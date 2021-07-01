@@ -36,12 +36,12 @@ export default {
     const layerOne = this.$refs.layerOne;
     const layerOneCtx = layerOne.getContext('2d');
 
-    backgroundCtx.fillStyle = 'lightgreen';
+    backgroundCtx.fillStyle = 'white';
     backgroundCtx.fillRect(0, 0, this.width, this.height);
 
     const layerOneObj = { ctx: layerOneCtx, width: this.width, height: this.height };
     const squareOne = new Square(layerOneObj, { x: 100, y: 100 });
-    const squareTwo = new Square(layerOneObj, { x: 200, y: 100 });
+    const squareTwo = new Square(layerOneObj, { x: 100, y: 155 });
     const entityManagerArr = [];
     entityManagerArr.push(squareOne);
     entityManagerArr.push(squareTwo);
@@ -51,10 +51,9 @@ export default {
       // const deltaTime = timestamp - timestampPrev;
       // timestampPrev = timestamp;
       // console.log(parseInt(deltaTime))
-      if(timestamp > 2000 && timestamp < 20000) {
-        entityManagerArr.forEach(entity => {
-          entity.update(timestamp);
-        })
+      if(timestamp > 1000 && timestamp < 20000) {
+        entityManagerArr.forEach(entity => entity.update(entityManagerArr, timestamp));
+        entityManagerArr.forEach(entity => entity.isCloseToEntity(entityManagerArr));
       }
 
       window.requestAnimationFrame(gameTick);

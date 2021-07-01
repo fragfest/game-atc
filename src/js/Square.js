@@ -1,5 +1,6 @@
 module.exports = class Square {
   constructor(layerObj, positionObj) {
+    this.id = Math.random();
     this.ctx = layerObj.ctx;
     this.x = positionObj.x;
     this.y = positionObj.y;
@@ -10,17 +11,32 @@ module.exports = class Square {
     this.height = 10;
   }
 
-  update(timestamp) {
+  update(entityManagerArr, timestamp) {
     const elapsedMs = timestamp - this.timestampPrevMs;
     if(elapsedMs > this.updateIntervalMs) {
       this.timestampPrevMs = timestamp;
       const pixels = (this.speedPixelPerMs * elapsedMs);
 
-      this.ctx.clearRect(this.x, this.y, this.width + 1, this.height + 1)
+      this.ctx.clearRect(this.x - 1, this.y - 1, this.width + 2, this.height + 2)
       this.x += pixels;
       this.y += pixels;
       this.ctx.fillStyle = 'darkslategrey';
       this.ctx.fillRect(this.x, this.y, this.width, this.height);
     }
+  }
+
+  isCloseToEntity(entityManagerArr) {
+    entityManagerArr.forEach(entity => {
+      if(entity.id === this.id) {
+        return;
+      }
+      const distX = Math.abs(this.x - entity.x);
+      const distY = Math.abs(this.y - entity.y);
+      if( distX < 51 && distY < 51) {
+        this.ctx.clearRect(this.x - 1, this.y - 1, this.width + 2, this.height + 2)
+        this.ctx.fillStyle = 'red';
+        this.ctx.fillRect(this.x, this.y, this.width, this.height);
+      }
+    });
   }
 }
