@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import canvas from '../js/canvas';
+import Square from '../js/Square';
 
 export default {
   name: 'Canvas',
@@ -40,26 +40,21 @@ export default {
     backgroundCtx.fillRect(0, 0, this.width, this.height);
 
     const layerOneObj = { ctx: layerOneCtx, width: this.width, height: this.height };
-    const positionObj = { x: 100, y: 100 };
+    const squareOne = new Square(layerOneObj, { x: 100, y: 100 });
+    const squareTwo = new Square(layerOneObj, { x: 200, y: 100 });
+    const entityManagerArr = [];
+    entityManagerArr.push(squareOne);
+    entityManagerArr.push(squareTwo);
 
-    let timestampPrev = 0;
-    let squareTimestampPrev = 0;
-
+    // let timestampPrev = 0;
     const gameTick = timestamp => {
-      const deltaTime = timestamp - timestampPrev;
-      timestampPrev = timestamp;
-
-      console.log(parseInt(deltaTime))
+      // const deltaTime = timestamp - timestampPrev;
+      // timestampPrev = timestamp;
+      // console.log(parseInt(deltaTime))
       if(timestamp > 2000 && timestamp < 20000) {
-
-        const squareUpdateInterval = 100;
-        const squareTimeElapsed = timestamp - squareTimestampPrev;
-        if(squareTimeElapsed > squareUpdateInterval) {
-          squareTimestampPrev = timestamp
-          const updatedPositionObj = canvas.update(squareTimeElapsed, positionObj);
-          canvas.drawSquare(layerOneObj, updatedPositionObj);
-        }
-
+        entityManagerArr.forEach(entity => {
+          entity.update(timestamp);
+        })
       }
 
       window.requestAnimationFrame(gameTick);

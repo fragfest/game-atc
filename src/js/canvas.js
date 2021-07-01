@@ -7,8 +7,8 @@ const drawSquare = (canvasObj, positionObj) => {
 }
 
 const update = (deltaTime, positionObj) => {
-  const delta = deltaTime ? (0.01 * deltaTime) : 0;
-  return { x: positionObj.x += delta, y: positionObj.y += delta};
+  const delta = deltaTime ? (0.005 * deltaTime) : 0;
+  return { x: positionObj.x += delta, y: positionObj.y += delta };
 }
 
 export default {
