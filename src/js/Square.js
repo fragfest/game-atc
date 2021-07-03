@@ -6,22 +6,39 @@ module.exports = class Square {
     this.ctx = layerObj.ctx;
     this.x = positionObj.x;
     this.y = positionObj.y;
+    this.headingRad = positionObj.heading;   // in radians. 0 is 100% to the right
     this.timestampPrevMs = 0;
-    this.updateIntervalMs = 2000;
     this.speedPixelPerMs = 0.005;
     this.width = 10;
     this.height = 10;
   }
 
-  update(timestamp) {
+  setHeading(direction) {
+    switch(direction){
+      case 'left': this.headingRad = Math.PI;
+      break;
+      case 'right': this.headingRad = 0;
+      break;
+      case 'top': this.headingRad = (3/2) * Math.PI;
+      break;
+      case 'down': this.headingRad = (1/2) * Math.PI;
+      break;
+      default: this.headingRad = 0;
+    }
+
+  }
+
+  update(timestamp, updateIntervalMs) {
     const elapsedMs = timestamp - this.timestampPrevMs;
-    if(elapsedMs > this.updateIntervalMs) {
+    if(elapsedMs > updateIntervalMs) {
       this.timestampPrevMs = timestamp;
       const pixels = (this.speedPixelPerMs * elapsedMs);
+      const pixelsInX = Math.cos(this.headingRad) * pixels;
+      const pixelsInY = Math.sin(this.headingRad) * pixels;
 
       this.ctx.clearRect(this.x - 1, this.y - 1, this.width + 2, this.height + 2)
-      this.x += pixels;
-      this.y += pixels;
+      this.x += pixelsInX;
+      this.y += pixelsInY;
       this.ctx.fillStyle = 'darkslategrey';
       this.ctx.fillRect(this.x, this.y, this.width, this.height);
     }
