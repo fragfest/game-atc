@@ -51,8 +51,8 @@ export default {
       // const deltaTime = timestamp - timestampPrev;
       // timestampPrev = timestamp;
       // console.log(parseInt(deltaTime))
-      if(timestamp > 1000 && timestamp < 20000) {
-        entityManagerArr.forEach(entity => entity.update(entityManagerArr, timestamp));
+      if (timestamp > 1000 && timestamp < 20000) {
+        entityManagerArr.forEach(entity => entity.update(timestamp));
         entityManagerArr.forEach(entity => entity.isCloseToEntity(entityManagerArr));
       }
 
