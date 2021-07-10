@@ -1,9 +1,10 @@
 const entityFns = require('./entity');
 
 module.exports = class Square {
-  constructor(layerObj, positionObj) {
+  constructor(entityLayerObj, textLayerObj, positionObj) {
     this.id = Math.random();
-    this.ctx = layerObj.ctx;
+    this.ctx = entityLayerObj.ctx;
+    this.textLayerObj = textLayerObj;
     this.x = positionObj.x;
     this.y = positionObj.y;
     this.headingRad = positionObj.heading;   // in radians. 0 is 100% to the right
@@ -40,11 +41,8 @@ module.exports = class Square {
     }
   }
 
-  update(timestamp, updateIntervalMs) {
-    const elapsedMs = timestamp - this.timestampPrevMs;
-    if(elapsedMs > updateIntervalMs) {
-      this.timestampPrevMs = timestamp;
-      const pixels = (this.speedPixelPerMs * elapsedMs);
+  update(deltaTimeMs) {
+      const pixels = (this.speedPixelPerMs * deltaTimeMs);
       const pixelsInX = Math.cos(this.headingRad) * pixels;
       const pixelsInY = Math.sin(this.headingRad) * pixels;
 
@@ -53,10 +51,11 @@ module.exports = class Square {
       this.y += pixelsInY;
       this.ctx.fillStyle = 'darkslategrey';
       this.ctx.fillRect(this.x, this.y, this.width, this.height);
-    }
+      this.textLayerObj.ctx.fillStyle = 'lightgreen';
+      this.textLayerObj.ctx.fillText('square', this.x, this.y + 5);
   }
 
-  setProximity(entityManagerArr) {
+  setProximity(timestamp, updateIntervalMs, entityManagerArr) {
     const entity = entityFns.create({...this});
     const isEntityCloseTo = entityFns.isCloseToEntity(entity);
     const accAnyEntitiesClose = (acc, val) => {
@@ -69,6 +68,13 @@ module.exports = class Square {
       this.ctx.clearRect(entity.x - 1, entity.y - 1, entity.width + 2, entity.height + 2)
       this.ctx.fillStyle = 'red';
       this.ctx.fillRect(entity.x, entity.y, entity.width, entity.height);
+
+      const elapsedMs = timestamp - this.timestampPrevMs;
+      if(elapsedMs > updateIntervalMs) {
+        this.timestampPrevMs = timestamp;
+        this.textLayerObj.ctx.fillStyle = 'lightgreen';
+        this.textLayerObj.ctx.fillText('square', this.x, this.y + 5);
+      }
     }
   }
 }

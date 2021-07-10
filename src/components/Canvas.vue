@@ -13,6 +13,12 @@
         :width="width"
         :height="height"
       ></canvas>
+      <canvas
+        ref="layerTwo"
+        class="canvas layer-two"
+        :width="width"
+        :height="height"
+      ></canvas>
     </div>
     <div :style="panelBottomStyle">
       <button @click="btnClick('left')" :style="buttonLeft">Left</button>
@@ -21,8 +27,8 @@
       <button @click="btnClick('right')" :style="buttonRight">Right</button>
     </div>
     <div :style="panelBottomRightStyle">
-      <label for="inputHeading">Heading &nbsp;</label>
-      <input id="inputHeading" type="text" @keydown.enter="inputHeadingKeyDown" v-model="inputHeading">
+      <label for="inputHeading">Heading <small>(3 digits)</small> &nbsp;</label>
+      <input id="inputHeading" type="text" @keydown.enter="inputHeadingKeyDown" v-model="inputHeading" maxlength="3" class="input-heading">
     </div>
   </div>
 </template>
@@ -66,15 +72,18 @@ export default {
     const background = this.$refs.background;
     const backgroundCtx = background.getContext('2d');
     const layerOne = this.$refs.layerOne;
-    const layerOneCtx = layerOne.getContext('2d');
+    const layerTwo = this.$refs.layerTwo;
+    const layerOneCtx = layerOne.getContext('2d'); // squares
+    const layerTwoCtx = layerTwo.getContext('2d'); // squares text
 
     backgroundCtx.fillStyle = 'white';
     backgroundCtx.fillRect(0, 0, this.width, this.height);
 
     const layerOneObj = { ctx: layerOneCtx, width: this.width, height: this.height };
-    const squareOne = new Square(layerOneObj, { x: 100, y: 110, heading: Math.PI / 4 });
+    const textLayerObj = { ctx: layerTwoCtx, width: this.width, height: this.height };
+    const squareOne = new Square(layerOneObj, textLayerObj, { x: 100, y: 110, heading: Math.PI / 4 });
     this.squareOne = squareOne;
-    const squareTwo = new Square(layerOneObj, { x: 100, y: 100, heading: 0 });
+    const squareTwo = new Square(layerOneObj, textLayerObj, { x: 100, y: 100, heading: 0 });
 
     const entityManagerArr = [];
     const entityManagerAdd = obj => {
@@ -85,14 +94,15 @@ export default {
     entityManagerAdd(squareTwo);
 
     const updateIntervalMs = 2000;
-    // let timestampPrev = 0;
+    let timestampPrev = 0;
     const gameTick = timestamp => {
-      // const deltaTime = timestamp - timestampPrev;
-      // timestampPrev = timestamp;
-      // console.log(parseInt(deltaTime))
-
-      entityManagerArr.forEach(entity => entity.update(timestamp, updateIntervalMs));
-      entityManagerArr.forEach(entity => entity.setProximity(entityManagerArr));
+      const deltaTime = timestamp - timestampPrev;
+      if(deltaTime > updateIntervalMs) {
+        timestampPrev = timestamp;
+        textLayerObj.ctx.clearRect(0, 0, textLayerObj.width, textLayerObj.height);
+        entityManagerArr.forEach(entity => entity.update(deltaTime));
+        entityManagerArr.forEach(entity => entity.setProximity(timestamp, updateIntervalMs, entityManagerArr));
+      }
 
       window.requestAnimationFrame(gameTick);
     }
@@ -103,6 +113,9 @@ export default {
 </script>
 
 <style scoped>
+  .layer-two {
+    z-index: 2;
+  }
   .layer-one {
     z-index: 1;
   }
@@ -113,5 +126,12 @@ export default {
     z-index: 0;
     border: solid 1px;
     position: absolute;
+  }
+
+  .input-heading {
+    border: solid 1px;
+    border-radius: 3px;
+    height: 20px;
+    width: 50px;
   }
 </style>
