@@ -25,6 +25,7 @@
 
 <script>
 import Square from '../js/Square';
+import { isEntity } from '../js/entity';
 
 const width = 800;
 const height = 600;
@@ -61,13 +62,17 @@ export default {
     backgroundCtx.fillRect(0, 0, this.width, this.height);
 
     const layerOneObj = { ctx: layerOneCtx, width: this.width, height: this.height };
-    const squareOne = new Square(layerOneObj, { x: 100, y: 100, heading: Math.PI / 4 });
+    const squareOne = new Square(layerOneObj, { x: 100, y: 110, heading: Math.PI / 4 });
     this.squareOne = squareOne;
     const squareTwo = new Square(layerOneObj, { x: 100, y: 100, heading: 0 });
 
     const entityManagerArr = [];
-    entityManagerArr.push(squareOne);
-    entityManagerArr.push(squareTwo);
+    const entityManagerAdd = obj => {
+      if(isEntity(obj)) entityManagerArr.push(obj);
+      else throw new Error('non-entity not added \n' + JSON.stringify(obj));
+    }
+    entityManagerAdd(squareOne);
+    entityManagerAdd(squareTwo);
 
     const updateIntervalMs = 2000;
     // let timestampPrev = 0;
@@ -77,7 +82,7 @@ export default {
       // console.log(parseInt(deltaTime))
 
       entityManagerArr.forEach(entity => entity.update(timestamp, updateIntervalMs));
-      entityManagerArr.forEach(entity => entity.isCloseToEntity(entityManagerArr));
+      entityManagerArr.forEach(entity => entity.setProximity(entityManagerArr));
 
       window.requestAnimationFrame(gameTick);
     }

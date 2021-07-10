@@ -25,7 +25,6 @@ module.exports = class Square {
       break;
       default: this.headingRad = 0;
     }
-
   }
 
   update(timestamp, updateIntervalMs) {
@@ -44,9 +43,19 @@ module.exports = class Square {
     }
   }
 
-  isCloseToEntity(entityManagerArr) {
-    const entity = entityFns.create(this.id, this.x, this.y, this.width, this.height);
-    const isEntityClose = entityFns.isCloseToEntity(this.ctx, entity);
-    entityManagerArr.forEach(isEntityClose);
+  setProximity(entityManagerArr) {
+    const entity = entityFns.create({...this});
+    const isEntityCloseTo = entityFns.isCloseToEntity(entity);
+    const accAnyEntitiesClose = (acc, val) => {
+      const entityOther = entityFns.create(val);
+      return acc || isEntityCloseTo(entityOther);
+    };
+    const isClose = entityManagerArr.reduce(accAnyEntitiesClose, false);
+
+    if(isClose) {
+      this.ctx.clearRect(entity.x - 1, entity.y - 1, entity.width + 2, entity.height + 2)
+      this.ctx.fillStyle = 'red';
+      this.ctx.fillRect(entity.x, entity.y, entity.width, entity.height);
+    }
   }
 }
