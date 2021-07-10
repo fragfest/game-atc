@@ -13,7 +13,20 @@ module.exports = class Square {
     this.height = 10;
   }
 
-  setHeading(direction) {
+  setHeading(inputHeading) {
+    if(!inputHeading && inputHeading !== 0) return;
+    if(inputHeading.toString().length !== 3) return;
+    const inputHeadingArr = inputHeading.toString().split('');
+    const accAllAreInts = (acc, val) => acc && Number.isInteger(parseInt(val));
+    const allCharsCanBeInts = inputHeadingArr.reduce(accAllAreInts, true);
+    if(!allCharsCanBeInts) return;
+
+    const heading = parseInt(inputHeading);
+    const headingRad = (heading - 90) * Math.PI / 180;
+    this.headingRad = headingRad;
+  }
+
+  setHeadingStr(direction) {
     switch(direction){
       case 'left': this.headingRad = Math.PI;
       break;

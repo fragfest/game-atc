@@ -20,6 +20,10 @@
       <button @click="btnClick('down')" :style="buttonBottom">Down</button>
       <button @click="btnClick('right')" :style="buttonRight">Right</button>
     </div>
+    <div :style="panelBottomRightStyle">
+      <label for="inputHeading">Heading &nbsp;</label>
+      <input id="inputHeading" type="text" @keydown.enter="inputHeadingKeyDown" v-model="inputHeading">
+    </div>
   </div>
 </template>
 
@@ -36,12 +40,14 @@ export default {
 
   data() {
     return {
+      inputHeading: '',
       width,
       height,
       squareOne: {}
     };
   },
   computed: {
+    panelBottomRightStyle: () => ({ position: 'absolute', left: '250px', top: height + 50 + 'px' }),
     panelBottomStyle: () => ({ position: 'absolute', left: '100px', top: height + 50 + 'px' }),
     buttonLeft: () => ({ position: 'absolute', width: '50px', top: '30px' }),
     buttonTop: () => ({ position: 'absolute', width: '50px', left: '30px' }),
@@ -49,7 +55,11 @@ export default {
     buttonRight: () => ({ position: 'absolute', width: '50px', left: '55px', top: '30px' }),
   },
   methods: {
-    btnClick: function(direction) { this.squareOne.setHeading(direction); }
+    btnClick: function(direction) { this.squareOne.setHeadingStr(direction); },
+    inputHeadingKeyDown: function() {
+      this.squareOne.setHeading(this.inputHeading);
+      this.inputHeading = '';
+    },
   },
 
   mounted() {
