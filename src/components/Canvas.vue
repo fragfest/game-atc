@@ -19,6 +19,12 @@
         :width="width"
         :height="height"
       ></canvas>
+      <canvas
+        ref="layerThree"
+        class="canvas layer-three"
+        :width="width"
+        :height="height"
+      ></canvas>
     </div>
     <div :style="panelBottomStyle">
       <button @click="btnClick('left')" :style="buttonLeft">Left</button>
@@ -73,17 +79,20 @@ export default {
     const backgroundCtx = background.getContext('2d');
     const layerOne = this.$refs.layerOne;
     const layerTwo = this.$refs.layerTwo;
+    const layerThree = this.$refs.layerThree;
     const layerOneCtx = layerOne.getContext('2d'); // squares
     const layerTwoCtx = layerTwo.getContext('2d'); // squares text
+    const layerThreeCtx = layerThree.getContext('2d'); // heading lines
 
     backgroundCtx.fillStyle = 'white';
     backgroundCtx.fillRect(0, 0, this.width, this.height);
 
     const layerOneObj = { ctx: layerOneCtx, width: this.width, height: this.height };
     const textLayerObj = { ctx: layerTwoCtx, width: this.width, height: this.height };
-    const squareOne = new Square(layerOneObj, textLayerObj, { x: this.width / 2, y: this.height / 2, heading: '090' });
+    const headingLayerObj = { ctx: layerThreeCtx, width: this.width, height: this.height };
+    const squareOne = new Square(layerOneObj, textLayerObj, headingLayerObj, { x: this.width / 2, y: this.height / 2, heading: '090' });
     this.squareOne = squareOne;
-    // const squareTwo = new Square(layerOneObj, textLayerObj, { x: 100, y: 100, heading: '180' });
+    const squareTwo = new Square(layerOneObj, textLayerObj, headingLayerObj, { x: this.width / 2, y: this.height / 2, heading: '180' });
 
     const entityManagerArr = [];
     const entityManagerAdd = obj => {
@@ -91,7 +100,7 @@ export default {
       else throw new Error('non-entity not added \n' + JSON.stringify(obj));
     }
     entityManagerAdd(squareOne);
-    // entityManagerAdd(squareTwo);
+    entityManagerAdd(squareTwo);
 
     const updateIntervalMs = 2000;
     let timestampPrev = 0;
@@ -100,8 +109,9 @@ export default {
       if(deltaTime > updateIntervalMs) {
         timestampPrev = timestamp;
         textLayerObj.ctx.clearRect(0, 0, textLayerObj.width, textLayerObj.height);
+        headingLayerObj.ctx.clearRect(0, 0, headingLayerObj.width, headingLayerObj.height);
         entityManagerArr.forEach(entity => entity.update(deltaTime));
-        entityManagerArr.forEach(entity => entity.setProximity(timestamp, updateIntervalMs, entityManagerArr));
+        entityManagerArr.forEach(entity => entity.setProximity(entityManagerArr));
       }
 
       window.requestAnimationFrame(gameTick);
@@ -113,6 +123,9 @@ export default {
 </script>
 
 <style scoped>
+  .layer-three {
+    z-index: 3;
+  }
   .layer-two {
     z-index: 2;
   }

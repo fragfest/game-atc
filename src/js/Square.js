@@ -3,19 +3,20 @@ const entityFns = require('./entity');
 const convertToSmallRad = rad => (rad < 2 * Math.PI) ? rad : (rad - 2 * Math.PI);
 const convertToPosRad = rad => (rad >= 0) ? rad : (2 * Math.PI + rad); 
 const convertToSmallDegrees = degrees => (degrees <= 360) ? degrees : (degrees - 360);
+// zero degrees is east on the Canvas
 const degreesToRad = degrees => (Number(degrees) - 90) * Math.PI / 180;
-const radToDegrees = rad => (Number(rad)* 180 / Math.PI) + 90;
-// zero degrees is east
-const headingToRad = heading => convertToPosRad(degreesToRad(heading));
+const radToDegrees = rad => (Number(rad) * 180 / Math.PI) + 90;
+const inputHeadingToRad = heading => convertToPosRad(degreesToRad(heading));
 
 module.exports = class Square {
-  constructor(entityLayerObj, textLayerObj, positionObj) {
+  constructor(entityLayerObj, textLayerObj, headingLayerObj, positionObj) {
     this.id = Math.random();
     this.ctx = entityLayerObj.ctx;
     this.textLayerObj = textLayerObj;
+    this.headingLayerObj = headingLayerObj;
     this.x = positionObj.x;
     this.y = positionObj.y;
-    this.headingRad = headingToRad(positionObj.heading);
+    this.headingRad = inputHeadingToRad(positionObj.heading);
     this.headingTargetRad = 0;
     this.setHeading(positionObj.heading);
     this.turnRateRadPerMs = 0.0001;
@@ -34,9 +35,9 @@ module.exports = class Square {
     if(!inputHeadingIsAllInts) return;
 
     const heading = parseInt(inputHeading);
-    // TODO return if heading > 360 or <= 0
+    if(heading > 360 || heading <= 0) return;
 
-    this.headingTargetRad = headingToRad(heading);
+    this.headingTargetRad = inputHeadingToRad(heading);
   }
 
   // TODO remove
@@ -79,12 +80,9 @@ module.exports = class Square {
       if(turnRight) return (headingIncrease > headingTargetSmall) ? headingTargetSmall : headingIncrease;
       else return (headingDecrease < headingTargetSmall) ? headingTargetSmall : headingDecrease;
     }
-    // isClosestBetween & turn right
-    if(isLowestLargeTarget) {
-      return (headingIncrease > headingTargetLarge) ? headingTargetLarge : headingIncrease;
-    } else {
-      return (headingLargeDecrease < headingTargetSmall) ? headingTargetSmall : headingLargeDecrease;
-    }
+    // else isClosestBetween :: if(isLowestLargeTarget) turnRight
+    if(isLowestLargeTarget) return (headingIncrease > headingTargetLarge) ? headingTargetLarge : headingIncrease;
+    else return (headingLargeDecrease < headingTargetSmall) ? headingTargetSmall : headingLargeDecrease;
   }
 
   update(deltaTimeMs) {
@@ -98,14 +96,20 @@ module.exports = class Square {
     const pixelsInX = Math.cos(headingRadNew) * pixels;
     const pixelsInY = Math.sin(headingRadNew) * pixels;
 
-    this.headingRad = headingRadNew;
     this.ctx.clearRect(this.x - 1, this.y - 1, this.width + 2, this.height + 2);
     this.x += pixelsInX;
     this.y += pixelsInY;
     this.ctx.fillStyle = 'darkslategrey';
     this.ctx.fillRect(this.x, this.y, this.width, this.height);
     this.textLayerObj.ctx.fillStyle = 'lightgreen';
-    
+
+    const center = { x: this.x + this.width / 2, y: this.y + this.height / 2 };
+    this.headingLayerObj.ctx.beginPath();
+    this.headingLayerObj.ctx.moveTo(center.x, center.y);
+    this.headingLayerObj.ctx.lineTo(center.x + pixelsInX * 1.5, center.y + pixelsInY * 1.5);
+    this.headingLayerObj.ctx.stroke();
+
+    this.headingRad = headingRadNew;
     const deg = Math.round(convertToSmallDegrees(radToDegrees(headingRadNew)));
     let degreesDisplay = deg;
     if(deg < 10) degreesDisplay = '00' + deg;
@@ -113,7 +117,7 @@ module.exports = class Square {
     this.textLayerObj.ctx.fillText('square ' + degreesDisplay, this.x, this.y + 5);
   }
 
-  setProximity(timestamp, updateIntervalMs, entityManagerArr) {
+  setProximity(entityManagerArr) {
     const entity = entityFns.create({...this});
     const isEntityCloseTo = entityFns.isCloseToEntity(entity);
     const accAnyEntitiesClose = (acc, val) => {
@@ -126,13 +130,8 @@ module.exports = class Square {
       this.ctx.clearRect(entity.x - 1, entity.y - 1, entity.width + 2, entity.height + 2)
       this.ctx.fillStyle = 'red';
       this.ctx.fillRect(entity.x, entity.y, entity.width, entity.height);
-
-      const elapsedMs = timestamp - this.timestampPrevMs;
-      if(elapsedMs > updateIntervalMs) {
-        this.timestampPrevMs = timestamp;
-        this.textLayerObj.ctx.fillStyle = 'lightgreen';
-        this.textLayerObj.ctx.fillText('square', this.x, this.y + 5);
-      }
+      this.textLayerObj.ctx.fillStyle = 'lightgreen';
+      this.textLayerObj.ctx.fillText('square', this.x, this.y + 5);
     }
   }
 }
