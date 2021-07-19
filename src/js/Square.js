@@ -2,7 +2,9 @@ const entityFns = require('./entity');
 
 const convertToSmallRad = rad => (rad < 2 * Math.PI) ? rad : (rad - 2 * Math.PI);
 const convertToPosRad = rad => (rad >= 0) ? rad : (2 * Math.PI + rad); 
+const convertToSmallDegrees = degrees => (degrees <= 360) ? degrees : (degrees - 360);
 const degreesToRad = degrees => (Number(degrees) - 90) * Math.PI / 180;
+const radToDegrees = rad => (Number(rad)* 180 / Math.PI) + 90;
 // zero degrees is east
 const headingToRad = heading => convertToPosRad(degreesToRad(heading));
 
@@ -40,81 +42,75 @@ module.exports = class Square {
   // TODO remove
   setHeadingStr(direction) {
     switch(direction){
-      case 'left': this.headingRad = Math.PI;
+      case 'left': this.headingTargetRad = Math.PI;
       break;
-      case 'right': this.headingRad = 0;
+      case 'right': this.headingTargetRad = 0;
       break;
-      case 'top': this.headingRad = (3/2) * Math.PI;
+      case 'top': this.headingTargetRad = (3/2) * Math.PI;
       break;
-      case 'down': this.headingRad = (1/2) * Math.PI;
+      case 'down': this.headingTargetRad = (1/2) * Math.PI;
       break;
-      default: this.headingRad = 0;
+      default: this.headingTargetRad = 0;
     }
   }
 
-  update(deltaTimeMs) {
-    let heading = this.headingRad;
-    let headingTarget = this.headingTargetRad;
-    let headingSmall = convertToSmallRad(heading);
-    let headingLarge = headingSmall + 2 * Math.PI;
-    let headingTargetSmall = convertToSmallRad(headingTarget);
-    let headingTargetLarge = headingTargetSmall + 2 * Math.PI;
+  updateHeading(headingOld, headingTarget, headingChange) {
+    const headingSmall = convertToSmallRad(headingOld);
+    const headingTargetSmall = convertToSmallRad(headingTarget);
+    const headingLarge = headingSmall + 2 * Math.PI;
+    const headingTargetLarge = headingTargetSmall + 2 * Math.PI;
 
     let smallDiff = Math.abs(headingTargetSmall - headingSmall);
     let highestSmall = (headingTargetSmall > headingSmall) ? headingTargetSmall : headingSmall;
     const isLowestLargeTarget = (headingTargetLarge < headingLarge);
     let lowestLarge = isLowestLargeTarget ? headingTargetLarge : headingLarge;
-    let betweenSmallLargeDiff = lowestLarge - highestSmall;
-    const isClosestSmall = smallDiff < betweenSmallLargeDiff;
+    let betweenDiff = lowestLarge - highestSmall;
+    const isClosestSmall = smallDiff < betweenDiff;
     const isOppositeHeading = smallDiff === Math.PI;
 
-    const turnRads = this.turnRateRadPerMs * deltaTimeMs;
-    if(headingTarget === heading) {
-      console.log('at target')
-    } else if(isOppositeHeading) {
-      console.log('turn right 180')
-      heading = headingSmall + turnRads;
-    } else if(isClosestSmall) {
-      console.log('use small')
-
+    const headingIncrease = headingSmall + headingChange;
+    const headingDecrease = headingSmall - headingChange;
+    const headingLargeDecrease = headingLarge - headingChange;
+    if(headingTargetSmall === headingSmall) return headingTargetSmall;
+    if(isOppositeHeading) return headingIncrease;
+    
+    if(isClosestSmall) {
       const turnRight = headingTargetSmall > headingSmall;
-      if(turnRight) heading = headingSmall + turnRads;
-      else heading = headingSmall - turnRads;
-
-      if(turnRight) {
-        heading = (heading > headingTargetSmall) ? headingTargetSmall : heading;
-        console.log('turn right', headingTargetSmall, heading)
-      } else {
-        heading = (heading < headingTargetSmall) ? headingTargetSmall : heading;
-        console.log('turn left', headingTargetSmall, heading)
-      }
-
-    } else {
-      console.log('use between')
-
-      if(isLowestLargeTarget) {
-        heading = headingSmall + turnRads;
-        heading = (heading > headingTargetLarge) ? headingTargetLarge : heading;
-        console.log('turn right', headingTargetLarge, heading)
-      } else {
-        heading = headingLarge - turnRads;
-        heading = (heading < headingTargetSmall) ? headingTargetSmall : heading;
-        console.log('turn left', headingTargetSmall, heading)
-      }
+      if(turnRight) return (headingIncrease > headingTargetSmall) ? headingTargetSmall : headingIncrease;
+      else return (headingDecrease < headingTargetSmall) ? headingTargetSmall : headingDecrease;
     }
+    // isClosestBetween & turn right
+    if(isLowestLargeTarget) {
+      return (headingIncrease > headingTargetLarge) ? headingTargetLarge : headingIncrease;
+    } else {
+      return (headingLargeDecrease < headingTargetSmall) ? headingTargetSmall : headingLargeDecrease;
+    }
+  }
+
+  update(deltaTimeMs) {
+    const headingOld = this.headingRad;
+    const headingTarget = this.headingTargetRad;
+    const headingChange = this.turnRateRadPerMs * deltaTimeMs;
+    const headingRadNewLarge = this.updateHeading(headingOld, headingTarget, headingChange);
+    const headingRadNew = convertToPosRad(convertToSmallRad(headingRadNewLarge));
 
     const pixels = (this.speedPixelPerMs * deltaTimeMs);
-    const pixelsInX = Math.cos(heading) * pixels;
-    const pixelsInY = Math.sin(heading) * pixels;
+    const pixelsInX = Math.cos(headingRadNew) * pixels;
+    const pixelsInY = Math.sin(headingRadNew) * pixels;
 
-    this.headingRad = convertToPosRad(convertToSmallRad(heading));
+    this.headingRad = headingRadNew;
     this.ctx.clearRect(this.x - 1, this.y - 1, this.width + 2, this.height + 2);
     this.x += pixelsInX;
     this.y += pixelsInY;
     this.ctx.fillStyle = 'darkslategrey';
     this.ctx.fillRect(this.x, this.y, this.width, this.height);
     this.textLayerObj.ctx.fillStyle = 'lightgreen';
-    this.textLayerObj.ctx.fillText('square', this.x, this.y + 5);
+    
+    const deg = Math.round(convertToSmallDegrees(radToDegrees(headingRadNew)));
+    let degreesDisplay = deg;
+    if(deg < 10) degreesDisplay = '00' + deg;
+    else if(deg < 100) degreesDisplay = '0' + deg;
+    this.textLayerObj.ctx.fillText('square ' + degreesDisplay, this.x, this.y + 5);
   }
 
   setProximity(timestamp, updateIntervalMs, entityManagerArr) {
