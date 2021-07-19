@@ -81,9 +81,9 @@ export default {
 
     const layerOneObj = { ctx: layerOneCtx, width: this.width, height: this.height };
     const textLayerObj = { ctx: layerTwoCtx, width: this.width, height: this.height };
-    const squareOne = new Square(layerOneObj, textLayerObj, { x: 100, y: 110, heading: Math.PI / 4 });
+    const squareOne = new Square(layerOneObj, textLayerObj, { x: this.width / 2, y: this.height / 2, heading: '090' });
     this.squareOne = squareOne;
-    const squareTwo = new Square(layerOneObj, textLayerObj, { x: 100, y: 100, heading: 0 });
+    // const squareTwo = new Square(layerOneObj, textLayerObj, { x: 100, y: 100, heading: '180' });
 
     const entityManagerArr = [];
     const entityManagerAdd = obj => {
@@ -91,7 +91,7 @@ export default {
       else throw new Error('non-entity not added \n' + JSON.stringify(obj));
     }
     entityManagerAdd(squareOne);
-    entityManagerAdd(squareTwo);
+    // entityManagerAdd(squareTwo);
 
     const updateIntervalMs = 2000;
     let timestampPrev = 0;
