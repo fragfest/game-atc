@@ -9,21 +9,34 @@ const radToDegrees = rad => (Number(rad) * 180 / Math.PI) + 90;
 const inputHeadingToRad = heading => convertToPosRad(degreesToRad(heading));
 
 module.exports = class Square {
-  constructor(entityLayerObj, textLayerObj, headingLayerObj, positionObj) {
+  constructor(title, entityLayerObj, textLayerObj, headingLayerObj, positionObj) {
     this.id = Math.random();
+    this.title = title.trim().substring(0, 6);
     this.ctx = entityLayerObj.ctx;
     this.textLayerObj = textLayerObj;
     this.headingLayerObj = headingLayerObj;
+
     this.x = positionObj.x;
     this.y = positionObj.y;
+    this.altitude = positionObj.altitude;
+    this.altitudeTarget = 1000;
+    this.setAltitude(positionObj.altitude);
     this.headingRad = inputHeadingToRad(positionObj.heading);
     this.headingTargetRad = 0;
     this.setHeading(positionObj.heading);
+
+    this.altitudeRatePerMs = 0.05;
     this.turnRateRadPerMs = 0.0001;
     this.timestampPrevMs = 0;
     this.speedPixelPerMs = 0.005;
     this.width = 10;
     this.height = 10;
+  }
+
+  setAltitude(altitudeArg) {
+    const altitude = parseInt(altitudeArg);
+    if(altitude < 100 || altitude > 40000) return;
+    this.altitudeTarget = Math.floor(altitude / 100) * 100;
   }
 
   setHeading(inputHeading) {
@@ -85,6 +98,18 @@ module.exports = class Square {
     else return (headingLargeDecrease < headingTargetSmall) ? headingTargetSmall : headingLargeDecrease;
   }
 
+  updateAltitude(altitudeOldArg, altitudeTargetArg, altitudeChangeArg) {
+    const altitudeOld = Math.floor(altitudeOldArg / 100) * 100;
+    const altitudeTarget = Math.floor(altitudeTargetArg / 100) * 100;
+    const altitudeChange = Math.floor(altitudeChangeArg / 100) * 100;
+    const delta = altitudeTarget - altitudeOld;
+    const altitudeIncrease = altitudeOld + altitudeChange;
+    const altitudeDecrease = altitudeOld - altitudeChange;
+    if(delta === 0) return altitudeOld;
+    else if(delta > 0) return (altitudeIncrease > altitudeTarget) ? altitudeTarget : altitudeIncrease;
+    else return (altitudeDecrease < altitudeTarget) ? altitudeTarget : altitudeDecrease;
+  }
+
   update(deltaTimeMs) {
     const headingOld = this.headingRad;
     const headingTarget = this.headingTargetRad;
@@ -95,6 +120,11 @@ module.exports = class Square {
     const pixels = (this.speedPixelPerMs * deltaTimeMs);
     const pixelsInX = Math.cos(headingRadNew) * pixels;
     const pixelsInY = Math.sin(headingRadNew) * pixels;
+
+    const altitudeOld = this.altitude;
+    const altitudeTarget = this.altitudeTarget;
+    const altitudeChange = this.altitudeRatePerMs * deltaTimeMs;
+    const altitudeNew = this.updateAltitude(altitudeOld, altitudeTarget, altitudeChange);
 
     this.ctx.clearRect(this.x - 1, this.y - 1, this.width + 2, this.height + 2);
     this.x += pixelsInX;
@@ -110,11 +140,16 @@ module.exports = class Square {
     this.headingLayerObj.ctx.stroke();
 
     this.headingRad = headingRadNew;
+    this.altitude = altitudeNew;
+
     const deg = Math.round(convertToSmallDegrees(radToDegrees(headingRadNew)));
     let degreesDisplay = deg;
     if(deg < 10) degreesDisplay = '00' + deg;
     else if(deg < 100) degreesDisplay = '0' + deg;
-    this.textLayerObj.ctx.fillText('square ' + degreesDisplay, this.x, this.y + 5);
+    const altitudeDisplay = Math.round(altitudeNew);
+
+    this.textLayerObj.ctx.fillText(this.title + ' ' + degreesDisplay, this.x, this.y - 2);
+    this.textLayerObj.ctx.fillText('             ' + altitudeDisplay, this.x, this.y + 10);
   }
 
   setProximity(entityManagerArr) {
@@ -131,7 +166,6 @@ module.exports = class Square {
       this.ctx.fillStyle = 'red';
       this.ctx.fillRect(entity.x, entity.y, entity.width, entity.height);
       this.textLayerObj.ctx.fillStyle = 'lightgreen';
-      this.textLayerObj.ctx.fillText('square', this.x, this.y + 5);
     }
   }
 }

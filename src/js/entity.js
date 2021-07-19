@@ -3,7 +3,8 @@ const hasEntityState = state => {
     && 'x' in state
     && 'y' in state
     && 'width' in state
-    && 'height' in state;
+    && 'height' in state
+    && 'altitude' in state;
 }
 
 export const isEntity = (entity) => {
@@ -22,6 +23,10 @@ export const isCloseToEntity = (entity) => (entityOther) => {
   
   const distX = Math.abs(entity.x - entityOther.x);
   const distY = Math.abs(entity.y - entityOther.y);
-  if (distX < 51 && distY < 51) return true;
+  const isCloseHorizontal = (distX < 51 && distY < 51);
+
+  const distVert = Math.abs(entity.altitude - entityOther.altitude);
+  const isCloseVertical = distVert < 1000;
+  if (isCloseHorizontal && isCloseVertical) return true;
   return false;
 };

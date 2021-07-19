@@ -35,6 +35,10 @@
     <div :style="panelBottomRightStyle">
       <label for="inputHeading">Heading <small>(3 digits)</small> &nbsp;</label>
       <input id="inputHeading" type="text" @keydown.enter="inputHeadingKeyDown" v-model="inputHeading" maxlength="3" class="input-heading">
+      <div :style="rowBelow">
+        <label for="inputAltitude">Altitude <small>(4 digits)</small> &nbsp;</label>
+        <input id="inputAltitude" type="text" @keydown.enter="inputAltitudeKeyDown" v-model="inputAltitude" maxlength="4" class="input-heading">
+      </div>
     </div>
   </div>
 </template>
@@ -52,6 +56,7 @@ export default {
 
   data() {
     return {
+      inputAltitude: '',
       inputHeading: '',
       width,
       height,
@@ -59,6 +64,7 @@ export default {
     };
   },
   computed: {
+    rowBelow: () => ({ position: 'relative', top: 10 + 'px' }),
     panelBottomRightStyle: () => ({ position: 'absolute', left: '250px', top: height + 50 + 'px' }),
     panelBottomStyle: () => ({ position: 'absolute', left: '100px', top: height + 50 + 'px' }),
     buttonLeft: () => ({ position: 'absolute', width: '50px', top: '30px' }),
@@ -71,6 +77,10 @@ export default {
     inputHeadingKeyDown: function() {
       this.squareOne.setHeading(this.inputHeading);
       this.inputHeading = '';
+    },
+    inputAltitudeKeyDown: function() {
+      this.squareOne.setAltitude(this.inputAltitude);
+      this.inputAltitude = '';
     },
   },
 
@@ -90,9 +100,15 @@ export default {
     const layerOneObj = { ctx: layerOneCtx, width: this.width, height: this.height };
     const textLayerObj = { ctx: layerTwoCtx, width: this.width, height: this.height };
     const headingLayerObj = { ctx: layerThreeCtx, width: this.width, height: this.height };
-    const squareOne = new Square(layerOneObj, textLayerObj, headingLayerObj, { x: this.width / 2, y: this.height / 2, heading: '090' });
+    const squareOne = new Square(
+      'SQ 001',
+      layerOneObj, textLayerObj, headingLayerObj,
+      { x: this.width / 2, y: this.height / 2, heading: '090', altitude: 1000 });
+    const squareTwo = new Square(
+      'SQ 002',
+      layerOneObj, textLayerObj, headingLayerObj,
+      { x: this.width / 2 - 50, y: this.height / 2, heading: '090', altitude: 1000 });
     this.squareOne = squareOne;
-    const squareTwo = new Square(layerOneObj, textLayerObj, headingLayerObj, { x: this.width / 2, y: this.height / 2, heading: '180' });
 
     const entityManagerArr = [];
     const entityManagerAdd = obj => {
