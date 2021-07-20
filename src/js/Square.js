@@ -147,7 +147,6 @@ module.exports = class Square {
     if(deg < 10) degreesDisplay = '00' + deg;
     else if(deg < 100) degreesDisplay = '0' + deg;
     const altitudeDisplay = Math.round(altitudeNew);
-
     this.textLayerObj.ctx.fillText(this.title + ' ' + degreesDisplay, this.x, this.y - 2);
     this.textLayerObj.ctx.fillText('             ' + altitudeDisplay, this.x, this.y + 10);
   }

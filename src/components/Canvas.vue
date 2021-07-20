@@ -126,7 +126,7 @@ export default {
         timestampPrev = timestamp;
         textLayerObj.ctx.clearRect(0, 0, textLayerObj.width, textLayerObj.height);
         headingLayerObj.ctx.clearRect(0, 0, headingLayerObj.width, headingLayerObj.height);
-        entityManagerArr.forEach(entity => entity.update(deltaTime));
+        entityManagerArr.forEach(entity => entity.update(updateIntervalMs));
         entityManagerArr.forEach(entity => entity.setProximity(entityManagerArr));
       }
 
