@@ -1,6 +1,7 @@
 <template>
   <div>
     <div>
+      <div class="entity-div layer-four" />
       <canvas
         ref="background"
         class="canvas layer-zero"
@@ -33,8 +34,11 @@
       <button @click="btnClick('right')" :style="buttonRight">Right</button>
     </div>
     <div :style="panelBottomRightStyle">
-      <label for="inputHeading">Heading <small>(3 digits)</small> &nbsp;</label>
-      <input id="inputHeading" type="text" @keydown.enter="inputHeadingKeyDown" v-model="inputHeading" maxlength="3" class="input-heading">
+      <p>{{ square.title }}</p>
+      <div :style="rowBelow">
+        <label for="inputHeading">Heading <small>(3 digits)</small> &nbsp;</label>
+        <input id="inputHeading" type="text" @keydown.enter="inputHeadingKeyDown" v-model="inputHeading" maxlength="3" class="input-heading">
+      </div>
       <div :style="rowBelow">
         <label for="inputAltitude">Altitude <small>(4 digits)</small> &nbsp;</label>
         <input id="inputAltitude" type="text" @keydown.enter="inputAltitudeKeyDown" v-model="inputAltitude" maxlength="4" class="input-heading">
@@ -60,12 +64,13 @@ export default {
       inputHeading: '',
       width,
       height,
-      squareOne: {}
+      square: {},
     };
   },
   computed: {
-    rowBelow: () => ({ position: 'relative', top: 10 + 'px' }),
-    panelBottomRightStyle: () => ({ position: 'absolute', left: '250px', top: height + 50 + 'px' }),
+    rowBelow: () => ({ position: 'relative', 'margin-top': '5px' }),
+
+    panelBottomRightStyle: () => ({ position: 'absolute', left: '250px', top: height + 20 + 'px' }),
     panelBottomStyle: () => ({ position: 'absolute', left: '100px', top: height + 50 + 'px' }),
     buttonLeft: () => ({ position: 'absolute', width: '50px', top: '30px' }),
     buttonTop: () => ({ position: 'absolute', width: '50px', left: '30px' }),
@@ -73,13 +78,15 @@ export default {
     buttonRight: () => ({ position: 'absolute', width: '50px', left: '55px', top: '30px' }),
   },
   methods: {
-    btnClick: function(direction) { this.squareOne.setHeadingStr(direction); },
+    btnClick: function(direction) {
+      this.square.setHeadingStr(direction);
+    },
     inputHeadingKeyDown: function() {
-      this.squareOne.setHeading(this.inputHeading);
+      this.square.setHeading(this.inputHeading);
       this.inputHeading = '';
     },
     inputAltitudeKeyDown: function() {
-      this.squareOne.setAltitude(this.inputAltitude);
+      this.square.setAltitude(this.inputAltitude);
       this.inputAltitude = '';
     },
   },
@@ -92,7 +99,8 @@ export default {
     const layerThree = this.$refs.layerThree;
     const layerOneCtx = layerOne.getContext('2d'); // squares
     const layerTwoCtx = layerTwo.getContext('2d'); // squares text
-    const layerThreeCtx = layerThree.getContext('2d'); // heading lines
+    const layerThreeCtx = layerThree.getContext('2d'); // heading trail lines
+    const entityDiv = document.querySelector('.entity-div')
 
     backgroundCtx.fillStyle = 'white';
     backgroundCtx.fillRect(0, 0, this.width, this.height);
@@ -100,15 +108,19 @@ export default {
     const layerOneObj = { ctx: layerOneCtx, width: this.width, height: this.height };
     const textLayerObj = { ctx: layerTwoCtx, width: this.width, height: this.height };
     const headingLayerObj = { ctx: layerThreeCtx, width: this.width, height: this.height };
+
     const squareOne = new Square(
       'SQ 001',
-      layerOneObj, textLayerObj, headingLayerObj,
+      layerOneObj, textLayerObj, headingLayerObj, entityDiv,
       { x: this.width / 2, y: this.height / 2, heading: '090', altitude: 1000 });
+    squareOne.clickEventCB = () => this.square = squareOne;
     const squareTwo = new Square(
       'SQ 002',
-      layerOneObj, textLayerObj, headingLayerObj,
+      layerOneObj, textLayerObj, headingLayerObj, entityDiv,
       { x: this.width / 2 - 50, y: this.height / 2, heading: '090', altitude: 1000 });
-    this.squareOne = squareOne;
+    squareTwo.clickEventCB = () => this.square = squareTwo;
+
+    this.square = squareOne;
 
     const entityManagerArr = [];
     const entityManagerAdd = obj => {
@@ -134,25 +146,24 @@ export default {
     }
 
     window.requestAnimationFrame(gameTick);
-  }
+  } // end mounted
 }
 </script>
 
 <style scoped>
-  .layer-three {
-    z-index: 3;
+  .layer-four { z-index: 4; }
+  .layer-three { z-index: 3; }
+  .layer-two { z-index: 2; }
+  .layer-one { z-index: 1; }
+  .layer-zero { z-index: 0; }
+
+  .entity-div {
+    position: absolute;
+    width: 800px;
+    height: 600px; 
   }
-  .layer-two {
-    z-index: 2;
-  }
-  .layer-one {
-    z-index: 1;
-  }
-  .layer-zero {
-    z-index: 0;
-  }
+
   .canvas {
-    z-index: 0;
     border: solid 1px;
     position: absolute;
   }

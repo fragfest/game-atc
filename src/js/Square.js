@@ -9,13 +9,23 @@ const radToDegrees = rad => (Number(rad) * 180 / Math.PI) + 90;
 const inputHeadingToRad = heading => convertToPosRad(degreesToRad(heading));
 
 module.exports = class Square {
-  constructor(title, entityLayerObj, textLayerObj, headingLayerObj, positionObj) {
+  constructor(title, entityLayerObj, textLayerObj, headingLayerObj, htmlDiv, positionObj) {
     this.id = Math.random();
     this.title = title.trim().substring(0, 6);
     this.ctx = entityLayerObj.ctx;
     this.textLayerObj = textLayerObj;
     this.headingLayerObj = headingLayerObj;
 
+    this.squareOneDiv = document.createElement('div');
+    htmlDiv.appendChild(this.squareOneDiv);
+    this.squareOneDiv.id = this.title;
+    this.squareOneDiv.style.position = 'absolute';
+    this.squareOneDiv.addEventListener('mouseup', () => this.clickEventCB());
+    this.squareOneDiv.addEventListener('mouseenter', () => this.squareOneDiv.style.cursor = 'pointer');
+    this.squareOneDiv.addEventListener('mouseleave', () => this.squareOneDiv.style.cursor = 'none');
+
+    this.squareOneDiv.style.left = positionObj.x - 5 + 'px';
+    this.squareOneDiv.style.top = positionObj.y - 5 + 'px';
     this.x = positionObj.x;
     this.y = positionObj.y;
     this.altitude = positionObj.altitude;
@@ -31,7 +41,11 @@ module.exports = class Square {
     this.speedPixelPerMs = 0.005;
     this.width = 10;
     this.height = 10;
+    this.squareOneDiv.style.width = 22 + 'px';
+    this.squareOneDiv.style.height = 22 + 'px';
   }
+
+  clickEventCB() { throw new Error('clickEventCB not attached'); }
 
   setAltitude(altitudeArg) {
     const altitude = parseInt(altitudeArg);
@@ -129,6 +143,8 @@ module.exports = class Square {
     this.ctx.clearRect(this.x - 1, this.y - 1, this.width + 2, this.height + 2);
     this.x += pixelsInX;
     this.y += pixelsInY;
+    this.squareOneDiv.style.left = this.x - 5 + 'px';
+    this.squareOneDiv.style.top = this.y - 5 + 'px';
     this.ctx.fillStyle = 'darkslategrey';
     this.ctx.fillRect(this.x, this.y, this.width, this.height);
     this.textLayerObj.ctx.fillStyle = 'lightgreen';
@@ -136,7 +152,7 @@ module.exports = class Square {
     const center = { x: this.x + this.width / 2, y: this.y + this.height / 2 };
     this.headingLayerObj.ctx.beginPath();
     this.headingLayerObj.ctx.moveTo(center.x, center.y);
-    this.headingLayerObj.ctx.lineTo(center.x + pixelsInX * 1.5, center.y + pixelsInY * 1.5);
+    this.headingLayerObj.ctx.lineTo(center.x - pixelsInX * 2, center.y - pixelsInY * 2);
     this.headingLayerObj.ctx.stroke();
 
     this.headingRad = headingRadNew;
@@ -147,6 +163,8 @@ module.exports = class Square {
     if(deg < 10) degreesDisplay = '00' + deg;
     else if(deg < 100) degreesDisplay = '0' + deg;
     const altitudeDisplay = Math.round(altitudeNew);
+    this.textLayerObj.ctx.fillStyle = 'darkslategrey';
+    this.textLayerObj.ctx.font = "bold 10px Arial"
     this.textLayerObj.ctx.fillText(this.title + ' ' + degreesDisplay, this.x, this.y - 2);
     this.textLayerObj.ctx.fillText('             ' + altitudeDisplay, this.x, this.y + 10);
   }
