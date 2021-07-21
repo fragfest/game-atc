@@ -17,7 +17,7 @@ export const create = args => {
   throw new Error('entity.create failed from args: \n' + JSON.stringify(args));
 };
 
-export const isCloseToEntity = (entity) => (entityOther) => {
+export const isCloseToEntity = entity => entityOther => {
   if(entityOther.id === entity.id) return false;
   
   const distX = Math.abs(entity.x - entityOther.x);

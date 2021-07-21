@@ -112,10 +112,10 @@ export default {
 
     const squareOne = new Square('SQ 001',
       layerOneObj, textLayerObj, headingLayerObj, entityDiv,
-      { x: this.width / 2, y: this.height / 2, heading: '090', altitude: 1000 });
+      { x: this.width / 2, y: this.height / 2, heading: '180', altitude: 300 });
     const squareTwo = new Square('SQ 002',
       layerOneObj, textLayerObj, headingLayerObj, entityDiv,
-      { x: this.width / 2 - 50, y: this.height / 2, heading: '090', altitude: 1000 });
+      { x: this.width / 2 - 50, y: this.height / 2 - 50, heading: '090', altitude: 1000 });
     squareOne.clickEventCB = () => this.square = squareOne;
     squareTwo.clickEventCB = () => this.square = squareTwo;
     this.square = squareOne;
@@ -142,6 +142,7 @@ export default {
         headingLayerObj.ctx.clearRect(0, 0, headingLayerObj.width, headingLayerObj.height);
         entityManagerArr.forEach(callFn('update', ({ deltaTimeMs: updateIntervalMs })));
         entityManagerArr.forEach(callFn('setProximity', { entityManagerArr }));
+        entityManagerArr.forEach(callFn('removeLanded', { entityManagerArr }));
       }
 
       window.requestAnimationFrame(gameTick);

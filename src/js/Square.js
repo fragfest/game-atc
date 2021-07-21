@@ -82,6 +82,15 @@ module.exports = class Square {
     }
   }
 
+  hide() {
+    this.ctx.clearRect(this.x - 1, this.y - 1, this.width + 2, this.height + 2)
+  }
+
+  destroy() {
+    this.hide();
+    this.squareOneDiv.remove();
+  }
+
   updateHeading(headingOld, headingTarget, headingChange) {
     const headingSmall = convertToSmallRad(headingOld);
     const headingTargetSmall = convertToSmallRad(headingTarget);
@@ -140,7 +149,7 @@ module.exports = class Square {
     const altitudeChange = this.altitudeRatePerMs * deltaTimeMs;
     const altitudeNew = this.updateAltitude(altitudeOld, altitudeTarget, altitudeChange);
 
-    this.ctx.clearRect(this.x - 1, this.y - 1, this.width + 2, this.height + 2);
+    this.hide();
     this.x += pixelsInX;
     this.y += pixelsInY;
     this.squareOneDiv.style.left = this.x - 5 + 'px';
@@ -172,14 +181,15 @@ module.exports = class Square {
   setProximity({ entityManagerArr }) {
     const entity = entityFns.create({...this});
     const isEntityCloseTo = entityFns.isCloseToEntity(entity);
-    const accAnyEntitiesClose = (acc, val) => {
+    const accAnySquaresClose = (acc, val) => {
       const entityOther = entityFns.create(val);
-      return acc || isEntityCloseTo(entityOther);
+      const isSquare = val => val instanceof Square;
+      return acc || (isEntityCloseTo(entityOther) && isSquare(val));
     };
-    const isClose = entityManagerArr.reduce(accAnyEntitiesClose, false);
+    const isClose = entityManagerArr.reduce(accAnySquaresClose, false);
 
     if(isClose) {
-      this.ctx.clearRect(entity.x - 1, entity.y - 1, entity.width + 2, entity.height + 2)
+      this.hide();
       this.ctx.fillStyle = 'red';
       this.ctx.fillRect(entity.x, entity.y, entity.width, entity.height);
       this.textLayerObj.ctx.fillStyle = 'lightgreen';
