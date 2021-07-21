@@ -9,8 +9,7 @@ const hasEntityState = state => {
 
 export const isEntity = (entity) => {
   return hasEntityState(entity) &&
-    typeof entity.update === 'function' &&
-    typeof entity.setProximity === 'function';
+    typeof entity.update === 'function'
 }
 
 export const create = args => {

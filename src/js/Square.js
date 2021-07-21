@@ -124,7 +124,7 @@ module.exports = class Square {
     else return (altitudeDecrease < altitudeTarget) ? altitudeTarget : altitudeDecrease;
   }
 
-  update(deltaTimeMs) {
+  update({ deltaTimeMs }) {
     const headingOld = this.headingRad;
     const headingTarget = this.headingTargetRad;
     const headingChange = this.turnRateRadPerMs * deltaTimeMs;
@@ -169,7 +169,7 @@ module.exports = class Square {
     this.textLayerObj.ctx.fillText('             ' + altitudeDisplay, this.x, this.y + 10);
   }
 
-  setProximity(entityManagerArr) {
+  setProximity({ entityManagerArr }) {
     const entity = entityFns.create({...this});
     const isEntityCloseTo = entityFns.isCloseToEntity(entity);
     const accAnyEntitiesClose = (acc, val) => {

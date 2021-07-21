@@ -129,6 +129,7 @@ export default {
     }
     entityManagerAdd(squareOne);
     entityManagerAdd(squareTwo);
+    const callFn = (fnStr, argsObj) => entity => entity[fnStr] ? entity[fnStr](argsObj) : null;
 
     const updateIntervalMs = 2000;
     let timestampPrev = 0;
@@ -138,8 +139,8 @@ export default {
         timestampPrev = timestamp;
         textLayerObj.ctx.clearRect(0, 0, textLayerObj.width, textLayerObj.height);
         headingLayerObj.ctx.clearRect(0, 0, headingLayerObj.width, headingLayerObj.height);
-        entityManagerArr.forEach(entity => entity.update(updateIntervalMs));
-        entityManagerArr.forEach(entity => entity.setProximity(entityManagerArr));
+        entityManagerArr.forEach(callFn('update', ({ deltaTimeMs: updateIntervalMs })));
+        entityManagerArr.forEach(callFn('setProximity', { entityManagerArr }));
       }
 
       window.requestAnimationFrame(gameTick);
