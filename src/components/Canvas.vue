@@ -49,6 +49,7 @@
 
 <script>
 import Square from '../js/Square';
+import Runway from '../js/Runway';
 import { isEntity } from '../js/entity';
 
 const width = 800;
@@ -109,18 +110,17 @@ export default {
     const textLayerObj = { ctx: layerTwoCtx, width: this.width, height: this.height };
     const headingLayerObj = { ctx: layerThreeCtx, width: this.width, height: this.height };
 
-    const squareOne = new Square(
-      'SQ 001',
+    const squareOne = new Square('SQ 001',
       layerOneObj, textLayerObj, headingLayerObj, entityDiv,
       { x: this.width / 2, y: this.height / 2, heading: '090', altitude: 1000 });
-    squareOne.clickEventCB = () => this.square = squareOne;
-    const squareTwo = new Square(
-      'SQ 002',
+    const squareTwo = new Square('SQ 002',
       layerOneObj, textLayerObj, headingLayerObj, entityDiv,
       { x: this.width / 2 - 50, y: this.height / 2, heading: '090', altitude: 1000 });
+    squareOne.clickEventCB = () => this.square = squareOne;
     squareTwo.clickEventCB = () => this.square = squareTwo;
-
     this.square = squareOne;
+
+    const runwayOne = new Runway('run1', { ctx: backgroundCtx }, { x: this.width / 2, y: this.height / 2 + 100 });
 
     const entityManagerArr = [];
     const entityManagerAdd = obj => {
@@ -129,6 +129,7 @@ export default {
     }
     entityManagerAdd(squareOne);
     entityManagerAdd(squareTwo);
+    entityManagerAdd(runwayOne);
     const callFn = (fnStr, argsObj) => entity => entity[fnStr] ? entity[fnStr](argsObj) : null;
 
     const updateIntervalMs = 2000;

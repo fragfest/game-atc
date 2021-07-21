@@ -5,17 +5,17 @@ const hasEntityState = state => {
     && 'width' in state
     && 'height' in state
     && 'altitude' in state;
-}
+};
 
 export const isEntity = (entity) => {
   return hasEntityState(entity) &&
     typeof entity.update === 'function'
-}
+};
 
 export const create = args => {
   if(hasEntityState(args)) return args;
   throw new Error('entity.create failed from args: \n' + JSON.stringify(args));
-}
+};
 
 export const isCloseToEntity = (entity) => (entityOther) => {
   if(entityOther.id === entity.id) return false;

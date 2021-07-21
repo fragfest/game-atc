@@ -185,4 +185,4 @@ module.exports = class Square {
       this.textLayerObj.ctx.fillStyle = 'lightgreen';
     }
   }
-}
+};
