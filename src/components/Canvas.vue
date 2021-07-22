@@ -1,16 +1,22 @@
 <template>
   <div>
     <div>
-      <div class="entity-div layer-four" />
+      <div class="entity-div layer-six" />
+      <!-- <canvas
+        ref="layerFive"
+        class="canvas layer-five"
+        :width="width"
+        :height="height"
+      ></canvas> -->
       <canvas
-        ref="background"
-        class="canvas layer-zero"
+        ref="layerFour"
+        class="canvas layer-four"
         :width="width"
         :height="height"
       ></canvas>
       <canvas
-        ref="layerOne"
-        class="canvas layer-one"
+        ref="layerThree"
+        class="canvas layer-three"
         :width="width"
         :height="height"
       ></canvas>
@@ -21,8 +27,14 @@
         :height="height"
       ></canvas>
       <canvas
-        ref="layerThree"
-        class="canvas layer-three"
+        ref="layerOne"
+        class="canvas layer-one"
+        :width="width"
+        :height="height"
+      ></canvas>
+      <canvas
+        ref="background"
+        class="canvas layer-zero"
         :width="width"
         :height="height"
       ></canvas>
@@ -94,33 +106,43 @@ export default {
 
   mounted() {
     const background = this.$refs.background;
-    const backgroundCtx = background.getContext('2d');
     const layerOne = this.$refs.layerOne;
     const layerTwo = this.$refs.layerTwo;
     const layerThree = this.$refs.layerThree;
-    const layerOneCtx = layerOne.getContext('2d'); // squares
-    const layerTwoCtx = layerTwo.getContext('2d'); // squares text
-    const layerThreeCtx = layerThree.getContext('2d'); // heading trail lines
-    const entityDiv = document.querySelector('.entity-div')
+    const layerFour = this.$refs.layerFour;
+    // const layerFive = this.$refs.layerFive;
+    const backgroundCtx = background.getContext('2d');
+    const layerOneCtx = layerOne.getContext('2d');
+    const layerTwoCtx = layerTwo.getContext('2d');
+    const layerThreeCtx = layerThree.getContext('2d');
+    const layerFourCtx = layerFour.getContext('2d');
+    // const layerFiveCtx = layerFive.getContext('2d');
+    const layerSixDiv = document.querySelector('.entity-div')
 
     backgroundCtx.fillStyle = 'white';
     backgroundCtx.fillRect(0, 0, this.width, this.height);
 
-    const layerOneObj = { ctx: layerOneCtx, width: this.width, height: this.height };
-    const textLayerObj = { ctx: layerTwoCtx, width: this.width, height: this.height };
-    const headingLayerObj = { ctx: layerThreeCtx, width: this.width, height: this.height };
+    const layerTwoObj = { ctx: layerTwoCtx, width: this.width, height: this.height };
+    const layerThreeObj = { ctx: layerThreeCtx, width: this.width, height: this.height };
+    const layerFourObj = { ctx: layerFourCtx, width: this.width, height: this.height };
 
     const squareOne = new Square('SQ 001',
-      layerOneObj, textLayerObj, headingLayerObj, entityDiv,
+      layerTwoObj, layerThreeObj, layerFourObj, layerSixDiv,
       { x: this.width / 2, y: this.height / 2, heading: '180', altitude: 300 });
     const squareTwo = new Square('SQ 002',
-      layerOneObj, textLayerObj, headingLayerObj, entityDiv,
+      layerTwoObj, layerThreeObj, layerFourObj, layerSixDiv,
       { x: this.width / 2 - 50, y: this.height / 2 - 50, heading: '090', altitude: 1000 });
+    const squareThree = new Square('SQ 003',
+      layerTwoObj, layerThreeObj, layerFourObj, layerSixDiv,
+      { x: 50, y: 100, heading: '090', altitude: 1000 });
     squareOne.clickEventCB = () => this.square = squareOne;
     squareTwo.clickEventCB = () => this.square = squareTwo;
+    squareThree.clickEventCB = () => this.square = squareThree;
     this.square = squareOne;
 
-    const runwayOne = new Runway('run1', { ctx: backgroundCtx }, { x: this.width / 2, y: this.height / 2 + 100 });
+    const runwayOne = new Runway('run1',
+      { ctx: backgroundCtx }, layerOneCtx,
+      { x: this.width / 2, y: this.height / 2 + 100 });
 
     const entityManagerArr = [];
     const entityManagerAdd = obj => {
@@ -129,6 +151,7 @@ export default {
     }
     entityManagerAdd(squareOne);
     entityManagerAdd(squareTwo);
+    entityManagerAdd(squareThree);
     entityManagerAdd(runwayOne);
     const callFn = (fnStr, argsObj) => entity => entity[fnStr] ? entity[fnStr](argsObj) : null;
 
@@ -138,11 +161,13 @@ export default {
       const deltaTime = timestamp - timestampPrev;
       if(deltaTime > updateIntervalMs) {
         timestampPrev = timestamp;
-        textLayerObj.ctx.clearRect(0, 0, textLayerObj.width, textLayerObj.height);
-        headingLayerObj.ctx.clearRect(0, 0, headingLayerObj.width, headingLayerObj.height);
+        // cleanup
+        entityManagerArr.forEach(callFn('removeLanded', { entityManagerArr }));
+        layerThreeObj.ctx.clearRect(0, 0, layerThreeObj.width, layerThreeObj.height);
+        layerFourObj.ctx.clearRect(0, 0, layerFourObj.width, layerThreeObj.height);
+        // update
         entityManagerArr.forEach(callFn('update', ({ deltaTimeMs: updateIntervalMs })));
         entityManagerArr.forEach(callFn('setProximity', { entityManagerArr }));
-        entityManagerArr.forEach(callFn('removeLanded', { entityManagerArr }));
       }
 
       window.requestAnimationFrame(gameTick);
@@ -154,6 +179,8 @@ export default {
 </script>
 
 <style scoped>
+  .layer-six { z-index: 6; }
+  .layer-five { z-index: 5; }
   .layer-four { z-index: 4; }
   .layer-three { z-index: 3; }
   .layer-two { z-index: 2; }

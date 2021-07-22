@@ -174,8 +174,9 @@ module.exports = class Square {
     const altitudeDisplay = Math.round(altitudeNew);
     this.textLayerObj.ctx.fillStyle = 'darkslategrey';
     this.textLayerObj.ctx.font = "bold 10px Arial"
-    this.textLayerObj.ctx.fillText(this.title + ' ' + degreesDisplay, this.x, this.y - 2);
-    this.textLayerObj.ctx.fillText('             ' + altitudeDisplay, this.x, this.y + 10);
+    this.textLayerObj.ctx.fillText(this.title + '  ' + degreesDisplay, this.x, this.y - 2);
+    this.textLayerObj.ctx.fillText('              ' + altitudeDisplay + ' ft', this.x, this.y + 8);
+    this.textLayerObj.ctx.fillText('              ' + 'XXX' + ' kts', this.x, this.y + 18);
   }
 
   setProximity({ entityManagerArr }) {
@@ -183,8 +184,8 @@ module.exports = class Square {
     const isEntityCloseTo = entityFns.isCloseToEntity(entity);
     const accAnySquaresClose = (acc, val) => {
       const entityOther = entityFns.create(val);
-      const isSquare = val => val instanceof Square;
-      return acc || (isEntityCloseTo(entityOther) && isSquare(val));
+      const isSquare = val instanceof Square;
+      return acc || (isEntityCloseTo(entityOther) && isSquare);
     };
     const isClose = entityManagerArr.reduce(accAnySquaresClose, false);
 

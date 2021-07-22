@@ -2,19 +2,23 @@ const entityFns = require('./entity');
 const Square = require('../js/Square');
 
 module.exports = class Runway {
-  constructor(title, entityLayerObj, positionObj) {
+  constructor(title, entityLayerObj, imgLayerCtx, positionObj) {
     this.id = Math.random();
     this.title = title.trim();
     this.x = positionObj.x;
     this.y = positionObj.y;
-    this.ctx = entityLayerObj.ctx;
+    this.ctx = entityLayerObj.ctx; // TODO unused
+    this.imgLayerCtx = imgLayerCtx;
     this.width = 10;
     this.height = 50;
     this.altitude = 0;
     this.runwayHeading = Math.PI / 2;
 
-    this.ctx.fillStyle = 'lightgreen';
-    this.ctx.fillRect(this.x, this.y, this.width, this.height);
+    const img = new Image();
+    img.onload = () => {
+      this.imgLayerCtx.drawImage(img, this.x, this.y, this.width, this.height);
+    };
+    img.src = '/img/mars.png';
   }
 
   update() {}
