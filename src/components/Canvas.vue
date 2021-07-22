@@ -128,10 +128,10 @@ export default {
 
     const squareOne = new Square('SQ 001',
       layerTwoObj, layerThreeObj, layerFourObj, layerSixDiv,
-      { x: this.width / 2, y: this.height / 2, heading: '180', altitude: 300 });
+      { x: this.width / 2 + 100, y: this.height / 2, heading: '210', altitude: 100 });
     const squareTwo = new Square('SQ 002',
       layerTwoObj, layerThreeObj, layerFourObj, layerSixDiv,
-      { x: this.width / 2 - 50, y: this.height / 2 - 50, heading: '090', altitude: 1000 });
+      { x: this.width / 2 + 100, y: this.height / 2 - 50, heading: '180', altitude: 100 });
     const squareThree = new Square('SQ 003',
       layerTwoObj, layerThreeObj, layerFourObj, layerSixDiv,
       { x: 50, y: 100, heading: '090', altitude: 1000 });
@@ -142,7 +142,7 @@ export default {
 
     const runwayOne = new Runway('run1',
       { ctx: backgroundCtx }, layerOneCtx,
-      { x: this.width / 2, y: this.height / 2 + 100 });
+      { x: this.width / 2, y: this.height / 2 + 200 });
 
     const entityManagerArr = [];
     const entityManagerAdd = obj => {
@@ -150,8 +150,8 @@ export default {
       else throw new Error('non-entity not added \n' + JSON.stringify(obj));
     }
     entityManagerAdd(squareOne);
-    entityManagerAdd(squareTwo);
-    entityManagerAdd(squareThree);
+    // entityManagerAdd(squareTwo);
+    // entityManagerAdd(squareThree);
     entityManagerAdd(runwayOne);
     const callFn = (fnStr, argsObj) => entity => entity[fnStr] ? entity[fnStr](argsObj) : null;
 

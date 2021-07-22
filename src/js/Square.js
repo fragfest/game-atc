@@ -155,8 +155,10 @@ module.exports = class Square {
     this.squareOneDiv.style.left = this.x - 5 + 'px';
     this.squareOneDiv.style.top = this.y - 5 + 'px';
     this.ctx.fillStyle = 'darkslategrey';
+    this.ctx.globalAlpha = 0.8;
     this.ctx.fillRect(this.x, this.y, this.width, this.height);
-    this.textLayerObj.ctx.fillStyle = 'lightgreen';
+    this.ctx.clearRect(this.x + 2, this.y + 2, this.width - 4, this.height - 4);
+    this.ctx.globalAlpha = 1;
 
     const center = { x: this.x + this.width / 2, y: this.y + this.height / 2 };
     this.headingLayerObj.ctx.beginPath();

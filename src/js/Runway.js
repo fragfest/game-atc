@@ -7,16 +7,23 @@ module.exports = class Runway {
     this.title = title.trim();
     this.x = positionObj.x;
     this.y = positionObj.y;
-    this.ctx = entityLayerObj.ctx; // TODO unused
+    this.ctx = entityLayerObj.ctx;
     this.imgLayerCtx = imgLayerCtx;
     this.width = 10;
     this.height = 50;
     this.altitude = 0;
     this.runwayHeading = Math.PI / 2;
 
+    this.ctx.fillStyle = 'darkslategrey';
+    this.ctx.fillRect(this.x, this.y, this.width, this.height);
+
     const img = new Image();
     img.onload = () => {
-      this.imgLayerCtx.drawImage(img, this.x, this.y, this.width, this.height);
+      this.imgLayerCtx.save();
+      this.imgLayerCtx.translate(this.x, this.y);
+      this.imgLayerCtx.rotate(Math.PI / 8);
+      this.imgLayerCtx.drawImage(img, 0, 0, this.width, this.height);
+      this.imgLayerCtx.restore();
     };
     img.src = '/img/mars.png';
   }
@@ -32,9 +39,10 @@ module.exports = class Runway {
       const distY = Math.abs(entityAirport.y - entityOther.y);
       const distVert = Math.abs(entityAirport.altitude - entityOther.altitude);
       const deltaHeading = Math.abs(this.runwayHeading - entityOther.headingRad)
-      const isCloseHorizontal = (distX < 5 && distY < 5);
+      const isCloseHorizontal = (distX < 10 && distY < 10);
       const isCloseVertical = distVert < 150;
-      const isRunwayHeading = deltaHeading < 0.05;
+      const isRunwayHeading = deltaHeading < 1;
+      // console.log(distX, distY, deltaHeading)
       return isCloseHorizontal && isCloseVertical && isRunwayHeading;
     }
     
