@@ -128,13 +128,13 @@ export default {
 
     const squareOne = new Square('SQ 001',
       layerTwoObj, layerThreeObj, layerFourObj, layerSixDiv,
-      { x: this.width / 2 + 200, y: this.height / 2 + 100, heading: '360', altitude: 100 });
+      { x: this.width / 2 + 200, y: this.height / 2 + 100, heading: '360', altitude: 100, speed: 180 });
     const squareTwo = new Square('SQ 002',
       layerTwoObj, layerThreeObj, layerFourObj, layerSixDiv,
-      { x: this.width / 2 + 100, y: this.height / 2 - 50, heading: '180', altitude: 100 });
+      { x: this.width / 2 + 100, y: this.height / 2 - 50, heading: '180', altitude: 100, speed: 180 });
     const squareThree = new Square('SQ 003',
       layerTwoObj, layerThreeObj, layerFourObj, layerSixDiv,
-      { x: 50, y: 100, heading: '090', altitude: 1000 });
+      { x: 50, y: 100, heading: '090', altitude: 1000, speed: 180 });
     squareOne.clickEventCB = () => this.square = squareOne;
     squareTwo.clickEventCB = () => this.square = squareTwo;
     squareThree.clickEventCB = () => this.square = squareThree;

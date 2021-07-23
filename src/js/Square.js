@@ -1,12 +1,11 @@
+const {
+  inputHeadingToRad,
+  convertToSmallRad,
+  convertToPosRad,
+  convertToSmallDegrees,
+  radToDegrees,
+} = require('./utils');
 const entityFns = require('./entity');
-
-const convertToSmallRad = rad => (rad < 2 * Math.PI) ? rad : (rad - 2 * Math.PI);
-const convertToPosRad = rad => (rad >= 0) ? rad : (2 * Math.PI + rad); 
-const convertToSmallDegrees = degrees => (degrees <= 360) ? degrees : (degrees - 360);
-// zero degrees is east on the Canvas
-const degreesToRad = degrees => (Number(degrees) - 90) * Math.PI / 180;
-const radToDegrees = rad => (Number(rad) * 180 / Math.PI) + 90;
-const inputHeadingToRad = heading => convertToPosRad(degreesToRad(heading));
 
 module.exports = class Square {
   constructor(title, entityLayerObj, textLayerObj, headingLayerObj, htmlDiv, positionObj) {
@@ -34,6 +33,8 @@ module.exports = class Square {
     this.headingRad = inputHeadingToRad(positionObj.heading);
     this.headingTargetRad = 0;
     this.setHeading(positionObj.heading);
+    this.speed = 180;
+    this.setSpeed(positionObj.speed);
 
     this.altitudeRatePerMs = 0.05;
     this.turnRateRadPerMs = 0.0001;
@@ -47,9 +48,15 @@ module.exports = class Square {
 
   clickEventCB() { throw new Error('clickEventCB not attached'); }
 
+  setSpeed(speedArg) {
+    const speed = parseInt(speedArg);
+    if(speed < 0 || speed > 500) return;
+    this.speed = Math.round(speed);
+  }
+
   setAltitude(altitudeArg) {
     const altitude = parseInt(altitudeArg);
-    if(altitude < 100 || altitude > 40000) return;
+    if(altitude < 0 || altitude > 40000) return;
     this.altitudeTarget = Math.floor(altitude / 100) * 100;
   }
 
@@ -173,12 +180,15 @@ module.exports = class Square {
     let degreesDisplay = deg;
     if(deg < 10) degreesDisplay = '00' + deg;
     else if(deg < 100) degreesDisplay = '0' + deg;
-    const altitudeDisplay = Math.round(altitudeNew);
+    let speedDisplay = this.speed;
+    if(this.speed < 10) speedDisplay = '00' + this.speed;
+    else if(this.speed < 100) speedDisplay = '0' + this.speed;
+
     this.textLayerObj.ctx.fillStyle = 'darkslategrey';
     this.textLayerObj.ctx.font = "bold 10px Arial"
     this.textLayerObj.ctx.fillText(this.title + '  ' + degreesDisplay, this.x, this.y - 2);
-    this.textLayerObj.ctx.fillText('              ' + altitudeDisplay + ' ft', this.x, this.y + 8);
-    this.textLayerObj.ctx.fillText('              ' + 'XXX' + ' kts', this.x, this.y + 18);
+    this.textLayerObj.ctx.fillText('              ' + altitudeNew + ' ft', this.x, this.y + 8);
+    this.textLayerObj.ctx.fillText('              ' + speedDisplay + ' kts', this.x, this.y + 18);
   }
 
   setProximity({ entityManagerArr }) {

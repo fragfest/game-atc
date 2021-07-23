@@ -1,9 +1,6 @@
+const { inputHeadingToRad } = require('./utils');
 const entityFns = require('./entity');
 const Square = require('../js/Square');
-
-const degreesToRad = degrees => (Number(degrees) - 90) * Math.PI / 180;
-const convertToPosRad = rad => (rad >= 0) ? rad : (2 * Math.PI + rad); 
-const inputHeadingToRad = heading => convertToPosRad(degreesToRad(heading));
 
 module.exports = class Runway {
   constructor(title, entityLayerObj, imgLayerCtx, htmlDiv, positionObj) {
@@ -18,6 +15,7 @@ module.exports = class Runway {
     this.altitude = 0;
     this.runwayHeading = inputHeadingToRad(positionObj.heading);
     // this.runwayHeading = Math.PI * 3 / 4;  // runwayHeading 222 degrees
+    this.landingEntities = [];
 
     const img = new Image();
     img.onload = () => {
@@ -37,7 +35,7 @@ module.exports = class Runway {
 
   removeLanded({ entityManagerArr }) {
     const entityAirport = entityFns.create({...this});
-    const isEntityLanded = entityOther => {
+    const isEntityTouchedDown = entityOther => {
       if(entityOther.id === entityAirport.id) return false;
       if(!entityOther.headingRad && entityOther.headingRad !== 0) return false;
       const distX = Math.abs(entityAirport.x - entityOther.x);
@@ -54,9 +52,26 @@ module.exports = class Runway {
     let index = 0;
     entityManagerArr.forEach(entity => {
       const isSquare = entity instanceof Square;
-      if(isEntityLanded(entity) && isSquare) {
-        entity.destroy();
-        entityManagerArr.splice(index, 1);
+      const isOnRunway = entity => this.landingEntities.find(landing => landing.id === entity.id);
+      const placeOnRunway = entity => this.landingEntities.push(entity);
+      const removeFromRunway = entity => {
+        this.landingEntities = this.landingEntities.filter(landing => landing.id !== entity.id);
+      }
+
+      if(!isSquare) return;
+      else if(isEntityTouchedDown(entity)) {
+        entity.setAltitude(0);
+        entity.setSpeed(entity.speed - 30);
+        if(!isOnRunway(entity)) placeOnRunway(entity);
+      } else if(isOnRunway(entity)) {
+        const speedNew = entity.speed - 30;
+        entity.setSpeed(speedNew);
+        if(speedNew <= 0) {
+          console.log(entity.title + ' :: landing completed');
+          removeFromRunway(entity);
+          entity.destroy();
+          entityManagerArr.splice(index, 1);
+        }
       }
       index++;
     });
