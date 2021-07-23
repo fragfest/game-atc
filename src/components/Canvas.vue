@@ -46,7 +46,7 @@
       <button @click="btnClick('right')" :style="buttonRight">Right</button>
     </div>
     <div :style="panelBottomRightStyle">
-      <p>{{ square.title }}</p>
+      <p>{{ square ? square.title : '' }}</p>
       <div :style="rowBelow">
         <label for="inputHeading">Heading <small>(3 digits)</small> &nbsp;</label>
         <input id="inputHeading" type="text" @keydown.enter="inputHeadingKeyDown" v-model="inputHeading" maxlength="3" class="input-heading">
@@ -60,9 +60,7 @@
 </template>
 
 <script>
-import Square from '../js/Square';
-import Runway from '../js/Runway';
-import { isEntity } from '../js/entity';
+import { setup } from '../js/game';
 
 const width = 800;
 const height = 600;
@@ -77,7 +75,7 @@ export default {
       inputHeading: '',
       width,
       height,
-      square: {},
+      square: null,
     };
   },
   computed: {
@@ -92,13 +90,16 @@ export default {
   },
   methods: {
     btnClick: function(direction) {
+      if(!this.square) return;
       this.square.setHeadingStr(direction);
     },
     inputHeadingKeyDown: function() {
+      if(!this.square) return;
       this.square.setHeading(this.inputHeading);
       this.inputHeading = '';
     },
     inputAltitudeKeyDown: function() {
+      if(!this.square) return;
       this.square.setAltitude(this.inputAltitude);
       this.inputAltitude = '';
     },
@@ -122,58 +123,23 @@ export default {
     backgroundCtx.fillStyle = 'white';
     backgroundCtx.fillRect(0, 0, this.width, this.height);
 
+    const backgroundObj = { ctx: backgroundCtx };
     const layerTwoObj = { ctx: layerTwoCtx, width: this.width, height: this.height };
     const layerThreeObj = { ctx: layerThreeCtx, width: this.width, height: this.height };
     const layerFourObj = { ctx: layerFourCtx, width: this.width, height: this.height };
 
-    const squareOne = new Square('SQ 001',
-      layerTwoObj, layerThreeObj, layerFourObj, layerSixDiv,
-      { x: this.width / 2 + 200, y: this.height / 2 + 100, heading: '360', altitude: 100, speed: 180 });
-    const squareTwo = new Square('SQ 002',
-      layerTwoObj, layerThreeObj, layerFourObj, layerSixDiv,
-      { x: this.width / 2 + 100, y: this.height / 2 - 50, heading: '180', altitude: 100, speed: 180 });
-    const squareThree = new Square('SQ 003',
-      layerTwoObj, layerThreeObj, layerFourObj, layerSixDiv,
-      { x: 50, y: 100, heading: '090', altitude: 1000, speed: 180 });
-    squareOne.clickEventCB = () => this.square = squareOne;
-    squareTwo.clickEventCB = () => this.square = squareTwo;
-    squareThree.clickEventCB = () => this.square = squareThree;
-    this.square = squareOne;
+    const squareClickEventCB = squareObj => this.square = squareObj;
+    setup({
+      width, height,
+      backgroundObj,
+      imgLayerObj: { ctx: layerOneCtx },
+      entityLayerObj: layerTwoObj,
+      textLayerObj: layerThreeObj,
+      headingLayerObj: layerFourObj,
+      entityDiv: layerSixDiv,
+      squareClickEventCB,
+    });
 
-    const runwayOne = new Runway('run1',
-      { ctx: backgroundCtx }, layerOneCtx, layerSixDiv,
-      { x: this.width / 2, y: this.height / 2, heading: 270 });
-
-    const entityManagerArr = [];
-    const entityManagerAdd = obj => {
-      if(isEntity(obj)) entityManagerArr.push(obj);
-      else throw new Error('non-entity not added \n' + JSON.stringify(obj));
-    }
-    entityManagerAdd(squareOne);
-    // entityManagerAdd(squareTwo);
-    // entityManagerAdd(squareThree);
-    entityManagerAdd(runwayOne);
-    const callFn = (fnStr, argsObj) => entity => entity[fnStr] ? entity[fnStr](argsObj) : null;
-
-    const updateIntervalMs = 2000;
-    let timestampPrev = 0;
-    const gameTick = timestamp => {
-      const deltaTime = timestamp - timestampPrev;
-      if(deltaTime > updateIntervalMs) {
-        timestampPrev = timestamp;
-        // cleanup
-        entityManagerArr.forEach(callFn('removeLanded', { entityManagerArr }));
-        layerThreeObj.ctx.clearRect(0, 0, layerThreeObj.width, layerThreeObj.height);
-        layerFourObj.ctx.clearRect(0, 0, layerFourObj.width, layerThreeObj.height);
-        // update
-        entityManagerArr.forEach(callFn('update', ({ deltaTimeMs: updateIntervalMs })));
-        entityManagerArr.forEach(callFn('setProximity', { entityManagerArr }));
-      }
-
-      window.requestAnimationFrame(gameTick);
-    }
-
-    window.requestAnimationFrame(gameTick);
   } // end mounted
 }
 </script>

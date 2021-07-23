@@ -3,13 +3,13 @@ const entityFns = require('./entity');
 const Square = require('../js/Square');
 
 module.exports = class Runway {
-  constructor(title, entityLayerObj, imgLayerCtx, htmlDiv, positionObj) {
+  constructor(title, entityLayerObj, imgLayerObj, positionObj) {
     this.id = Math.random();
     this.title = title.trim();
     this.x = positionObj.x;
     this.y = positionObj.y;
     this.ctx = entityLayerObj.ctx;
-    this.imgLayerCtx = imgLayerCtx;
+    this.imgLayerCtx = imgLayerObj.ctx;
     this.width = 8;
     this.height = 100;
     this.altitude = 0;
@@ -62,7 +62,9 @@ module.exports = class Runway {
       else if(isEntityTouchedDown(entity)) {
         entity.setAltitude(0);
         entity.setSpeed(entity.speed - 30);
-        if(!isOnRunway(entity)) placeOnRunway(entity);
+        if(!isOnRunway(entity)) {
+          placeOnRunway(entity);
+        }
       } else if(isOnRunway(entity)) {
         const speedNew = entity.speed - 30;
         entity.setSpeed(speedNew);
