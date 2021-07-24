@@ -67,6 +67,11 @@ module.exports = class Square {
     this.altitudeTarget = Math.floor(altitude / 100) * 100;
   }
 
+  setHeadingTarget(headingRad) {
+    this.headingTargetRad = convertToPosRad(convertToSmallRad(headingRad));
+    console.log('setHeadingTarget ' + radToDegrees(this.headingRad))
+  }
+
   setHeading(inputHeading) {
     if(!inputHeading && inputHeading !== 0) return;
     if(inputHeading.toString().length !== 3) return;

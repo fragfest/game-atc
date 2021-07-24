@@ -7,7 +7,7 @@ export const setup = (argObj) => {
 
   const squareOne = new Square('SQ 001',
     argObj.entityLayerObj, argObj.textLayerObj, argObj.headingLayerObj, argObj.entityDiv,
-    { x: argObj.width / 2 + 200, y: argObj.height / 2 - 5, heading: '270', altitude: 100, speed: 180 });
+    { x: argObj.width / 2 + 200, y: argObj.height / 2 + 8, heading: '270', altitude: 100, speed: 180 });
   const squareTwo = new Square('SQ 002',
     argObj.entityLayerObj, argObj.textLayerObj, argObj.headingLayerObj, argObj.entityDiv,
     { x: argObj.width / 2 + 100, y: argObj.height / 2 - 50, heading: '180', altitude: 100, speed: 180 });

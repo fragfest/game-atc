@@ -43,9 +43,8 @@ module.exports = class Runway {
     entityManagerArr.forEach(entity => {
       if(!isSquare(entity)) return;
       if(entity.landing && isHeadingClose(entity)) {
-        console.log(entity.title + ' :: heading close')
-        const distX = Math.abs(this.x - entity.x);
-        const distY = Math.abs(this.y - entity.y);
+        const distX = this.x - entity.x;
+        const distY = this.y - entity.y;
         const dist = Math.sqrt( Math.pow(distX,2) + Math.pow(distY, 2) );
         const outgoingHeading = this.runwayHeading + Math.PI;
         const oncourseX = dist * Math.cos(outgoingHeading);
@@ -55,14 +54,16 @@ module.exports = class Runway {
         const margin = 10;
         let marginX = Math.abs(margin * Math.cos(outgoingHeading));
         let marginY = Math.abs(margin * Math.sin(outgoingHeading));
-        marginX = (marginX > 5) ? marginX : 5;
-        marginY = (marginY > 5) ? marginY : 5;
+        marginX = (marginX > 10) ? marginX : 10;
+        marginY = (marginY > 10) ? marginY : 10;
 
         this.ctx.fillStyle = 'darkslategrey';
         this.ctx.fillRect(x, y, 3, 3);
 
         if(Math.abs(entity.x - x) < marginX && Math.abs(entity.y - y) < marginY ) {
-          console.log(entity.title + ' :: is on course')
+          const interceptHeading = Math.atan(distY / distX) + Math.PI;
+          console.log(entity.title + ' :: landing mode ')
+          entity.setHeadingTarget(interceptHeading);
         }
       }
     });
@@ -96,12 +97,12 @@ module.exports = class Runway {
       else if(isEntityTouchedDown(entity)) {
         console.log(entity.title + ' :: touch down');
         entity.setAltitude(0);
-        entity.setSpeed(entity.speed - 30);
         if(!isOnRunway(entity)) {
           placeOnRunway(entity);
         }
       } else if(isOnRunway(entity)) {
         console.log(entity.title + ' :: landing rollout');
+        entity.setHeadingTarget(this.runwayHeading)
         const speedNew = entity.speed - 30;
         entity.setSpeed(speedNew);
         if(speedNew <= 0) {
