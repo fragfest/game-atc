@@ -35,6 +35,7 @@ module.exports = class Square {
     this.setHeading(positionObj.heading);
     this.speed = 180;
     this.setSpeed(positionObj.speed);
+    this.landing = false;
 
     this.altitudeRatePerMs = 0.05;
     this.turnRateRadPerMs = 0.0001;
@@ -48,10 +49,16 @@ module.exports = class Square {
 
   clickEventCB() { throw new Error('clickEventCB not attached'); }
 
+  setLanding() {
+    console.log(this.title + ' :: start landing')
+    this.landing = true;
+  }
+
   setSpeed(speedArg) {
     const speed = parseInt(speedArg);
     if(speed < 0 || speed > 500) return;
     this.speed = Math.round(speed);
+    // TODO actually set speed
   }
 
   setAltitude(altitudeArg) {

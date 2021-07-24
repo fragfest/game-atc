@@ -7,7 +7,7 @@ export const setup = (argObj) => {
 
   const squareOne = new Square('SQ 001',
     argObj.entityLayerObj, argObj.textLayerObj, argObj.headingLayerObj, argObj.entityDiv,
-    { x: argObj.width / 2 + 200, y: argObj.height / 2 + 100, heading: '360', altitude: 100, speed: 180 });
+    { x: argObj.width / 2 + 200, y: argObj.height / 2 - 5, heading: '270', altitude: 100, speed: 180 });
   const squareTwo = new Square('SQ 002',
     argObj.entityLayerObj, argObj.textLayerObj, argObj.headingLayerObj, argObj.entityDiv,
     { x: argObj.width / 2 + 100, y: argObj.height / 2 - 50, heading: '180', altitude: 100, speed: 180 });
@@ -29,8 +29,8 @@ export const setup = (argObj) => {
     else throw new Error('non-entity not added \n' + JSON.stringify(obj));
   }
   entityManagerAdd(squareOne);
-  entityManagerAdd(squareTwo);
-  entityManagerAdd(squareThree);
+  // entityManagerAdd(squareTwo);
+  // entityManagerAdd(squareThree);
   entityManagerAdd(runwayOne);
   const callFn = (fnStr, argsObj) => entity => entity[fnStr] ? entity[fnStr](argsObj) : null;
 
@@ -47,6 +47,7 @@ export const setup = (argObj) => {
       // update
       entityManagerArr.forEach(callFn('update', ({ deltaTimeMs: updateIntervalMs })));
       entityManagerArr.forEach(callFn('setProximity', { entityManagerArr }));
+      entityManagerArr.forEach(callFn('updateLanding', { entityManagerArr }));
     }
 
     window.requestAnimationFrame(gameTick);

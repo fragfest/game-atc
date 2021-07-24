@@ -40,6 +40,7 @@
       ></canvas>
     </div>
     <div :style="panelBottomStyle">
+      <button @click="btnClick('land')" :style="buttonLand">Land</button>
       <button @click="btnClick('left')" :style="buttonLeft">Left</button>
       <button @click="btnClick('top')" :style="buttonTop">Up</button>
       <button @click="btnClick('down')" :style="buttonBottom">Down</button>
@@ -79,19 +80,21 @@ export default {
     };
   },
   computed: {
-    rowBelow: () => ({ position: 'relative', 'margin-top': '5px' }),
+    rowBelow: () => ({ position: 'relative', 'margin-top': '10px' }),
 
     panelBottomRightStyle: () => ({ position: 'absolute', left: '250px', top: height + 20 + 'px' }),
-    panelBottomStyle: () => ({ position: 'absolute', left: '100px', top: height + 50 + 'px' }),
-    buttonLeft: () => ({ position: 'absolute', width: '50px', top: '30px' }),
-    buttonTop: () => ({ position: 'absolute', width: '50px', left: '30px' }),
-    buttonBottom: () => ({ position: 'absolute', width: '50px', left: '30px', top: '60px' }),
-    buttonRight: () => ({ position: 'absolute', width: '50px', left: '55px', top: '30px' }),
+    panelBottomStyle: () => ({ position: 'absolute', left: '100px', top: height + 30 + 'px' }),
+    buttonLand: () => ({ position: 'absolute', width: '120px', top: '0px' }),
+    buttonLeft: () => ({ position: 'absolute', width: '50px', top: '70px' }),
+    buttonTop: () => ({ position: 'absolute', width: '50px', left: '30px', top: '40px' }),
+    buttonBottom: () => ({ position: 'absolute', width: '50px', left: '30px', top: '100px' }),
+    buttonRight: () => ({ position: 'absolute', width: '50px', left: '55px', top: '70px' }),
   },
   methods: {
     btnClick: function(direction) {
       if(!this.square) return;
-      this.square.setHeadingStr(direction);
+      if(direction === 'land') this.square.setLanding();
+      else this.square.setHeadingStr(direction);
     },
     inputHeadingKeyDown: function() {
       if(!this.square) return;
@@ -164,7 +167,11 @@ export default {
     position: absolute;
   }
 
-  .input-heading {
+  p {
+    margin: 6px;
+  }
+
+  input {
     border: solid 1px;
     border-radius: 3px;
     height: 20px;

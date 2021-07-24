@@ -33,6 +33,41 @@ module.exports = class Runway {
 
   update() {}
 
+  updateLanding({ entityManagerArr }) {
+    const isSquare = entity => entity instanceof Square;
+    const isHeadingClose = entity => {
+      const deltaHeading = Math.abs(this.runwayHeading - entity.headingRad);
+      return deltaHeading < 0.5;
+    }
+
+    entityManagerArr.forEach(entity => {
+      if(!isSquare(entity)) return;
+      if(entity.landing && isHeadingClose(entity)) {
+        console.log(entity.title + ' :: heading close')
+        const distX = Math.abs(this.x - entity.x);
+        const distY = Math.abs(this.y - entity.y);
+        const dist = Math.sqrt( Math.pow(distX,2) + Math.pow(distY, 2) );
+        const outgoingHeading = this.runwayHeading + Math.PI;
+        const oncourseX = dist * Math.cos(outgoingHeading);
+        const oncourseY = dist * Math.sin(outgoingHeading);
+        const x = this.x + oncourseX;
+        const y = this.y + oncourseY;
+        const margin = 10;
+        let marginX = Math.abs(margin * Math.cos(outgoingHeading));
+        let marginY = Math.abs(margin * Math.sin(outgoingHeading));
+        marginX = (marginX > 5) ? marginX : 5;
+        marginY = (marginY > 5) ? marginY : 5;
+
+        this.ctx.fillStyle = 'darkslategrey';
+        this.ctx.fillRect(x, y, 3, 3);
+
+        if(Math.abs(entity.x - x) < marginX && Math.abs(entity.y - y) < marginY ) {
+          console.log(entity.title + ' :: is on course')
+        }
+      }
+    });
+  }
+
   removeLanded({ entityManagerArr }) {
     const entityAirport = entityFns.create({...this});
     const isEntityTouchedDown = entityOther => {
@@ -45,7 +80,6 @@ module.exports = class Runway {
       const isCloseHorizontal = (distX < 10 && distY < 10);
       const isCloseVertical = distVert < 150;
       const isRunwayHeading = deltaHeading < 0.3;
-      console.log(entityOther.title, distX, distY, deltaHeading)
       return isCloseHorizontal && isCloseVertical && isRunwayHeading;
     }
     
@@ -60,16 +94,18 @@ module.exports = class Runway {
 
       if(!isSquare) return;
       else if(isEntityTouchedDown(entity)) {
+        console.log(entity.title + ' :: touch down');
         entity.setAltitude(0);
         entity.setSpeed(entity.speed - 30);
         if(!isOnRunway(entity)) {
           placeOnRunway(entity);
         }
       } else if(isOnRunway(entity)) {
+        console.log(entity.title + ' :: landing rollout');
         const speedNew = entity.speed - 30;
         entity.setSpeed(speedNew);
         if(speedNew <= 0) {
-          console.log(entity.title + ' :: landing completed');
+          console.log(entity.title + ' :: landing complete');
           removeFromRunway(entity);
           entity.destroy();
           entityManagerArr.splice(index, 1);
