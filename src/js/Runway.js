@@ -10,8 +10,8 @@ module.exports = class Runway {
     this.y = positionObj.y;
     this.ctx = entityLayerObj.ctx;
     this.imgLayerCtx = imgLayerObj.ctx;
-    this.width = 8;
-    this.height = 100;
+    this.width = 4;
+    this.height = 60;
     this.altitude = 0;
     this.runwayHeading = inputHeadingToRad(positionObj.heading);
     // this.runwayHeading = Math.PI * 3 / 4;  // runwayHeading 222 degrees
@@ -27,8 +27,8 @@ module.exports = class Runway {
     };
     img.src = '/img/runway.png';
 
-    this.ctx.fillStyle = 'darkslategrey';
-    this.ctx.fillRect(this.x, this.y, 6, 6);
+    this.ctx.fillStyle = 'yellow';
+    this.ctx.fillRect(this.x, this.y, 5, 5);
   }
 
   update() {}
@@ -45,7 +45,7 @@ module.exports = class Runway {
       if(entity.landing && isHeadingClose(entity)) {
         const distX = this.x - entity.x;
         const distY = this.y - entity.y;
-        const dist = Math.sqrt( Math.pow(distX,2) + Math.pow(distY, 2) );
+        const dist = Math.sqrt( Math.pow(distX, 2) + Math.pow(distY, 2) );
         const outgoingHeading = this.runwayHeading + Math.PI;
         const oncourseX = dist * Math.cos(outgoingHeading);
         const oncourseY = dist * Math.sin(outgoingHeading);
@@ -56,11 +56,13 @@ module.exports = class Runway {
         let marginY = Math.abs(margin * Math.sin(outgoingHeading));
         marginX = (marginX > 10) ? marginX : 10;
         marginY = (marginY > 10) ? marginY : 10;
-
-        this.ctx.fillStyle = 'darkslategrey';
+        
+        this.ctx.fillStyle = 'white';
         this.ctx.fillRect(x, y, 3, 3);
 
-        if(Math.abs(entity.x - x) < marginX && Math.abs(entity.y - y) < marginY ) {
+        const distSquareToX = Math.abs(entity.x - x);
+        const distSquareToY = Math.abs(entity.y - y);
+        if(distSquareToX < marginX && distSquareToY < marginY ) {
           const interceptHeading = Math.atan(distY / distX) + Math.PI;
           console.log(entity.title + ' :: landing mode ')
           entity.setHeadingTarget(interceptHeading);
@@ -97,12 +99,13 @@ module.exports = class Runway {
       else if(isEntityTouchedDown(entity)) {
         console.log(entity.title + ' :: touch down');
         entity.setAltitude(0);
+        entity.setHeadingRad(this.runwayHeading);
         if(!isOnRunway(entity)) {
           placeOnRunway(entity);
         }
       } else if(isOnRunway(entity)) {
         console.log(entity.title + ' :: landing rollout');
-        entity.setHeadingTarget(this.runwayHeading)
+        entity.setHeadingRad(this.runwayHeading);
         const speedNew = entity.speed - 30;
         entity.setSpeed(speedNew);
         if(speedNew <= 0) {

@@ -7,7 +7,7 @@ export const setup = (argObj) => {
 
   const squareOne = new Square('SQ 001',
     argObj.entityLayerObj, argObj.textLayerObj, argObj.headingLayerObj, argObj.entityDiv,
-    { x: argObj.width / 2 + 200, y: argObj.height / 2 + 8, heading: '270', altitude: 100, speed: 180 });
+    { x: argObj.width / 2 + 50, y: argObj.height / 2 + 8, heading: '270', altitude: 100, speed: 180 });
   const squareTwo = new Square('SQ 002',
     argObj.entityLayerObj, argObj.textLayerObj, argObj.headingLayerObj, argObj.entityDiv,
     { x: argObj.width / 2 + 100, y: argObj.height / 2 - 50, heading: '180', altitude: 100, speed: 180 });
@@ -21,7 +21,7 @@ export const setup = (argObj) => {
   
   const runwayOne = new Runway('run1',
     argObj.backgroundObj, argObj.imgLayerObj,
-    { x: argObj.width / 2, y: argObj.height / 2, heading: 270 });
+    { x: argObj.width / 2 - 100, y: argObj.height / 2 + 17, heading: 270 });
 
   const entityManagerArr = [];
   const entityManagerAdd = obj => {
@@ -29,8 +29,8 @@ export const setup = (argObj) => {
     else throw new Error('non-entity not added \n' + JSON.stringify(obj));
   }
   entityManagerAdd(squareOne);
-  // entityManagerAdd(squareTwo);
-  // entityManagerAdd(squareThree);
+  entityManagerAdd(squareTwo);
+  entityManagerAdd(squareThree);
   entityManagerAdd(runwayOne);
   const callFn = (fnStr, argsObj) => entity => entity[fnStr] ? entity[fnStr](argsObj) : null;
 

@@ -23,8 +23,8 @@ module.exports = class Square {
     this.squareOneDiv.addEventListener('mouseenter', () => this.squareOneDiv.style.cursor = 'pointer');
     this.squareOneDiv.addEventListener('mouseleave', () => this.squareOneDiv.style.cursor = 'none');
 
-    this.squareOneDiv.style.left = positionObj.x - 5 + 'px';
-    this.squareOneDiv.style.top = positionObj.y - 5 + 'px';
+    this.squareOneDiv.style.left = positionObj.x - 8 + 'px';
+    this.squareOneDiv.style.top = positionObj.y - 8 + 'px';
     this.x = positionObj.x;
     this.y = positionObj.y;
     this.altitude = positionObj.altitude;
@@ -32,7 +32,7 @@ module.exports = class Square {
     this.setAltitude(positionObj.altitude);
     this.headingRad = inputHeadingToRad(positionObj.heading);
     this.headingTargetRad = 0;
-    this.setHeading(positionObj.heading);
+    this.setHeadingDegrees(positionObj.heading);
     this.speed = 180;
     this.setSpeed(positionObj.speed);
     this.landing = false;
@@ -41,8 +41,8 @@ module.exports = class Square {
     this.turnRateRadPerMs = 0.0001;
     this.timestampPrevMs = 0;
     this.speedPixelPerMs = 0.005;
-    this.width = 10;
-    this.height = 10;
+    this.width = 5;
+    this.height = 5;
     this.squareOneDiv.style.width = 22 + 'px';
     this.squareOneDiv.style.height = 22 + 'px';
   }
@@ -67,12 +67,19 @@ module.exports = class Square {
     this.altitudeTarget = Math.floor(altitude / 100) * 100;
   }
 
+  setHeadingRad(headingRadArg) {
+    const headingRad = convertToPosRad(convertToSmallRad(headingRadArg));
+    this.headingRad = headingRad;
+    this.setHeadingTarget(headingRad);
+    console.log('setHeadingRad ' + radToDegrees(this.headingRad))
+  }
+
   setHeadingTarget(headingRad) {
     this.headingTargetRad = convertToPosRad(convertToSmallRad(headingRad));
     console.log('setHeadingTarget ' + radToDegrees(this.headingRad))
   }
 
-  setHeading(inputHeading) {
+  setHeadingDegrees(inputHeading) {
     if(!inputHeading && inputHeading !== 0) return;
     if(inputHeading.toString().length !== 3) return;
     const inputHeadingArr = inputHeading.toString().split('');
@@ -171,15 +178,16 @@ module.exports = class Square {
     this.hide();
     this.x += pixelsInX;
     this.y += pixelsInY;
-    this.squareOneDiv.style.left = this.x - 5 + 'px';
-    this.squareOneDiv.style.top = this.y - 5 + 'px';
-    this.ctx.fillStyle = 'darkslategrey';
-    this.ctx.globalAlpha = 0.8;
+    this.squareOneDiv.style.left = this.x - 8 + 'px';
+    this.squareOneDiv.style.top = this.y - 8 + 'px';
+    this.ctx.fillStyle = 'white';
+    this.ctx.globalAlpha = 1;
     this.ctx.fillRect(this.x, this.y, this.width, this.height);
-    this.ctx.clearRect(this.x + 2, this.y + 2, this.width - 4, this.height - 4);
+    this.ctx.clearRect(this.x + 1, this.y + 1, this.width - 2, this.height - 2);
     this.ctx.globalAlpha = 1;
 
     const center = { x: this.x + this.width / 2, y: this.y + this.height / 2 };
+    this.headingLayerObj.ctx.strokeStyle ='white';
     this.headingLayerObj.ctx.beginPath();
     this.headingLayerObj.ctx.moveTo(center.x, center.y);
     this.headingLayerObj.ctx.lineTo(center.x - pixelsInX * 2, center.y - pixelsInY * 2);
@@ -196,8 +204,8 @@ module.exports = class Square {
     if(this.speed < 10) speedDisplay = '00' + this.speed;
     else if(this.speed < 100) speedDisplay = '0' + this.speed;
 
-    this.textLayerObj.ctx.fillStyle = 'darkslategrey';
-    this.textLayerObj.ctx.font = "bold 10px Arial"
+    this.textLayerObj.ctx.fillStyle = 'white';
+    this.textLayerObj.ctx.font = "10px Arial"
     this.textLayerObj.ctx.fillText(this.title + '  ' + degreesDisplay, this.x, this.y - 2);
     this.textLayerObj.ctx.fillText('              ' + altitudeNew + ' ft', this.x, this.y + 8);
     this.textLayerObj.ctx.fillText('              ' + speedDisplay + ' kts', this.x, this.y + 18);
@@ -217,7 +225,7 @@ module.exports = class Square {
       this.hide();
       this.ctx.fillStyle = 'red';
       this.ctx.fillRect(entity.x, entity.y, entity.width, entity.height);
-      this.textLayerObj.ctx.fillStyle = 'lightgreen';
+      this.textLayerObj.ctx.fillStyle = 'white';
     }
   }
 };

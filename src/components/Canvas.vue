@@ -38,6 +38,7 @@
         :width="width"
         :height="height"
       ></canvas>
+      <img src="/img/london.png" :height="height">
     </div>
     <div :style="panelBottomStyle">
       <button @click="btnClick('land')" :style="buttonLand">Land</button>
@@ -63,7 +64,7 @@
 <script>
 import { setup } from '../js/game';
 
-const width = 800;
+const width = 993;
 const height = 600;
 
 export default {
@@ -98,7 +99,7 @@ export default {
     },
     inputHeadingKeyDown: function() {
       if(!this.square) return;
-      this.square.setHeading(this.inputHeading);
+      this.square.setHeadingDegrees(this.inputHeading);
       this.inputHeading = '';
     },
     inputAltitudeKeyDown: function() {
@@ -123,8 +124,8 @@ export default {
     // const layerFiveCtx = layerFive.getContext('2d');
     const layerSixDiv = document.querySelector('.entity-div')
 
-    backgroundCtx.fillStyle = 'white';
-    backgroundCtx.fillRect(0, 0, this.width, this.height);
+    // backgroundCtx.fillStyle = 'black';
+    // backgroundCtx.fillRect(0, 0, this.width, this.height);
 
     const backgroundObj = { ctx: backgroundCtx };
     const layerTwoObj = { ctx: layerTwoCtx, width: this.width, height: this.height };
