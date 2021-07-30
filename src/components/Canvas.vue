@@ -94,7 +94,7 @@ export default {
   methods: {
     btnClick: function(direction) {
       if(!this.square) return;
-      if(direction === 'land') this.square.setLanding();
+      if(direction === 'land') this.square.setLanding(true);
       else this.square.setHeadingStr(direction);
     },
     inputHeadingKeyDown: function() {

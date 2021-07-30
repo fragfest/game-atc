@@ -61,15 +61,20 @@ module.exports = class Runway {
         marginX = (marginX > 10) ? marginX : 10;
         marginY = (marginY > 10) ? marginY : 10;
         
-        this.ctx.fillStyle = 'white';
-        this.ctx.fillRect(x, y, 3, 3);
+        this.imgLayerCtx.fillStyle = 'yellow';
+        this.imgLayerCtx.fillRect(x, y, 3, 3);
 
         const distSquareToX = Math.abs(entity.x - x);
         const distSquareToY = Math.abs(entity.y - y);
-        if(distSquareToX < marginX && distSquareToY < marginY ) {
+        const isGettingCloser = dist < entity.distPrev;
+        entity.distPrev = dist;
+        if(distSquareToX < marginX && distSquareToY < marginY && isGettingCloser) {
           const interceptHeading = Math.atan(distY / distX) + Math.PI;
           console.log(entity.title + ' :: landing mode ')
-          entity.setHeadingTarget(interceptHeading);
+          entity.setHeadingTarget(interceptHeading, true);
+        }
+        if(!isGettingCloser && dist > 10) {
+          entity.setHeadingTarget(this.runwayHeading, false);
         }
       }
     });
@@ -84,13 +89,13 @@ module.exports = class Runway {
       const distY = Math.abs(entityAirport.y - entityOther.y);
       const distVert = Math.abs(entityAirport.altitude - entityOther.altitude);
       const deltaHeading = Math.abs(this.runwayHeading - entityOther.headingRad)
-      const isCloseHorizontal = (distX < 10 && distY < 10);
+      const isCloseHorizontal = (distX < 5 && distY < 5);
       const isCloseVertical = distVert < 150;
-      const isRunwayHeading = deltaHeading < 0.3;
+      const isRunwayHeading = deltaHeading < 0.1;
       return isCloseHorizontal && isCloseVertical && isRunwayHeading;
     }
     
-    let index = 0;
+    let index = -1;
     entityManagerArr.forEach(entity => {
       const isSquare = entity instanceof Square;
       const isOnRunway = entity => this.landingEntities.find(landing => landing.id === entity.id);
@@ -99,17 +104,19 @@ module.exports = class Runway {
         this.landingEntities = this.landingEntities.filter(landing => landing.id !== entity.id);
       }
 
+      index++;
       if(!isSquare) return;
-      else if(isEntityTouchedDown(entity)) {
+      if(!entity.landing && !isOnRunway(entity)) return;
+      if(isEntityTouchedDown(entity)) {
         console.log(entity.title + ' :: touch down');
         entity.setAltitude(0);
-        entity.setHeadingRad(this.runwayHeading);
+        entity.setHeadingRad(this.runwayHeading, true);
         if(!isOnRunway(entity)) {
           placeOnRunway(entity);
         }
       } else if(isOnRunway(entity)) {
         console.log(entity.title + ' :: landing rollout');
-        entity.setHeadingRad(this.runwayHeading);
+        entity.setHeadingRad(this.runwayHeading, true);
         const speedNew = entity.speed - 30;
         entity.setSpeed(speedNew);
         if(speedNew <= 0) {
@@ -119,7 +126,6 @@ module.exports = class Runway {
           entityManagerArr.splice(index, 1);
         }
       }
-      index++;
     });
   }
 };

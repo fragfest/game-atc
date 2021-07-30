@@ -36,6 +36,7 @@ module.exports = class Square {
     this.speed = 180;
     this.setSpeed(positionObj.speed);
     this.landing = false;
+    this.distPrev = Infinity;
 
     this.altitudeRatePerMs = 0.05;
     this.turnRateRadPerMs = 0.0001;
@@ -49,9 +50,8 @@ module.exports = class Square {
 
   clickEventCB() { throw new Error('clickEventCB not attached'); }
 
-  setLanding() {
-    console.log(this.title + ' :: start landing')
-    this.landing = true;
+  setLanding(isLanding) {
+    this.landing = !!isLanding;
   }
 
   setSpeed(speedArg) {
@@ -67,16 +67,15 @@ module.exports = class Square {
     this.altitudeTarget = Math.floor(altitude / 100) * 100;
   }
 
-  setHeadingRad(headingRadArg) {
+  setHeadingRad(headingRadArg, isLanding) {
     const headingRad = convertToPosRad(convertToSmallRad(headingRadArg));
     this.headingRad = headingRad;
-    this.setHeadingTarget(headingRad);
-    console.log('setHeadingRad ' + radToDegrees(this.headingRad))
+    this.setHeadingTarget(headingRad, isLanding);
   }
 
-  setHeadingTarget(headingRad) {
+  setHeadingTarget(headingRad, isLanding) {
+    this.setLanding(isLanding);
     this.headingTargetRad = convertToPosRad(convertToSmallRad(headingRad));
-    console.log('setHeadingTarget ' + radToDegrees(this.headingRad))
   }
 
   setHeadingDegrees(inputHeading) {
@@ -90,21 +89,21 @@ module.exports = class Square {
     const heading = parseInt(inputHeading);
     if(heading > 360 || heading <= 0) return;
 
-    this.headingTargetRad = inputHeadingToRad(heading);
+    this.setHeadingTarget(inputHeadingToRad(heading), false);
   }
 
   // TODO remove
   setHeadingStr(direction) {
     switch(direction){
-      case 'left': this.headingTargetRad = Math.PI;
+      case 'left': this.setHeadingTarget(Math.PI, false);
       break;
-      case 'right': this.headingTargetRad = 0;
+      case 'right': this.setHeadingTarget(0, false);
       break;
-      case 'top': this.headingTargetRad = (3/2) * Math.PI;
+      case 'top': this.setHeadingTarget((3/2) * Math.PI, false);
       break;
-      case 'down': this.headingTargetRad = (1/2) * Math.PI;
+      case 'down': this.setHeadingTarget((1/2) * Math.PI, false);
       break;
-      default: this.headingTargetRad = 0;
+      default: this.setHeadingTarget(0, false);
     }
   }
 
