@@ -27,8 +27,12 @@ module.exports = class Runway {
     };
     img.src = '/img/runway.png';
 
-    this.ctx.fillStyle = 'yellow';
+    this.ctx.fillStyle = 'greenyellow';
     this.ctx.fillRect(this.x, this.y, 5, 5);
+
+    this.imgLayerCtx.fillStyle = 'greenyellow';
+    this.imgLayerCtx.font = "bold 10px Arial"
+    this.imgLayerCtx.fillText('27R', this.x, this.y - 5);
   }
 
   update() {}

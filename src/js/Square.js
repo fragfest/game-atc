@@ -180,14 +180,14 @@ module.exports = class Square {
     this.y += pixelsInY;
     this.squareOneDiv.style.left = this.x - 8 + 'px';
     this.squareOneDiv.style.top = this.y - 8 + 'px';
-    this.ctx.fillStyle = 'white';
+    this.ctx.fillStyle = 'greenyellow';
     this.ctx.globalAlpha = 1;
     this.ctx.fillRect(this.x, this.y, this.width, this.height);
     this.ctx.clearRect(this.x + 1, this.y + 1, this.width - 2, this.height - 2);
     this.ctx.globalAlpha = 1;
 
     const center = { x: this.x + this.width / 2, y: this.y + this.height / 2 };
-    this.headingLayerObj.ctx.strokeStyle ='white';
+    this.headingLayerObj.ctx.strokeStyle ='greenyellow';
     this.headingLayerObj.ctx.beginPath();
     this.headingLayerObj.ctx.moveTo(center.x, center.y);
     this.headingLayerObj.ctx.lineTo(center.x - pixelsInX * 2, center.y - pixelsInY * 2);
@@ -204,8 +204,8 @@ module.exports = class Square {
     if(this.speed < 10) speedDisplay = '00' + this.speed;
     else if(this.speed < 100) speedDisplay = '0' + this.speed;
 
-    this.textLayerObj.ctx.fillStyle = 'white';
-    this.textLayerObj.ctx.font = "10px Arial"
+    this.textLayerObj.ctx.fillStyle = 'greenyellow';
+    this.textLayerObj.ctx.font = "bold 10px Arial"
     this.textLayerObj.ctx.fillText(this.title + '  ' + degreesDisplay, this.x, this.y - 2);
     this.textLayerObj.ctx.fillText('              ' + altitudeNew + ' ft', this.x, this.y + 8);
     this.textLayerObj.ctx.fillText('              ' + speedDisplay + ' kts', this.x, this.y + 18);

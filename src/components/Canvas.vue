@@ -34,7 +34,7 @@
       ></canvas>
       <canvas
         ref="background"
-        class="canvas layer-zero"
+        class="canvas background layer-zero"
         :width="width"
         :height="height"
       ></canvas>
@@ -156,6 +156,11 @@ export default {
   .layer-two { z-index: 2; }
   .layer-one { z-index: 1; }
   .layer-zero { z-index: 0; }
+
+  .background {
+    opacity: 60%;
+    background-color: grey;
+  }
 
   .entity-div {
     position: absolute;
