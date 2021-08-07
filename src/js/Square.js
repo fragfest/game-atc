@@ -184,35 +184,11 @@ module.exports = class Square {
     this.y += pixelsInY;
     this.squareOneDiv.style.left = this.x - 8 + 'px';
     this.squareOneDiv.style.top = this.y - 8 + 'px';
-    this.ctx.fillStyle = 'greenyellow';
-    this.ctx.globalAlpha = 1;
-    this.ctx.fillRect(this.x, this.y, this.width, this.height);
-    this.ctx.clearRect(this.x + 1, this.y + 1, this.width - 2, this.height - 2);
-    this.ctx.globalAlpha = 1;
-
-    const center = { x: this.x + this.width / 2, y: this.y + this.height / 2 };
-    this.headingLayerObj.ctx.strokeStyle ='greenyellow';
-    this.headingLayerObj.ctx.beginPath();
-    this.headingLayerObj.ctx.moveTo(center.x, center.y);
-    this.headingLayerObj.ctx.lineTo(center.x - pixelsInX * 2, center.y - pixelsInY * 2);
-    this.headingLayerObj.ctx.stroke();
-
     this.headingRad = headingRadNew;
     this.altitude = altitudeNew;
 
-    const deg = Math.round(convertToSmallDegrees(radToDegrees(headingRadNew)));
-    let degreesDisplay = deg;
-    if(deg < 10) degreesDisplay = '00' + deg;
-    else if(deg < 100) degreesDisplay = '0' + deg;
-    let speedDisplay = this.speed;
-    if(this.speed < 10) speedDisplay = '00' + this.speed;
-    else if(this.speed < 100) speedDisplay = '0' + this.speed;
-
-    this.textLayerObj.ctx.fillStyle = 'greenyellow';
-    this.textLayerObj.ctx.font = "bold 10px Arial"
-    this.textLayerObj.ctx.fillText(this.title + '  ' + degreesDisplay, this.x, this.y - 2);
-    this.textLayerObj.ctx.fillText('              ' + altitudeNew + ' ft', this.x, this.y + 8);
-    this.textLayerObj.ctx.fillText('              ' + speedDisplay + ' kts', this.x, this.y + 18);
+    const speedPixels = this.speedPixelPerMs * deltaTimeMs;
+    draw(this, 'greenyellow', speedPixels);
   }
 
   setProximity({ entityManagerArr, deltaTimeMs }) {
@@ -227,35 +203,41 @@ module.exports = class Square {
 
     if(isClose) {
       this.hide();
-      this.ctx.fillStyle = 'darkred';
-      this.ctx.fillRect(entity.x, entity.y, entity.width, entity.height);
-      this.ctx.clearRect(this.x + 1, this.y + 1, this.width - 2, this.height - 2);
-
-      const pixels = (this.speedPixelPerMs * deltaTimeMs);
-      const pixelsInX = Math.cos(this.headingRad) * pixels;
-      const pixelsInY = Math.sin(this.headingRad) * pixels;
-      const center = { x: this.x + this.width / 2, y: this.y + this.height / 2 };
-      this.headingLayerObj.ctx.strokeStyle ='darkred';
-      this.headingLayerObj.ctx.beginPath();
-      this.headingLayerObj.ctx.moveTo(center.x, center.y);
-      this.headingLayerObj.ctx.lineTo(center.x - pixelsInX * 2, center.y - pixelsInY * 2);
-      this.headingLayerObj.ctx.stroke();
-
-      const deg = Math.round(convertToSmallDegrees(radToDegrees(this.headingRad)));
-      let degreesDisplay = deg;
-      if(deg < 10) degreesDisplay = '00' + deg;
-      else if(deg < 100) degreesDisplay = '0' + deg;
-      let speedDisplay = this.speed;
-      if(this.speed < 10) speedDisplay = '00' + this.speed;
-      else if(this.speed < 100) speedDisplay = '0' + this.speed;
-
-      this.textLayerObj.ctx.fillStyle = 'darkred';
-      this.textLayerObj.ctx.font = "bold 10px Arial"
-      this.textLayerObj.ctx.fillText(this.title, this.x, this.y - 2);
-      this.textLayerObj.ctx.fillStyle = 'darkred';
-      this.textLayerObj.ctx.fillText('              ' + degreesDisplay, this.x, this.y - 2);
-      this.textLayerObj.ctx.fillText('              ' + this.altitude + ' ft', this.x, this.y + 8);
-      this.textLayerObj.ctx.fillText('              ' + speedDisplay + ' kts', this.x, this.y + 18);
+      const speedPixels = this.speedPixelPerMs * deltaTimeMs;
+      draw(this, 'darkred', speedPixels);
     }
   }
 };
+
+const draw = (self, color, speedPixels) => {
+  self.ctx.fillStyle = color;
+  self.ctx.globalAlpha = 1;
+  self.ctx.fillRect(self.x, self.y, self.width, self.height);
+  self.ctx.clearRect(self.x + 1, self.y + 1, self.width - 2, self.height - 2);
+
+  const pixels = speedPixels;
+  const pixelsInX = Math.cos(self.headingRad) * pixels;
+  const pixelsInY = Math.sin(self.headingRad) * pixels;
+  const center = { x: self.x + self.width / 2, y: self.y + self.height / 2 };
+  self.headingLayerObj.ctx.strokeStyle = color;
+  self.headingLayerObj.ctx.beginPath();
+  self.headingLayerObj.ctx.moveTo(center.x, center.y);
+  self.headingLayerObj.ctx.lineTo(center.x - pixelsInX * 2, center.y - pixelsInY * 2);
+  self.headingLayerObj.ctx.stroke();
+
+  const deg = Math.round(convertToSmallDegrees(radToDegrees(self.headingRad)));
+  let degreesDisplay = deg;
+  if(deg < 10) degreesDisplay = '00' + deg;
+  else if(deg < 100) degreesDisplay = '0' + deg;
+  let speedDisplay = self.speed;
+  if(self.speed < 10) speedDisplay = '00' + self.speed;
+  else if(self.speed < 100) speedDisplay = '0' + self.speed;
+
+  self.textLayerObj.ctx.fillStyle = color;
+  self.textLayerObj.ctx.font = "bold 10px Arial"
+  self.textLayerObj.ctx.fillText(self.title, self.x, self.y - 2);
+  self.textLayerObj.ctx.fillStyle = color;
+  self.textLayerObj.ctx.fillText('              ' + degreesDisplay, self.x, self.y - 2);
+  self.textLayerObj.ctx.fillText('              ' + self.altitude + ' ft', self.x, self.y + 8);
+  self.textLayerObj.ctx.fillText('              ' + speedDisplay + ' kts', self.x, self.y + 18);
+}
