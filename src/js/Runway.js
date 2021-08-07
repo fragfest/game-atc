@@ -72,9 +72,13 @@ module.exports = class Runway {
           const interceptHeading = Math.atan(distY / distX) + Math.PI;
           console.log(entity.title + ' :: landing mode ')
           entity.setHeadingTarget(interceptHeading, true);
+          // TODO auto-slowdown need to support manual setting during landing also
+          // entity.setSpeed(entity.speedLanding);
         }
         if(!isGettingCloser && dist > 10) {
           entity.setHeadingTarget(this.runwayHeading, false);
+          // TODO go-around
+          // entity.setSpeed(160);
         }
       }
     });
@@ -88,11 +92,14 @@ module.exports = class Runway {
       const distX = Math.abs(entityAirport.x - entityOther.x);
       const distY = Math.abs(entityAirport.y - entityOther.y);
       const distVert = Math.abs(entityAirport.altitude - entityOther.altitude);
-      const deltaHeading = Math.abs(this.runwayHeading - entityOther.headingRad)
+      const deltaHeading = Math.abs(entityAirport.runwayHeading - entityOther.headingRad);
+      const deltaLandingSpeed = Math.abs(entityOther.speedLanding - entityOther.speed);
       const isCloseHorizontal = (distX < 5 && distY < 5);
       const isCloseVertical = distVert < 150;
       const isRunwayHeading = deltaHeading < 0.1;
-      return isCloseHorizontal && isCloseVertical && isRunwayHeading;
+      const isCloseLandingSpeed = deltaLandingSpeed < 15;
+      console.log('isCloseLandingSpeed', isCloseLandingSpeed, entityOther.speed)
+      return isCloseHorizontal && isCloseVertical && isRunwayHeading && isCloseLandingSpeed;
     }
     
     let index = -1;

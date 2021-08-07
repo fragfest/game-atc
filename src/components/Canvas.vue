@@ -117,7 +117,7 @@ export default {
     inputSpeedKeyDown: function() {
       if(!this.square) return;
       if(Number(this.inputSpeed) < 0) return
-      this.square.setSpeed(this.inputSpeed, false);
+      this.square.setSpeed(this.inputSpeed);
       this.inputSpeed = '';
     }
   },

@@ -39,8 +39,9 @@ module.exports = class Square {
     this.speedTarget = 180;
     this.speedPixelPerMs = 0.005;
     this.speedTargetPixelPerMs = 0.005;
-    this.setSpeed(positionObj.speed, false);
-    this.speedMin = 120;
+    this.setSpeed(positionObj.speed);
+    this.speedMin = 135;
+    this.speedLanding = 135; // TODO when ready can unlink from speedMin
     this.speedMax = 500;
 
     this.landing = false;
@@ -61,11 +62,10 @@ module.exports = class Square {
     this.landing = !!isLanding;
   }
 
-  setSpeed(speedArg, isLanding) {
-    this.setLanding(isLanding);
-    const speedMin = isLanding ? 0 : this.speedMin;
-
+  setSpeed(speedArg, isTouchedDown) {
     let speed = parseInt(speedArg);
+    const speedMin = isTouchedDown ? 0 : this.speedMin;
+
     speed = (speed < speedMin) ? speedMin : speed;
     speed = (speed > this.speedMax) ? this.speedMax : speed;
     this.speedTarget = Math.floor(speed / 10) * 10;
@@ -193,7 +193,7 @@ module.exports = class Square {
     const headingRadNewLarge = this.updateHeading(headingOld, headingTarget, headingChange);
     const headingRadNew = convertToPosRad(convertToSmallRad(headingRadNewLarge));
 
-    const speedNew = this.updateSpeed(this.speed, this.speedTarget, 15, 30);
+    const speedNew = this.updateSpeed(this.speed, this.speedTarget, 15, 15);
     const pixels = (this.speedPixelPerMs * deltaTimeMs);
     const pixelsInX = Math.cos(headingRadNew) * pixels;
     const pixelsInY = Math.sin(headingRadNew) * pixels;
