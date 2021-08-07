@@ -109,6 +109,10 @@ module.exports = class Square {
 
   hide() {
     this.ctx.clearRect(this.x - 1, this.y - 1, this.width + 2, this.height + 2)
+    const center = { x: this.x + this.width / 2, y: this.y + this.height / 2 };
+    this.headingLayerObj.ctx.clearRect(center.x - 25, center.y - 25, 50, 50);
+    this.textLayerObj.ctx.clearRect(this.x, this.y - 10, 35, 10);
+    this.textLayerObj.ctx.clearRect(this.x + 35, this.y - 10, 40, 35);
   }
 
   destroy() {
@@ -141,7 +145,8 @@ module.exports = class Square {
       if(turnRight) return (headingIncrease > headingTargetSmall) ? headingTargetSmall : headingIncrease;
       else return (headingDecrease < headingTargetSmall) ? headingTargetSmall : headingDecrease;
     }
-    // else isClosestBetween :: if(isLowestLargeTarget) turnRight
+    // else isClosestBetween
+    // if(isLowestLargeTarget) turnRight
     if(isLowestLargeTarget) return (headingIncrease > headingTargetLarge) ? headingTargetLarge : headingIncrease;
     else return (headingLargeDecrease < headingTargetSmall) ? headingTargetSmall : headingLargeDecrease;
   }
@@ -210,7 +215,7 @@ module.exports = class Square {
     this.textLayerObj.ctx.fillText('              ' + speedDisplay + ' kts', this.x, this.y + 18);
   }
 
-  setProximity({ entityManagerArr }) {
+  setProximity({ entityManagerArr, deltaTimeMs }) {
     const entity = entityFns.create({...this});
     const isEntityCloseTo = entityFns.isCloseToEntity(entity);
     const accAnySquaresClose = (acc, val) => {
@@ -222,9 +227,35 @@ module.exports = class Square {
 
     if(isClose) {
       this.hide();
-      this.ctx.fillStyle = 'red';
+      this.ctx.fillStyle = 'darkred';
       this.ctx.fillRect(entity.x, entity.y, entity.width, entity.height);
-      this.textLayerObj.ctx.fillStyle = 'white';
+      this.ctx.clearRect(this.x + 1, this.y + 1, this.width - 2, this.height - 2);
+
+      const pixels = (this.speedPixelPerMs * deltaTimeMs);
+      const pixelsInX = Math.cos(this.headingRad) * pixels;
+      const pixelsInY = Math.sin(this.headingRad) * pixels;
+      const center = { x: this.x + this.width / 2, y: this.y + this.height / 2 };
+      this.headingLayerObj.ctx.strokeStyle ='darkred';
+      this.headingLayerObj.ctx.beginPath();
+      this.headingLayerObj.ctx.moveTo(center.x, center.y);
+      this.headingLayerObj.ctx.lineTo(center.x - pixelsInX * 2, center.y - pixelsInY * 2);
+      this.headingLayerObj.ctx.stroke();
+
+      const deg = Math.round(convertToSmallDegrees(radToDegrees(this.headingRad)));
+      let degreesDisplay = deg;
+      if(deg < 10) degreesDisplay = '00' + deg;
+      else if(deg < 100) degreesDisplay = '0' + deg;
+      let speedDisplay = this.speed;
+      if(this.speed < 10) speedDisplay = '00' + this.speed;
+      else if(this.speed < 100) speedDisplay = '0' + this.speed;
+
+      this.textLayerObj.ctx.fillStyle = 'darkred';
+      this.textLayerObj.ctx.font = "bold 10px Arial"
+      this.textLayerObj.ctx.fillText(this.title, this.x, this.y - 2);
+      this.textLayerObj.ctx.fillStyle = 'darkred';
+      this.textLayerObj.ctx.fillText('              ' + degreesDisplay, this.x, this.y - 2);
+      this.textLayerObj.ctx.fillText('              ' + this.altitude + ' ft', this.x, this.y + 8);
+      this.textLayerObj.ctx.fillText('              ' + speedDisplay + ' kts', this.x, this.y + 18);
     }
   }
 };

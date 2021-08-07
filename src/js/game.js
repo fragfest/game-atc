@@ -10,7 +10,7 @@ export const setup = (argObj) => {
     { x: argObj.width / 2 + 50, y: argObj.height / 2 + 8, heading: '270', altitude: 100, speed: 180 });
   const squareTwo = new Square('SQ 002',
     argObj.entityLayerObj, argObj.textLayerObj, argObj.headingLayerObj, argObj.entityDiv,
-    { x: argObj.width / 2 + 100, y: argObj.height / 2 - 50, heading: '180', altitude: 100, speed: 180 });
+    { x: argObj.width / 2 + 100, y: argObj.height / 2, heading: '265', altitude: 100, speed: 180 });
   const squareThree = new Square('SQ 003',
     argObj.entityLayerObj, argObj.textLayerObj, argObj.headingLayerObj, argObj.entityDiv,
     { x: 50, y: 100, heading: '090', altitude: 1000, speed: 180 });
@@ -46,7 +46,7 @@ export const setup = (argObj) => {
       argObj.headingLayerObj.ctx.clearRect(0, 0, argObj.width, argObj.height);
       // update
       entityManagerArr.forEach(callFn('update', ({ deltaTimeMs: updateIntervalMs })));
-      entityManagerArr.forEach(callFn('setProximity', { entityManagerArr }));
+      entityManagerArr.forEach(callFn('setProximity', { entityManagerArr, deltaTimeMs: updateIntervalMs }));
       entityManagerArr.forEach(callFn('updateLanding', { entityManagerArr }));
     }
 
