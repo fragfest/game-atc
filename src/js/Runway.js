@@ -43,10 +43,12 @@ module.exports = class Runway {
       const deltaHeading = Math.abs(this.runwayHeading - entity.headingRad);
       return deltaHeading < 0.5;
     }
+    const isEntityOnRunway = isOnRunway(this.landingEntities);
 
     entityManagerArr.forEach(entity => {
       if(!isSquare(entity)) return;
-      if(entity.landing && isHeadingClose(entity)) {
+      if(!entity.landing) return;
+      if(isHeadingClose(entity)) {
         const distX = this.x - entity.x;
         const distY = this.y - entity.y;
         const dist = Math.sqrt( Math.pow(distX, 2) + Math.pow(distY, 2) );
@@ -70,42 +72,29 @@ module.exports = class Runway {
         entity.distPrev = dist;
         if(distSquareToX < marginX && distSquareToY < marginY && isGettingCloser) {
           const interceptHeading = Math.atan(distY / distX) + Math.PI;
-          console.log(entity.title + ' :: landing mode ')
+          console.log(entity.title + ' :: landing mode ');
           entity.setHeadingTarget(interceptHeading, true);
           // TODO auto-slowdown need to support manual setting during landing also
-          // entity.setSpeed(entity.speedLanding);
+          // TODO setSpeed & setAltitude based on dist i.e. glideslope
+          if(entity.speedTarget > entity.speedLanding) entity.setSpeed(entity.speedLanding);
         }
-        if(!isGettingCloser && dist > 10) {
+        if(!isGettingCloser && !isEntityOnRunway(entity)) {
+          console.log(entity.title + ' :: go-around');
           entity.setHeadingTarget(this.runwayHeading, false);
-          // TODO go-around
-          // entity.setSpeed(160);
+          if(entity.speedTarget < 160) entity.setSpeed(160);
+          if(entity.altitudeTarget < 2000) entity.setAltitude(2000);
         }
       }
     });
   }
 
-  removeLanded({ entityManagerArr }) {
-    const entityAirport = entityFns.create({...this});
-    const isEntityTouchedDown = entityOther => {
-      if(entityOther.id === entityAirport.id) return false;
-      if(!entityOther.headingRad && entityOther.headingRad !== 0) return false;
-      const distX = Math.abs(entityAirport.x - entityOther.x);
-      const distY = Math.abs(entityAirport.y - entityOther.y);
-      const distVert = Math.abs(entityAirport.altitude - entityOther.altitude);
-      const deltaHeading = Math.abs(entityAirport.runwayHeading - entityOther.headingRad);
-      const deltaLandingSpeed = Math.abs(entityOther.speedLanding - entityOther.speed);
-      const isCloseHorizontal = (distX < 5 && distY < 5);
-      const isCloseVertical = distVert < 150;
-      const isRunwayHeading = deltaHeading < 0.1;
-      const isCloseLandingSpeed = deltaLandingSpeed < 15;
-      console.log('isCloseLandingSpeed', isCloseLandingSpeed, entityOther.speed)
-      return isCloseHorizontal && isCloseVertical && isRunwayHeading && isCloseLandingSpeed;
-    }
+  removeLanded({ entityManagerArr }) { 
+    const isEntityTouchedDown = isTouchedDown(this);
+    const isEntityOnRunway = isOnRunway(this.landingEntities);
     
     let index = -1;
     entityManagerArr.forEach(entity => {
       const isSquare = entity instanceof Square;
-      const isOnRunway = entity => this.landingEntities.find(landing => landing.id === entity.id);
       const placeOnRunway = entity => this.landingEntities.push(entity);
       const removeFromRunway = entity => {
         this.landingEntities = this.landingEntities.filter(landing => landing.id !== entity.id);
@@ -113,15 +102,15 @@ module.exports = class Runway {
 
       index++;
       if(!isSquare) return;
-      if(!entity.landing && !isOnRunway(entity)) return;
+      if(!entity.landing) return;
       if(isEntityTouchedDown(entity)) {
         console.log(entity.title + ' :: touch down');
         entity.setAltitude(0);
         entity.setHeadingRad(this.runwayHeading, true);
-        if(!isOnRunway(entity)) {
+        if(!isEntityOnRunway(entity)) {
           placeOnRunway(entity);
         }
-      } else if(isOnRunway(entity)) {
+      } else if(isEntityOnRunway(entity)) {
         console.log(entity.title + ' :: landing rollout');
         entity.setHeadingRad(this.runwayHeading, true);
         const speedNew = entity.speed - 30;
@@ -135,4 +124,22 @@ module.exports = class Runway {
       }
     });
   }
-};
+}; //end class Runway
+
+const isOnRunway = landingEntities => entity => landingEntities.find(landing => landing.id === entity.id);
+
+const isTouchedDown = runwaySelf => entityOther => {
+  const entityAirport = entityFns.create(runwaySelf);
+
+  if(entityOther.id === entityAirport.id) return false;
+  const distX = Math.abs(entityAirport.x - entityOther.x);
+  const distY = Math.abs(entityAirport.y - entityOther.y);
+  const distVert = Math.abs(entityAirport.altitude - entityOther.altitude);
+  const deltaHeading = Math.abs(entityAirport.runwayHeading - entityOther.headingRad);
+  const deltaLandingSpeed = Math.abs(entityOther.speedLanding - entityOther.speed);
+  const isCloseHorizontal = (distX < 5 && distY < 5);
+  const isCloseVertical = distVert < 150;
+  const isRunwayHeading = deltaHeading < 0.1;
+  const isCloseLandingSpeed = deltaLandingSpeed < 15;
+  return isCloseHorizontal && isCloseVertical && isRunwayHeading && isCloseLandingSpeed;
+}
