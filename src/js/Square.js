@@ -29,19 +29,26 @@ module.exports = class Square {
     this.y = positionObj.y;
     this.altitude = positionObj.altitude;
     this.altitudeTarget = 1000;
+    this.altitudeMin = 100;
+    this.altitudeMax = 40000;
     this.setAltitude(positionObj.altitude);
     this.headingRad = inputHeadingToRad(positionObj.heading);
     this.headingTargetRad = 0;
     this.setHeadingDegrees(positionObj.heading);
     this.speed = 180;
-    this.setSpeed(positionObj.speed);
+    this.speedTarget = 180;
+    this.speedPixelPerMs = 0.005;
+    this.speedTargetPixelPerMs = 0.005;
+    this.setSpeed(positionObj.speed, false);
+    this.speedMin = 120;
+    this.speedMax = 500;
+
     this.landing = false;
     this.distPrev = Infinity;
 
     this.altitudeRatePerMs = 0.05;
     this.turnRateRadPerMs = 0.0001;
     this.timestampPrevMs = 0;
-    this.speedPixelPerMs = 0.005;
     this.width = 5;
     this.height = 5;
     this.squareOneDiv.style.width = 22 + 'px';
@@ -54,16 +61,21 @@ module.exports = class Square {
     this.landing = !!isLanding;
   }
 
-  setSpeed(speedArg) {
-    const speed = parseInt(speedArg);
-    if(speed < 0 || speed > 500) return;
-    this.speed = Math.round(speed);
-    // TODO actually set speed
+  setSpeed(speedArg, isLanding) {
+    this.setLanding(isLanding);
+    const speedMin = isLanding ? 0 : this.speedMin;
+
+    let speed = parseInt(speedArg);
+    speed = (speed < speedMin) ? speedMin : speed;
+    speed = (speed > this.speedMax) ? this.speedMax : speed;
+    this.speedTarget = Math.floor(speed / 10) * 10;
+    this.speedTargetPixelPerMs = convertKnotsToPixelsPerMs(speed);
   }
 
   setAltitude(altitudeArg) {
-    const altitude = parseInt(altitudeArg);
-    if(altitude < 0 || altitude > 40000) return;
+    let altitude = parseInt(altitudeArg);
+    altitude = (altitude < this.altitudeMin) ? this.altitudeMin : altitude;
+    altitude = (altitude > this.altitudeMax) ? this.altitudeMax : altitude;
     this.altitudeTarget = Math.floor(altitude / 100) * 100;
   }
 
@@ -163,6 +175,17 @@ module.exports = class Square {
     else return (altitudeDecrease < altitudeTarget) ? altitudeTarget : altitudeDecrease;
   }
 
+  updateSpeed(speedArg, speedTargetArg, speedIncreaseArg, speedDecreaseArg) {
+    const speed = Math.round(speedArg);
+    const speedTarget = Math.round(speedTargetArg);
+    const delta = speedTarget - speed;
+    const speedIncrease = speed + speedIncreaseArg;
+    const speedDecrease = speed - speedDecreaseArg;
+    if(delta === 0) return speed;
+    else if(delta > 0) return (speedIncrease > speedTarget) ? speedTarget : speedIncrease;
+    else return (speedDecrease < speedTarget) ? speedTarget : speedDecrease;
+  }
+
   update({ deltaTimeMs }) {
     const headingOld = this.headingRad;
     const headingTarget = this.headingTargetRad;
@@ -170,6 +193,7 @@ module.exports = class Square {
     const headingRadNewLarge = this.updateHeading(headingOld, headingTarget, headingChange);
     const headingRadNew = convertToPosRad(convertToSmallRad(headingRadNewLarge));
 
+    const speedNew = this.updateSpeed(this.speed, this.speedTarget, 15, 30);
     const pixels = (this.speedPixelPerMs * deltaTimeMs);
     const pixelsInX = Math.cos(headingRadNew) * pixels;
     const pixelsInY = Math.sin(headingRadNew) * pixels;
@@ -186,8 +210,10 @@ module.exports = class Square {
     this.squareOneDiv.style.top = this.y - 8 + 'px';
     this.headingRad = headingRadNew;
     this.altitude = altitudeNew;
-
+    this.speed = speedNew;
+    this.speedPixelPerMs = convertKnotsToPixelsPerMs(speedNew);
     const speedPixels = this.speedPixelPerMs * deltaTimeMs;
+
     draw(this, 'greenyellow', speedPixels);
   }
 
@@ -207,7 +233,9 @@ module.exports = class Square {
       draw(this, 'darkred', speedPixels);
     }
   }
-};
+}; // end class Square
+
+const convertKnotsToPixelsPerMs = knots => parseInt(knots) / 36000;
 
 const draw = (self, color, speedPixels) => {
   self.ctx.fillStyle = color;
@@ -240,4 +268,4 @@ const draw = (self, color, speedPixels) => {
   self.textLayerObj.ctx.fillText('              ' + degreesDisplay, self.x, self.y - 2);
   self.textLayerObj.ctx.fillText('              ' + self.altitude + ' ft', self.x, self.y + 8);
   self.textLayerObj.ctx.fillText('              ' + speedDisplay + ' kts', self.x, self.y + 18);
-}
+};

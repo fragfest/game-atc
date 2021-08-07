@@ -54,8 +54,12 @@
         <input id="inputHeading" type="text" @keydown.enter="inputHeadingKeyDown" v-model="inputHeading" maxlength="3" class="input-heading">
       </div>
       <div :style="rowBelow">
-        <label for="inputAltitude">Altitude <small>(4 digits)</small> &nbsp;</label>
-        <input id="inputAltitude" type="text" @keydown.enter="inputAltitudeKeyDown" v-model="inputAltitude" maxlength="4" class="input-heading">
+        <label for="inputAltitude">Altitude <small>(3-5 digits)</small> &nbsp;</label>
+        <input id="inputAltitude" type="text" @keydown.enter="inputAltitudeKeyDown" v-model="inputAltitude" maxlength="5" class="input-heading">
+      </div>
+      <div :style="rowBelow">
+        <label for="inputSpeed">Speed <small>(3 digits)</small> &nbsp;</label>
+        <input id="inputSpeed" type="text" @keydown.enter="inputSpeedKeyDown" v-model="inputSpeed" maxlength="3" class="input-heading">
       </div>
     </div>
   </div>
@@ -75,6 +79,7 @@ export default {
     return {
       inputAltitude: '',
       inputHeading: '',
+      inputSpeed: '',
       width,
       height,
       square: null,
@@ -99,14 +104,22 @@ export default {
     },
     inputHeadingKeyDown: function() {
       if(!this.square) return;
+      if(Number(this.inputHeading) < 0) return
       this.square.setHeadingDegrees(this.inputHeading);
       this.inputHeading = '';
     },
     inputAltitudeKeyDown: function() {
       if(!this.square) return;
+      if(Number(this.inputAltitude) < 0) return
       this.square.setAltitude(this.inputAltitude);
       this.inputAltitude = '';
     },
+    inputSpeedKeyDown: function() {
+      if(!this.square) return;
+      if(Number(this.inputSpeed) < 0) return
+      this.square.setSpeed(this.inputSpeed, false);
+      this.inputSpeed = '';
+    }
   },
 
   mounted() {

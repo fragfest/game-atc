@@ -27,8 +27,8 @@ module.exports = class Runway {
     };
     img.src = '/img/runway.png';
 
-    this.ctx.fillStyle = 'greenyellow';
-    this.ctx.fillRect(this.x, this.y, 5, 5);
+    // this.ctx.fillStyle = 'greenyellow';
+    // this.ctx.fillRect(this.x, this.y, 5, 5);
 
     this.imgLayerCtx.fillStyle = 'greenyellow';
     this.imgLayerCtx.font = "bold 10px Arial"
@@ -61,8 +61,8 @@ module.exports = class Runway {
         marginX = (marginX > 10) ? marginX : 10;
         marginY = (marginY > 10) ? marginY : 10;
         
-        this.imgLayerCtx.fillStyle = 'yellow';
-        this.imgLayerCtx.fillRect(x, y, 3, 3);
+        // this.imgLayerCtx.fillStyle = 'yellow';
+        // this.imgLayerCtx.fillRect(x, y, 3, 3);
 
         const distSquareToX = Math.abs(entity.x - x);
         const distSquareToY = Math.abs(entity.y - y);
@@ -118,7 +118,7 @@ module.exports = class Runway {
         console.log(entity.title + ' :: landing rollout');
         entity.setHeadingRad(this.runwayHeading, true);
         const speedNew = entity.speed - 30;
-        entity.setSpeed(speedNew);
+        entity.setSpeed(speedNew, true);
         if(speedNew <= 0) {
           console.log(entity.title + ' :: landing complete');
           removeFromRunway(entity);
