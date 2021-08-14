@@ -2,6 +2,9 @@ const { inputHeadingToRad } = require('./utils');
 const entityFns = require('./entity');
 const Square = require('../js/Square');
 
+////////////////////////////////////////////////////////////
+// class Runway
+////////////////////////////////////////////////////////////
 module.exports = class Runway {
   constructor(title, entityLayerObj, imgLayerObj, positionObj) {
     this.id = Math.random();
@@ -49,29 +52,11 @@ module.exports = class Runway {
       if(!isSquare(entity)) return;
       if(!entity.landing) return;
       if(isHeadingClose(entity)) {
-        const distX = this.x - entity.x;
-        const distY = this.y - entity.y;
-        const dist = Math.sqrt( Math.pow(distX, 2) + Math.pow(distY, 2) );
-        const outgoingHeading = this.runwayHeading + Math.PI;
-        const oncourseX = dist * Math.cos(outgoingHeading);
-        const oncourseY = dist * Math.sin(outgoingHeading);
-        const x = this.x + oncourseX;
-        const y = this.y + oncourseY;
-        const margin = 10;
-        let marginX = Math.abs(margin * Math.cos(outgoingHeading));
-        let marginY = Math.abs(margin * Math.sin(outgoingHeading));
-        marginX = (marginX > 10) ? marginX : 10;
-        marginY = (marginY > 10) ? marginY : 10;
-        
-        // this.imgLayerCtx.fillStyle = 'yellow';
-        // this.imgLayerCtx.fillRect(x, y, 3, 3);
+        const distObj = distToRunwayObj(this, entity);
+        const isGettingCloser = distObj.dist < entity.distPrev;
 
-        const distSquareToX = Math.abs(entity.x - x);
-        const distSquareToY = Math.abs(entity.y - y);
-        const isGettingCloser = dist < entity.distPrev;
-        entity.distPrev = dist;
-        if(distSquareToX < marginX && distSquareToY < marginY && isGettingCloser) {
-          const interceptHeading = Math.atan(distY / distX) + Math.PI;
+        if(isCloseToGlidepath(this, entity)) {
+          const interceptHeading = Math.atan(distObj.y / distObj.x) + Math.PI;
           console.log(entity.title + ' :: landing mode ');
           entity.setHeadingTarget(interceptHeading, true);
           // TODO auto-slowdown need to support manual setting during landing also
@@ -79,11 +64,12 @@ module.exports = class Runway {
           if(entity.speedTarget > entity.speedLanding) entity.setSpeed(entity.speedLanding);
         }
         if(!isGettingCloser && !isEntityOnRunway(entity)) {
-          console.log(entity.title + ' :: go-around');
+          console.log(entity.title + ' :: go-around :: ');
           entity.setHeadingTarget(this.runwayHeading, false);
           if(entity.speedTarget < 160) entity.setSpeed(160);
           if(entity.altitudeTarget < 2000) entity.setAltitude(2000);
         }
+        entity.distPrev = distObj.dist;
       }
     });
   }
@@ -124,14 +110,45 @@ module.exports = class Runway {
       }
     });
   }
-}; //end class Runway
+};
+////////////////////////////////////////////////////////////
+// end class Runway
+////////////////////////////////////////////////////////////
+
+const distToRunwayObj = (runwaySelf, entity) => {
+  const x = runwaySelf.x - entity.x;
+  const y = runwaySelf.y - entity.y;
+  const dist = Math.sqrt( Math.pow(x, 2) + Math.pow(y, 2) );
+  return { x, y, dist };
+};
+
+const isCloseToGlidepath = (runwaySelf, entity) => {
+  const dist = distToRunwayObj(runwaySelf, entity).dist;
+  const outgoingHeading = runwaySelf.runwayHeading + Math.PI;
+  const oncourseX = dist * Math.cos(outgoingHeading);
+  const oncourseY = dist * Math.sin(outgoingHeading);
+  const x = runwaySelf.x + oncourseX;
+  const y = runwaySelf.y + oncourseY;
+  const margin = 10;
+  let marginX = Math.abs(margin * Math.cos(outgoingHeading));
+  let marginY = Math.abs(margin * Math.sin(outgoingHeading));
+  marginX = (marginX > 10) ? marginX : 10;
+  marginY = (marginY > 10) ? marginY : 10;
+  
+  runwaySelf.imgLayerCtx.fillStyle = 'yellow';
+  runwaySelf.imgLayerCtx.fillRect(x, y, 3, 3);
+
+  const distSquareToX = Math.abs(entity.x - x);
+  const distSquareToY = Math.abs(entity.y - y);
+  const isGettingCloser = dist < entity.distPrev;
+  return distSquareToX < marginX && distSquareToY < marginY && isGettingCloser;
+};
 
 const isOnRunway = landingEntities => entity => landingEntities.find(landing => landing.id === entity.id);
-
 const isTouchedDown = runwaySelf => entityOther => {
   const entityAirport = entityFns.create(runwaySelf);
-
   if(entityOther.id === entityAirport.id) return false;
+
   const distX = Math.abs(entityAirport.x - entityOther.x);
   const distY = Math.abs(entityAirport.y - entityOther.y);
   const distVert = Math.abs(entityAirport.altitude - entityOther.altitude);
@@ -141,5 +158,12 @@ const isTouchedDown = runwaySelf => entityOther => {
   const isCloseVertical = distVert < 150;
   const isRunwayHeading = deltaHeading < 0.1;
   const isCloseLandingSpeed = deltaLandingSpeed < 15;
+  if(entityOther.landing) {
+    console.log(entityOther.title
+      + ' :: isCloseHorizontal: ' + isCloseHorizontal
+      + ' :: isCloseVertical: ' + isCloseVertical
+      + ' :: isRunwayHeading: ' + isRunwayHeading
+      + ' :: isCloseLandingSpeed: ' + isCloseLandingSpeed);
+  }
   return isCloseHorizontal && isCloseVertical && isRunwayHeading && isCloseLandingSpeed;
-}
+};

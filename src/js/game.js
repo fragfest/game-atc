@@ -10,14 +10,14 @@ export const setup = (argObj) => {
     { x: argObj.width / 2 + 50, y: argObj.height / 2 + 8, heading: '270', altitude: 100, speed: 180 });
   const squareTwo = new Square('SQ 002',
     argObj.entityLayerObj, argObj.textLayerObj, argObj.headingLayerObj, argObj.entityDiv,
-    { x: argObj.width / 2 + 100, y: argObj.height / 2, heading: '265', altitude: 100, speed: 180 });
-  const squareThree = new Square('SQ 003',
-    argObj.entityLayerObj, argObj.textLayerObj, argObj.headingLayerObj, argObj.entityDiv,
-    { x: 50, y: 100, heading: '090', altitude: 1000, speed: 180 });
+    { x: argObj.width / 2 + 150, y: argObj.height / 2 + 8, heading: '270', altitude: 100, speed: 180 });
+  // const squareThree = new Square('SQ 003',
+  //   argObj.entityLayerObj, argObj.textLayerObj, argObj.headingLayerObj, argObj.entityDiv,
+  //   { x: 50, y: 100, heading: '090', altitude: 1000, speed: 180 });
 
   squareOne.clickEventCB = () => squareClickEventCB(squareOne);
   squareTwo.clickEventCB = () => squareClickEventCB(squareTwo);
-  squareThree.clickEventCB = () => squareClickEventCB(squareThree);
+  // squareThree.clickEventCB = () => squareClickEventCB(squareThree);
   
   const runwayOne = new Runway('run1',
     argObj.backgroundObj, argObj.imgLayerObj,
@@ -30,7 +30,7 @@ export const setup = (argObj) => {
   }
   entityManagerAdd(squareOne);
   entityManagerAdd(squareTwo);
-  entityManagerAdd(squareThree);
+  // entityManagerAdd(squareThree);
   entityManagerAdd(runwayOne);
   const callFn = (fnStr, argsObj) => entity => entity[fnStr] ? entity[fnStr](argsObj) : null;
 
