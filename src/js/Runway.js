@@ -92,14 +92,7 @@ module.exports = class Runway {
       index++;
       if(!isSquare) return;
       if(!entity.landing) return;
-      if(isEntityTouchedDown(entity)) {
-        console.log(entity.title + ' :: touch down');
-        entity.setAltitude(0);
-        entity.setHeadingRad(this.runwayHeading, true);
-        if(!isEntityOnRunway(entity)) {
-          placeOnRunway(entity);
-        }
-      } else if(isEntityOnRunway(entity)) {
+      if(isEntityOnRunway(entity)) {
         console.log(entity.title + ' :: landing rollout');
         entity.setHeadingRad(this.runwayHeading, true);
         const speedNew = entity.speed - 30;
@@ -109,6 +102,13 @@ module.exports = class Runway {
           removeFromRunway(entity);
           entity.destroy();
           entityManagerArr.splice(index, 1);
+        }
+      } else if(isEntityTouchedDown(entity)) {
+        console.log(entity.title + ' :: touch down');
+        entity.setAltitude(0);
+        entity.setHeadingRad(this.runwayHeading, true);
+        if(!isEntityOnRunway(entity)) {
+          placeOnRunway(entity);
         }
       }
     });
@@ -149,13 +149,12 @@ const isCloseToGlidepath = (runwaySelf, entity) => {
 
 const isOnRunway = landingEntities => entity => landingEntities.find(landing => landing.id === entity.id);
 const isTouchedDown = runwaySelf => entityOther => {
-  const entityAirport = entityFns.create(runwaySelf);
-  if(entityOther.id === entityAirport.id) return false;
+  if(entityOther.id === runwaySelf.id) return false;
 
-  const distX = Math.abs(entityAirport.x - entityOther.x);
-  const distY = Math.abs(entityAirport.y - entityOther.y);
-  const distVert = Math.abs(entityAirport.altitude - entityOther.altitude);
-  const deltaHeading = Math.abs(entityAirport.runwayHeading - entityOther.headingRad);
+  const distX = Math.abs(runwaySelf.x - entityOther.x);
+  const distY = Math.abs(runwaySelf.y - entityOther.y);
+  const distVert = Math.abs(runwaySelf.altitude - entityOther.altitude);
+  const deltaHeading = Math.abs(runwaySelf.runwayHeading - entityOther.headingRad);
   const deltaLandingSpeed = Math.abs(entityOther.speedLanding - entityOther.speed);
   const isCloseHorizontal = (distX < 5 && distY < 5);
   const isCloseVertical = distVert < 200;
