@@ -16,6 +16,7 @@ module.exports = class Runway {
     this.width = 4;
     this.height = 60;
     this.altitude = 0;
+    this.altitudeLanding = this.altitude + 150;
     this.runwayHeading = inputHeadingToRad(positionObj.heading);
     // this.runwayHeading = Math.PI * 3 / 4;  // runwayHeading 222 degrees
     this.landingEntities = [];
@@ -62,6 +63,8 @@ module.exports = class Runway {
           // TODO auto-slowdown need to support manual setting during landing also
           // TODO setSpeed & setAltitude based on dist i.e. glideslope
           if(entity.speedTarget > entity.speedLanding) entity.setSpeed(entity.speedLanding);
+          console.log(entity.altitudeTarget, this.altitudeLanding)
+          if(entity.altitudeTarget > this.altitudeLanding) entity.setAltitude(this.altitudeLanding);
         }
         if(!isGettingCloser && !isEntityOnRunway(entity)) {
           console.log(entity.title + ' :: go-around :: ');
@@ -155,7 +158,7 @@ const isTouchedDown = runwaySelf => entityOther => {
   const deltaHeading = Math.abs(entityAirport.runwayHeading - entityOther.headingRad);
   const deltaLandingSpeed = Math.abs(entityOther.speedLanding - entityOther.speed);
   const isCloseHorizontal = (distX < 5 && distY < 5);
-  const isCloseVertical = distVert < 150;
+  const isCloseVertical = distVert < 200;
   const isRunwayHeading = deltaHeading < 0.1;
   const isCloseLandingSpeed = deltaLandingSpeed < 15;
   if(entityOther.landing) {
