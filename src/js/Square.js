@@ -60,6 +60,7 @@ module.exports = class Square {
 
   setLanding(isLanding) {
     this.landing = !!isLanding;
+    if(!isLanding) this.distPrev = Infinity;
   }
 
   setSpeed(speedArg, isTouchedDown) {

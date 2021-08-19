@@ -40,6 +40,13 @@ module.exports = class Runway {
 
   update() {}
 
+  updateGoAround(entity) {
+    console.log(entity.title + ' :: go-around');
+    entity.setHeadingTarget(this.runwayHeading, false);
+    if(entity.speedTarget < 160) entity.setSpeed(160);
+    if(entity.altitudeTarget < 2000) entity.setAltitude(2000);
+  }
+
   updateLanding({ entityManagerArr }) {
     const isSquare = entity => entity instanceof Square;
     const isHeadingClose = entity => {
@@ -51,11 +58,16 @@ module.exports = class Runway {
     entityManagerArr.forEach(entity => {
       if(!isSquare(entity)) return;
       if(!entity.landing) return;
-      if(!isHeadingClose(entity)) return;
-      if(!isCloseToGlidepath(this, entity)) return;
 
       const distObj = distToRunwayObj(this, entity);
       const isGettingCloser = distObj.dist < entity.distPrev;
+      if(!isGettingCloser && !isEntityOnRunway(entity)) {
+        return this.updateGoAround(entity);
+      }
+
+      if(!isHeadingClose(entity)) return;
+      if(!isCloseToGlidepath(this, entity)) return;
+      entity.distPrev = distObj.dist;
 
       const interceptHeading = Math.atan(distObj.y / distObj.x) + Math.PI;
       console.log(entity.title + ' :: landing mode');
@@ -64,14 +76,6 @@ module.exports = class Runway {
       // TODO setSpeed & setAltitude based on dist i.e. glideslope
       if(entity.speedTarget > entity.speedLanding) entity.setSpeed(entity.speedLanding);
       if(entity.altitudeTarget > this.altitudeLanding) entity.setAltitude(this.altitudeLanding);
-
-      if(!isGettingCloser && !isEntityOnRunway(entity)) {
-        console.log(entity.title + ' :: go-around');
-        entity.setHeadingTarget(this.runwayHeading, false);
-        if(entity.speedTarget < 160) entity.setSpeed(160);
-        if(entity.altitudeTarget < 2000) entity.setAltitude(2000);
-      }
-      entity.distPrev = distObj.dist;
     });
   }
 
