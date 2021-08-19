@@ -43,8 +43,8 @@ module.exports = class Runway {
   updateGoAround(entity) {
     console.log(entity.title + ' :: go-around');
     entity.setHeadingTarget(this.runwayHeading, false);
-    if(entity.speedTarget < 160) entity.setSpeed(160);
-    if(entity.altitudeTarget < 2000) entity.setAltitude(2000);
+    if(entity.speedTarget < 160) entity.setSpeed(160, false, false);
+    if(entity.altitudeTarget < 2000) entity.setAltitude(2000, false);
   }
 
   updateLanding({ entityManagerArr }) {
@@ -72,10 +72,9 @@ module.exports = class Runway {
       const interceptHeading = Math.atan(distObj.y / distObj.x) + Math.PI;
       console.log(entity.title + ' :: landing mode');
       entity.setHeadingTarget(interceptHeading, true);
-      // TODO auto-slowdown need to support manual setting during landing also
       // TODO setSpeed & setAltitude based on dist i.e. glideslope
-      if(entity.speedTarget > entity.speedLanding) entity.setSpeed(entity.speedLanding);
-      if(entity.altitudeTarget > this.altitudeLanding) entity.setAltitude(this.altitudeLanding);
+      if(entity.speedTarget > entity.speedLanding) entity.setSpeed(entity.speedLanding, true, false);
+      if(entity.altitudeTarget > this.altitudeLanding) entity.setAltitude(this.altitudeLanding, true);
     });
   }
 
@@ -98,7 +97,7 @@ module.exports = class Runway {
         console.log(entity.title + ' :: landing rollout');
         entity.setHeadingRad(this.runwayHeading, true);
         const speedNew = entity.speed - 30;
-        entity.setSpeed(speedNew, true);
+        entity.setSpeed(speedNew, true, true);
         if(speedNew <= 0) {
           console.log(entity.title + ' :: landing complete');
           removeFromRunway(entity);
@@ -107,7 +106,7 @@ module.exports = class Runway {
         }
       } else if(isEntityTouchedDown(entity)) {
         console.log(entity.title + ' :: touch down');
-        entity.setAltitude(0);
+        entity.setAltitude(0, true);
         entity.setHeadingRad(this.runwayHeading, true);
         if(!isEntityOnRunway(entity)) {
           placeOnRunway(entity);

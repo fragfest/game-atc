@@ -111,13 +111,13 @@ export default {
     inputAltitudeKeyDown: function() {
       if(!this.square) return;
       if(Number(this.inputAltitude) < 0) return
-      this.square.setAltitude(this.inputAltitude);
+      this.square.setAltitude(this.inputAltitude, false);
       this.inputAltitude = '';
     },
     inputSpeedKeyDown: function() {
       if(!this.square) return;
       if(Number(this.inputSpeed) < 0) return
-      this.square.setSpeed(this.inputSpeed);
+      this.square.setSpeed(this.inputSpeed, false, false);
       this.inputSpeed = '';
     }
   },

@@ -31,7 +31,7 @@ module.exports = class Square {
     this.altitudeTarget = 1000;
     this.altitudeMin = 100;
     this.altitudeMax = 40000;
-    this.setAltitude(positionObj.altitude);
+    this.setAltitude(positionObj.altitude, false);
     this.headingRad = inputHeadingToRad(positionObj.heading);
     this.headingTargetRad = 0;
     this.setHeadingDegrees(positionObj.heading);
@@ -39,7 +39,7 @@ module.exports = class Square {
     this.speedTarget = 180;
     this.speedPixelPerMs = 0.005;
     this.speedTargetPixelPerMs = 0.005;
-    this.setSpeed(positionObj.speed);
+    this.setSpeed(positionObj.speed, false, false);
     this.speedMin = 135;
     this.speedLanding = 135; // TODO when ready can unlink from speedMin
     this.speedMax = 500;
@@ -59,11 +59,15 @@ module.exports = class Square {
   clickEventCB() { throw new Error('clickEventCB not attached'); }
 
   setLanding(isLanding) {
+    if(this.landing && !isLanding) console.log(this.title + ' :: cancel landing');
     this.landing = !!isLanding;
-    if(!isLanding) this.distPrev = Infinity;
+    if(!isLanding) {
+      this.distPrev = Infinity;
+    }
   }
 
-  setSpeed(speedArg, isTouchedDown) {
+  setSpeed(speedArg, isLanding, isTouchedDown) {
+    this.setLanding(isLanding);
     let speed = parseInt(speedArg);
     const speedMin = isTouchedDown ? 0 : this.speedMin;
 
@@ -73,7 +77,8 @@ module.exports = class Square {
     this.speedTargetPixelPerMs = convertKnotsToPixelsPerMs(speed);
   }
 
-  setAltitude(altitudeArg) {
+  setAltitude(altitudeArg, isLanding) {
+    this.setLanding(isLanding);
     let altitude = parseInt(altitudeArg);
     altitude = (altitude < this.altitudeMin) ? this.altitudeMin : altitude;
     altitude = (altitude > this.altitudeMax) ? this.altitudeMax : altitude;
