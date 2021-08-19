@@ -1,5 +1,4 @@
 const { inputHeadingToRad } = require('./utils');
-const entityFns = require('./entity');
 const Square = require('../js/Square');
 
 ////////////////////////////////////////////////////////////
@@ -52,28 +51,27 @@ module.exports = class Runway {
     entityManagerArr.forEach(entity => {
       if(!isSquare(entity)) return;
       if(!entity.landing) return;
-      if(isHeadingClose(entity)) {
-        const distObj = distToRunwayObj(this, entity);
-        const isGettingCloser = distObj.dist < entity.distPrev;
+      if(!isHeadingClose(entity)) return;
+      if(!isCloseToGlidepath(this, entity)) return;
 
-        if(isCloseToGlidepath(this, entity)) {
-          const interceptHeading = Math.atan(distObj.y / distObj.x) + Math.PI;
-          console.log(entity.title + ' :: landing mode ');
-          entity.setHeadingTarget(interceptHeading, true);
-          // TODO auto-slowdown need to support manual setting during landing also
-          // TODO setSpeed & setAltitude based on dist i.e. glideslope
-          if(entity.speedTarget > entity.speedLanding) entity.setSpeed(entity.speedLanding);
-          console.log(entity.altitudeTarget, this.altitudeLanding)
-          if(entity.altitudeTarget > this.altitudeLanding) entity.setAltitude(this.altitudeLanding);
-        }
-        if(!isGettingCloser && !isEntityOnRunway(entity)) {
-          console.log(entity.title + ' :: go-around :: ');
-          entity.setHeadingTarget(this.runwayHeading, false);
-          if(entity.speedTarget < 160) entity.setSpeed(160);
-          if(entity.altitudeTarget < 2000) entity.setAltitude(2000);
-        }
-        entity.distPrev = distObj.dist;
+      const distObj = distToRunwayObj(this, entity);
+      const isGettingCloser = distObj.dist < entity.distPrev;
+
+      const interceptHeading = Math.atan(distObj.y / distObj.x) + Math.PI;
+      console.log(entity.title + ' :: landing mode');
+      entity.setHeadingTarget(interceptHeading, true);
+      // TODO auto-slowdown need to support manual setting during landing also
+      // TODO setSpeed & setAltitude based on dist i.e. glideslope
+      if(entity.speedTarget > entity.speedLanding) entity.setSpeed(entity.speedLanding);
+      if(entity.altitudeTarget > this.altitudeLanding) entity.setAltitude(this.altitudeLanding);
+
+      if(!isGettingCloser && !isEntityOnRunway(entity)) {
+        console.log(entity.title + ' :: go-around');
+        entity.setHeadingTarget(this.runwayHeading, false);
+        if(entity.speedTarget < 160) entity.setSpeed(160);
+        if(entity.altitudeTarget < 2000) entity.setAltitude(2000);
       }
+      entity.distPrev = distObj.dist;
     });
   }
 
@@ -161,11 +159,11 @@ const isTouchedDown = runwaySelf => entityOther => {
   const isRunwayHeading = deltaHeading < 0.1;
   const isCloseLandingSpeed = deltaLandingSpeed < 15;
   if(entityOther.landing) {
-    console.log(entityOther.title
-      + ' :: isCloseHorizontal: ' + isCloseHorizontal
-      + ' :: isCloseVertical: ' + isCloseVertical
-      + ' :: isRunwayHeading: ' + isRunwayHeading
-      + ' :: isCloseLandingSpeed: ' + isCloseLandingSpeed);
+    // console.log(entityOther.title
+    //   + ' :: isCloseHorizontal: ' + isCloseHorizontal
+    //   + ' :: isCloseVertical: ' + isCloseVertical
+    //   + ' :: isRunwayHeading: ' + isRunwayHeading
+    //   + ' :: isCloseLandingSpeed: ' + isCloseLandingSpeed);
   }
   return isCloseHorizontal && isCloseVertical && isRunwayHeading && isCloseLandingSpeed;
 };
