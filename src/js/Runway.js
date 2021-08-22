@@ -109,9 +109,10 @@ module.exports = class Runway {
       if(!isSquare) return;
       if(!entity.landing) return;
       if(isEntityOnRunway(entity)) {
-        landingRollout(this, entityManagerArr, index, entity)
+        landingRollout(this, entityManagerArr, index, entity);
       } else if(isEntityTouchedDown(entity)) {
         console.log(entity.title + ' :: touch down');
+        entity.setIsTouchedDown(true);
         entity.setAltitude(this.altitude, true);
         entity.setHeadingRad(this.runwayHeading, true);
         if(!isEntityOnRunway(entity)) {
@@ -172,6 +173,7 @@ const isCloseToGlidepath = (runwaySelf, entity) => {
 };
 
 const isOnRunway = landingEntities => entity => landingEntities.find(landing => landing.id === entity.id);
+
 const isTouchedDown = runwaySelf => entityOther => {
   if(entityOther.id === runwaySelf.id) return false;
 

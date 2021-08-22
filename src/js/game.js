@@ -10,7 +10,7 @@ export const setup = (argObj) => {
     { x: argObj.width / 2 + 120, y: argObj.height / 2 + 14, heading: '270', altitude: 100, speed: 180 });
   const squareTwo = new Square('SQ 002',
     argObj.entityLayerObj, argObj.textLayerObj, argObj.headingLayerObj, argObj.entityDiv,
-    { x: argObj.width / 2 + 35, y: argObj.height / 2 + 8, heading: '270', altitude: 300, speed: 180 });
+    { x: argObj.width / 2 + 100, y: argObj.height / 2 + 8, heading: '270', altitude: 300, speed: 180 });
   // const squareThree = new Square('SQ 003',
   //   argObj.entityLayerObj, argObj.textLayerObj, argObj.headingLayerObj, argObj.entityDiv,
   //   { x: 50, y: 100, heading: '090', altitude: 1000, speed: 180 });

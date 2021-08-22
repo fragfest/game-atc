@@ -44,6 +44,7 @@ module.exports = class Square {
     this.speedLanding = 135; // TODO when ready can unlink from speedMin
     this.speedMax = 500;
 
+    this.isTouchedDown = false;
     this.landing = false;
     this.distPrev = Infinity;
 
@@ -57,6 +58,10 @@ module.exports = class Square {
   }
 
   clickEventCB() { throw new Error('clickEventCB not attached'); }
+
+  setIsTouchedDown(isTouchedDown) {
+    this.isTouchedDown = !!isTouchedDown;
+  }
 
   setLanding(isLanding) {
     if(this.landing && !isLanding) console.log(this.title + ' :: cancel landing');
@@ -231,7 +236,8 @@ module.exports = class Square {
     const accAnySquaresClose = (acc, val) => {
       const entityOther = entityFns.create(val);
       const isSquare = val instanceof Square;
-      return acc || (isEntityCloseTo(entityOther) && isSquare);
+      const areBothFlying = !entity.isTouchedDown && !entityOther.isTouchedDown;
+      return acc || (isEntityCloseTo(entityOther) && isSquare && areBothFlying);
     };
     const isClose = entityManagerArr.reduce(accAnySquaresClose, false);
 
