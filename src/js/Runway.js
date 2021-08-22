@@ -104,27 +104,15 @@ module.exports = class Runway {
     entityManagerArr.forEach(entity => {
       const isSquare = entity instanceof Square;
       const placeOnRunway = entity => this.landingEntities.push(entity);
-      const removeFromRunway = entity => {
-        this.landingEntities = this.landingEntities.filter(landing => landing.id !== entity.id);
-      }
 
       index++;
       if(!isSquare) return;
       if(!entity.landing) return;
       if(isEntityOnRunway(entity)) {
-        console.log(entity.title + ' :: landing rollout');
-        entity.setHeadingRad(this.runwayHeading, true);
-        const speedNew = entity.speed - 30;
-        entity.setSpeed(speedNew, true, true);
-        if(speedNew <= 0) {
-          console.log(entity.title + ' :: landing complete');
-          removeFromRunway(entity);
-          entity.destroy();
-          entityManagerArr.splice(index, 1);
-        }
+        landingRollout(this, entityManagerArr, index, entity)
       } else if(isEntityTouchedDown(entity)) {
         console.log(entity.title + ' :: touch down');
-        entity.setAltitude(0, true);
+        entity.setAltitude(this.altitude, true);
         entity.setHeadingRad(this.runwayHeading, true);
         if(!isEntityOnRunway(entity)) {
           placeOnRunway(entity);
@@ -136,6 +124,23 @@ module.exports = class Runway {
 ////////////////////////////////////////////////////////////
 // end class Runway
 ////////////////////////////////////////////////////////////
+
+const landingRollout = (self, entityManagerArr, entityIndex, entity) => {
+  const removeFromRunway = entity => {
+    this.landingEntities = self.landingEntities.filter(landing => landing.id !== entity.id);
+  }
+
+  console.log(entity.title + ' :: landing rollout');
+  entity.setHeadingRad(self.runwayHeading, true);
+  const speedNew = entity.speed - 30;
+  entity.setSpeed(speedNew, true, true);
+  if(speedNew <= 0) {
+    console.log(entity.title + ' :: landing complete');
+    removeFromRunway(entity);
+    entity.destroy();
+    entityManagerArr.splice(entityIndex, 1);
+  }
+};
 
 const distToRunwayObj = (runwaySelf, entity) => {
   const x = runwaySelf.x - entity.x;
@@ -157,8 +162,8 @@ const isCloseToGlidepath = (runwaySelf, entity) => {
   marginX = (marginX > 10) ? marginX : 10;
   marginY = (marginY > 10) ? marginY : 10;
   
-  runwaySelf.imgLayerCtx.fillStyle = 'yellow';
-  runwaySelf.imgLayerCtx.fillRect(x, y, 3, 3);
+  // runwaySelf.imgLayerCtx.fillStyle = 'yellow';
+  // runwaySelf.imgLayerCtx.fillRect(x, y, 3, 3);
 
   const distSquareToX = Math.abs(entity.x - x);
   const distSquareToY = Math.abs(entity.y - y);

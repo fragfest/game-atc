@@ -1,7 +1,10 @@
 <template>
   <div>
     <div>
-      <div class="entity-div layer-six" />
+      <div
+        class="entity-div layer-six"
+        :style="styleFullSize"
+      />
       <!-- <canvas
         ref="layerFive"
         class="canvas layer-five"
@@ -86,6 +89,8 @@ export default {
     };
   },
   computed: {
+    styleFullSize: () => ({ width: width + 'px', height: height + 'px' }),
+
     rowBelow: () => ({ position: 'relative', 'margin-top': '10px' }),
 
     panelBottomRightStyle: () => ({ position: 'absolute', left: '250px', top: height + 20 + 'px' }),
@@ -177,8 +182,8 @@ export default {
 
   .entity-div {
     position: absolute;
-    width: 800px;
-    height: 600px; 
+    /* width: 800px;
+    height: 600px;  */
   }
 
   .canvas {
