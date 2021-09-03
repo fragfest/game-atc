@@ -60,14 +60,18 @@ module.exports = class Runway {
       if(!isGettingCloser && !isEntityOnRunway(entity)) {
         return this.updateGoAround(entity);
       }
+      if(isEntityOnRunway(entity)) return;
 
-      if(!isHeadingClose(this, entity)) return;
-      if(!isCloseToGlidepath(this, entity)) return;
-      entity.distPrev = distObj.dist; // TODO make explicit Square setter
+      if(!isHeadingClose(this, entity)) {
+        return entity.setLanding(false);
+      }
+      if(!isCloseToGlidepath(this, entity)) {
+        return entity.setLanding(false);
+      }
+      entity.setDistPrev(distObj.dist);
 
       const interceptHeading = Math.atan(distObj.y / distObj.x) + Math.PI;
       console.log(entity.title + ' :: intercept heading ', interceptHeading);
-      // console.log(entity.title + ' :: landing mode');
       entity.setHeadingTarget(interceptHeading, true);
       updateSpeedAlt(this, entity);
     });
@@ -105,10 +109,11 @@ module.exports = class Runway {
 
 const getGlideslopeDist = (self, entity) => {
   const dist = distToRunwayObj(self, entity).dist;
+  console.log(entity.title + ' :: dist ' + dist)
   if(dist <= 60) return 10;
-  if(60 < dist && dist <= 120) return 30;
-  if(120 < dist && dist <= 200) return 60;
-  if(dist > 200) return 120;
+  if(60 < dist && dist <= 120) return 20;
+  if(120 < dist && dist <= 200) return 30;
+  if(dist > 200) return 60;
 };
 
 const isHeadingClose = (self, entity) => {
@@ -184,8 +189,8 @@ const isCloseToGlidepath = (self, entity) => {
     self.imgLayerCtx.fillStyle = 'yellow';
     self.imgLayerCtx.fillRect(x, y, 3, 3);
   }
-  console.log('marginX', marginX, 'marginY', marginY)
-  console.log('distSquareToX', distSquareToX, 'distSquareToY', distSquareToY)
+  // console.log('distTo-x', distSquareToX.toFixed('1'), 'max-x', marginX.toFixed('1'),
+  //  'distTo-y', distSquareToY.toFixed('1'), 'max-y', marginY.toFixed('1'))
   return distSquareToX < marginX && distSquareToY < marginY && isGettingCloser;
 };
 

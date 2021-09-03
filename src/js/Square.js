@@ -59,6 +59,10 @@ module.exports = class Square {
 
   clickEventCB() { throw new Error('clickEventCB not attached'); }
 
+  setDistPrev(distPrevArg) {
+    this.distPrev = distPrevArg;
+  }
+
   setIsTouchedDown(isTouchedDown) {
     this.isTouchedDown = !!isTouchedDown;
   }
