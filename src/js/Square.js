@@ -7,6 +7,9 @@ const {
 } = require('./utils');
 const entityFns = require('./entity');
 
+////////////////////////////////////////////////////////////
+// class Square
+////////////////////////////////////////////////////////////
 module.exports = class Square {
   constructor(title, entityLayerObj, textLayerObj, headingLayerObj, htmlDiv, positionObj) {
     this.id = Math.random();
@@ -175,8 +178,8 @@ module.exports = class Square {
       else return (headingDecrease < headingTargetSmall) ? headingTargetSmall : headingDecrease;
     }
     // else isClosestBetween
-    // if(isLowestLargeTarget) turnRight
-    if(isLowestLargeTarget) return (headingIncrease > headingTargetLarge) ? headingTargetLarge : headingIncrease;
+    const turnRight = isLowestLargeTarget;
+    if(turnRight) return (headingIncrease > headingTargetLarge) ? headingTargetLarge : headingIncrease;
     else return (headingLargeDecrease < headingTargetSmall) ? headingTargetSmall : headingLargeDecrease;
   }
 
@@ -229,9 +232,8 @@ module.exports = class Square {
     this.altitude = altitudeNew;
     this.speed = speedNew;
     this.speedPixelPerMs = convertKnotsToPixelsPerMs(speedNew);
-    const speedPixels = this.speedPixelPerMs * deltaTimeMs;
 
-    draw(this, 'greenyellow', speedPixels);
+    draw(this, 'greenyellow');
   }
 
   setProximity({ entityManagerArr, deltaTimeMs }) {
@@ -251,17 +253,20 @@ module.exports = class Square {
       draw(this, 'darkred', speedPixels);
     }
   }
-}; // end class Square
+};
+////////////////////////////////////////////////////////////
+// end class Square
+////////////////////////////////////////////////////////////
 
 const convertKnotsToPixelsPerMs = knots => parseInt(knots) / 36000;
 
-const draw = (self, color, speedPixels) => {
+const draw = (self, color) => {
   self.ctx.fillStyle = color;
   self.ctx.globalAlpha = 1;
   self.ctx.fillRect(self.x, self.y, self.width, self.height);
   self.ctx.clearRect(self.x + 1, self.y + 1, self.width - 2, self.height - 2);
 
-  const pixels = speedPixels;
+  const pixels = self.speedPixelPerMs * 2000;
   const pixelsInX = Math.cos(self.headingRad) * pixels;
   const pixelsInY = Math.sin(self.headingRad) * pixels;
   const center = { x: self.x + self.width / 2, y: self.y + self.height / 2 };

@@ -7,10 +7,10 @@ export const setup = (argObj) => {
 
   const squareOne = new Square('SQ 001',
     argObj.entityLayerObj, argObj.textLayerObj, argObj.headingLayerObj, argObj.entityDiv,
-    { x: argObj.width / 2 + 30, y: argObj.height / 2 - 30, heading: '222', altitude: 100, speed: 180 });
+    { x: argObj.width / 2 + 70, y: argObj.height / 2 - 200, heading: '222', altitude: 100, speed: 180 });
   const squareTwo = new Square('SQ 002',
     argObj.entityLayerObj, argObj.textLayerObj, argObj.headingLayerObj, argObj.entityDiv,
-    { x: argObj.width / 2 - 40, y: argObj.height / 2 - 30, heading: '222', altitude: 300, speed: 180 });
+    { x: argObj.width / 2 - 40, y: argObj.height / 2 - 30, heading: '222', altitude: 1000, speed: 180 });
   // const squareThree = new Square('SQ 003',
   //   argObj.entityLayerObj, argObj.textLayerObj, argObj.headingLayerObj, argObj.entityDiv,
   //   { x: 50, y: 100, heading: '090', altitude: 1000, speed: 180 });
@@ -34,7 +34,7 @@ export const setup = (argObj) => {
   entityManagerAdd(runwayOne);
   const callFn = (fnStr, argsObj) => entity => entity[fnStr] ? entity[fnStr](argsObj) : null;
 
-  const updateIntervalMs = 2000;
+  const updateIntervalMs = 1000;
   let timestampPrev = 0;
   const gameTick = timestamp => {
     const deltaTime = timestamp - timestampPrev;
