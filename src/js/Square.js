@@ -47,6 +47,7 @@ module.exports = class Square {
     this.speedLanding = 135; // TODO when ready can unlink from speedMin
     this.speedMax = 500;
 
+    this.onGlidePath = false;
     this.isTouchedDown = false;
     this.landing = false;
     this.distPrev = Infinity;
@@ -63,6 +64,10 @@ module.exports = class Square {
 
   clickEventCB() { throw new Error('clickEventCB not attached'); }
 
+  setOnGlidepath(arg) {
+    this.onGlidePath = !!arg;
+  }
+
   setDistPrev(distPrevArg) {
     this.distPrev = distPrevArg;
   }
@@ -75,6 +80,7 @@ module.exports = class Square {
     if(this.landing && !isLanding) console.log(this.title + ' :: cancel landing');
     this.landing = !!isLanding;
     if(!isLanding) {
+      this.onGlidePath = false;
       this.distPrev = Infinity;
     }
   }

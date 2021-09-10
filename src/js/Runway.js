@@ -53,18 +53,17 @@ module.exports = class Runway {
 
     entityManagerArr.forEach(entity => {
       if(!isSquare(entity)) return;
-      if(!entity.landing) return;
-
       const distObj = distToRunwayObj(this, entity);
       const isGettingCloser = distObj.dist < entity.distPrev;
-      if(!isGettingCloser && !isEntityOnRunway(entity)) {
-        return this.updateGoAround(entity);
-      }
+
+      if(!entity.landing) return;
+      if(!isGettingCloser && !isEntityOnRunway(entity)) { return this.updateGoAround(entity); }
       if(isEntityOnRunway(entity)) return;
 
-      if(!isHeadingClose(this, entity)) { return entity.setLanding(false); }
-      if(!isCloseToGlidepath(this, entity)) { return entity.setLanding(false); }
+      if(!isHeadingClose(this, entity) && !entity.onGlidePath) { return entity.setLanding(false); }
+      if(!isCloseToGlidepath(this, entity) && !entity.onGlidePath) { return entity.setLanding(false); }
       entity.setDistPrev(distObj.dist);
+      entity.setOnGlidepath(true);
 
       const interceptHeading = Math.atan(distObj.y / distObj.x) + Math.PI;
       console.log(entity.title + ' :: intercept heading ', interceptHeading);
