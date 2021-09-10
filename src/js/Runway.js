@@ -62,12 +62,8 @@ module.exports = class Runway {
       }
       if(isEntityOnRunway(entity)) return;
 
-      if(!isHeadingClose(this, entity)) {
-        return entity.setLanding(false);
-      }
-      if(!isCloseToGlidepath(this, entity)) {
-        return entity.setLanding(false);
-      }
+      if(!isHeadingClose(this, entity)) { return entity.setLanding(false); }
+      if(!isCloseToGlidepath(this, entity)) { return entity.setLanding(false); }
       entity.setDistPrev(distObj.dist);
 
       const interceptHeading = Math.atan(distObj.y / distObj.x) + Math.PI;

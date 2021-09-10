@@ -51,6 +51,7 @@ module.exports = class Square {
     this.landing = false;
     this.distPrev = Infinity;
 
+    this.speedRatePerMs = 0.0075;
     this.altitudeRatePerMs = 0.05;
     this.turnRateRadPerMs = 0.0001;
     this.timestampPrevMs = 0;
@@ -184,9 +185,9 @@ module.exports = class Square {
   }
 
   updateAltitude(altitudeOldArg, altitudeTargetArg, altitudeChangeArg) {
-    const altitudeOld = Math.floor(altitudeOldArg / 100) * 100;
-    const altitudeTarget = Math.floor(altitudeTargetArg / 100) * 100;
-    const altitudeChange = Math.floor(altitudeChangeArg / 100) * 100;
+    const altitudeOld = Math.ceil(altitudeOldArg / 50) * 50;
+    const altitudeTarget = Math.ceil(altitudeTargetArg / 50) * 50;
+    const altitudeChange = Math.ceil(altitudeChangeArg / 50) * 50;
     const delta = altitudeTarget - altitudeOld;
     const altitudeIncrease = altitudeOld + altitudeChange;
     const altitudeDecrease = altitudeOld - altitudeChange;
@@ -199,8 +200,8 @@ module.exports = class Square {
     const speed = Math.round(speedArg);
     const speedTarget = Math.round(speedTargetArg);
     const delta = speedTarget - speed;
-    const speedIncrease = speed + speedIncreaseArg;
-    const speedDecrease = speed - speedDecreaseArg;
+    const speedIncrease = speed + Math.round(speedIncreaseArg);
+    const speedDecrease = speed - Math.round(speedDecreaseArg);
     if(delta === 0) return speed;
     else if(delta > 0) return (speedIncrease > speedTarget) ? speedTarget : speedIncrease;
     else return (speedDecrease < speedTarget) ? speedTarget : speedDecrease;
@@ -213,7 +214,8 @@ module.exports = class Square {
     const headingRadNewLarge = this.updateHeading(headingOld, headingTarget, headingChange);
     const headingRadNew = convertToPosRad(convertToSmallRad(headingRadNewLarge));
 
-    const speedNew = this.updateSpeed(this.speed, this.speedTarget, 15, 15);
+    const speedDelta = this.speedRatePerMs * deltaTimeMs;
+    const speedNew = this.updateSpeed(this.speed, this.speedTarget, speedDelta, speedDelta);
     const pixels = (this.speedPixelPerMs * deltaTimeMs);
     const pixelsInX = Math.cos(headingRadNew) * pixels;
     const pixelsInY = Math.sin(headingRadNew) * pixels;
