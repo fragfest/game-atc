@@ -1,6 +1,7 @@
+const Waypoint = require('./Waypoint');
 const Square = require('./Square');
-import Runway from '../js/Runway';
-import { isEntity } from '../js/entity';
+import Runway from './Runway';
+import { isEntity } from './entity';
 
 export const setup = (argObj) => {
   const squareClickEventCB = argObj.squareClickEventCB; // CB arg: Square
@@ -23,6 +24,10 @@ export const setup = (argObj) => {
     argObj.backgroundObj, argObj.imgLayerObj,
     { x: argObj.width / 2 - 100, y: argObj.height / 2 + 17, heading: 270 });
 
+  const waypointOne = new Waypoint('WAYONE',
+    argObj.backgroundObj, argObj.headingLayerObj,
+    { x: argObj.width / 2 + 200, y: argObj.height / 2 });
+
   const entityManagerArr = [];
   const entityManagerAdd = obj => {
     if(isEntity(obj)) entityManagerArr.push(obj);
@@ -32,10 +37,12 @@ export const setup = (argObj) => {
   entityManagerAdd(squareTwo);
   // entityManagerAdd(squareThree);
   entityManagerAdd(runwayOne);
-  const callFn = (fnStr, argsObj) => entity => entity[fnStr] ? entity[fnStr](argsObj) : null;
+  entityManagerAdd(waypointOne);
 
+  const callFn = (fnStr, argsObj) => entity => entity[fnStr] ? entity[fnStr](argsObj) : null;
   const updateIntervalMs = 2000;
   let timestampPrev = 0;
+
   const gameTick = timestamp => {
     const deltaTime = timestamp - timestampPrev;
     if(deltaTime > updateIntervalMs) {
