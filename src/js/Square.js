@@ -241,7 +241,8 @@ module.exports = class Square {
     this.speed = speedNew;
     this.speedPixelPerMs = convertKnotsToPixelsPerMs(speedNew);
 
-    draw(this, 'greenyellow');
+    const speedPixels = this.speedPixelPerMs * deltaTimeMs;
+    draw(this, 'greenyellow', speedPixels);
   }
 
   setProximity({ entityManagerArr, deltaTimeMs }) {
@@ -268,15 +269,14 @@ module.exports = class Square {
 
 const convertKnotsToPixelsPerMs = knots => parseInt(knots) / 36000;
 
-const draw = (self, color) => {
+const draw = (self, color, speedPixels) => {
   self.ctx.fillStyle = color;
   self.ctx.globalAlpha = 1;
   self.ctx.fillRect(self.x, self.y, self.width, self.height);
   self.ctx.clearRect(self.x + 1, self.y + 1, self.width - 2, self.height - 2);
 
-  const pixels = self.speedPixelPerMs * 2000;
-  const pixelsInX = Math.cos(self.headingRad) * pixels;
-  const pixelsInY = Math.sin(self.headingRad) * pixels;
+  const pixelsInX = Math.cos(self.headingRad) * speedPixels * 0.8;
+  const pixelsInY = Math.sin(self.headingRad) * speedPixels * 0.8;
   const center = { x: self.x + self.width / 2, y: self.y + self.height / 2 };
   self.headingLayerObj.ctx.strokeStyle = color;
   self.headingLayerObj.ctx.beginPath();
