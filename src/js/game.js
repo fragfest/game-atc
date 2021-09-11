@@ -8,10 +8,10 @@ export const setup = (argObj) => {
 
   const squareOne = new Square('SQ 001',
     argObj.entityLayerObj, argObj.textLayerObj, argObj.headingLayerObj, argObj.entityDiv,
-    { x: argObj.width / 2 + 70, y: argObj.height / 2 - 200, heading: '222', altitude: 100, speed: 180 });
+    { x: argObj.width / 2 + 300, y: argObj.height / 2 - 200, heading: '222', altitude: 100, speed: 180 });
   const squareTwo = new Square('SQ 002',
     argObj.entityLayerObj, argObj.textLayerObj, argObj.headingLayerObj, argObj.entityDiv,
-    { x: argObj.width / 2 - 40, y: argObj.height / 2 - 30, heading: '222', altitude: 800, speed: 180 });
+    { x: argObj.width / 2 + 10, y: argObj.height / 2 + 20, heading: '270', altitude: 800, speed: 180 });
   // const squareThree = new Square('SQ 003',
   //   argObj.entityLayerObj, argObj.textLayerObj, argObj.headingLayerObj, argObj.entityDiv,
   //   { x: 50, y: 100, heading: '090', altitude: 1000, speed: 180 });

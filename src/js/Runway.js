@@ -16,8 +16,8 @@ module.exports = class Runway {
     this.height = 60;
     this.altitude = 0;
     this.altitudeLanding = this.altitude + 150;
-    // this.runwayHeading = inputHeadingToRad(positionObj.heading);
-    this.runwayHeading = Math.PI * 3 / 4;  // runwayHeading 222 degrees
+    this.runwayHeading = inputHeadingToRad(positionObj.heading);
+    // this.runwayHeading = Math.PI * 3 / 4;  // runwayHeading 222 degrees
     this.landingEntities = [];
 
     const img = new Image();
@@ -89,7 +89,7 @@ module.exports = class Runway {
       } else if(isEntityTouchedDown(entity)) {
         console.log(entity.title + ' :: touch down');
         entity.setIsTouchedDown(true);
-        entity.setAltitude(this.altitude, true);
+        entity.setAltitude(this.altitude, true, true);
         entity.setHeadingRad(this.runwayHeading, true);
         if(!isEntityOnRunway(entity)) {
           placeOnRunway(entity);

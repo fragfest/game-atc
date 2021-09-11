@@ -77,7 +77,6 @@ module.exports = class Square {
   }
 
   setLanding(isLanding) {
-    if(this.landing && !isLanding) console.log(this.title + ' :: cancel landing');
     this.landing = !!isLanding;
     if(!isLanding) {
       this.onGlidePath = false;
@@ -96,9 +95,13 @@ module.exports = class Square {
     this.speedTargetPixelPerMs = convertKnotsToPixelsPerMs(speed);
   }
 
-  setAltitude(altitudeArg, isLanding) {
+  setAltitude(altitudeArg, isLanding, isTouchedDown) {
     this.setLanding(isLanding);
     let altitude = parseInt(altitudeArg);
+    if(isTouchedDown) {
+      return this.altitudeTarget = altitude;
+    }
+    
     altitude = (altitude < this.altitudeMin) ? this.altitudeMin : altitude;
     altitude = (altitude > this.altitudeMax) ? this.altitudeMax : altitude;
     this.altitudeTarget = Math.floor(altitude / 100) * 100;
@@ -191,12 +194,13 @@ module.exports = class Square {
   }
 
   updateAltitude(altitudeOldArg, altitudeTargetArg, altitudeChangeArg) {
-    const altitudeOld = Math.ceil(altitudeOldArg / 50) * 50;
-    const altitudeTarget = Math.ceil(altitudeTargetArg / 50) * 50;
-    const altitudeChange = Math.ceil(altitudeChangeArg / 50) * 50;
+    const altitudeOld = Math.round(altitudeOldArg / 50) * 50;
+    const altitudeTarget = Math.round(altitudeTargetArg / 50) * 50;
+    const altitudeChange = Math.round(altitudeChangeArg / 50) * 50;
     const delta = altitudeTarget - altitudeOld;
     const altitudeIncrease = altitudeOld + altitudeChange;
     const altitudeDecrease = altitudeOld - altitudeChange;
+    console.log(altitudeDecrease, altitudeTargetArg, altitudeOld)
     if(delta === 0) return altitudeOld;
     else if(delta > 0) return (altitudeIncrease > altitudeTarget) ? altitudeTarget : altitudeIncrease;
     else return (altitudeDecrease < altitudeTarget) ? altitudeTarget : altitudeDecrease;

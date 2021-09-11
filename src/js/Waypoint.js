@@ -2,17 +2,17 @@
 // class Waypoint
 ////////////////////////////////////////////////////////////
 module.exports = class Waypoint {
-    constructor(title, entityLayerObj, textLayerObj, positionObj) {
-    this.id = Math.random();
-    this.title = title.trim();
-    this.ctx = entityLayerObj.ctx
-    this.textLayerObj = textLayerObj;
+  constructor(title, entityLayerObj, textLayerObj, positionObj) {
+      this.id = Math.random();
+      this.title = title.trim();
+      this.ctx = entityLayerObj.ctx
+      this.textLayerObj = textLayerObj;
 
-    this.x = positionObj.x;
-    this.y = positionObj.y;
-    this.width = 5;
-    this.height = 5;
-    this.altitude = 0;
+      this.x = positionObj.x;
+      this.y = positionObj.y;
+      this.width = 5;
+      this.height = 5;
+      this.altitude = 0;
   }
 
   update() {
