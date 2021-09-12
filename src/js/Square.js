@@ -200,7 +200,6 @@ module.exports = class Square {
     const delta = altitudeTarget - altitudeOld;
     const altitudeIncrease = altitudeOld + altitudeChange;
     const altitudeDecrease = altitudeOld - altitudeChange;
-    console.log(altitudeDecrease, altitudeTargetArg, altitudeOld)
     if(delta === 0) return altitudeOld;
     else if(delta > 0) return (altitudeIncrease > altitudeTarget) ? altitudeTarget : altitudeIncrease;
     else return (altitudeDecrease < altitudeTarget) ? altitudeTarget : altitudeDecrease;

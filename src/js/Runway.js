@@ -30,8 +30,8 @@ module.exports = class Runway {
     };
     img.src = '/img/runway.png';
 
-    this.ctx.fillStyle = 'greenyellow';
-    this.ctx.fillRect(this.x, this.y, 5, 5);
+    // this.ctx.fillStyle = 'greenyellow';
+    // this.ctx.fillRect(this.x, this.y, 5, 5);
 
     this.imgLayerCtx.fillStyle = 'greenyellow';
     this.imgLayerCtx.font = "bold 10px Arial"
@@ -66,7 +66,7 @@ module.exports = class Runway {
       entity.setOnGlidepath(true);
 
       const interceptHeading = Math.atan(distObj.y / distObj.x) + Math.PI;
-      console.log(entity.title + ' :: intercept heading ', interceptHeading);
+      console.log(entity.title + ' :: intercept glidepath ');
       entity.setHeadingTarget(interceptHeading, true);
       updateSpeedAlt(this, entity);
     });
@@ -104,7 +104,7 @@ module.exports = class Runway {
 
 const getGlideslopeDist = (self, entity) => {
   const dist = distToRunwayObj(self, entity).dist;
-  console.log(entity.title + ' :: dist ' + dist)
+  // console.log(entity.title + ' :: dist ' + dist)
   if(dist <= 60) return 10;
   if(60 < dist && dist <= 120) return 20;
   if(120 < dist && dist <= 200) return 30;
@@ -180,10 +180,10 @@ const isCloseToGlidepath = (self, entity) => {
   const distSquareToX = Math.abs(entity.x - x);
   const distSquareToY = Math.abs(entity.y - y);
   const isGettingCloser = dist < entity.distPrev;
-  if(isGettingCloser) {
-    self.imgLayerCtx.fillStyle = 'yellow';
-    self.imgLayerCtx.fillRect(x, y, 3, 3);
-  }
+  // if(isGettingCloser) {
+  //   self.imgLayerCtx.fillStyle = 'yellow';
+  //   self.imgLayerCtx.fillRect(x, y, 3, 3);
+  // }
   // console.log('distTo-x', distSquareToX.toFixed('1'), 'max-x', marginX.toFixed('1'),
   //  'distTo-y', distSquareToY.toFixed('1'), 'max-y', marginY.toFixed('1'))
   return distSquareToX < marginX && distSquareToY < marginY && isGettingCloser;
