@@ -61,4 +61,8 @@ export const setup = (argObj) => {
   }
 
   window.requestAnimationFrame(gameTick);
+
+  return {
+    planes: [squareOne, squareTwo],
+  };
 }; // end setup

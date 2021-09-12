@@ -1,85 +1,112 @@
 <template>
-  <div>
-    <div>
-      <div
-        class="entity-div layer-six"
-        :style="styleFullSize"
-      />
-      <!-- <canvas
-        ref="layerFive"
-        class="canvas layer-five"
-        :width="width"
-        :height="height"
-      ></canvas> -->
-      <canvas
-        ref="layerFour"
-        class="canvas layer-four"
-        :width="width"
-        :height="height"
-      ></canvas>
-      <canvas
-        ref="layerThree"
-        class="canvas layer-three"
-        :width="width"
-        :height="height"
-      ></canvas>
-      <canvas
-        ref="layerTwo"
-        class="canvas layer-two"
-        :width="width"
-        :height="height"
-      ></canvas>
-      <canvas
-        ref="layerOne"
-        class="canvas layer-one"
-        :width="width"
-        :height="height"
-      ></canvas>
-      <canvas
-        ref="background"
-        class="canvas background layer-zero"
-        :width="width"
-        :height="height"
-      ></canvas>
-      <img src="/img/london.png" :height="height">
-    </div>
-    <div :style="panelBottomStyle">
-      <button @click="btnClick('land')" :style="buttonLand">Land</button>
-      <button @click="btnClick('left')" :style="buttonLeft">Left</button>
-      <button @click="btnClick('top')" :style="buttonTop">Up</button>
-      <button @click="btnClick('down')" :style="buttonBottom">Down</button>
-      <button @click="btnClick('right')" :style="buttonRight">Right</button>
-    </div>
-    <div :style="panelBottomRightStyle">
-      <p>{{ square ? square.title : '' }}</p>
-      <div :style="rowBelow">
-        <label for="inputHeading">Heading <small>(3 digits)</small> &nbsp;</label>
-        <input id="inputHeading" type="text" @keydown.enter="inputHeadingKeyDown" v-model="inputHeading" maxlength="3" class="input-heading">
+  <div class="container">
+
+    <!-- row-top -->
+    <div class="row-top">
+      <!-- scope -->
+      <div class="scope">
+        <div
+          class="entity-div layer-six"
+          :style="styleFullSize"
+        />
+        <!-- <canvas
+          ref="layerFive"
+          class="canvas layer-five"
+          :width="width"
+          :height="height"
+        ></canvas> -->
+        <canvas
+          ref="layerFour"
+          class="canvas layer-four"
+          :width="width"
+          :height="height"
+        ></canvas>
+        <canvas
+          ref="layerThree"
+          class="canvas layer-three"
+          :width="width"
+          :height="height"
+        ></canvas>
+        <canvas
+          ref="layerTwo"
+          class="canvas layer-two"
+          :width="width"
+          :height="height"
+        ></canvas>
+        <canvas
+          ref="layerOne"
+          class="canvas layer-one"
+          :width="width"
+          :height="height"
+        ></canvas>
+        <canvas
+          ref="background"
+          class="canvas background layer-zero"
+          :width="width"
+          :height="height"
+        ></canvas>
+        <img src="/img/london.png" :height="height">
       </div>
-      <div :style="rowBelow">
-        <label for="inputAltitude">Altitude <small>(3-5 digits)</small> &nbsp;</label>
-        <input id="inputAltitude" type="text" @keydown.enter="inputAltitudeKeyDown" v-model="inputAltitude" maxlength="5" class="input-heading">
+      <!-- end scope -->
+      <!-- panel-right -->
+      <div class="panel-right">
+        <ul>
+          <li v-for="(plane, index) in planes" :key="index">
+            <FlightStrip
+              :title="plane.title"
+            ></FlightStrip>
+          </li>
+        </ul>
       </div>
-      <div :style="rowBelow">
-        <label for="inputSpeed">Speed <small>(3 digits)</small> &nbsp;</label>
-        <input id="inputSpeed" type="text" @keydown.enter="inputSpeedKeyDown" v-model="inputSpeed" maxlength="3" class="input-heading">
+      <!-- end panel-right -->
+    </div>
+    <!-- end row-top -->
+
+    <!-- row-bottom -->
+    <div class="row-bottom">
+      <div :style="panelBottomStyle">
+        <button @click="btnClick('land')" :style="buttonLand">Land</button>
+        <button @click="btnClick('left')" :style="buttonLeft">Left</button>
+        <button @click="btnClick('top')" :style="buttonTop">Up</button>
+        <button @click="btnClick('down')" :style="buttonBottom">Down</button>
+        <button @click="btnClick('right')" :style="buttonRight">Right</button>
+      </div>
+      <div :style="panelBottomRightStyle">
+        <p>{{ square ? square.title : '' }}</p>
+        <div :style="rowBelow">
+          <label for="inputHeading">Heading <small>(3 digits)</small> &nbsp;</label>
+          <input id="inputHeading" type="text" @keydown.enter="inputHeadingKeyDown" v-model="inputHeading" maxlength="3" class="input-heading">
+        </div>
+        <div :style="rowBelow">
+          <label for="inputAltitude">Altitude <small>(3-5 digits)</small> &nbsp;</label>
+          <input id="inputAltitude" type="text" @keydown.enter="inputAltitudeKeyDown" v-model="inputAltitude" maxlength="5" class="input-heading">
+        </div>
+        <div :style="rowBelow">
+          <label for="inputSpeed">Speed <small>(3 digits)</small> &nbsp;</label>
+          <input id="inputSpeed" type="text" @keydown.enter="inputSpeedKeyDown" v-model="inputSpeed" maxlength="3" class="input-heading">
+        </div>
       </div>
     </div>
+    <!-- end row-bottom -->
+
   </div>
 </template>
 
 <script>
 import { setup } from '../js/game';
+import FlightStrip from './FlightStrip';
 
 const width = 993;
 const height = 600;
 
 export default {
   name: 'Canvas',
+  components: { FlightStrip },
   props: {},
 
   data() {
     return {
+      planes: [],
       inputAltitude: '',
       inputHeading: '',
       inputSpeed: '',
@@ -151,7 +178,7 @@ export default {
     const layerFourObj = { ctx: layerFourCtx, width: this.width, height: this.height };
 
     const squareClickEventCB = squareObj => this.square = squareObj;
-    setup({
+    const setupObj = setup({
       width, height,
       backgroundObj,
       imgLayerObj: { ctx: layerOneCtx },
@@ -161,12 +188,36 @@ export default {
       entityDiv: layerSixDiv,
       squareClickEventCB,
     });
+    this.planes = setupObj.planes;
 
   } // end mounted
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+  .container {
+    display: flex;
+  }
+
+  .row-top {
+    display: flex;
+  }
+
+  .scope {
+
+  }
+
+  .panel-right {
+    margin: 0px 10px;
+    & ul {
+      list-style-type: none;
+    }
+  }
+
+  .row-bottom {
+    display: flex;
+  }
+
   .layer-six { z-index: 6; }
   .layer-five { z-index: 5; }
   .layer-four { z-index: 4; }
