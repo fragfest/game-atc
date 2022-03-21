@@ -211,6 +211,7 @@ export default {
     margin: 0px 10px;
     & ul {
       list-style-type: none;
+      padding: 0 0;
     }
   }
 
