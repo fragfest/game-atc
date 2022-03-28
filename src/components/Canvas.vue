@@ -48,7 +48,7 @@
       <div class="panel-right">
         <ul>
           <li v-for="(plane, index) in planes" :key="index">
-            <FlightStrip :title="plane.title"></FlightStrip>
+            <FlightStrip :plane="plane"></FlightStrip>
           </li>
         </ul>
       </div>

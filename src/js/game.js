@@ -12,14 +12,15 @@ export const setup = (argObj) => {
   const squareTwo = new Square('SQ 002',
     argObj.entityLayerObj, argObj.textLayerObj, argObj.headingLayerObj, argObj.entityDiv,
     { x: argObj.width / 2 + 10, y: argObj.height / 2 + 20, heading: '270', altitude: 800, speed: 180 });
-  // const squareThree = new Square('SQ 003',
-  //   argObj.entityLayerObj, argObj.textLayerObj, argObj.headingLayerObj, argObj.entityDiv,
-  //   { x: 50, y: 100, heading: '090', altitude: 1000, speed: 180 });
+  const squareThree = new Square('SQ 003',
+    argObj.entityLayerObj, argObj.textLayerObj, argObj.headingLayerObj, argObj.entityDiv,
+    { x: 50, y: 100, heading: '090', altitude: 1000, speed: 180 });
 
   squareOne.clickEventCB = () => squareClickEventCB(squareOne);
   squareTwo.clickEventCB = () => squareClickEventCB(squareTwo);
-  // squareThree.clickEventCB = () => squareClickEventCB(squareThree);
-  
+  squareThree.clickEventCB = () => squareClickEventCB(squareThree);
+  const planes = [squareOne, squareTwo, squareThree];
+
   const runwayOne = new Runway('run1',
     argObj.backgroundObj, argObj.imgLayerObj,
     { x: argObj.width / 2 - 100, y: argObj.height / 2 + 17, heading: 270 });
@@ -30,12 +31,12 @@ export const setup = (argObj) => {
 
   const entityManagerArr = [];
   const entityManagerAdd = obj => {
-    if(isEntity(obj)) entityManagerArr.push(obj);
+    if (isEntity(obj)) entityManagerArr.push(obj);
     else throw new Error('non-entity not added \n' + JSON.stringify(obj));
   }
-  entityManagerAdd(squareOne);
-  entityManagerAdd(squareTwo);
-  // entityManagerAdd(squareThree);
+  planes.forEach(plane => {
+    entityManagerAdd(plane);
+  })
   entityManagerAdd(runwayOne);
   entityManagerAdd(waypointOne);
 
@@ -45,7 +46,7 @@ export const setup = (argObj) => {
 
   const gameTick = timestamp => {
     const deltaTime = timestamp - timestampPrev;
-    if(deltaTime > updateIntervalMs) {
+    if (deltaTime > updateIntervalMs) {
       timestampPrev = timestamp;
       // cleanup
       entityManagerArr.forEach(callFn('removeLanded', { entityManagerArr }));
@@ -63,6 +64,6 @@ export const setup = (argObj) => {
   window.requestAnimationFrame(gameTick);
 
   return {
-    planes: [squareOne, squareTwo],
+    planes,
   };
 }; // end setup

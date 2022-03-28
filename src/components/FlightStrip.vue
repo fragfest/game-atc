@@ -2,8 +2,8 @@
   <div>
     <div class="background"></div>
     <div class="strip">
-      <div class="title">
-        <span>{{ title }}</span>
+      <div class="title clickable" @click="click(plane)">
+        <span>{{ plane.title }}</span>
       </div>
 
       <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
@@ -57,8 +57,9 @@
 
         <path
           fill="url('#gradient')"
-          d-tmp="M0.6,0.6 35,0.6 35,0.6 38,2.6 55,2.6 58.2,0.5 69.5,0.5 69.5,14.5 0.6,14.5 0.6,0.6"
           d="M0.6,2 3,0.5 35,0.5 38,1.45 55,1.45 57.9,0.5 68.5,0.5 69.5,1.5 69.5,13.6 68.5,14.6 3.2,14.6 0.6,13 0.6,2"
+          class="clickable"
+          @click="click(plane)"
         />
       </svg>
     </div>
@@ -69,8 +70,14 @@
 export default {
   name: "FlightStrip",
   props: {
-    title: {
-      type: String,
+    plane: {
+      type: Object, // typeof Square: title, clickEventCB
+    },
+  },
+
+  methods: {
+    click: function (plane) {
+      plane.clickEventCB();
     },
   },
 };
@@ -97,6 +104,10 @@ export default {
     margin: 5px 5px;
     font: bold 12px Arial;
   }
+}
+
+.clickable {
+  cursor: pointer;
 }
 
 .strip {
