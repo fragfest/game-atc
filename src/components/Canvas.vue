@@ -256,7 +256,8 @@ export default {
   display: flex;
 }
 
-.scope {
+ul {
+  margin: 0;
 }
 
 .panel-right {
