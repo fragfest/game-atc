@@ -136,7 +136,10 @@ export default {
   computed: {
     styleFullSize: () => ({ width: width + "px", height: height + "px" }),
 
-    rowBelow: () => ({ position: "relative", "margin-top": "10px" }),
+    rowBelow: () => ({
+      position: "relative",
+      "margin-top": "10px",
+    }),
 
     panelBottomRightStyle: () => ({
       position: "absolute",
@@ -250,26 +253,27 @@ export default {
 <style scoped lang="scss">
 .container {
   display: flex;
+  flex-direction: column;
 }
 
 .row-top {
   display: flex;
 }
 
-ul {
-  margin: 0;
-}
-
 .panel-right {
   margin: 0px 10px;
+  background-color: whitesmoke;
   & ul {
     list-style-type: none;
+    margin: 0;
     padding: 0 0;
   }
 }
 
 .row-bottom {
   display: flex;
+  height: 200px;
+  background-color: whitesmoke;
 }
 
 .layer-six {
