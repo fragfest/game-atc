@@ -66,7 +66,7 @@
         <button @click="btnClick('right')" :style="buttonRight">Right</button>
       </div>
       <div :style="panelBottomRightStyle">
-        <p>{{ square ? square.title : "" }}</p>
+        <p>{{ planeSelected ? planeSelected.title : "" }}</p>
         <div :style="rowBelow">
           <label for="inputHeading"
             >Heading <small>(3 digits)</small> &nbsp;</label
@@ -113,9 +113,13 @@
 <script>
 import { setup } from "../js/game";
 import FlightStrip from "./FlightStrip";
+import { ref } from "vue";
 
 const width = 993;
 const height = 600;
+
+const planes = ref([]);
+const squareClicked = ref({});
 
 export default {
   name: "Canvas",
@@ -129,8 +133,7 @@ export default {
       inputSpeed: "",
       width,
       height,
-      square: null,
-      planes: [],
+      planes: planes,
     };
   },
 
@@ -172,30 +175,34 @@ export default {
       left: "55px",
       top: "70px",
     }),
+
+    planeSelected: () => {
+      return planes.value.find((plane) => plane.id === squareClicked.value.id);
+    },
   },
 
   methods: {
     btnClick: function (direction) {
-      if (!this.square) return;
-      if (direction === "land") this.square.setLanding(true);
-      else this.square.setHeadingStr(direction);
+      if (!this.planeSelected) return;
+      if (direction === "land") this.planeSelected.setLanding(true);
+      else this.planeSelected.setHeadingStr(direction);
     },
     inputHeadingKeyDown: function () {
-      if (!this.square) return;
+      if (!this.planeSelected) return;
       if (Number(this.inputHeading) < 0) return;
-      this.square.setHeadingDegrees(this.inputHeading);
+      this.planeSelected.setHeadingDegrees(this.inputHeading);
       this.inputHeading = "";
     },
     inputAltitudeKeyDown: function () {
-      if (!this.square) return;
+      if (!this.planeSelected) return;
       if (Number(this.inputAltitude) < 0) return;
-      this.square.setAltitude(this.inputAltitude, false);
+      this.planeSelected.setAltitude(this.inputAltitude, false);
       this.inputAltitude = "";
     },
     inputSpeedKeyDown: function () {
-      if (!this.square) return;
+      if (!this.planeSelected) return;
       if (Number(this.inputSpeed) < 0) return;
-      this.square.setSpeed(this.inputSpeed, false, false);
+      this.planeSelected.setSpeed(this.inputSpeed, false, false);
       this.inputSpeed = "";
     },
   },
@@ -235,9 +242,9 @@ export default {
       height: this.height,
     };
 
-    const squareClickEventCB = (squareObj) => (this.square = squareObj);
+    const squareClickEventCB = (squareObj) => (squareClicked.value = squareObj);
     const gameUpdateCB = (updateObj) => {
-      this.planes = updateObj.planes;
+      planes.value = updateObj.planes;
     };
     setup({
       width,
