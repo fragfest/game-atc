@@ -56,6 +56,10 @@ export const setup = (argObj) => {
       entityManagerArr.forEach(callFn('update', ({ deltaTimeMs: updateIntervalMs })));
       entityManagerArr.forEach(callFn('setProximity', { entityManagerArr, deltaTimeMs: updateIntervalMs }));
       entityManagerArr.forEach(callFn('updateLanding', { entityManagerArr }));
+      // callbacks
+      argObj.gameUpdateCB({
+        planes: entityManagerArr.filter(entity => entity instanceof Square),
+      });
     }
 
     window.requestAnimationFrame(gameTick);
@@ -63,7 +67,4 @@ export const setup = (argObj) => {
 
   window.requestAnimationFrame(gameTick);
 
-  return {
-    planes,
-  };
 }; // end setup

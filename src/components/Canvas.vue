@@ -124,15 +124,16 @@ export default {
 
   data() {
     return {
-      planes: [],
       inputAltitude: "",
       inputHeading: "",
       inputSpeed: "",
       width,
       height,
       square: null,
+      planes: [],
     };
   },
+
   computed: {
     styleFullSize: () => ({ width: width + "px", height: height + "px" }),
 
@@ -172,6 +173,7 @@ export default {
       top: "70px",
     }),
   },
+
   methods: {
     btnClick: function (direction) {
       if (!this.square) return;
@@ -234,7 +236,10 @@ export default {
     };
 
     const squareClickEventCB = (squareObj) => (this.square = squareObj);
-    const setupObj = setup({
+    const gameUpdateCB = (updateObj) => {
+      this.planes = updateObj.planes;
+    };
+    setup({
       width,
       height,
       backgroundObj,
@@ -244,8 +249,8 @@ export default {
       headingLayerObj: layerFourObj,
       entityDiv: layerSixDiv,
       squareClickEventCB,
+      gameUpdateCB,
     });
-    this.planes = setupObj.planes;
   }, // end mounted
 };
 </script>
