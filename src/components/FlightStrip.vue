@@ -6,60 +6,75 @@
         <span>{{ plane.title }}</span>
       </div>
 
-      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="0 0 100 20">
         <defs>
           <linearGradient id="gradient">
             <stop offset="0%" stop-color="#122534" />
             <stop offset="100%" stop-color="#2d6794" />
           </linearGradient>
         </defs>
-
-        <path d="M0,2 3,0" fill="none" stroke="#24b3c9" stroke-width="0.2" />
-        <path d="M3,0 35,0" fill="none" stroke="#24b3c9" stroke-width="0.4" />
         <path
-          d="M35,0 38,1 55,1 58,0"
+          d="M0,2.67 4.29,0"
           fill="none"
           stroke="#24b3c9"
           stroke-width="0.2"
         />
         <path
-          d="M58,0 68.5,0"
+          d="M4.29,0 50.07,0"
           fill="none"
           stroke="#24b3c9"
           stroke-width="0.4"
         />
         <path
-          d="M68.5,0 69.9,1.5"
+          d="M50.07,0 54.36,1.33 78.68,1.33 82.98,0"
           fill="none"
           stroke="#24b3c9"
           stroke-width="0.2"
         />
         <path
-          d="M69.9,1.5 69.9,13.8"
+          d="M82.98,0 98,0"
+          fill="none"
+          stroke="#24b3c9"
+          stroke-width="0.4"
+        />
+        <path d="M98,0 100,2" fill="none" stroke="#24b3c9" stroke-width="0.2" />
+        <path
+          d="M100,2 100,18.4"
+          fill="none"
+          stroke="#24b3c9"
+          stroke-width="0.4"
+        />
+        <path
+          d="M100,18.4 98.23,20"
           fill="none"
           stroke="#24b3c9"
           stroke-width="0.2"
         />
         <path
-          d="M69.9,13.8 68.7,15"
+          d="M98.28,20 4.29,20"
           fill="none"
           stroke="#24b3c9"
           stroke-width="0.2"
         />
         <path
-          d="M68.7,15 3,15"
+          d="M0,17.33 4.29,20"
           fill="none"
           stroke="#24b3c9"
           stroke-width="0.2"
         />
-        <path d="M0,13 3,15" fill="none" stroke="#24b3c9" stroke-width="0.2" />
-        <path d="M0,2 0,13" fill="none" stroke="#24b3c9" stroke-width="0.4" />
+        <path
+          d="M0,2.67 0,17.33"
+          fill="none"
+          stroke="#24b3c9"
+          stroke-width="0.4"
+        />
 
         <path
           fill="url('#gradient')"
-          d="M0.6,2 3,0.5 35,0.5 38,1.45 55,1.45 57.9,0.5 68.5,0.5 69.5,1.5 69.5,13.6 68.5,14.6 3.2,14.6 0.6,13 0.6,2"
+          d="M0.76,3 4.29,0.8 50.07,0.8 54.36,2.0 78.68,2.0 82.83,0.8 97.8,0.8 99.2,2.2 99.2,18.1 97.8,19.3 4.48,19.3 0.76,17.1 0.76,2"
           class="clickable"
           @click="click(plane)"
+          @mouseover="hover()"
         />
       </svg>
     </div>
@@ -67,17 +82,22 @@
 </template>
 
 <script>
+const Square = require("../js/Square");
+
 export default {
   name: "FlightStrip",
   props: {
     plane: {
-      type: Object, // typeof Square: title, clickEventCB
+      type: Square,
     },
   },
 
   methods: {
     click: function (plane) {
       plane.clickEventCB();
+    },
+    hover: function () {
+      console.log("hover");
     },
   },
 };
@@ -86,13 +106,19 @@ export default {
 <style scoped lang="scss">
 .background {
   position: absolute;
-  height: 84px;
-  width: 428px;
+  height: 78px;
+  width: 402px;
   margin-top: 6px;
-  margin-left: 2px;
+  margin-left: 6px;
   border-radius: 12px;
   background-color: #24b3c960;
   filter: blur(6px);
+}
+
+.strip {
+  position: relative;
+  width: 400px;
+  height: 80px;
 }
 
 .title {
@@ -108,12 +134,5 @@ export default {
 
 .clickable {
   cursor: pointer;
-}
-
-.strip {
-  position: relative;
-  height: 90px;
-  width: 600px;
-  margin-right: -136px; // TODO hacky alignment with canvas row
 }
 </style>

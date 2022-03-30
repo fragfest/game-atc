@@ -261,8 +261,9 @@ export default {
 }
 
 .panel-right {
-  margin: 0px 10px;
+  margin-left: 10px;
   background-color: whitesmoke;
+  width: 100%;
   & ul {
     list-style-type: none;
     margin: 0;
