@@ -84,6 +84,12 @@ module.exports = class Square {
     }
   }
 
+  /**
+   * @description set speed & landing modes
+   * @param {Number|String} speedArg knots
+   * @param {Boolean} isLanding set landing mode to attempt glideslope lineup
+   * @param {Boolean} isTouchedDown set when on runway
+   */
   setSpeed(speedArg, isLanding, isTouchedDown) {
     this.setLanding(isLanding);
     let speed = parseInt(speedArg);
