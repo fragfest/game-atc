@@ -1,7 +1,7 @@
 const Waypoint = require('./Waypoint');
 const Square = require('./Square');
 import Runway from './Runway';
-import { isEntity } from './entity';
+import { hasEntityUpdate } from './entity';
 
 export const setup = (argObj) => {
   const squareClickEventCB = argObj.squareClickEventCB; // CB arg: Square
@@ -14,7 +14,7 @@ export const setup = (argObj) => {
     { x: argObj.width / 2 + 10, y: argObj.height / 2 + 20, heading: '270', altitude: 800, speed: 180 });
   const squareThree = new Square('SQ 003',
     argObj.entityLayerObj, argObj.textLayerObj, argObj.headingLayerObj, argObj.entityDiv,
-    { x: 50, y: 100, heading: '090', altitude: 1000, speed: 180 });
+    { x: argObj.width / 2 + 300, y: argObj.height / 2 - 160, heading: '215', altitude: 100, speed: 250 });
 
   squareOne.clickEventCB = () => squareClickEventCB(squareOne);
   squareTwo.clickEventCB = () => squareClickEventCB(squareTwo);
@@ -31,7 +31,7 @@ export const setup = (argObj) => {
 
   const entityManagerArr = [];
   const entityManagerAdd = obj => {
-    if (isEntity(obj)) entityManagerArr.push(obj);
+    if (hasEntityUpdate(obj)) entityManagerArr.push(obj);
     else throw new Error('non-entity not added \n' + JSON.stringify(obj));
   }
   planes.forEach(plane => {

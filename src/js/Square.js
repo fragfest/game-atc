@@ -78,7 +78,7 @@ module.exports = class Square {
 
   setLanding(isLanding) {
     this.landing = !!isLanding;
-    if(!isLanding) {
+    if (!isLanding) {
       this.onGlidePath = false;
       this.distPrev = Infinity;
     }
@@ -104,10 +104,10 @@ module.exports = class Square {
   setAltitude(altitudeArg, isLanding, isTouchedDown) {
     this.setLanding(isLanding);
     let altitude = parseInt(altitudeArg);
-    if(isTouchedDown) {
+    if (isTouchedDown) {
       return this.altitudeTarget = altitude;
     }
-    
+
     altitude = (altitude < this.altitudeMin) ? this.altitudeMin : altitude;
     altitude = (altitude > this.altitudeMax) ? this.altitudeMax : altitude;
     this.altitudeTarget = Math.floor(altitude / 100) * 100;
@@ -125,30 +125,30 @@ module.exports = class Square {
   }
 
   setHeadingDegrees(inputHeading) {
-    if(!inputHeading && inputHeading !== 0) return;
-    if(inputHeading.toString().length !== 3) return;
+    if (!inputHeading && inputHeading !== 0) return;
+    if (inputHeading.toString().length !== 3) return;
     const inputHeadingArr = inputHeading.toString().split('');
     const accAllAreInts = (acc, val) => acc && Number.isInteger(parseInt(val));
     const inputHeadingIsAllInts = inputHeadingArr.reduce(accAllAreInts, true);
-    if(!inputHeadingIsAllInts) return;
+    if (!inputHeadingIsAllInts) return;
 
     const heading = parseInt(inputHeading);
-    if(heading > 360 || heading <= 0) return;
+    if (heading > 360 || heading <= 0) return;
 
     this.setHeadingTarget(inputHeadingToRad(heading), false);
   }
 
   // TODO remove
   setHeadingStr(direction) {
-    switch(direction){
+    switch (direction) {
       case 'left': this.setHeadingTarget(Math.PI, false);
-      break;
+        break;
       case 'right': this.setHeadingTarget(0, false);
-      break;
-      case 'top': this.setHeadingTarget((3/2) * Math.PI, false);
-      break;
-      case 'down': this.setHeadingTarget((1/2) * Math.PI, false);
-      break;
+        break;
+      case 'top': this.setHeadingTarget((3 / 2) * Math.PI, false);
+        break;
+      case 'down': this.setHeadingTarget((1 / 2) * Math.PI, false);
+        break;
       default: this.setHeadingTarget(0, false);
     }
   }
@@ -185,17 +185,17 @@ module.exports = class Square {
     const headingIncrease = headingSmall + headingChange;
     const headingDecrease = headingSmall - headingChange;
     const headingLargeDecrease = headingLarge - headingChange;
-    if(headingTargetSmall === headingSmall) return headingTargetSmall;
-    if(isOppositeHeading) return headingIncrease;
-    
-    if(isClosestSmall) {
+    if (headingTargetSmall === headingSmall) return headingTargetSmall;
+    if (isOppositeHeading) return headingIncrease;
+
+    if (isClosestSmall) {
       const turnRight = headingTargetSmall > headingSmall;
-      if(turnRight) return (headingIncrease > headingTargetSmall) ? headingTargetSmall : headingIncrease;
+      if (turnRight) return (headingIncrease > headingTargetSmall) ? headingTargetSmall : headingIncrease;
       else return (headingDecrease < headingTargetSmall) ? headingTargetSmall : headingDecrease;
     }
     // else isClosestBetween
     const turnRight = isLowestLargeTarget;
-    if(turnRight) return (headingIncrease > headingTargetLarge) ? headingTargetLarge : headingIncrease;
+    if (turnRight) return (headingIncrease > headingTargetLarge) ? headingTargetLarge : headingIncrease;
     else return (headingLargeDecrease < headingTargetSmall) ? headingTargetSmall : headingLargeDecrease;
   }
 
@@ -206,8 +206,8 @@ module.exports = class Square {
     const delta = altitudeTarget - altitudeOld;
     const altitudeIncrease = altitudeOld + altitudeChange;
     const altitudeDecrease = altitudeOld - altitudeChange;
-    if(delta === 0) return altitudeOld;
-    else if(delta > 0) return (altitudeIncrease > altitudeTarget) ? altitudeTarget : altitudeIncrease;
+    if (delta === 0) return altitudeOld;
+    else if (delta > 0) return (altitudeIncrease > altitudeTarget) ? altitudeTarget : altitudeIncrease;
     else return (altitudeDecrease < altitudeTarget) ? altitudeTarget : altitudeDecrease;
   }
 
@@ -217,8 +217,8 @@ module.exports = class Square {
     const delta = speedTarget - speed;
     const speedIncrease = speed + Math.round(speedIncreaseArg);
     const speedDecrease = speed - Math.round(speedDecreaseArg);
-    if(delta === 0) return speed;
-    else if(delta > 0) return (speedIncrease > speedTarget) ? speedTarget : speedIncrease;
+    if (delta === 0) return speed;
+    else if (delta > 0) return (speedIncrease > speedTarget) ? speedTarget : speedIncrease;
     else return (speedDecrease < speedTarget) ? speedTarget : speedDecrease;
   }
 
@@ -255,17 +255,16 @@ module.exports = class Square {
   }
 
   setProximity({ entityManagerArr, deltaTimeMs }) {
-    const entity = entityFns.create({...this});
-    const isEntityCloseTo = entityFns.isCloseToEntity(entity);
+    const isEntityCloseTo = entityFns.isCloseToEntity(this);
     const accAnySquaresClose = (acc, val) => {
-      const entityOther = entityFns.create(val);
+      const entityOther = val;
       const isSquare = val instanceof Square;
-      const areBothFlying = !entity.isTouchedDown && !entityOther.isTouchedDown;
+      const areBothFlying = !this.isTouchedDown && !entityOther.isTouchedDown;
       return acc || (isEntityCloseTo(entityOther) && isSquare && areBothFlying);
     };
     const isClose = entityManagerArr.reduce(accAnySquaresClose, false);
 
-    if(isClose) {
+    if (isClose) {
       this.hide();
       const speedPixels = this.speedPixelPerMs * deltaTimeMs;
       draw(this, 'darkred', speedPixels);
@@ -295,11 +294,11 @@ const draw = (self, color, speedPixels) => {
 
   const deg = Math.round(convertToSmallDegrees(radToDegrees(self.headingRad)));
   let degreesDisplay = deg;
-  if(deg < 10) degreesDisplay = '00' + deg;
-  else if(deg < 100) degreesDisplay = '0' + deg;
+  if (deg < 10) degreesDisplay = '00' + deg;
+  else if (deg < 100) degreesDisplay = '0' + deg;
   let speedDisplay = self.speed;
-  if(self.speed < 10) speedDisplay = '00' + self.speed;
-  else if(self.speed < 100) speedDisplay = '0' + self.speed;
+  if (self.speed < 10) speedDisplay = '00' + self.speed;
+  else if (self.speed < 100) speedDisplay = '0' + self.speed;
 
   self.textLayerObj.ctx.fillStyle = color;
   self.textLayerObj.ctx.font = "bold 10px Arial"
