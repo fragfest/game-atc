@@ -38,16 +38,7 @@ module.exports = class Runway {
     this.imgLayerCtx.fillText('27R', this.x, this.y - 5);
   }
 
-  update() { }
-
-  updateGoAround(entity) {
-    console.log(entity.title + ' :: go-around');
-    entity.setHeadingTarget(this.runwayHeading, false);
-    if (entity.speedTarget < 160) entity.setSpeed(160, false, false);
-    if (entity.altitudeTarget < 2000) entity.setAltitude(2000, false);
-  }
-
-  updateLanding({ entityManagerArr }) {
+  update({ entityManagerArr }) {
     const isSquare = entity => entity instanceof Square;
     const isEntityOnRunway = isOnRunway(this.landingEntities);
 
@@ -70,6 +61,13 @@ module.exports = class Runway {
       entity.setHeadingTarget(interceptHeading, true);
       updateSpeedAlt(this, entity);
     });
+  }
+
+  updateGoAround(entity) {
+    console.log(entity.title + ' :: go-around');
+    entity.setHeadingTarget(this.runwayHeading, false);
+    if (entity.speedTarget < 160) entity.setSpeed(160, false, false);
+    if (entity.altitudeTarget < 2000) entity.setAltitude(2000, false);
   }
 
   removeLanded({ entityManagerArr }) {

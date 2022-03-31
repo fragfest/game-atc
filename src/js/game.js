@@ -34,9 +34,7 @@ export const setup = (argObj) => {
     if (hasEntityUpdate(obj)) entityManagerArr.push(obj);
     else throw new Error('non-entity not added \n' + JSON.stringify(obj));
   }
-  planes.forEach(plane => {
-    entityManagerAdd(plane);
-  })
+  planes.forEach(entityManagerAdd);
   entityManagerAdd(runwayOne);
   entityManagerAdd(waypointOne);
 
@@ -53,9 +51,8 @@ export const setup = (argObj) => {
       argObj.textLayerObj.ctx.clearRect(0, 0, argObj.width, argObj.height);
       argObj.headingLayerObj.ctx.clearRect(0, 0, argObj.width, argObj.height);
       // update
-      entityManagerArr.forEach(callFn('update', ({ deltaTimeMs: updateIntervalMs })));
+      entityManagerArr.forEach(callFn('update', ({ deltaTimeMs: updateIntervalMs, entityManagerArr })));
       entityManagerArr.forEach(callFn('setProximity', { entityManagerArr, deltaTimeMs: updateIntervalMs }));
-      entityManagerArr.forEach(callFn('updateLanding', { entityManagerArr }));
       // callbacks
       argObj.gameUpdateCB({
         planes: entityManagerArr.filter(entity => entity instanceof Square),
