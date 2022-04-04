@@ -31,15 +31,13 @@ module.exports = class Square {
     this.x = positionObj.x;
     this.y = positionObj.y;
     this.altitude = positionObj.altitude;
-    this.altitudeTarget = 1000;
     this.altitudeMin = 100;
     this.altitudeMax = 40000;
     this.setAltitude(positionObj.altitude, false);
     this.headingRad = inputHeadingToRad(positionObj.heading);
     this.headingTargetRad = 0;
     this.setHeadingDegrees(positionObj.heading);
-    this.speed = 180;
-    this.speedTarget = 180;
+    this.speed = positionObj.speed;
     this.speedPixelPerMs = 0.005;
     this.speedTargetPixelPerMs = 0.005;
     this.setSpeed(positionObj.speed, false, false);

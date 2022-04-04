@@ -1,42 +1,11 @@
 const Waypoint = require('./Waypoint');
 const Square = require('./Square');
-import Runway from './Runway';
+const Runway = require('./Runway');
 import { hasEntityUpdate } from './entity';
 
+let gameLoopRunning = false;
 export const setup = (argObj) => {
-  const squareClickEventCB = argObj.squareClickEventCB; // CB arg: Square
-
-  const squareOne = new Square('SQ 001',
-    argObj.entityLayerObj, argObj.textLayerObj, argObj.headingLayerObj, argObj.entityDiv,
-    { x: argObj.width / 2 + 300, y: argObj.height / 2 - 200, heading: '222', altitude: 100, speed: 180 });
-  const squareTwo = new Square('SQ 002',
-    argObj.entityLayerObj, argObj.textLayerObj, argObj.headingLayerObj, argObj.entityDiv,
-    { x: argObj.width / 2 + 10, y: argObj.height / 2 + 20, heading: '270', altitude: 800, speed: 180 });
-  const squareThree = new Square('SQ 003',
-    argObj.entityLayerObj, argObj.textLayerObj, argObj.headingLayerObj, argObj.entityDiv,
-    { x: argObj.width / 2 + 300, y: argObj.height / 2 - 160, heading: '215', altitude: 100, speed: 250 });
-
-  squareOne.clickEventCB = () => squareClickEventCB(squareOne);
-  squareTwo.clickEventCB = () => squareClickEventCB(squareTwo);
-  squareThree.clickEventCB = () => squareClickEventCB(squareThree);
-  const planes = [squareOne, squareTwo, squareThree];
-
-  const runwayOne = new Runway('run1',
-    argObj.backgroundObj, argObj.imgLayerObj,
-    { x: argObj.width / 2 - 100, y: argObj.height / 2 + 17, heading: 270 });
-
-  const waypointOne = new Waypoint('WAYONE',
-    argObj.backgroundObj, argObj.headingLayerObj,
-    { x: argObj.width / 2 + 200, y: argObj.height / 2 });
-
-  const entityManagerArr = [];
-  const entityManagerAdd = obj => {
-    if (hasEntityUpdate(obj)) entityManagerArr.push(obj);
-    else throw new Error('non-entity not added \n' + JSON.stringify(obj));
-  }
-  planes.forEach(entityManagerAdd);
-  entityManagerAdd(runwayOne);
-  entityManagerAdd(waypointOne);
+  const entityManagerArr = argObj.entityManagerArr;
 
   const callFn = (fnStr, argsObj) => entity => entity[fnStr] ? entity[fnStr](argsObj) : null;
   const updateIntervalMs = 2000;
@@ -62,6 +31,43 @@ export const setup = (argObj) => {
     window.requestAnimationFrame(gameTick);
   }
 
+  if (gameLoopRunning) return;
   window.requestAnimationFrame(gameTick);
+  gameLoopRunning = true;
+};
 
-}; // end setup
+export const setupEntities = (argObj) => {
+  const squareOne = new Square('SQ 001',
+    argObj.entityLayerObj, argObj.textLayerObj, argObj.headingLayerObj, argObj.entityDiv,
+    { x: argObj.width / 2 + 300, y: argObj.height / 2 - 200, heading: '222', altitude: 100, speed: 180 });
+  const squareTwo = new Square('SQ 002',
+    argObj.entityLayerObj, argObj.textLayerObj, argObj.headingLayerObj, argObj.entityDiv,
+    { x: argObj.width / 2 + 10, y: argObj.height / 2 + 20, heading: '270', altitude: 800, speed: 180 });
+  const squareThree = new Square('SQ 003',
+    argObj.entityLayerObj, argObj.textLayerObj, argObj.headingLayerObj, argObj.entityDiv,
+    { x: argObj.width / 2 + 300, y: argObj.height / 2 - 160, heading: '215', altitude: 100, speed: 250 });
+
+  const squareClickEventCB = argObj.squareClickEventCB; // CB arg: Square
+  squareOne.clickEventCB = () => squareClickEventCB(squareOne);
+  squareTwo.clickEventCB = () => squareClickEventCB(squareTwo);
+  squareThree.clickEventCB = () => squareClickEventCB(squareThree);
+  const planes = [squareOne, squareTwo, squareThree];
+
+  const runwayOne = new Runway('run1',
+    argObj.backgroundObj, argObj.imgLayerObj,
+    { x: argObj.width / 2 - 140, y: argObj.height / 2 + 26, heading: 270 });
+
+  const waypointOne = new Waypoint('WAYONE',
+    argObj.backgroundObj, argObj.headingLayerObj,
+    { x: argObj.width / 2 + 200, y: argObj.height / 2 });
+
+  const entityManagerArr = [];
+  const entityManagerAdd = obj => {
+    if (hasEntityUpdate(obj)) entityManagerArr.push(obj);
+    else throw new Error('non-entity not added \n' + JSON.stringify(obj));
+  }
+  planes.forEach(entityManagerAdd);
+  entityManagerAdd(runwayOne);
+  entityManagerAdd(waypointOne);
+  return entityManagerArr;
+};

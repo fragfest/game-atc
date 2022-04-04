@@ -1,5 +1,5 @@
 const { inputHeadingToRad } = require('./utils');
-const Square = require('../js/Square');
+const Square = require('./Square');
 
 ////////////////////////////////////////////////////////////
 // class Runway

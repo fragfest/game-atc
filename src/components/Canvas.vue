@@ -1,8 +1,6 @@
 <template>
   <div class="container">
-    <!-- row-top -->
-    <div class="row-top">
-      <!-- scope -->
+    <div class="row-left">
       <div class="scope">
         <div class="entity-div layer-six" :style="styleFullSize" />
         <!-- <canvas
@@ -43,80 +41,79 @@
         ></canvas>
         <img src="/img/london.png" :height="height" />
       </div>
-      <!-- end scope -->
-      <!-- panel-right -->
-      <div class="panel-right">
-        <ul>
-          <li v-for="(plane, index) in planes" :key="index">
-            <FlightStrip :plane="plane"></FlightStrip>
-          </li>
-        </ul>
-      </div>
-      <!-- end panel-right -->
-    </div>
-    <!-- end row-top -->
 
-    <!-- row-bottom -->
-    <div class="row-bottom">
-      <div :style="panelBottomStyle">
-        <button @click="btnClick('land')" :style="buttonLand">Land</button>
-        <button @click="btnClick('left')" :style="buttonLeft">Left</button>
-        <button @click="btnClick('top')" :style="buttonTop">Up</button>
-        <button @click="btnClick('down')" :style="buttonBottom">Down</button>
-        <button @click="btnClick('right')" :style="buttonRight">Right</button>
-      </div>
-      <div :style="panelBottomRightStyle">
-        <p>{{ planeSelected ? planeSelected.title : "" }}</p>
-        <div :style="rowBelow">
-          <label for="inputHeading"
-            >Heading <small>(3 digits)</small> &nbsp;</label
-          >
-          <input
-            id="inputHeading"
-            type="text"
-            @keydown.enter="inputHeadingKeyDown"
-            v-model="inputHeading"
-            maxlength="3"
-            class="input-heading"
-          />
+      <div class="row-bottom">
+        <div :style="panelBottomStyle">
+          <button @click="btnClick('land')" :style="buttonLand">Land</button>
+          <button @click="btnClick('left')" :style="buttonLeft">Left</button>
+          <button @click="btnClick('top')" :style="buttonTop">Up</button>
+          <button @click="btnClick('down')" :style="buttonBottom">Down</button>
+          <button @click="btnClick('right')" :style="buttonRight">Right</button>
         </div>
-        <div :style="rowBelow">
-          <label for="inputAltitude"
-            >Altitude <small>(3-5 digits)</small> &nbsp;</label
-          >
-          <input
-            id="inputAltitude"
-            type="text"
-            @keydown.enter="inputAltitudeKeyDown"
-            v-model="inputAltitude"
-            maxlength="5"
-            class="input-heading"
-          />
-        </div>
-        <div :style="rowBelow">
-          <label for="inputSpeed">Speed <small>(3 digits)</small> &nbsp;</label>
-          <input
-            id="inputSpeed"
-            type="text"
-            @keydown.enter="inputSpeedKeyDown"
-            v-model="inputSpeed"
-            maxlength="3"
-            class="input-heading"
-          />
+        <div :style="panelBottomRightStyle">
+          <p>{{ planeSelected ? planeSelected.title : "" }}</p>
+          <div :style="rowBelow">
+            <label for="inputHeading"
+              >Heading <small>(3 digits)</small> &nbsp;</label
+            >
+            <input
+              id="inputHeading"
+              type="text"
+              @keydown.enter="inputHeadingKeyDown"
+              v-model="inputHeading"
+              maxlength="3"
+              class="input-heading"
+            />
+          </div>
+          <div :style="rowBelow">
+            <label for="inputAltitude"
+              >Altitude <small>(3-5 digits)</small> &nbsp;</label
+            >
+            <input
+              id="inputAltitude"
+              type="text"
+              @keydown.enter="inputAltitudeKeyDown"
+              v-model="inputAltitude"
+              maxlength="5"
+              class="input-heading"
+            />
+          </div>
+          <div :style="rowBelow">
+            <label for="inputSpeed"
+              >Speed <small>(3 digits)</small> &nbsp;</label
+            >
+            <input
+              id="inputSpeed"
+              type="text"
+              @keydown.enter="inputSpeedKeyDown"
+              v-model="inputSpeed"
+              maxlength="3"
+              class="input-heading"
+            />
+          </div>
         </div>
       </div>
     </div>
-    <!-- end row-bottom -->
+
+    <div class="panel-right">
+      <ul>
+        <li v-for="(plane, index) in planes" :key="index">
+          <FlightStrip :plane="plane"></FlightStrip>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script>
-import { setup } from "../js/game";
+import { setup, setupEntities } from "../js/game";
 import FlightStrip from "./FlightStrip";
 import { ref } from "vue";
 
-const width = 993;
-const height = 600;
+// const width = 993;
+// const height = 600;
+const width = 1322;
+const height = 800;
 
 const planes = ref([]);
 const squareClicked = ref({});
@@ -133,12 +130,18 @@ export default {
       inputSpeed: "",
       width,
       height,
-      planes: planes,
+      planes,
     };
   },
 
   computed: {
-    styleFullSize: () => ({ width: width + "px", height: height + "px" }),
+    styleFullSize: () => ({
+      width: width - 2 + "px",
+      height: height - 1 + "px",
+      border: "3px darkgreen",
+      "border-radius": "4px",
+      "border-style": "inset",
+    }),
 
     rowBelow: () => ({
       position: "relative",
@@ -242,11 +245,7 @@ export default {
       height: this.height,
     };
 
-    const squareClickEventCB = (squareObj) => (squareClicked.value = squareObj);
-    const gameUpdateCB = (updateObj) => {
-      planes.value = updateObj.planes;
-    };
-    setup({
+    const setupArg = {
       width,
       height,
       backgroundObj,
@@ -255,8 +254,19 @@ export default {
       textLayerObj: layerThreeObj,
       headingLayerObj: layerFourObj,
       entityDiv: layerSixDiv,
-      squareClickEventCB,
-      gameUpdateCB,
+      squareClickEventCB: (squareObj) => (squareClicked.value = squareObj),
+      gameUpdateCB: (updateObj) => {
+        planes.value = updateObj.planes;
+      },
+    };
+    const entityManagerArr = setupEntities(setupArg);
+    setupArg.entityManagerArr = entityManagerArr;
+    setup(setupArg);
+
+    window.addEventListener("resize", () => {
+      setupArg.width = width;
+      setupArg.height = height;
+      setup(setupArg);
     });
   }, // end mounted
 };
@@ -265,17 +275,17 @@ export default {
 <style scoped lang="scss">
 .container {
   display: flex;
+}
+
+.row-left {
+  display: flex;
   flex-direction: column;
 }
 
-.row-top {
-  display: flex;
-}
-
 .panel-right {
-  margin-left: 10px;
-  background-color: whitesmoke;
+  background-color: #e5e4e4;
   width: 100%;
+  padding-left: 6px;
   & ul {
     list-style-type: none;
     margin: 0;
@@ -286,7 +296,10 @@ export default {
 .row-bottom {
   display: flex;
   height: 200px;
-  background-color: whitesmoke;
+  border: darkgray solid 1px;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #e5e4e4, #c4c4c4);
+  border-right-width: 2px;
 }
 
 .layer-six {
@@ -312,7 +325,7 @@ export default {
 }
 
 .background {
-  opacity: 60%;
+  opacity: 50%;
   background-color: grey;
 }
 
