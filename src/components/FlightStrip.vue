@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="background"></div>
-    <div class="strip">
+    <div class="strip" :class="hoverClass">
       <div class="title clickable" @click="click(plane)">
         <span>{{ plane.title }}</span>
       </div>
@@ -75,6 +75,7 @@
           class="clickable"
           @click="click(plane)"
           @mouseover="hover()"
+          @mouseout="flatten()"
         />
       </svg>
     </div>
@@ -91,13 +92,21 @@ export default {
       type: Square,
     },
   },
+  data() {
+    return {
+      hoverClass: "",
+    };
+  },
 
   methods: {
     click: function (plane) {
       plane.clickEventCB();
     },
     hover: function () {
-      console.log("hover");
+      this.hoverClass = "hover";
+    },
+    flatten: function () {
+      this.hoverClass = "";
     },
   },
 };
@@ -119,6 +128,11 @@ export default {
   position: relative;
   width: 400px;
   height: 80px;
+  position: 100px;
+
+  &.hover {
+    left: -4px;
+  }
 }
 
 .title {
