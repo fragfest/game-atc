@@ -43,54 +43,12 @@
       </div>
 
       <div class="row-bottom">
-        <div :style="panelBottomStyle">
-          <button @click="btnClick('land')" :style="buttonLand">Land</button>
-          <button @click="btnClick('left')" :style="buttonLeft">Left</button>
-          <button @click="btnClick('top')" :style="buttonTop">Up</button>
-          <button @click="btnClick('down')" :style="buttonBottom">Down</button>
-          <button @click="btnClick('right')" :style="buttonRight">Right</button>
-        </div>
-        <div :style="panelBottomRightStyle">
-          <p>{{ planeSelected ? planeSelected.title : "" }}</p>
-          <div :style="rowBelow">
-            <label for="inputHeading"
-              >Heading <small>(3 digits)</small> &nbsp;</label
-            >
-            <input
-              id="inputHeading"
-              type="text"
-              @keydown.enter="inputHeadingKeyDown"
-              v-model="inputHeading"
-              maxlength="3"
-              class="input-heading"
-            />
-          </div>
-          <div :style="rowBelow">
-            <label for="inputAltitude"
-              >Altitude <small>(3-5 digits)</small> &nbsp;</label
-            >
-            <input
-              id="inputAltitude"
-              type="text"
-              @keydown.enter="inputAltitudeKeyDown"
-              v-model="inputAltitude"
-              maxlength="5"
-              class="input-heading"
-            />
-          </div>
-          <div :style="rowBelow">
-            <label for="inputSpeed"
-              >Speed <small>(3 digits)</small> &nbsp;</label
-            >
-            <input
-              id="inputSpeed"
-              type="text"
-              @keydown.enter="inputSpeedKeyDown"
-              v-model="inputSpeed"
-              maxlength="3"
-              class="input-heading"
-            />
-          </div>
+        <div class="row-bottom-left"></div>
+        <div class="row-bottom-right">
+          <ControlPanel
+            :planes="planes"
+            :planeSelected="squareClicked"
+          ></ControlPanel>
         </div>
       </div>
     </div>
@@ -106,12 +64,12 @@
 </template>
 
 <script>
-import { setup, setupEntities } from "../js/game";
-import FlightStrip from "./FlightStrip";
 import { ref } from "vue";
 
-// const width = 993;
-// const height = 600;
+import { setup, setupEntities } from "../js/game";
+import ControlPanel from "./ControlPanel";
+import FlightStrip from "./FlightStrip";
+
 const width = 1322;
 const height = 800;
 
@@ -120,7 +78,7 @@ const squareClicked = ref({});
 
 export default {
   name: "Canvas",
-  components: { FlightStrip },
+  components: { FlightStrip, ControlPanel },
   props: {},
 
   data() {
@@ -131,6 +89,7 @@ export default {
       width,
       height,
       planes,
+      squareClicked,
     };
   },
 
@@ -142,73 +101,9 @@ export default {
       "border-radius": "4px",
       "border-style": "inset",
     }),
-
-    rowBelow: () => ({
-      position: "relative",
-      "margin-top": "10px",
-    }),
-
-    panelBottomRightStyle: () => ({
-      position: "absolute",
-      left: "250px",
-      top: height + 20 + "px",
-    }),
-    panelBottomStyle: () => ({
-      position: "absolute",
-      left: "100px",
-      top: height + 30 + "px",
-    }),
-    buttonLand: () => ({ position: "absolute", width: "120px", top: "0px" }),
-    buttonLeft: () => ({ position: "absolute", width: "50px", top: "70px" }),
-    buttonTop: () => ({
-      position: "absolute",
-      width: "50px",
-      left: "30px",
-      top: "40px",
-    }),
-    buttonBottom: () => ({
-      position: "absolute",
-      width: "50px",
-      left: "30px",
-      top: "100px",
-    }),
-    buttonRight: () => ({
-      position: "absolute",
-      width: "50px",
-      left: "55px",
-      top: "70px",
-    }),
-
-    planeSelected: () => {
-      return planes.value.find((plane) => plane.id === squareClicked.value.id);
-    },
   },
 
-  methods: {
-    btnClick: function (direction) {
-      if (!this.planeSelected) return;
-      if (direction === "land") this.planeSelected.setLanding(true);
-      else this.planeSelected.setHeadingStr(direction);
-    },
-    inputHeadingKeyDown: function () {
-      if (!this.planeSelected) return;
-      if (Number(this.inputHeading) < 0) return;
-      this.planeSelected.setHeadingDegrees(this.inputHeading);
-      this.inputHeading = "";
-    },
-    inputAltitudeKeyDown: function () {
-      if (!this.planeSelected) return;
-      if (Number(this.inputAltitude) < 0) return;
-      this.planeSelected.setAltitude(this.inputAltitude, false);
-      this.inputAltitude = "";
-    },
-    inputSpeedKeyDown: function () {
-      if (!this.planeSelected) return;
-      if (Number(this.inputSpeed) < 0) return;
-      this.planeSelected.setSpeed(this.inputSpeed, false, false);
-      this.inputSpeed = "";
-    },
-  },
+  methods: {},
 
   mounted() {
     const background = this.$refs.background;
@@ -295,11 +190,24 @@ export default {
 
 .row-bottom {
   display: flex;
+  justify-content: space-around;
   height: 200px;
   border: darkgray solid 1px;
   border-radius: 3px;
   background: linear-gradient(180deg, #e5e4e4, #c4c4c4);
   border-right-width: 2px;
+}
+
+.row-bottom-left {
+  display: flex;
+  width: 100%;
+}
+
+.row-bottom-right {
+  display: flex;
+  width: 100%;
+  padding: 8px;
+  padding-right: 8%;
 }
 
 .layer-six {
@@ -326,7 +234,7 @@ export default {
 
 .background {
   opacity: 50%;
-  background-color: grey;
+  background-color: black;
 }
 
 .entity-div {

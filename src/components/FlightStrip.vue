@@ -88,9 +88,7 @@ const Square = require("../js/Square");
 export default {
   name: "FlightStrip",
   props: {
-    plane: {
-      type: Square,
-    },
+    plane: { type: Square },
   },
   data() {
     return {
