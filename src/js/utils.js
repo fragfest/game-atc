@@ -18,3 +18,28 @@ export const isValidHeading = str => {
   const isNotAllZeros = str !== '000';
   return hasOnlyInts && isInRange && isNotAllZeros;
 }
+
+export const isValidAltitude = str => {
+  if (str.length > 3) return false;
+
+  const strArr = str.split('');
+  const intOnlyArr = strArr.map(str => parseInt(str))
+    .filter(int => !Number.isNaN(int));
+  const hasOnlyInts = intOnlyArr.length === str.length;
+  const isInRange = parseInt(str) >= 1 && parseInt(str) <= 400;
+  const isNotAllZeros = str !== '000';
+  return hasOnlyInts && isInRange && isNotAllZeros;
+}
+
+export const isValidSpeed = str => {
+  if (str.length > 3) return false;
+  if (str.length < 3) return true;
+
+  const strArr = str.split('');
+  const intOnlyArr = strArr.map(str => parseInt(str))
+    .filter(int => !Number.isNaN(int));
+  const hasOnlyInts = intOnlyArr.length === str.length;
+  const isInRange = parseInt(str) >= 135 && parseInt(str) <= 500;
+  const isNotAllZeros = str !== '000';
+  return hasOnlyInts && isInRange && isNotAllZeros;
+}

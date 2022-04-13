@@ -95,7 +95,7 @@ module.exports = class Square {
 
     speed = (speed < speedMin) ? speedMin : speed;
     speed = (speed > this.speedMax) ? this.speedMax : speed;
-    this.speedTarget = Math.floor(speed / 10) * 10;
+    this.speedTarget = Math.floor(speed / 5) * 5;
     this.speedTargetPixelPerMs = convertKnotsToPixelsPerMs(speed);
   }
 

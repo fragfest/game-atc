@@ -3,35 +3,34 @@
     <div class="circle-inputs">
       <!-- <button class="land" @click="btnClick('land')">Land</button> -->
 
-      <label class="heading-label" for="inputHeading">heading</label>
+      <label class="heading" for="inputHeading">hdg</label>
       <input
         id="inputHeading"
-        class="heading"
         type="text"
         @keydown.enter="inputHeadingKeyDown"
         @input="inputEventHeading"
         v-model="inputHeading"
       />
 
-      <!-- <label class="heading-label" for="inputAltitude">Altitude</label>
+      <label class="altitude" for="inputAltitude">
+        alt <small>x100</small>
+      </label>
       <input
         id="inputAltitude"
-        class="altitude"
         type="text"
         @keydown.enter="inputAltitudeKeyDown"
+        @input="inputEventAltitude"
         v-model="inputAltitude"
-        maxlength="5"
       />
 
-      <label class="heading-label" for="inputSpeed">Speed</label>
+      <label class="speed" for="inputSpeed">spd</label>
       <input
         id="inputSpeed"
-        class="speed"
         type="text"
         @keydown.enter="inputSpeedKeyDown"
+        @input="inputEventSpeed"
         v-model="inputSpeed"
-        maxlength="3"
-      /> -->
+      />
     </div>
 
     <div class="circle-div">
@@ -49,7 +48,22 @@
 </template>
 
 <script>
-const { isValidHeading } = require("../js/utils");
+const {
+  isValidHeading,
+  isValidAltitude,
+  isValidSpeed,
+} = require("../js/utils");
+
+const inputFilter = (value) => {
+  let inputHeading = value;
+  if (value.substring(0, 3) === "---") {
+    inputHeading = value[3] || "";
+  }
+  if (inputHeading.length > 3) {
+    inputHeading = value.substring(0, 3);
+  }
+  return inputHeading;
+};
 
 export default {
   name: "ControlPanel",
@@ -80,39 +94,63 @@ export default {
         return;
       }
 
-      if (value.substring(0, 3) === "---") {
-        this.inputHeading = value[3] || "";
-      }
-      if (this.inputHeading.length > 3) {
-        this.inputHeading = value.substring(0, 3);
-      }
-
+      this.inputHeading = inputFilter(value);
       if (!isValidHeading(this.inputHeading)) {
         this.inputHeading = "---";
         return;
       }
     },
-
     inputHeadingKeyDown: function () {
       if (!this.planeSelected.setHeadingDegrees) return;
       if (this.inputHeading.length !== 3) return;
       if (!isValidHeading(this.inputHeading)) {
-        return (this.inputHeading = "");
+        this.inputHeading = "";
+        return;
       }
-      console.log("inputHeadingKeyDown", this.inputHeading);
+
       this.planeSelected.setHeadingDegrees(this.inputHeading);
       this.inputHeading = "";
     },
 
+    inputEventAltitude: function (ev) {
+      const value = ev.target.value;
+      if (!this.planeSelected.setAltitude) {
+        this.inputAltitude = "";
+        return;
+      }
+
+      this.inputAltitude = inputFilter(value);
+      if (!isValidAltitude(this.inputAltitude)) {
+        this.inputAltitude = "---";
+        return;
+      }
+    },
     inputAltitudeKeyDown: function () {
       if (!this.planeSelected.setAltitude) return;
-      if (Number(this.inputAltitude) < 0) return;
-      this.planeSelected.setAltitude(this.inputAltitude, false);
+      if (this.inputAltitude.length > 3) return;
+
+      const alt = parseInt(this.inputAltitude) * 100;
+      this.planeSelected.setAltitude(alt, false);
       this.inputAltitude = "";
+    },
+
+    inputEventSpeed: function (ev) {
+      const value = ev.target.value;
+      if (!this.planeSelected.setSpeed) {
+        this.inputSpeed = "";
+        return;
+      }
+
+      this.inputSpeed = inputFilter(value);
+      if (!isValidSpeed(this.inputSpeed)) {
+        this.inputSpeed = "---";
+        return;
+      }
     },
     inputSpeedKeyDown: function () {
       if (!this.planeSelected.setSpeed) return;
-      if (Number(this.inputSpeed) < 0) return;
+      if (this.inputSpeed.length > 3) return;
+
       this.planeSelected.setSpeed(this.inputSpeed, false, false);
       this.inputSpeed = "";
     },
@@ -132,32 +170,38 @@ export default {
   display: flex;
   flex-direction: column;
   left: 19.2%;
-  padding-top: 50px;
-
-  .heading-label {
-    margin-bottom: 4px;
-    font-size: 14px;
-    font-family: sans-serif;
-    color: white;
-  }
+  padding-top: 20px;
 
   :focus-visible {
     outline-style: none;
   }
 
-  .heading {
-    width: 36px;
-    margin-left: 5px;
+  label {
+    margin-bottom: 4px;
+    font-size: 14px;
+    font-family: sans-serif;
+    font-weight: 600;
+    color: white;
+    &.heading {
+      margin-left: 12px;
+    }
+    &.altitude {
+      margin-left: 5px;
+    }
+    &.speed {
+      margin-left: 12px;
+    }
+  }
+
+  input {
+    width: 32px;
+    margin-left: 8px;
+    margin-bottom: 6px;
     border-radius: 4px;
     border-style: none;
-    font-size: 20px;
+    font-size: 16px;
     font-family: sans-serif;
-  }
-  .speed {
-    width: 25px;
-  }
-  .altitude {
-    width: 40px;
+    background-color: whitesmoke;
   }
 
   .land {
