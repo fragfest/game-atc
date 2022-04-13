@@ -1,8 +1,8 @@
 <template>
   <div class="circle-panel">
-    <div class="circle-inputs">
-      <!-- <button class="land" @click="btnClick('land')">Land</button> -->
+    <button class="land" @click="btnClick('land')">land</button>
 
+    <div class="circle-inputs">
       <label class="heading" for="inputHeading">hdg</label>
       <input
         id="inputHeading"
@@ -197,9 +197,35 @@ export default {
   width: 100%;
 }
 
-.land {
-  color: green;
-  position: relative;
+button.land {
+  width: 100px;
+  height: 40px;
+  margin-top: 20px;
+  background-color: #2c5c81;
+  border: none;
+  border-radius: 6px;
+  box-shadow: 3px 2px rgb(119, 119, 119);
+
+  color: white;
+  font-weight: 600;
+  font-size: 15px;
+  font-family: sans-serif;
+
+  &:focus-visible {
+    outline-style: solid;
+    outline-color: limegreen;
+    outline-width: 1px;
+  }
+
+  &:hover {
+    cursor: pointer;
+    background-color: #3d8ac5;
+  }
+
+  &:active {
+    margin-right: 1px;
+    box-shadow: 0px 0px black;
+  }
 }
 
 .circle-inputs {
