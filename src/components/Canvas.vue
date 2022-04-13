@@ -149,7 +149,9 @@ export default {
       textLayerObj: layerThreeObj,
       headingLayerObj: layerFourObj,
       entityDiv: layerSixDiv,
-      squareClickEventCB: (squareObj) => (squareClicked.value = squareObj),
+      squareClickEventCB: (squareObj) => {
+        squareClicked.value = squareObj;
+      },
       gameUpdateCB: (updateObj) => {
         planes.value = updateObj.planes;
       },

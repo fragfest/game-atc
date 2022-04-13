@@ -6,10 +6,12 @@
       <label class="heading" for="inputHeading">hdg</label>
       <input
         id="inputHeading"
+        ref="inputHeading"
         type="text"
         @keydown.enter="inputHeadingKeyDown"
         @input="inputEventHeading"
         v-model="inputHeading"
+        :disabled="isDisabled"
       />
 
       <label class="altitude" for="inputAltitude">
@@ -17,19 +19,23 @@
       </label>
       <input
         id="inputAltitude"
+        ref="inputAltitude"
         type="text"
         @keydown.enter="inputAltitudeKeyDown"
         @input="inputEventAltitude"
         v-model="inputAltitude"
+        :disabled="isDisabled"
       />
 
       <label class="speed" for="inputSpeed">spd</label>
       <input
         id="inputSpeed"
+        ref="inputSpeed"
         type="text"
         @keydown.enter="inputSpeedKeyDown"
         @input="inputEventSpeed"
         v-model="inputSpeed"
+        :disabled="isDisabled"
       />
     </div>
 
@@ -49,6 +55,8 @@
 
 <script>
 const {
+  convertToSmallDegrees,
+  radToDegrees,
   isValidHeading,
   isValidAltitude,
   isValidSpeed,
@@ -60,10 +68,12 @@ const inputFilter = (value) => {
     inputHeading = value[3] || "";
   }
   if (inputHeading.length > 3) {
-    inputHeading = value.substring(0, 3);
+    inputHeading = value[3];
   }
   return inputHeading;
 };
+
+const leftPadZeros = (str) => ("000" + str).slice(-3);
 
 export default {
   name: "ControlPanel",
@@ -78,6 +88,28 @@ export default {
       inputAltitude: null,
       inputSpeed: null,
     };
+  },
+
+  computed: {
+    isDisabled: function () {
+      return !this.planeSelected.title;
+    },
+  },
+
+  watch: {
+    planeSelected(newPlane) {
+      const heading = convertToSmallDegrees(
+        radToDegrees(newPlane.headingTargetRad)
+      );
+      const altShort = Math.floor(newPlane.altitudeTarget / 100).toString();
+
+      this.inputSpeed = leftPadZeros(newPlane.speedTarget);
+      this.inputHeading = leftPadZeros(heading);
+      this.inputAltitude = leftPadZeros(altShort);
+      this.$nextTick(() => {
+        this.$refs.inputHeading.focus();
+      });
+    },
   },
 
   methods: {
@@ -109,7 +141,7 @@ export default {
       }
 
       this.planeSelected.setHeadingDegrees(this.inputHeading);
-      this.inputHeading = "";
+      this.$refs.inputAltitude.focus();
     },
 
     inputEventAltitude: function (ev) {
@@ -131,7 +163,7 @@ export default {
 
       const alt = parseInt(this.inputAltitude) * 100;
       this.planeSelected.setAltitude(alt, false);
-      this.inputAltitude = "";
+      this.$refs.inputSpeed.focus();
     },
 
     inputEventSpeed: function (ev) {
@@ -152,7 +184,7 @@ export default {
       if (this.inputSpeed.length > 3) return;
 
       this.planeSelected.setSpeed(this.inputSpeed, false, false);
-      this.inputSpeed = "";
+      this.$refs.inputHeading.focus();
     },
   },
 };
@@ -165,16 +197,17 @@ export default {
   width: 100%;
 }
 
+.land {
+  color: green;
+  position: relative;
+}
+
 .circle-inputs {
   position: relative;
   display: flex;
   flex-direction: column;
   left: 19.2%;
   padding-top: 20px;
-
-  :focus-visible {
-    outline-style: none;
-  }
 
   label {
     margin-bottom: 4px;
@@ -194,19 +227,30 @@ export default {
   }
 
   input {
-    width: 32px;
+    width: 28px;
     margin-left: 8px;
     margin-bottom: 6px;
+    padding-top: 1.5px;
     border-radius: 4px;
     border-style: none;
     font-size: 16px;
     font-family: sans-serif;
-    background-color: whitesmoke;
+    font-weight: 600;
+    background-color: lightgreen;
+    color: darkslategray;
   }
 
-  .land {
-    color: green;
-    position: relative;
+  ::selection {
+    background: transparent;
+  }
+
+  :focus-visible {
+    background-color: whitesmoke;
+    color: black;
+    caret-color: transparent;
+    outline-style: solid;
+    outline-color: limegreen;
+    outline-width: 2px;
   }
 }
 

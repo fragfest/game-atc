@@ -9,6 +9,7 @@ export const inputHeadingToRad = heading => convertToPosRad(degreesToRad(heading
 
 export const isValidHeading = str => {
   if (str.length > 3) return false;
+  if (str.length < 3) return true;
 
   const strArr = str.split('');
   const intOnlyArr = strArr.map(str => parseInt(str))
@@ -21,6 +22,7 @@ export const isValidHeading = str => {
 
 export const isValidAltitude = str => {
   if (str.length > 3) return false;
+  if (str.length < 3) return true;
 
   const strArr = str.split('');
   const intOnlyArr = strArr.map(str => parseInt(str))
