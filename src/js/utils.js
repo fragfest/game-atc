@@ -9,7 +9,6 @@ export const inputHeadingToRad = heading => convertToPosRad(degreesToRad(heading
 
 export const isValidHeading = str => {
   if (str.length > 3) return false;
-  if (str.length < 3) return true;
 
   const strArr = str.split('');
   const intOnlyArr = strArr.map(str => parseInt(str))
@@ -17,12 +16,17 @@ export const isValidHeading = str => {
   const hasOnlyInts = intOnlyArr.length === str.length;
   const isInRange = parseInt(str) >= 0 && parseInt(str) <= 360;
   const isNotAllZeros = str !== '000';
+  if (str.length < 3 && !hasOnlyInts) {
+    return false;
+  }
+  if (str.length < 3 && hasOnlyInts) {
+    return true;
+  }
   return hasOnlyInts && isInRange && isNotAllZeros;
 }
 
 export const isValidAltitude = str => {
   if (str.length > 3) return false;
-  if (str.length < 3) return true;
 
   const strArr = str.split('');
   const intOnlyArr = strArr.map(str => parseInt(str))
@@ -30,12 +34,17 @@ export const isValidAltitude = str => {
   const hasOnlyInts = intOnlyArr.length === str.length;
   const isInRange = parseInt(str) >= 1 && parseInt(str) <= 400;
   const isNotAllZeros = str !== '000';
+  if (str.length < 3 && !hasOnlyInts) {
+    return false;
+  }
+  if (str.length < 3 && hasOnlyInts) {
+    return true;
+  }
   return hasOnlyInts && isInRange && isNotAllZeros;
 }
 
 export const isValidSpeed = str => {
   if (str.length > 3) return false;
-  if (str.length < 3) return true;
 
   const strArr = str.split('');
   const intOnlyArr = strArr.map(str => parseInt(str))
@@ -43,5 +52,11 @@ export const isValidSpeed = str => {
   const hasOnlyInts = intOnlyArr.length === str.length;
   const isInRange = parseInt(str) >= 135 && parseInt(str) <= 500;
   const isNotAllZeros = str !== '000';
+  if (str.length < 3 && !hasOnlyInts) {
+    return false;
+  }
+  if (str.length < 3 && hasOnlyInts) {
+    return true;
+  }
   return hasOnlyInts && isInRange && isNotAllZeros;
 }

@@ -10,6 +10,7 @@
         type="text"
         @keydown.enter="inputHeadingKeyDown"
         @input="inputEventHeading"
+        @click="inputClick"
         v-model="inputHeading"
         :disabled="isDisabled"
       />
@@ -23,6 +24,7 @@
         type="text"
         @keydown.enter="inputAltitudeKeyDown"
         @input="inputEventAltitude"
+        @click="inputClick"
         v-model="inputAltitude"
         :disabled="isDisabled"
       />
@@ -34,6 +36,7 @@
         type="text"
         @keydown.enter="inputSpeedKeyDown"
         @input="inputEventSpeed"
+        @click="inputClick"
         v-model="inputSpeed"
         :disabled="isDisabled"
       />
@@ -119,6 +122,11 @@ export default {
       else this.planeSelected.setHeadingStr(direction);
     },
 
+    inputClick: function (el) {
+      const length = el.target.value.length;
+      el.target.setSelectionRange(length, length);
+    },
+
     inputEventHeading: function (ev) {
       const value = ev.target.value;
       if (!this.planeSelected.setHeadingDegrees) {
@@ -134,7 +142,11 @@ export default {
     },
     inputHeadingKeyDown: function () {
       if (!this.planeSelected.setHeadingDegrees) return;
-      if (this.inputHeading.length !== 3) return;
+      this.inputHeading = inputFilter(this.inputHeading);
+      if (this.inputHeading.length !== 3) {
+        this.inputHeading = "---";
+        return;
+      }
       if (!isValidHeading(this.inputHeading)) {
         this.inputHeading = "";
         return;
@@ -159,7 +171,11 @@ export default {
     },
     inputAltitudeKeyDown: function () {
       if (!this.planeSelected.setAltitude) return;
-      if (this.inputAltitude.length > 3) return;
+      this.inputAltitude = inputFilter(this.inputAltitude);
+      if (this.inputAltitude.length !== 3) {
+        this.inputAltitude = "---";
+        return;
+      }
 
       const alt = parseInt(this.inputAltitude) * 100;
       this.planeSelected.setAltitude(alt, false);
@@ -181,7 +197,11 @@ export default {
     },
     inputSpeedKeyDown: function () {
       if (!this.planeSelected.setSpeed) return;
-      if (this.inputSpeed.length > 3) return;
+      this.inputSpeed = inputFilter(this.inputSpeed);
+      if (this.inputSpeed.length !== 3) {
+        this.inputSpeed = "---";
+        return;
+      }
 
       this.planeSelected.setSpeed(this.inputSpeed, false, false);
       this.$refs.inputHeading.focus();
@@ -259,11 +279,17 @@ button.land {
     padding-top: 1.5px;
     border-radius: 4px;
     border-style: none;
+
+    cursor: pointer;
     font-size: 16px;
     font-family: sans-serif;
     font-weight: 600;
     background-color: lightgreen;
     color: darkslategray;
+
+    &[disabled] {
+      cursor: default;
+    }
   }
 
   ::selection {
