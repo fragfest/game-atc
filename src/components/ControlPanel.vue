@@ -1,6 +1,8 @@
 <template>
   <div class="circle-panel">
-    <button class="land" @click="btnClick('land')">land</button>
+    <button class="land" :disabled="isDisabled" @click="btnClick('land')">
+      land
+    </button>
 
     <div class="circle-inputs">
       <label class="heading" for="inputHeading">hdg</label>
@@ -240,11 +242,19 @@ button.land {
   &:hover {
     cursor: pointer;
     background-color: #3d8ac5;
+    &[disabled] {
+      cursor: default;
+      background-color: #2c5c81;
+    }
   }
 
   &:active {
     margin-right: 1px;
     box-shadow: 0px 0px black;
+    &[disabled] {
+      margin-right: 0;
+      box-shadow: 3px 2px rgb(119, 119, 119);
+    }
   }
 }
 
