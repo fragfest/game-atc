@@ -89,11 +89,23 @@ export default {
   name: "FlightStrip",
   props: {
     plane: { type: Square },
+    planeSelected: { type: Object },
   },
+
   data() {
     return {
-      hoverClass: "",
+      isHover: false,
     };
+  },
+
+  computed: {
+    hoverClass: function () {
+      const isSelected = this.plane.id === this.planeSelected.id;
+      const isHover = this.isHover;
+      if (isSelected) return "selected";
+      if (isHover) return "hover";
+      return "";
+    },
   },
 
   methods: {
@@ -101,10 +113,10 @@ export default {
       plane.clickEventCB();
     },
     hover: function () {
-      this.hoverClass = "hover";
+      this.isHover = true;
     },
     flatten: function () {
-      this.hoverClass = "";
+      this.isHover = false;
     },
   },
 };
@@ -129,7 +141,11 @@ export default {
   position: 100px;
 
   &.hover {
-    left: -4px;
+    left: 4px;
+  }
+
+  &.selected {
+    left: 8px;
   }
 }
 

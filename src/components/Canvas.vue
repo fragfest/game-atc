@@ -56,7 +56,10 @@
     <div class="panel-right">
       <ul>
         <li v-for="(plane, index) in planes" :key="index">
-          <FlightStrip :plane="plane"></FlightStrip>
+          <FlightStrip
+            :plane="plane"
+            :planeSelected="squareClicked"
+          ></FlightStrip>
         </li>
       </ul>
     </div>
