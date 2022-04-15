@@ -92,7 +92,6 @@ export default {
   name: "ControlPanel",
   props: {
     planeSelected: { type: Object },
-    planes: { type: Object },
   },
 
   data() {

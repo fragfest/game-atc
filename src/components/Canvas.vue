@@ -45,10 +45,7 @@
       <div class="row-bottom">
         <div class="row-bottom-left"></div>
         <div class="row-bottom-right">
-          <ControlPanel
-            :planes="planes"
-            :planeSelected="squareClicked"
-          ></ControlPanel>
+          <ControlPanel :planeSelected="squareClicked"></ControlPanel>
         </div>
       </div>
     </div>
@@ -100,9 +97,6 @@ export default {
     styleFullSize: () => ({
       width: width - 2 + "px",
       height: height - 1 + "px",
-      border: "3px darkgreen",
-      "border-radius": "4px",
-      "border-style": "inset",
     }),
   },
 
@@ -183,9 +177,22 @@ export default {
 }
 
 .panel-right {
-  background-color: #e5e4e4;
-  width: 100%;
+  width: 420px;
+  padding-top: 6px;
   padding-left: 6px;
+  background-image: url("/img/teal-bckgnd.jpg");
+  // background-image: linear-gradient(
+  //     rgba(255, 255, 255, 0.1),
+  //     rgba(255, 255, 255, 0.1)
+  //   ),
+  //   url("/img/teal-bckgnd.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+
+  border-right: solid 3px teal;
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+
   & ul {
     list-style-type: none;
     margin: 0;
@@ -198,7 +205,6 @@ export default {
   justify-content: space-around;
   height: 200px;
   border: darkgray solid 1px;
-  border-radius: 3px;
   background: linear-gradient(180deg, #e5e4e4, #c4c4c4);
   border-right-width: 2px;
 }
@@ -244,8 +250,10 @@ export default {
 
 .entity-div {
   position: absolute;
-  /* width: 800px;
-    height: 600px;  */
+  border-color: teal;
+  border-width: 3px;
+  border-right-width: 2px;
+  border-style: inset;
 }
 
 .canvas {

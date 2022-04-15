@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="background"></div>
+    <div class="background" :class="hoverClass"></div>
     <div class="strip" :class="hoverClass">
       <div
         class="title"
@@ -137,6 +137,16 @@ export default {
   border-radius: 12px;
   background-color: #24b3c960;
   filter: blur(2px);
+
+  &.hover {
+    width: 398px;
+    margin-left: 10px;
+  }
+
+  &.selected {
+    width: 394px;
+    margin-left: 14px;
+  }
 }
 
 // strip start
