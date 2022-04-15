@@ -2,8 +2,7 @@ const {
   inputHeadingToRad,
   convertToSmallRad,
   convertToPosRad,
-  convertToSmallDegrees,
-  radToDegrees,
+  convertHeadingToThreeDigitStr,
 } = require('./utils');
 const entityFns = require('./entity');
 
@@ -35,6 +34,7 @@ module.exports = class Square {
     this.altitudeMax = 40000;
     this.setAltitude(positionObj.altitude, false);
     this.headingRad = inputHeadingToRad(positionObj.heading);
+    this.heading = positionObj.heading;
     this.headingTargetRad = 0;
     this.setHeadingDegrees(positionObj.heading);
     this.speed = positionObj.speed;
@@ -244,6 +244,7 @@ module.exports = class Square {
     this.squareOneDiv.style.left = this.x - 8 + 'px';
     this.squareOneDiv.style.top = this.y - 8 + 'px';
     this.headingRad = headingRadNew;
+    this.heading = convertHeadingToThreeDigitStr(headingRadNew);
     this.altitude = altitudeNew;
     this.speed = speedNew;
     this.speedPixelPerMs = convertKnotsToPixelsPerMs(speedNew);
@@ -290,10 +291,7 @@ const draw = (self, color, speedPixels) => {
   self.headingLayerObj.ctx.lineTo(center.x - pixelsInX * 2, center.y - pixelsInY * 2);
   self.headingLayerObj.ctx.stroke();
 
-  const deg = Math.round(convertToSmallDegrees(radToDegrees(self.headingRad)));
-  let degreesDisplay = deg;
-  if (deg < 10) degreesDisplay = '00' + deg;
-  else if (deg < 100) degreesDisplay = '0' + deg;
+  const degreesDisplay = self.heading;
   let speedDisplay = self.speed;
   if (self.speed < 10) speedDisplay = '00' + self.speed;
   else if (self.speed < 100) speedDisplay = '0' + self.speed;

@@ -7,23 +7,12 @@ export const radToDegrees = rad => (Number(rad) * 180 / Math.PI) + 90;
 export const degreesToRad = degrees => (Number(degrees) - 90) * Math.PI / 180;
 export const inputHeadingToRad = heading => convertToPosRad(degreesToRad(heading));
 
-const isValidThreeDigitInput = (str, isInRange) => {
-  if (str.length > 3) return false;
-
-  const strArr = str.split('');
-  const intOnlyArr = strArr.map(str => parseInt(str))
-    .filter(int => !Number.isNaN(int));
-  const hasOnlyInts = intOnlyArr.length === str.length;
-  const isNotAllZeros = str !== '000';
-  if (str.length < 3 && !hasOnlyInts) {
-    return false;
-  }
-  if (str.length < 3 && hasOnlyInts) {
-    return true;
-  }
-  return hasOnlyInts && isNotAllZeros && isInRange;
+export const convertHeadingToThreeDigitStr = (rad) => {
+  const degrees = Math.round(convertToSmallDegrees(radToDegrees(rad)));
+  if (degrees < 10) return '00' + degrees;
+  if (degrees < 100) return '0' + degrees;
+  return degrees;
 }
-
 export const isValidHeading = str => {
   const isInRange = parseInt(str) >= 0 && parseInt(str) <= 360;
   return isValidThreeDigitInput(str, isInRange);
@@ -37,4 +26,22 @@ export const isValidAltitude = str => {
 export const isValidSpeed = str => {
   const isInRange = parseInt(str) >= 135 && parseInt(str) <= 500;
   return isValidThreeDigitInput(str, isInRange);
+}
+
+////////////// PRIVATE //////////////////////////////////////
+const isValidThreeDigitInput = (str, isInRange) => {
+  if (str.length > 3) return false;
+
+  const strArr = str.split('');
+  const intOnlyArr = strArr.map(str => parseInt(str))
+    .filter(Number.isInteger);
+  const hasOnlyInts = intOnlyArr.length === str.length;
+  const isNotAllZeros = str !== '000';
+  if (str.length < 3 && !hasOnlyInts) {
+    return false;
+  }
+  if (str.length < 3 && hasOnlyInts) {
+    return true;
+  }
+  return hasOnlyInts && isNotAllZeros && isInRange;
 }

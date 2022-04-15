@@ -2,7 +2,12 @@
   <div>
     <div class="background"></div>
     <div class="strip" :class="hoverClass">
-      <div class="title clickable" @click="click(plane)">
+      <div
+        class="title"
+        @click="click(plane)"
+        @mouseover="hover()"
+        @mouseout="flatten()"
+      >
         <span>{{ plane.title }}</span>
       </div>
 
@@ -131,14 +136,16 @@ export default {
   margin-left: 6px;
   border-radius: 12px;
   background-color: #24b3c960;
-  filter: blur(6px);
+  filter: blur(2px);
 }
 
+// strip start
 .strip {
   position: relative;
   width: 400px;
   height: 80px;
   position: 100px;
+  cursor: pointer;
 
   &.hover {
     left: 4px;
@@ -147,20 +154,17 @@ export default {
   &.selected {
     left: 8px;
   }
-}
 
-.title {
-  position: absolute;
-  top: 10px;
-  left: 16px;
-  span {
-    color: lightgreen;
-    margin: 5px 5px;
-    font: bold 12px Arial;
+  .title {
+    position: absolute;
+    top: 10px;
+    left: 16px;
+    span {
+      color: lightgreen;
+      margin: 5px 5px;
+      font: bold 12px Arial;
+    }
   }
 }
-
-.clickable {
-  cursor: pointer;
-}
+// strip end
 </style>

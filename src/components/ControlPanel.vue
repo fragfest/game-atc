@@ -1,8 +1,16 @@
 <template>
   <div class="circle-panel">
-    <button class="land" :disabled="isDisabled" @click="btnClick('land')">
-      land
-    </button>
+    <div class="btn-info-panel">
+      <button class="land" :disabled="isDisabled" @click="btnClick('land')">
+        land
+      </button>
+      <div class="info" v-show="planeSelected.id">
+        <span>Fl {{ planeSelected.title }}</span> <br />
+        <span>Hdg {{ planeSelected.heading }}</span> <br />
+        <span>Alt {{ planeSelected.altitude }}</span> <br />
+        <span>Spd {{ planeSelected.speed }}</span> <br />
+      </div>
+    </div>
 
     <div class="circle-inputs">
       <label class="heading" for="inputHeading">hdg</label>
@@ -219,10 +227,25 @@ export default {
   width: 100%;
 }
 
+.btn-info-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  max-width: 100px;
+  margin-top: 10px;
+  .info {
+    margin-top: 12px;
+    margin-left: 2px;
+    padding: 8px;
+    border: solid 1px darkgreen;
+    border-radius: 4px;
+    box-shadow: 1px 1px rgb(119, 119, 119);
+  }
+}
+
 button.land {
   width: 100px;
   height: 40px;
-  margin-top: 20px;
   background-color: #2c5c81;
   border: none;
   border-radius: 6px;
