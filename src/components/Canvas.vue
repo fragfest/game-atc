@@ -215,7 +215,7 @@ export default {
 .row-bottom {
   display: flex;
   justify-content: space-around;
-  height: 200px;
+  height: 240px;
   border: darkgray solid 1px;
   background: linear-gradient(180deg, #e5e4e4, #c4c4c4);
   border-right-width: 2px;
@@ -230,7 +230,7 @@ export default {
   display: flex;
   width: 100%;
   padding: 8px;
-  padding-right: 8%;
+  padding-right: 40px;
 }
 
 .layer-six {

@@ -53,14 +53,27 @@
     </div>
 
     <div class="circle-div">
-      <svg viewBox="0 0 100 100">
+      <svg viewBox="-250 -250 500 500" id="svg">
         <defs>
           <radialGradient id="circle">
             <stop offset="0%" stop-color="#3d8ac5" />
             <stop offset="100%" stop-color="#2c5c81" />
           </radialGradient>
         </defs>
-        <circle class="circle" cx="50" cy="50" r="48" fill="url(#circle)" />
+        <circle
+          r="222"
+          cx="0"
+          cy="0"
+          fill="url(#circle)"
+          stroke="lightgreen"
+          stroke-width="4"
+        />
+        <g id="gauge">
+          <g id="noon">
+            <line x1="0" y1="-220" x2="0" y2="-205" />
+            <text x="0" y="-180" class="text"></text>
+          </g>
+        </g>
       </svg>
     </div>
   </div>
@@ -92,7 +105,7 @@ export default {
   name: "ControlPanel",
   props: {
     // NOTE: planes is needed to trigger a responsive update of component.
-    // Then changes to planeSelected will be
+    // Then changes to planeSelected will be picked up.
     planeSelected: { type: Object },
     planes: { type: Object },
   },
@@ -103,6 +116,19 @@ export default {
       inputAltitude: null,
       inputSpeed: null,
     };
+  },
+
+  mounted() {
+    const noon = document.querySelector("#noon");
+    const gauge = document.querySelector("#gauge");
+
+    for (var i = 0; i <= 360; i = i + 30) {
+      var new_tick = noon.cloneNode(true);
+      new_tick.getElementsByTagName("text")[0].textContent = i;
+      new_tick.removeAttribute("id");
+      new_tick.setAttribute("transform", "rotate(" + i + ")");
+      gauge.appendChild(new_tick);
+    }
   },
 
   computed: {
@@ -288,8 +314,8 @@ button.land {
   position: relative;
   display: flex;
   flex-direction: column;
-  left: 19.2%;
-  padding-top: 20px;
+  left: 138px;
+  padding-top: 41px;
 
   label {
     margin-bottom: 4px;
@@ -343,10 +369,39 @@ button.land {
 }
 
 .circle-div {
-  width: 180px;
+  width: 220px;
+  border: 1px solid grey;
+  border-radius: 4px;
 }
 
-.circle {
-  filter: drop-shadow(1px 1px 1px rgb(119, 119, 119));
+svg {
+  line {
+    stroke: white;
+    stroke-width: 4px;
+  }
+
+  text {
+    fill: white;
+    text-anchor: middle;
+    font-size: 24px;
+    font-family: sans-serif;
+  }
+
+  rect {
+    fill: transparent;
+  }
+
+  #id {
+    display: none;
+  }
+
+  .origin {
+    fill: green;
+  }
+
+  .outer {
+    fill: none;
+    stroke: black;
+  }
 }
 </style>
