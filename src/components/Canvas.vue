@@ -45,7 +45,10 @@
       <div class="row-bottom">
         <div class="row-bottom-left"></div>
         <div class="row-bottom-right">
-          <ControlPanel :planeSelected="squareClicked"></ControlPanel>
+          <ControlPanel
+            :planeSelected="squareClicked"
+            :planes="planes"
+          ></ControlPanel>
         </div>
       </div>
     </div>
@@ -158,7 +161,6 @@ export default {
         const isFound = (plane) => plane.id === planeSelId;
         const planeSelFound = planes.value.find(isFound);
         if (!planeSelFound) {
-          console.log("planeSelected not found", planeSelFound);
           squareClicked.value = {};
         }
       },

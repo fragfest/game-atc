@@ -91,12 +91,10 @@ const leftPadZeros = (str) => ("000" + str).slice(-3);
 export default {
   name: "ControlPanel",
   props: {
-    planeSelected: {
-      type: Object,
-      // default() {
-      //   return {};
-      // },
-    },
+    // NOTE: planes is needed to trigger a responsive update of component.
+    // Then changes to planeSelected will be
+    planeSelected: { type: Object },
+    planes: { type: Object },
   },
 
   data() {
@@ -109,14 +107,12 @@ export default {
 
   computed: {
     isDisabled: function () {
-      // if (!this.planeSelected) return;
       return !this.planeSelected.title;
     },
   },
 
   watch: {
     planeSelected(newPlane) {
-      // const newPlane = newPlaneArg || {};
       const heading = convertToSmallDegrees(
         radToDegrees(newPlane.headingTargetRad)
       );
