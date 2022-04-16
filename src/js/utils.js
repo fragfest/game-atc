@@ -11,7 +11,7 @@ export const convertHeadingToThreeDigitStr = (rad) => {
   const degrees = Math.round(convertToSmallDegrees(radToDegrees(rad)));
   if (degrees < 10) return '00' + degrees;
   if (degrees < 100) return '0' + degrees;
-  return degrees;
+  return degrees.toString();
 }
 export const isValidHeading = str => {
   const isInRange = parseInt(str) >= 0 && parseInt(str) <= 360;

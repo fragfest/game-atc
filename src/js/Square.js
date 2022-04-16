@@ -136,29 +136,8 @@ module.exports = class Square {
     this.setHeadingTarget(inputHeadingToRad(heading), false);
   }
 
-  // TODO remove
-  setHeadingStr(direction) {
-    switch (direction) {
-      case 'left': this.setHeadingTarget(Math.PI, false);
-        break;
-      case 'right': this.setHeadingTarget(0, false);
-        break;
-      case 'top': this.setHeadingTarget((3 / 2) * Math.PI, false);
-        break;
-      case 'down': this.setHeadingTarget((1 / 2) * Math.PI, false);
-        break;
-      default: this.setHeadingTarget(0, false);
-    }
-  }
-
   hide() {
-    // TODO could use this non canvas-wide hiding of squares to show previous track
     this.ctx.clearRect(this.x - 1, this.y - 1, this.width + 2, this.height + 2)
-    // TODO can probably just rely on canvas-wide clearing in game loop
-    // const center = { x: this.x + this.width / 2, y: this.y + this.height / 2 };
-    // this.headingLayerObj.ctx.clearRect(center.x - 25, center.y - 25, 50, 50);
-    // this.textLayerObj.ctx.clearRect(this.x, this.y - 10, 35, 10);
-    // this.textLayerObj.ctx.clearRect(this.x + 35, this.y - 10, 40, 35);
   }
 
   destroy() {

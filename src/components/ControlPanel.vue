@@ -81,8 +81,7 @@
 
 <script>
 const {
-  convertToSmallDegrees,
-  radToDegrees,
+  convertHeadingToThreeDigitStr,
   isValidHeading,
   isValidAltitude,
   isValidSpeed,
@@ -139,9 +138,7 @@ export default {
 
   watch: {
     planeSelected(newPlane) {
-      const heading = convertToSmallDegrees(
-        radToDegrees(newPlane.headingTargetRad)
-      );
+      const heading = convertHeadingToThreeDigitStr(newPlane.headingTargetRad);
       const altShort = Math.floor(newPlane.altitudeTarget / 100).toString();
 
       this.inputSpeed = newPlane.id ? leftPadZeros(newPlane.speedTarget) : "";
@@ -158,7 +155,6 @@ export default {
     btnClick: function (direction) {
       if (!this.planeSelected.setLanding) return;
       if (direction === "land") this.planeSelected.setLanding(true);
-      else this.planeSelected.setHeadingStr(direction);
     },
 
     inputClick: function (el) {
