@@ -91,7 +91,12 @@ const leftPadZeros = (str) => ("000" + str).slice(-3);
 export default {
   name: "ControlPanel",
   props: {
-    planeSelected: { type: Object },
+    planeSelected: {
+      type: Object,
+      // default() {
+      //   return {};
+      // },
+    },
   },
 
   data() {
@@ -104,22 +109,25 @@ export default {
 
   computed: {
     isDisabled: function () {
+      // if (!this.planeSelected) return;
       return !this.planeSelected.title;
     },
   },
 
   watch: {
     planeSelected(newPlane) {
+      // const newPlane = newPlaneArg || {};
       const heading = convertToSmallDegrees(
         radToDegrees(newPlane.headingTargetRad)
       );
       const altShort = Math.floor(newPlane.altitudeTarget / 100).toString();
 
-      this.inputSpeed = leftPadZeros(newPlane.speedTarget);
-      this.inputHeading = leftPadZeros(heading);
-      this.inputAltitude = leftPadZeros(altShort);
+      this.inputSpeed = newPlane.id ? leftPadZeros(newPlane.speedTarget) : "";
+      this.inputHeading = newPlane.id ? leftPadZeros(heading) : "";
+      this.inputAltitude = newPlane.id ? leftPadZeros(altShort) : "";
       this.$nextTick(() => {
-        this.$refs.inputHeading.focus();
+        if (newPlane.id) this.$refs.inputHeading.focus();
+        if (!newPlane.id) this.$refs.inputHeading.blur();
       });
     },
   },

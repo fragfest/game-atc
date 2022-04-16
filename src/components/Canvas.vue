@@ -150,7 +150,17 @@ export default {
         squareClicked.value = squareObj;
       },
       gameUpdateCB: (updateObj) => {
-        planes.value = updateObj.planes;
+        planes.value = updateObj.planes || [];
+        if (!squareClicked.value) return;
+        if (!squareClicked.value.id) return;
+
+        const planeSelId = squareClicked.value.id;
+        const isFound = (plane) => plane.id === planeSelId;
+        const planeSelFound = planes.value.find(isFound);
+        if (!planeSelFound) {
+          console.log("planeSelected not found", planeSelFound);
+          squareClicked.value = {};
+        }
       },
     };
     const entityManagerArr = setupEntities(setupArg);
