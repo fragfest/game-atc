@@ -45,7 +45,7 @@ export const setupEntities = (argObj) => {
     { x: argObj.width / 2 + 10, y: argObj.height / 2 + 20, heading: '270', altitude: 800, speed: 180 });
   const squareThree = new Square('SQ 003',
     argObj.entityLayerObj, argObj.textLayerObj, argObj.headingLayerObj, argObj.entityDiv,
-    { x: argObj.width / 2 + 300, y: argObj.height / 2 - 160, heading: '215', altitude: 100, speed: 250 });
+    { x: argObj.width / 2 + 300, y: argObj.height / 2 - 160, heading: '222', altitude: 100, speed: 180 });
 
   const squareClickEventCB = argObj.squareClickEventCB; // CB arg: Square
   squareOne.clickEventCB = () => squareClickEventCB(squareOne);

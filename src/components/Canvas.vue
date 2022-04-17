@@ -191,7 +191,7 @@ export default {
 .panel-right {
   width: 420px;
   padding-top: 6px;
-  padding-left: 6px;
+  padding-left: 12px;
   background-image: url("/img/teal-bckgnd.jpg");
   // background-image: linear-gradient(
   //     rgba(255, 255, 255, 0.1),
@@ -199,7 +199,6 @@ export default {
   //   ),
   //   url("/img/teal-bckgnd.jpg");
   background-size: cover;
-  background-repeat: no-repeat;
 
   border-right: solid 3px teal;
   border-top-right-radius: 6px;
@@ -217,6 +216,7 @@ export default {
   justify-content: space-around;
   height: 240px;
   margin-top: -1px;
+  border-right: solid 1px teal;
 
   // background-image: url("/img/teal-bckgnd.jpg");
   background-image: linear-gradient(
@@ -224,8 +224,9 @@ export default {
       rgba(255, 255, 255, 0.1)
     ),
     url("/img/teal-bckgnd.jpg");
-  background-size: cover;
-  background-repeat: no-repeat;
+  // background-size: cover;
+  background-size: contain;
+  // background-position: right;
 }
 
 .row-bottom-left {

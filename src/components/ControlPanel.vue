@@ -7,9 +7,18 @@
       <div class="info" v-show="planeSelected.id">
         <span> {{ planeSelected.title }} </span><br />
         <hr />
-        <span><b>Hdg</b> {{ heading }}</span> <br />
-        <span><b>Alt</b> {{ planeSelected.altitude }}</span> <br />
-        <span><b>Spd</b> {{ planeSelected.speed }}</span> <br />
+        <div class="row">
+          <span><b>Hdg</b></span>
+          <span>{{ heading }} &#176;</span>
+        </div>
+        <div class="row">
+          <span><b>Alt</b></span>
+          <span>{{ planeSelected.altitude }} ft</span>
+        </div>
+        <div class="row">
+          <span><b>Spd</b></span>
+          <span>{{ planeSelected.speed }} kts</span>
+        </div>
       </div>
     </div>
 
@@ -194,6 +203,7 @@ export default {
     },
   },
 
+  // methods
   methods: {
     btnClick: function (direction) {
       if (!this.planeSelected.setLanding) return;
@@ -285,6 +295,7 @@ export default {
       this.$refs.inputHeading.focus();
     },
   },
+  // methods END
 };
 </script>
 
@@ -299,9 +310,12 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  max-width: 100px;
+  max-width: 120px;
   margin-top: 10px;
   .info {
+    hr {
+      margin-top: 4px;
+    }
     color: white;
     font-size: 16px;
     margin-top: 12px;
@@ -309,17 +323,23 @@ export default {
     padding: 10px;
     border: 1px solid rgb(201, 201, 201);
     border-radius: 8px;
+    box-shadow: 3px 3px rgb(0, 84, 84);
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+    }
   }
 }
 
 // button.land
 button.land {
-  width: 100px;
+  width: 120px;
   height: 40px;
   background-color: #2c5c81;
   border: none;
   border-radius: 6px;
-  box-shadow: 3px 2px rgb(119, 119, 119);
+  box-shadow: 2px 2px rgb(0, 84, 84);
 
   color: white;
   font-weight: 600;
@@ -334,7 +354,7 @@ button.land {
 
   &:hover {
     cursor: pointer;
-    background-color: #3d8ac5;
+    background-color: #36719d;
     &[disabled] {
       cursor: default;
       background-color: #2c5c81;

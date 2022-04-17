@@ -245,7 +245,9 @@ module.exports = class Square {
     if (isClose) {
       this.hide();
       const speedPixels = this.speedPixelPerMs * deltaTimeMs;
-      draw(this, 'darkred', speedPixels);
+      draw(this, 'orangered', speedPixels);
+      // draw(this, '#ff0b0d', speedPixels);
+      // draw(this, '#E60026', speedPixels);
     }
   }
 };
@@ -276,10 +278,10 @@ const draw = (self, color, speedPixels) => {
   else if (self.speed < 100) speedDisplay = '0' + self.speed;
 
   self.textLayerObj.ctx.fillStyle = color;
-  self.textLayerObj.ctx.font = "bold 10px Arial"
+  self.textLayerObj.ctx.font = "11px Arial"
   self.textLayerObj.ctx.fillText(self.title, self.x, self.y - 2);
   self.textLayerObj.ctx.fillStyle = color;
-  self.textLayerObj.ctx.fillText('              ' + degreesDisplay, self.x, self.y - 2);
+  self.textLayerObj.ctx.fillText('              ' + degreesDisplay + '\u00B0', self.x, self.y - 2);
   self.textLayerObj.ctx.fillText('              ' + self.altitude + ' ft', self.x, self.y + 8);
   self.textLayerObj.ctx.fillText('              ' + speedDisplay + ' kts', self.x, self.y + 18);
 };
