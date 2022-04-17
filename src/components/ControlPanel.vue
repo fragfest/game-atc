@@ -5,10 +5,11 @@
         land
       </button>
       <div class="info" v-show="planeSelected.id">
-        <span>Fl {{ planeSelected.title }}</span> <br />
-        <span>Hdg {{ planeSelected.heading }}</span> <br />
-        <span>Alt {{ planeSelected.altitude }}</span> <br />
-        <span>Spd {{ planeSelected.speed }}</span> <br />
+        <span> {{ planeSelected.title }} </span><br />
+        <hr />
+        <span><b>Hdg</b> {{ heading }}</span> <br />
+        <span><b>Alt</b> {{ planeSelected.altitude }}</span> <br />
+        <span><b>Spd</b> {{ planeSelected.speed }}</span> <br />
       </div>
     </div>
 
@@ -59,7 +60,19 @@
             <stop offset="0%" stop-color="#3d8ac5" />
             <stop offset="100%" stop-color="#2c5c81" />
           </radialGradient>
+
+          <marker
+            id="arrow"
+            orient="90"
+            markerWidth="6"
+            markerHeight="6"
+            refX="7"
+            refY="3"
+          >
+            <path class="arrow" d="M 0 0 L 6 3 L 0 6 Z" />
+          </marker>
         </defs>
+
         <circle
           r="222"
           cx="0"
@@ -68,10 +81,18 @@
           stroke="lightgreen"
           stroke-width="4"
         />
+
         <g id="gauge">
-          <g id="noon">
+          <g id="gauge-tick">
             <line x1="0" y1="-220" x2="0" y2="-205" />
-            <text x="0" y="-180" class="text"></text>
+            <text x="0" y="-180" class="text" />
+          </g>
+          <g
+            id="gauge-tick-arrow"
+            marker-start="url(#arrow)"
+            transform="rotate(0)"
+          >
+            <line class="tick-arrow" x1="0" y1="-220" x2="0" y2="-205" />
           </g>
         </g>
       </svg>
@@ -82,10 +103,14 @@
 <script>
 const {
   convertHeadingToThreeDigitStr,
+  convertToSmallDegrees,
+  radToDegrees,
   isValidHeading,
   isValidAltitude,
   isValidSpeed,
 } = require("../js/utils");
+
+const leftPadZeros = (str) => ("000" + str).slice(-3);
 
 const inputFilter = (value) => {
   let inputHeading = value;
@@ -98,8 +123,16 @@ const inputFilter = (value) => {
   return inputHeading;
 };
 
-const leftPadZeros = (str) => ("000" + str).slice(-3);
+const setCompass = (headingRad) => {
+  const headingDegree = convertToSmallDegrees(radToDegrees(headingRad));
+  const tickEl = document.querySelector("#gauge-tick-arrow");
+  if (!tickEl) return;
+  tickEl.setAttribute("transform", "rotate(" + headingDegree + ")");
+};
 
+////////////////////////////////////////////////////////////////////////
+// EXPORT DEFAULT
+////////////////////////////////////////////////////////////////////////
 export default {
   name: "ControlPanel",
   props: {
@@ -118,14 +151,15 @@ export default {
   },
 
   mounted() {
-    const noon = document.querySelector("#noon");
     const gauge = document.querySelector("#gauge");
+    const tick = document.querySelector("#gauge-tick");
+    const tickInc = 30;
 
-    for (var i = 0; i <= 360; i = i + 30) {
-      var new_tick = noon.cloneNode(true);
+    for (let i = tickInc; i <= 360; i = i + tickInc) {
+      const new_tick = tick.cloneNode(true);
       new_tick.getElementsByTagName("text")[0].textContent = i;
-      new_tick.removeAttribute("id");
       new_tick.setAttribute("transform", "rotate(" + i + ")");
+      new_tick.id = "tick-" + leftPadZeros(i);
       gauge.appendChild(new_tick);
     }
   },
@@ -133,6 +167,14 @@ export default {
   computed: {
     isDisabled: function () {
       return !this.planeSelected.title;
+    },
+    heading: function () {
+      const planeSel = this.planes.find(
+        (plane) => plane.id === this.planeSelected.id
+      );
+      if (!planeSel) return "";
+      setCompass(planeSel.headingRad);
+      return planeSel.heading;
     },
   },
 
@@ -144,6 +186,7 @@ export default {
       this.inputSpeed = newPlane.id ? leftPadZeros(newPlane.speedTarget) : "";
       this.inputHeading = newPlane.id ? leftPadZeros(heading) : "";
       this.inputAltitude = newPlane.id ? leftPadZeros(altShort) : "";
+
       this.$nextTick(() => {
         if (newPlane.id) this.$refs.inputHeading.focus();
         if (!newPlane.id) this.$refs.inputHeading.blur();
@@ -259,15 +302,17 @@ export default {
   max-width: 100px;
   margin-top: 10px;
   .info {
+    color: white;
+    font-size: 16px;
     margin-top: 12px;
     margin-left: 2px;
-    padding: 8px;
-    border: solid 1px darkgreen;
-    border-radius: 4px;
-    box-shadow: 1px 1px rgb(119, 119, 119);
+    padding: 10px;
+    border: 1px solid rgb(201, 201, 201);
+    border-radius: 8px;
   }
 }
 
+// button.land
 button.land {
   width: 100px;
   height: 40px;
@@ -305,7 +350,9 @@ button.land {
     }
   }
 }
+// button.land END
 
+// circle-inputs
 .circle-inputs {
   position: relative;
   display: flex;
@@ -363,17 +410,23 @@ button.land {
     outline-width: 2px;
   }
 }
+// circle-inputs END
 
 .circle-div {
   width: 220px;
-  border: 1px solid grey;
-  border-radius: 4px;
 }
 
 svg {
+  .arrow {
+    fill: white;
+  }
+
   line {
     stroke: white;
     stroke-width: 4px;
+    &.tick-arrow {
+      stroke: transparent;
+    }
   }
 
   text {

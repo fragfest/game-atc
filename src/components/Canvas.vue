@@ -216,9 +216,16 @@ export default {
   display: flex;
   justify-content: space-around;
   height: 240px;
-  border: darkgray solid 1px;
-  background: linear-gradient(180deg, #e5e4e4, #c4c4c4);
-  border-right-width: 2px;
+  margin-top: -1px;
+
+  // background-image: url("/img/teal-bckgnd.jpg");
+  background-image: linear-gradient(
+      rgba(255, 255, 255, 0.1),
+      rgba(255, 255, 255, 0.1)
+    ),
+    url("/img/teal-bckgnd.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 .row-bottom-left {
