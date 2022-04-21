@@ -10,7 +10,7 @@ const entityFns = require('./entity');
 // class Square
 ////////////////////////////////////////////////////////////
 module.exports = class Square {
-  constructor(title, entityLayerObj, textLayerObj, headingLayerObj, htmlDiv, positionObj) {
+  constructor(title, entityLayerObj, textLayerObj, headingLayerObj, htmlDiv, positionObj, planeObj) {
     this.id = Math.random();
     this.title = title.trim().substring(0, 6);
     this.ctx = entityLayerObj.ctx;
@@ -24,9 +24,9 @@ module.exports = class Square {
     this.squareOneDiv.addEventListener('mouseup', () => this.clickEventCB());
     this.squareOneDiv.addEventListener('mouseenter', () => this.squareOneDiv.style.cursor = 'pointer');
     this.squareOneDiv.addEventListener('mouseleave', () => this.squareOneDiv.style.cursor = 'none');
-
     this.squareOneDiv.style.left = positionObj.x - 8 + 'px';
     this.squareOneDiv.style.top = positionObj.y - 8 + 'px';
+
     this.x = positionObj.x;
     this.y = positionObj.y;
     this.altitude = positionObj.altitude;
@@ -49,6 +49,7 @@ module.exports = class Square {
     this.isTouchedDown = false;
     this.landing = false;
     this.distPrev = Infinity;
+    this.destinationType = planeObj.destinationType || 'arrival';
 
     this.speedRatePerMs = 0.0075;
     this.altitudeRatePerMs = 0.05;

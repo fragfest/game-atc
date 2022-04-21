@@ -9,7 +9,7 @@ export const setup = (argObj) => {
 
   const callFn = (fnStr, argsObj) => entity => entity[fnStr] ? entity[fnStr](argsObj) : null;
   const updateIntervalMs = 2000;
-  let timestampPrev = 0;
+  let timestampPrev = -2000;
 
   const gameTick = timestamp => {
     const deltaTime = timestamp - timestampPrev;
@@ -39,13 +39,16 @@ export const setup = (argObj) => {
 export const setupEntities = (argObj) => {
   const squareOne = new Square('SQ 001',
     argObj.entityLayerObj, argObj.textLayerObj, argObj.headingLayerObj, argObj.entityDiv,
-    { x: argObj.width / 2 + 300, y: argObj.height / 2 - 200, heading: '222', altitude: 100, speed: 180 });
+    { x: argObj.width / 2 + 300, y: argObj.height / 2 - 200, heading: '222', altitude: 100, speed: 180 },
+    { destinationType: 'arrival' });
   const squareTwo = new Square('SQ 002',
     argObj.entityLayerObj, argObj.textLayerObj, argObj.headingLayerObj, argObj.entityDiv,
-    { x: argObj.width / 2 + 10, y: argObj.height / 2 + 20, heading: '270', altitude: 800, speed: 180 });
+    { x: argObj.width / 2 + 10, y: argObj.height / 2 + 20, heading: '270', altitude: 800, speed: 180 },
+    { destinationType: 'departure' });
   const squareThree = new Square('SQ 003',
     argObj.entityLayerObj, argObj.textLayerObj, argObj.headingLayerObj, argObj.entityDiv,
-    { x: argObj.width / 2 + 300, y: argObj.height / 2 - 160, heading: '222', altitude: 100, speed: 180 });
+    { x: argObj.width / 2 + 300, y: argObj.height / 2 - 160, heading: '222', altitude: 100, speed: 180 },
+    { destinationType: 'departure' });
 
   const squareClickEventCB = argObj.squareClickEventCB; // CB arg: Square
   squareOne.clickEventCB = () => squareClickEventCB(squareOne);

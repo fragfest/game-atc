@@ -321,10 +321,11 @@ export default {
     margin-top: 12px;
     margin-left: 2px;
     padding: 10px;
-    border: 1px solid rgb(201, 201, 201);
+
+    background-color: #2c5c816f;
+    border: 1px solid limegreen;
     border-radius: 8px;
     box-shadow: 3px 3px rgb(0, 84, 84);
-
     .row {
       display: flex;
       justify-content: space-between;
