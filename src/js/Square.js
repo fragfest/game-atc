@@ -49,7 +49,13 @@ module.exports = class Square {
     this.isTouchedDown = false;
     this.landing = false;
     this.distPrev = Infinity;
-    this.destinationType = planeObj.destinationType || 'arrival';
+
+    // planeObj
+    this.destinationType = planeObj.destinationType || "";
+    this.runway = planeObj.runway || "";
+    this.waypoint = planeObj.waypoint || "";
+    this.airframe = planeObj.airframe || "";
+    this.wakeRating = planeObj.wakeRating || "";
 
     this.speedRatePerMs = 0.0075;
     this.altitudeRatePerMs = 0.05;

@@ -5,7 +5,11 @@
         land
       </button>
       <div class="info" v-show="planeSelected.id">
-        <span> {{ planeSelected.title }} </span><br />
+        <div class="row title">
+          <span>
+            <b> {{ planeSelected.title }} </b>
+          </span>
+        </div>
         <hr />
         <div class="row">
           <span><b>Hdg</b></span>
@@ -306,12 +310,14 @@ export default {
   width: 100%;
 }
 
+// btn-info-panel
 .btn-info-panel {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   max-width: 120px;
   margin-top: 10px;
+
   .info {
     hr {
       margin-top: 4px;
@@ -330,8 +336,14 @@ export default {
       display: flex;
       justify-content: space-between;
     }
+    .title {
+      justify-content: center;
+      color: lightgreen;
+      font-size: 18px;
+    }
   }
 }
+// btn-info-panel END
 
 // button.land
 button.land {

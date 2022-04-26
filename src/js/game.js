@@ -39,16 +39,16 @@ export const setup = (argObj) => {
 export const setupEntities = (argObj) => {
   const squareOne = new Square('SQ 001',
     argObj.entityLayerObj, argObj.textLayerObj, argObj.headingLayerObj, argObj.entityDiv,
-    { x: argObj.width / 2 + 300, y: argObj.height / 2 - 200, heading: '222', altitude: 100, speed: 180 },
-    { destinationType: 'arrival' });
+    { x: argObj.width / 2 + 300, y: 200, heading: '222', altitude: 100, speed: 180 },
+    { destinationType: 'arrival', airframe: 'B738', wakeRating: 'M', waypoint: 'LAM', runway: '27R' });
   const squareTwo = new Square('SQ 002',
     argObj.entityLayerObj, argObj.textLayerObj, argObj.headingLayerObj, argObj.entityDiv,
     { x: argObj.width / 2 + 10, y: argObj.height / 2 + 20, heading: '270', altitude: 800, speed: 180 },
-    { destinationType: 'departure' });
+    { destinationType: 'arrival', airframe: 'A320', wakeRating: 'M', waypoint: 'LAM', runway: '27R' });
   const squareThree = new Square('SQ 003',
     argObj.entityLayerObj, argObj.textLayerObj, argObj.headingLayerObj, argObj.entityDiv,
-    { x: argObj.width / 2 + 300, y: argObj.height / 2 - 160, heading: '222', altitude: 100, speed: 180 },
-    { destinationType: 'departure' });
+    { x: argObj.width / 2 + 300, y: 30, heading: '222', altitude: 100, speed: 180 },
+    { destinationType: 'arrival', airframe: 'B738', wakeRating: 'M', waypoint: 'OCK', runway: '27R' });
 
   const squareClickEventCB = argObj.squareClickEventCB; // CB arg: Square
   squareOne.clickEventCB = () => squareClickEventCB(squareOne);

@@ -3,12 +3,34 @@
     <div class="background" :class="stripClass"></div>
     <div class="strip" :class="stripClass">
       <div
-        class="title"
+        class="strip-info"
         @click="click(plane)"
         @mouseover="hover()"
         @mouseout="flatten()"
       >
-        <span>{{ plane.title }}</span>
+        <!-- <div class="col">
+          <div>12:35</div>
+        </div> -->
+        <div class="col large title">
+          <b>{{ plane.title }}</b>
+        </div>
+        <div class="col large">
+          <b>{{ plane.runway }}</b>
+        </div>
+        <div class="col large">
+          <b>{{ plane.waypoint }}</b>
+        </div>
+        <div class="col">{{ plane.airframe }}/{{ plane.wakeRating }}</div>
+        <div class="col fixed-width">
+          <!-- <div>Way1</div>
+          <div>Fl 10 12:15</div>
+          <div>12:15</div> -->
+        </div>
+        <div class="col fixed-width no-border">
+          <!-- <div>Way2</div>
+          <div>Fl 07 12:25</div>
+          <div>12:25</div> -->
+        </div>
       </div>
 
       <svg viewBox="0 0 100 20">
@@ -198,14 +220,36 @@ export default {
     left: 8px;
   }
 
-  .title {
+  .strip-info {
+    display: flex;
+    align-items: center;
     position: absolute;
-    top: 10px;
-    left: 16px;
-    span {
+    top: 14px;
+    left: 12px;
+    height: 45px;
+
+    font: 11px Arial;
+    color: white;
+    .large {
+      font-size: 14px;
+    }
+    .col {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 6px;
+      height: 30px;
+      text-align: center;
+      border-right: solid 1px #b2b0b0;
+    }
+    .title {
       color: lightgreen;
-      margin: 5px 5px;
-      font: bold 12px Arial;
+    }
+    .no-border {
+      border: none;
+    }
+    .fixed-width {
+      width: 60px;
     }
   }
 }
