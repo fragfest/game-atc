@@ -50,7 +50,9 @@ export const setupEntities = (argObj) => {
     clickCB: argObj.squareClickEventCB,
   };
   const planeOne = create(DestinationType.Arrival, canvasObj);
-  const planes = [planeOne.square];
+  const planeTwo = create(DestinationType.Arrival, canvasObj);
+  planeTwo.square.y = argObj.height / 2 - 100;
+  const planes = [planeOne.square, planeTwo.square];
 
   const runwayOne = new Runway('run1',
     argObj.backgroundObj, argObj.imgLayerObj,

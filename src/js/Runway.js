@@ -1,4 +1,4 @@
-const { inputHeadingToRad } = require('./utils');
+const { inputHeadingToRad, radToDegrees, convertToSmallDegrees } = require('./utils');
 const Square = require('./Square');
 
 ////////////////////////////////////////////////////////////
@@ -17,7 +17,6 @@ module.exports = class Runway {
     this.altitude = 0;
     this.altitudeLanding = this.altitude + 150;
     this.runwayHeading = inputHeadingToRad(positionObj.heading);
-    // this.runwayHeading = Math.PI * 3 / 4;  // runwayHeading 222 degrees
     this.landingEntities = [];
 
     const img = new Image();
@@ -100,15 +99,6 @@ module.exports = class Runway {
 // end class Runway
 ////////////////////////////////////////////////////////////
 
-const getGlideslopeDist = (self, entity) => {
-  const dist = distToRunwayObj(self, entity).dist;
-  // console.log(entity.title + ' :: dist ' + dist)
-  if (dist <= 60) return 10;
-  if (60 < dist && dist <= 120) return 20;
-  if (120 < dist && dist <= 200) return 30;
-  if (dist > 200) return 60;
-};
-
 const isHeadingClose = (self, entity) => {
   const dist = distToRunwayObj(self, entity).dist;
   let deltaHeading = Math.abs(self.runwayHeading - entity.headingRad);
@@ -168,28 +158,25 @@ const distToRunwayObj = (self, entity) => {
 };
 
 const isCloseToGlidepath = (self, entity) => {
-  const dist = distToRunwayObj(self, entity).dist;
-  const outgoingHeading = self.runwayHeading + Math.PI;
-  const oncourseX = dist * Math.cos(outgoingHeading);
-  const oncourseY = dist * Math.sin(outgoingHeading);
-  const x = self.x + oncourseX;
-  const y = self.y + oncourseY;
-  const margin = getGlideslopeDist(self, entity);
-  let marginX = Math.abs(margin * Math.cos(outgoingHeading));
-  let marginY = Math.abs(margin * Math.sin(outgoingHeading));
-  marginX = (marginX > 10) ? marginX : 10;
-  marginY = (marginY > 10) ? marginY : 10;
+  const angleMaxDeg = 6;
+  const maxDistFromRunway = 400;
 
-  const distSquareToX = Math.abs(entity.x - x);
-  const distSquareToY = Math.abs(entity.y - y);
+  const dist = distToRunwayObj(self, entity).dist;
+  const x = Math.abs(self.x - entity.x);
+  const isWithinMaxDist = dist < maxDistFromRunway;
   const isGettingCloser = dist < entity.distPrev;
-  // if(isGettingCloser) {
+  // if (isGettingCloser) {
+  //   const outgoingHeading = self.runwayHeading + Math.PI;
+  //   const oncourseX = dist * Math.cos(outgoingHeading);
+  //   const oncourseY = dist * Math.sin(outgoingHeading);
+  //   const xdiff = self.x + oncourseX;
+  //   const ydiff = self.y + oncourseY;
   //   self.imgLayerCtx.fillStyle = 'yellow';
-  //   self.imgLayerCtx.fillRect(x, y, 3, 3);
+  //   self.imgLayerCtx.fillRect(xdiff, ydiff, 3, 3);
   // }
-  // console.log('distTo-x', distSquareToX.toFixed('1'), 'max-x', marginX.toFixed('1'),
-  //  'distTo-y', distSquareToY.toFixed('1'), 'max-y', marginY.toFixed('1'))
-  return distSquareToX < marginX && distSquareToY < marginY && isGettingCloser;
+
+  const angleToGlidepath = convertToSmallDegrees(radToDegrees(Math.acos(x / dist)) - 90);
+  return (angleToGlidepath < angleMaxDeg) && isGettingCloser && isWithinMaxDist;
 };
 
 const isOnRunway = landingEntities => entity => landingEntities.find(landing => landing.id === entity.id);
@@ -206,7 +193,7 @@ const isTouchedDown = self => entityOther => {
   const isCloseVertical = distVert < 200;
   const isRunwayHeading = deltaHeading < 0.5;
   const isCloseLandingSpeed = deltaLandingSpeed < 15;
-  // if(entityOther.landing) {
+  // if (entityOther.landing) {
   //   console.log(entityOther.title
   //     + ' :: isCloseHorizontal: ' + isCloseHorizontal
   //     + ' :: isCloseVertical: ' + isCloseVertical
