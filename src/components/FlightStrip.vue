@@ -20,7 +20,7 @@
         <div class="col large">
           <b>{{ plane.waypoint }}</b>
         </div>
-        <div class="col">{{ plane.airframe }}/{{ plane.wakeRating }}</div>
+        <div class="col">{{ plane.airframe }} / {{ plane.wakeRating }}</div>
         <div class="col fixed-width">
           <!-- <div>Way1</div>
           <div>Fl 10 12:15</div>
@@ -181,22 +181,22 @@ export default {
 <style scoped lang="scss">
 .background {
   position: absolute;
-  height: 78px;
-  width: 402px;
+  height: 70px;
+  width: 360px;
   margin-top: 6px;
-  margin-left: 6px;
+  margin-left: 18px;
   border-radius: 12px;
   background-color: #24b3c960;
   filter: blur(2px);
 
   &.hover {
-    width: 398px;
-    margin-left: 10px;
+    height: 68px;
+    width: 358px;
+    margin-left: 22px;
   }
 
   &.selected {
-    width: 394px;
-    margin-left: 14px;
+    display: none;
   }
 
   &.arrival {
@@ -207,9 +207,9 @@ export default {
 // strip start
 .strip {
   position: relative;
-  width: 400px;
-  height: 80px;
-  position: 100px;
+  width: 360px;
+  height: 71px;
+  margin-left: 12px;
   cursor: pointer;
 
   &.hover {
@@ -217,16 +217,16 @@ export default {
   }
 
   &.selected {
-    left: 8px;
+    left: 10px;
   }
 
   .strip-info {
     display: flex;
     align-items: center;
     position: absolute;
-    top: 14px;
-    left: 12px;
-    height: 45px;
+    top: 16px;
+    left: 8px;
+    height: 38px;
 
     font: 11px Arial;
     color: white;

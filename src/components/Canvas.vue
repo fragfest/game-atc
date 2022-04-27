@@ -189,7 +189,7 @@ export default {
 }
 
 .panel-right {
-  width: 420px;
+  width: 410px;
   padding-top: 6px;
   padding-left: 12px;
   background-image: url("/img/teal-bckgnd.jpg");
