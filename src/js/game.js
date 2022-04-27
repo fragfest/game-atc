@@ -2,12 +2,16 @@ const Waypoint = require('./Waypoint');
 const Square = require('./Square');
 const Runway = require('./Runway');
 import { hasEntityUpdate } from './entity';
+import { create, DestinationType } from './Plane';
 
 let gameLoopRunning = false;
 export const setup = (argObj) => {
   const entityManagerArr = argObj.entityManagerArr;
 
-  const callFn = (fnStr, argsObj) => entity => entity[fnStr] ? entity[fnStr](argsObj) : null;
+  const callFn = (fnStr, argsObj) => entity => {
+    if (!entity) return null;
+    entity[fnStr] ? entity[fnStr](argsObj) : null;
+  }
   const updateIntervalMs = 2000;
   let timestampPrev = -2000;
 
@@ -37,24 +41,16 @@ export const setup = (argObj) => {
 };
 
 export const setupEntities = (argObj) => {
-  const squareOne = new Square('SQ 001',
-    argObj.entityLayerObj, argObj.textLayerObj, argObj.headingLayerObj, argObj.entityDiv,
-    { x: argObj.width / 2 + 300, y: 200, heading: '222', altitude: 100, speed: 180 },
-    { destinationType: 'arrival', airframe: 'B738', wakeRating: 'M', waypoint: 'LAM', runway: '27R' });
-  const squareTwo = new Square('SQ 002',
-    argObj.entityLayerObj, argObj.textLayerObj, argObj.headingLayerObj, argObj.entityDiv,
-    { x: argObj.width / 2 + 10, y: argObj.height / 2 + 20, heading: '270', altitude: 800, speed: 180 },
-    { destinationType: 'arrival', airframe: 'A320', wakeRating: 'M', waypoint: 'LAM', runway: '27R' });
-  const squareThree = new Square('SQ 003',
-    argObj.entityLayerObj, argObj.textLayerObj, argObj.headingLayerObj, argObj.entityDiv,
-    { x: argObj.width / 2 + 300, y: 30, heading: '222', altitude: 100, speed: 180 },
-    { destinationType: 'arrival', airframe: 'B738', wakeRating: 'M', waypoint: 'OCK', runway: '27R' });
-
-  const squareClickEventCB = argObj.squareClickEventCB; // CB arg: Square
-  squareOne.clickEventCB = () => squareClickEventCB(squareOne);
-  squareTwo.clickEventCB = () => squareClickEventCB(squareTwo);
-  squareThree.clickEventCB = () => squareClickEventCB(squareThree);
-  const planes = [squareOne, squareTwo, squareThree];
+  const canvasObj = {
+    width: argObj.width, height: argObj.height,
+    canvasObjEntity: argObj.entityLayerObj,
+    canvasObjText: argObj.textLayerObj,
+    canvasObjHeading: argObj.headingLayerObj,
+    canvasEntityEl: argObj.entityDiv,
+    clickCB: argObj.squareClickEventCB,
+  };
+  const planeOne = create(DestinationType.Arrival, canvasObj);
+  const planes = [planeOne.square];
 
   const runwayOne = new Runway('run1',
     argObj.backgroundObj, argObj.imgLayerObj,
