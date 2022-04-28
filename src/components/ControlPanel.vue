@@ -199,6 +199,8 @@ export default {
       this.inputSpeed = newPlane.id ? leftPadZeros(newPlane.speedTarget) : "";
       this.inputHeading = newPlane.id ? leftPadZeros(heading) : "";
       this.inputAltitude = newPlane.id ? leftPadZeros(altShort) : "";
+      if (newPlane.id) setCompass(newPlane.headingRad);
+      if (!newPlane.id) setCompass((-1 * Math.PI) / 2);
 
       this.$nextTick(() => {
         if (newPlane.id) this.$refs.inputHeading.focus();

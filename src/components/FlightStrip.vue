@@ -179,30 +179,31 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.background {
-  position: absolute;
-  height: 70px;
-  width: 360px;
-  margin-top: 6px;
-  margin-left: 18px;
-  border-radius: 12px;
-  background-color: #24b3c960;
-  filter: blur(2px);
+// TODO backgrounds stack up below container when there are enough strips to allow scrolling
+// .background {
+//   position: absolute;
+//   height: 70px;
+//   width: 360px;
+//   margin-top: 6px;
+//   margin-left: 18px;
+//   border-radius: 12px;
+//   background-color: #24b3c960;
+//   filter: blur(2px);
 
-  &.hover {
-    height: 68px;
-    width: 358px;
-    margin-left: 22px;
-  }
+//   &.hover {
+//     height: 68px;
+//     width: 358px;
+//     margin-left: 22px;
+//   }
 
-  &.selected {
-    display: none;
-  }
+//   &.selected {
+//     display: none;
+//   }
 
-  &.arrival {
-    background-color: #c9830160;
-  }
-}
+//   &.arrival {
+//     background-color: #c9830160;
+//   }
+// }
 
 // strip start
 .strip {

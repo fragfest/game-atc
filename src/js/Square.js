@@ -236,8 +236,8 @@ module.exports = class Square {
     this.hide();
     this.x += pixelsInX;
     this.y += pixelsInY;
-    this.squareOneDiv.style.left = this.x - 8 + 'px';
-    this.squareOneDiv.style.top = this.y - 8 + 'px';
+    this.squareOneDiv.style.left = this.x - 10 + 'px';
+    this.squareOneDiv.style.top = this.y - 10 + 'px';
     this.headingRad = headingRadNew;
     this.heading = convertHeadingToThreeDigitStr(headingRadNew);
     this.altitude = altitudeNew;

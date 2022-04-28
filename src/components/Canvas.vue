@@ -189,7 +189,9 @@ export default {
 }
 
 .panel-right {
+  height: 1054px;
   width: 410px;
+  overflow: scroll;
   padding-top: 6px;
   padding-left: 12px;
   background-image: url("/img/teal-bckgnd.jpg");

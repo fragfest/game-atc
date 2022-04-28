@@ -5,26 +5,67 @@ export const DestinationType = Object.freeze({
   Departure: 'departure',
 });
 
-export const create = (destinationType, { width, height, canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl, clickCB }) => {
-  // pick arrival/destination
-  // for arrival
+export const create = ({ width, height, canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl, clickCB }) => {
   // set runway (based on half day)
-  // pick spawn quadrant + waypoint hold, set heading
-  // select flight num + airframe + wake
-  // set altitude somewhere above 7000, set speed above 250
 
-  const square = new Square('AC123',
-    canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl,
-    { x: width / 2 + 200, y: height / 2 - 300, heading: '030', altitude: 100, speed: 300 },
-    { destinationType, airframe: 'B738', wakeRating: 'M', waypoint: 'LAM', runway: '27R' }
-  );
-  square.clickEventCB = () => clickCB(square);
+  let destinationType = DestinationType.Departure;
+  if (Math.random() > isArrivalIfRndAbove) destinationType = DestinationType.Arrival;
 
-  return {
-    square,
+  let square;
+  if (destinationType === DestinationType.Arrival) {
+    // pick spawn quadrant + waypoint hold, set heading
+    // sections numbered from NW going clockwise: 1 - 4
+    const section = Math.ceil(Math.random() / 0.25);
+    const newPlane = spawn(width, height, section);
+
+    // select flight num + airframe + wake
+    // set altitude somewhere above 7000, set speed above 250
+
+    square = new Square('AC123',
+      canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl,
+      { x: newPlane.x, y: newPlane.y, heading: newPlane.heading, altitude: 100, speed: 200 },
+      { destinationType, airframe: 'B738', wakeRating: 'M', waypoint: 'LAM', runway: '27R' }
+    );
+    square.clickEventCB = () => clickCB(square);
   }
+
+  return { square };
 };
 
 /////////////////////////////////////////////////////////
 // PRIVATE
 /////////////////////////////////////////////////////////
+const isArrivalIfRndAbove = 0 // 0.5;
+
+const spawn = (width, height, sectionInt) => {
+  const rand = (min, max) => min + Math.random() * (max - min);
+
+  if (sectionInt === 1) {
+    return {
+      x: rand(0, width / 2),
+      y: 0,
+      heading: '120',
+    };
+  }
+  if (sectionInt === 2) {
+    return {
+      x: rand(width / 2, width),
+      y: 0,
+      heading: '240',
+    };
+  }
+  if (sectionInt === 3) {
+    return {
+      x: rand(width / 2, width),
+      y: height,
+      heading: '330',
+    };
+  }
+  if (sectionInt === 4) {
+    return {
+      x: rand(0, width / 2),
+      y: height,
+      heading: '030',
+    };
+  }
+};

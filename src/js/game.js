@@ -2,11 +2,24 @@ const Waypoint = require('./Waypoint');
 const Square = require('./Square');
 const Runway = require('./Runway');
 import { hasEntityUpdate } from './entity';
-import { create, DestinationType } from './Plane';
+import { create } from './Plane';
+import { isCloseToEntity } from './entity';
 
 let gameLoopRunning = false;
 export const setup = (argObj) => {
   const entityManagerArr = argObj.entityManagerArr;
+  const canvasObj = {
+    width: argObj.width, height: argObj.height,
+    canvasObjEntity: argObj.entityLayerObj,
+    canvasObjText: argObj.textLayerObj,
+    canvasObjHeading: argObj.headingLayerObj,
+    canvasEntityEl: argObj.entityDiv,
+    clickCB: argObj.squareClickEventCB,
+  };
+
+  const createPlane = () => {
+    entityCreate(entityManagerArr, () => create(canvasObj).square);
+  }
 
   const updateIntervalMs = 2000;
   let timestampPrev = -2000;
@@ -20,6 +33,7 @@ export const setup = (argObj) => {
       argObj.textLayerObj.ctx.clearRect(0, 0, argObj.width, argObj.height);
       argObj.headingLayerObj.ctx.clearRect(0, 0, argObj.width, argObj.height);
       // update
+      createPlane();
       entityManagerArr.forEach(callFn('update', ({ deltaTimeMs: updateIntervalMs, entityManagerArr })));
       entityManagerArr.forEach(callFn('setProximity', { entityManagerArr, deltaTimeMs: updateIntervalMs }));
       // callbacks
@@ -37,17 +51,6 @@ export const setup = (argObj) => {
 };
 
 export const setupEntities = (argObj) => {
-  const canvasObj = {
-    width: argObj.width, height: argObj.height,
-    canvasObjEntity: argObj.entityLayerObj,
-    canvasObjText: argObj.textLayerObj,
-    canvasObjHeading: argObj.headingLayerObj,
-    canvasEntityEl: argObj.entityDiv,
-    clickCB: argObj.squareClickEventCB,
-  };
-  const planeOne = create(DestinationType.Arrival, canvasObj);
-  const planes = [planeOne.square];
-
   const runwayOne = new Runway('run1',
     argObj.backgroundObj, argObj.imgLayerObj,
     { x: argObj.width / 2 - 140, y: argObj.height / 2 + 26, heading: 270 });
@@ -57,19 +60,31 @@ export const setupEntities = (argObj) => {
     { x: argObj.width / 2 + 200, y: argObj.height / 2 });
 
   const entityManagerArr = [];
-  const entityManagerAdd = obj => {
-    if (hasEntityUpdate(obj)) entityManagerArr.push(obj);
-    else throw new Error('non-entity not added \n' + JSON.stringify(obj));
-  }
-  planes.forEach(entityManagerAdd);
-  entityManagerAdd(runwayOne);
-  entityManagerAdd(waypointOne);
+  const entityAdd = entityManagerAdd(entityManagerArr);
+  entityAdd(runwayOne);
+  entityAdd(waypointOne);
   return entityManagerArr;
 };
 
 //////////////////////////////////////////////////////////////////////////////
 // PRIVATE
 //////////////////////////////////////////////////////////////////////////////
+const shouldCreatePlaneIfRndAbove = 0.1;
+
+const entityCreate = (entityManagerArr, createEntityFn) => {
+  const addObj = entityManagerAdd(entityManagerArr);
+  const newEntity = createEntityFn();
+
+  if (Math.random() > shouldCreatePlaneIfRndAbove) {
+    const entityClose = entityManagerArr.find(isCloseToEntity(newEntity));
+    if (!entityClose) addObj(newEntity);
+  }
+}
+
+const entityManagerAdd = entityManagerArr => obj => {
+  if (hasEntityUpdate(obj)) entityManagerArr.push(obj);
+  else throw new Error('non-entity not added \n' + JSON.stringify(obj));
+}
 
 const callFn = (fnStr, argsObj) => entity => {
   if (!entity) return null;
