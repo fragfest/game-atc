@@ -145,8 +145,7 @@ const landingRollout = (self, entityManagerArr, entityIndex, entity) => {
   if (speedNew <= 0) {
     console.log(entity.title + ' :: landing complete');
     removeFromRunway(entity);
-    entity.destroy();
-    entityManagerArr.splice(entityIndex, 1);
+    entity.destroy(entityManagerArr);
   }
 };
 

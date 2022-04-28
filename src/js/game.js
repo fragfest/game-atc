@@ -8,10 +8,6 @@ let gameLoopRunning = false;
 export const setup = (argObj) => {
   const entityManagerArr = argObj.entityManagerArr;
 
-  const callFn = (fnStr, argsObj) => entity => {
-    if (!entity) return null;
-    entity[fnStr] ? entity[fnStr](argsObj) : null;
-  }
   const updateIntervalMs = 2000;
   let timestampPrev = -2000;
 
@@ -50,9 +46,7 @@ export const setupEntities = (argObj) => {
     clickCB: argObj.squareClickEventCB,
   };
   const planeOne = create(DestinationType.Arrival, canvasObj);
-  const planeTwo = create(DestinationType.Arrival, canvasObj);
-  planeTwo.square.y = argObj.height / 2 - 100;
-  const planes = [planeOne.square, planeTwo.square];
+  const planes = [planeOne.square];
 
   const runwayOne = new Runway('run1',
     argObj.backgroundObj, argObj.imgLayerObj,
@@ -72,3 +66,12 @@ export const setupEntities = (argObj) => {
   entityManagerAdd(waypointOne);
   return entityManagerArr;
 };
+
+//////////////////////////////////////////////////////////////////////////////
+// PRIVATE
+//////////////////////////////////////////////////////////////////////////////
+
+const callFn = (fnStr, argsObj) => entity => {
+  if (!entity) return null;
+  entity[fnStr] ? entity[fnStr](argsObj) : null;
+}

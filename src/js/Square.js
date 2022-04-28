@@ -14,6 +14,8 @@ module.exports = class Square {
     this.id = Math.random();
     this.title = title.trim().substring(0, 6);
     this.ctx = entityLayerObj.ctx;
+    this.canvasWidth = entityLayerObj.width;
+    this.canvasHeight = entityLayerObj.height;
     this.textLayerObj = textLayerObj;
     this.headingLayerObj = headingLayerObj;
 
@@ -147,8 +149,15 @@ module.exports = class Square {
     this.ctx.clearRect(this.x - 1, this.y - 1, this.width + 2, this.height + 2)
   }
 
-  destroy() {
+  destroy(entityManagerArr) {
     this.hide();
+    this.squareOneDiv.remove();
+    const index = entityManagerArr.findIndex(entity => entity.id === this.id);
+    if (index === -1) return;
+    entityManagerArr.splice(index, 1);
+  }
+
+  setNonInteractive() {
     this.squareOneDiv.remove();
   }
 
@@ -206,7 +215,7 @@ module.exports = class Square {
     else return (speedDecrease < speedTarget) ? speedTarget : speedDecrease;
   }
 
-  update({ deltaTimeMs }) {
+  update({ deltaTimeMs, entityManagerArr }) {
     const headingOld = this.headingRad;
     const headingTarget = this.headingTargetRad;
     const headingChange = this.turnRateRadPerMs * deltaTimeMs;
@@ -237,6 +246,15 @@ module.exports = class Square {
 
     const speedPixels = this.speedPixelPerMs * deltaTimeMs;
     draw(this, 'greenyellow', speedPixels);
+
+    const outsideCanvasWidth = (x, offset) => (x > (this.canvasWidth + offset)) || (x < (0 - offset));
+    const outsideCanvasHeight = (y, offset) => (y > (this.canvasHeight + offset)) || (y < (0 - offset));
+    if (outsideCanvasWidth(this.x, 0) || outsideCanvasHeight(this.y, 0)) {
+      this.setNonInteractive();
+    }
+    if (outsideCanvasWidth(this.x, 15) || outsideCanvasHeight(this.y, 15)) {
+      this.destroy(entityManagerArr);
+    }
   }
 
   setProximity({ entityManagerArr, deltaTimeMs }) {
