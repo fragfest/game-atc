@@ -2,7 +2,7 @@ const {
   inputHeadingToRad,
   convertToSmallRad,
   convertToPosRad,
-  convertHeadingToThreeDigitStr,
+  convHdgRadToThreeDigits,
 } = require('./utils');
 const entityFns = require('./entity');
 
@@ -239,7 +239,7 @@ module.exports = class Square {
     this.squareOneDiv.style.left = this.x - 10 + 'px';
     this.squareOneDiv.style.top = this.y - 10 + 'px';
     this.headingRad = headingRadNew;
-    this.heading = convertHeadingToThreeDigitStr(headingRadNew);
+    this.heading = convHdgRadToThreeDigits(headingRadNew);
     this.altitude = altitudeNew;
     this.speed = speedNew;
     this.speedPixelPerMs = convertKnotsToPixelsPerMs(speedNew);
@@ -271,8 +271,6 @@ module.exports = class Square {
       this.hide();
       const speedPixels = this.speedPixelPerMs * deltaTimeMs;
       draw(this, 'orangered', speedPixels);
-      // draw(this, '#ff0b0d', speedPixels);
-      // draw(this, '#E60026', speedPixels);
     }
   }
 };

@@ -69,13 +69,13 @@ export const setupEntities = (argObj) => {
 //////////////////////////////////////////////////////////////////////////////
 // PRIVATE
 //////////////////////////////////////////////////////////////////////////////
-const shouldCreatePlaneIfRndAbove = 0.1;
+const shouldCreatePlaneIfRndAbove = 0.8;
 
 const entityCreate = (entityManagerArr, createEntityFn) => {
   const addObj = entityManagerAdd(entityManagerArr);
-  const newEntity = createEntityFn();
 
   if (Math.random() > shouldCreatePlaneIfRndAbove) {
+    const newEntity = createEntityFn();
     const entityClose = entityManagerArr.find(isCloseToEntity(newEntity));
     if (!entityClose) addObj(newEntity);
   }

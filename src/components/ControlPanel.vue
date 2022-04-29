@@ -115,15 +115,14 @@
 
 <script>
 const {
-  convertHeadingToThreeDigitStr,
+  convHdgRadToThreeDigits,
   convertToSmallDegrees,
   radToDegrees,
   isValidHeading,
   isValidAltitude,
   isValidSpeed,
+  leftPadZeros,
 } = require("../js/utils");
-
-const leftPadZeros = (str) => ("000" + str).slice(-3);
 
 const inputFilter = (value) => {
   let inputHeading = value;
@@ -193,7 +192,7 @@ export default {
 
   watch: {
     planeSelected(newPlane) {
-      const heading = convertHeadingToThreeDigitStr(newPlane.headingTargetRad);
+      const heading = convHdgRadToThreeDigits(newPlane.headingTargetRad);
       const altShort = Math.floor(newPlane.altitudeTarget / 100).toString();
 
       this.inputSpeed = newPlane.id ? leftPadZeros(newPlane.speedTarget) : "";
