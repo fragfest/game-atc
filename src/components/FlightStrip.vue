@@ -234,6 +234,7 @@ export default {
     .large {
       font-size: 14px;
     }
+
     .col {
       display: flex;
       flex-direction: column;

@@ -1,5 +1,6 @@
 const Square = require('./Square');
 const { convHdgDegToThreeDigits } = require('./utils');
+const { getFlightArrival } = require('./flights/LHR');
 
 export const DestinationType = Object.freeze({
   Arrival: 'arrival',
@@ -14,19 +15,27 @@ export const create = ({ width, height, canvasObjEntity, canvasObjText, canvasOb
 
   let square;
   if (destinationType === DestinationType.Arrival) {
-    // pick spawn quadrant + waypoint hold, set heading
     // sections numbered from NW going clockwise: 1 - 8
-    const chancePerSection = 1 / 8;
-    const section = Math.ceil(Math.random() / chancePerSection);
+    const sectionsCount = 8;
+    const section = Math.ceil(Math.random() * sectionsCount);
     const newPlane = spawn(width, height, section);
+    const altitude = setAlt();
 
-    // select flight num + airframe + wake
-    // set altitude somewhere above 7000, set speed above 250
+    let newFlight;
+    if (destinationType === DestinationType.Arrival) {
+      newFlight = getFlightArrival(spawned);
+    }
+    if (!newFlight) {
+      spawned = [];
+      newFlight = getFlightArrival(spawned);
+    }
+    spawned.push(newFlight);
 
-    square = new Square('AC123',
+    square = new Square(
+      setRndFlightTitle(newFlight),
       canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl,
-      { x: newPlane.x, y: newPlane.y, heading: newPlane.heading, altitude: 100, speed: 200 },
-      { destinationType, airframe: 'B738', wakeRating: 'M', waypoint: 'LAM', runway: '27R' }
+      { x: newPlane.x, y: newPlane.y, heading: newPlane.heading, altitude, speed: 250 },
+      { destinationType, airframe: newFlight.airframe, wakeRating: newFlight.wake, waypoint: 'LAM', runway: '27R' }
     );
     square.clickEventCB = () => clickCB(square);
   }
@@ -34,12 +43,15 @@ export const create = ({ width, height, canvasObjEntity, canvasObjText, canvasOb
   return { square };
 };
 
-/////////////////////////////////////////////////////////
-// PRIVATE
-/////////////////////////////////////////////////////////
+////////////// PRIVATE //////////////////////////////////////
 const isArrivalIfRndAbove = 0 // 0.5;
 
+let spawned = [];
+
 const rand = (min, max) => min + Math.random() * (max - min);
+const setRndFlightTitle = obj => obj.airlineCode + Math.floor((Math.random() * 1000));
+const setAlt = () => Math.floor(rand(7000, 10000) / 100) * 100;
+
 const spawn = (width, height, sectionInt) => {
   if (sectionInt === 1) {
     return {

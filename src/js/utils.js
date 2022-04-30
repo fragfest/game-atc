@@ -36,7 +36,8 @@ const isValidThreeDigitInput = (str, isInRange) => {
   if (str.length > 3) return false;
 
   const strArr = str.split('');
-  const intOnlyArr = strArr.map(str => parseInt(str))
+  const intOnlyArr = strArr
+    .map(str => parseInt(str))
     .filter(Number.isInteger);
   const hasOnlyInts = intOnlyArr.length === str.length;
   const isNotAllZeros = str !== '000';

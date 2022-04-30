@@ -76,6 +76,8 @@ const entityCreate = (entityManagerArr, createEntityFn) => {
 
   if (Math.random() > shouldCreatePlaneIfRndAbove) {
     const newEntity = createEntityFn();
+    if (!newEntity) return;
+
     const entityClose = entityManagerArr.find(isCloseToEntity(newEntity));
     if (!entityClose) addObj(newEntity);
   }
