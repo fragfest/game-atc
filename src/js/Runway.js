@@ -116,16 +116,16 @@ const updateSpeedAlt = (self, square) => {
   let speedTarget = square.speedLanding;
   let altitudeTarget = self.altitudeLanding;
   if (60 < dist && dist <= 120) {
-    speedTarget += 15;
-    altitudeTarget += 300;
+    speedTarget += 5;
+    altitudeTarget += 100;
   }
   if (120 < dist && dist <= 200) {
-    speedTarget += 30;
-    altitudeTarget += 600;
+    speedTarget += 10;
+    altitudeTarget += 300;
   }
   if (dist > 200) {
-    speedTarget += 60;
-    altitudeTarget += 900;
+    speedTarget += 20;
+    altitudeTarget += 600;
   }
 
   if (square.speedTarget > speedTarget) square.setSpeed(speedTarget, true, false);

@@ -40,8 +40,7 @@ module.exports = class Square {
     this.headingTargetRad = 0;
     this.setHeadingDegrees(positionObj.heading);
     this.speed = positionObj.speed;
-    this.speedPixelPerMs = 0.005;
-    this.speedTargetPixelPerMs = 0.005;
+    this.speedPixelPerMs = 0;
     this.setSpeed(positionObj.speed, false, false);
     this.speedMin = 180;
     this.speedLanding = 135;
@@ -59,10 +58,10 @@ module.exports = class Square {
     this.airframe = planeObj.airframe || "";
     this.wakeRating = planeObj.wakeRating || "";
 
-    this.speedRatePerMs = 0.0075;
-    this.altitudeRatePerMs = 0.05;
+    this.speedDeltaPerMs = 0.0015;
+    this.speedRatePerMs = 0.0005;
+    this.altitudeRatePerMs = 0.025;
     this.turnRateRadPerMs = 0.0001;
-    this.timestampPrevMs = 0;
     this.width = 5;
     this.height = 5;
     this.squareOneDiv.style.width = 22 + 'px';
@@ -81,6 +80,7 @@ module.exports = class Square {
 
   setIsTouchedDown(isTouchedDown) {
     this.isTouchedDown = !!isTouchedDown;
+    this.speedDeltaPerMs = 0.0075;
   }
 
   setLanding(isLanding) {
@@ -107,7 +107,6 @@ module.exports = class Square {
     speed = (speed < speedMin) ? speedMin : speed;
     speed = (speed > this.speedMax) ? this.speedMax : speed;
     this.speedTarget = Math.floor(speed / 5) * 5;
-    this.speedTargetPixelPerMs = convertKnotsToPixelsPerMs(speed);
   }
 
   setAltitude(altitudeArg, isLanding, isTouchedDown) {
@@ -213,8 +212,8 @@ module.exports = class Square {
     const speedIncrease = speed + Math.round(speedIncreaseArg);
     const speedDecrease = speed - Math.round(speedDecreaseArg);
     if (delta === 0) return speed;
-    else if (delta > 0) return (speedIncrease > speedTarget) ? speedTarget : speedIncrease;
-    else return (speedDecrease < speedTarget) ? speedTarget : speedDecrease;
+    if (delta > 0) return (speedIncrease > speedTarget) ? speedTarget : speedIncrease;
+    return (speedDecrease < speedTarget) ? speedTarget : speedDecrease;
   }
 
   update({ deltaTimeMs, entityManagerArr }) {
@@ -224,7 +223,7 @@ module.exports = class Square {
     const headingRadNewLarge = this.updateHeading(headingOld, headingTarget, headingChange);
     const headingRadNew = convertToPosRad(convertToSmallRad(headingRadNewLarge));
 
-    const speedDelta = this.speedRatePerMs * deltaTimeMs;
+    const speedDelta = this.speedDeltaPerMs * deltaTimeMs;
     const speedNew = this.updateSpeed(this.speed, this.speedTarget, speedDelta, speedDelta);
     const pixels = (this.speedPixelPerMs * deltaTimeMs);
     const pixelsInX = Math.cos(headingRadNew) * pixels;
@@ -288,8 +287,8 @@ const draw = (self, color, speedPixels) => {
   self.ctx.fillRect(self.x, self.y, self.width, self.height);
   self.ctx.clearRect(self.x + 1, self.y + 1, self.width - 2, self.height - 2);
 
-  const pixelsInX = Math.cos(self.headingRad) * speedPixels * 0.8;
-  const pixelsInY = Math.sin(self.headingRad) * speedPixels * 0.8;
+  const pixelsInX = Math.cos(self.headingRad) * speedPixels * 1.2;
+  const pixelsInY = Math.sin(self.headingRad) * speedPixels * 1.2;
   const center = { x: self.x + self.width / 2, y: self.y + self.height / 2 };
   self.headingLayerObj.ctx.strokeStyle = color;
   self.headingLayerObj.ctx.beginPath();
