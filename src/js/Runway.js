@@ -65,24 +65,22 @@ module.exports = class Runway {
   updateGoAround(entity) {
     console.log(entity.title + ' :: go-around');
     entity.setHeadingTarget(this.runwayHeading, false);
-    if (entity.speedTarget < 160) entity.setSpeed(160, false, false);
-    if (entity.altitudeTarget < 2000) entity.setAltitude(2000, false);
+    entity.setSpeed(220, false, false);
+    entity.setAltitude(2000, false);
   }
 
   removeLanded({ entityManagerArr }) {
     const isEntityTouchedDown = isTouchedDown(this);
     const isEntityOnRunway = isOnRunway(this.landingEntities);
 
-    let index = -1;
     entityManagerArr.forEach(entity => {
       const isSquare = entity instanceof Square;
       const placeOnRunway = entity => this.landingEntities.push(entity);
 
-      index++;
       if (!isSquare) return;
       if (!entity.landing) return;
       if (isEntityOnRunway(entity)) {
-        landingRollout(this, entityManagerArr, index, entity);
+        landingRollout(this, entityManagerArr, entity);
       } else if (isEntityTouchedDown(entity)) {
         console.log(entity.title + ' :: touch down');
         entity.setIsTouchedDown(true);
@@ -129,11 +127,12 @@ const updateSpeedAlt = (self, square) => {
     speedTarget += 60;
     altitudeTarget += 900;
   }
+
   if (square.speedTarget > speedTarget) square.setSpeed(speedTarget, true, false);
   if (square.altitudeTarget > altitudeTarget) square.setAltitude(altitudeTarget, true);
 };
 
-const landingRollout = (self, entityManagerArr, entityIndex, entity) => {
+const landingRollout = (self, entityManagerArr, entity) => {
   const removeFromRunway = entity => {
     self.landingEntities = self.landingEntities.filter(landing => landing.id !== entity.id);
   };

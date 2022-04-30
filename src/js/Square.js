@@ -43,9 +43,9 @@ module.exports = class Square {
     this.speedPixelPerMs = 0.005;
     this.speedTargetPixelPerMs = 0.005;
     this.setSpeed(positionObj.speed, false, false);
-    this.speedMin = 135;
-    this.speedLanding = 135; // TODO when ready can unlink from speedMin
-    this.speedMax = 500;
+    this.speedMin = 180;
+    this.speedLanding = 135;
+    this.speedMax = 450;
 
     this.onGlidePath = false;
     this.isTouchedDown = false;
@@ -100,7 +100,9 @@ module.exports = class Square {
   setSpeed(speedArg, isLanding, isTouchedDown) {
     this.setLanding(isLanding);
     let speed = parseInt(speedArg);
-    const speedMin = isTouchedDown ? 0 : this.speedMin;
+    let speedMin = this.speedMin;
+    if (isLanding) speedMin = this.speedLanding;
+    if (isTouchedDown) speedMin = 0;
 
     speed = (speed < speedMin) ? speedMin : speed;
     speed = (speed > this.speedMax) ? this.speedMax : speed;

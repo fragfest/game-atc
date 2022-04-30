@@ -38,7 +38,7 @@ export const setup = (argObj) => {
       entityManagerArr.forEach(callFn('setProximity', { entityManagerArr, deltaTimeMs: updateIntervalMs }));
       // callbacks
       argObj.gameUpdateCB({
-        planes: entityManagerArr.filter(entity => entity instanceof Square),
+        planes: entityManagerArr.filter(isSquare),
       });
     }
 
@@ -73,12 +73,13 @@ const shouldCreatePlaneIfRndAbove = 0.8;
 
 const entityCreate = (entityManagerArr, createEntityFn) => {
   const addObj = entityManagerAdd(entityManagerArr);
+  const isCloseToPlane = newObj => otherObj => isCloseToEntity(newObj)(otherObj) && isSquare(otherObj);
 
   if (Math.random() > shouldCreatePlaneIfRndAbove) {
     const newEntity = createEntityFn();
     if (!newEntity) return;
 
-    const entityClose = entityManagerArr.find(isCloseToEntity(newEntity));
+    const entityClose = entityManagerArr.find(isCloseToPlane(newEntity));
     if (!entityClose) addObj(newEntity);
   }
 }
@@ -92,3 +93,5 @@ const callFn = (fnStr, argsObj) => entity => {
   if (!entity) return null;
   entity[fnStr] ? entity[fnStr](argsObj) : null;
 }
+
+const isSquare = obj => obj instanceof Square
