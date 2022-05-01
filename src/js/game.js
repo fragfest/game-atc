@@ -20,9 +20,10 @@ export const setup = (argObj) => {
   const createPlane = () => {
     entityCreate(entityManagerArr, () => create(canvasObj).square);
   }
+  entityManagerAdd(entityManagerArr)(create(canvasObj).square);
 
-  const updateIntervalMs = 1000;
-  let timestampPrev = -1000;
+  const updateIntervalMs = 2000;
+  let timestampPrev = -2000;
 
   const gameTick = timestamp => {
     const deltaTime = timestamp - timestampPrev;
@@ -69,7 +70,7 @@ export const setupEntities = (argObj) => {
 //////////////////////////////////////////////////////////////////////////////
 // PRIVATE
 //////////////////////////////////////////////////////////////////////////////
-const shouldCreatePlaneIfRndAbove = 0.8;
+const shouldCreatePlaneIfRndAbove = 0.9;
 
 const entityCreate = (entityManagerArr, createEntityFn) => {
   const addObj = entityManagerAdd(entityManagerArr);

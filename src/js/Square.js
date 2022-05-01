@@ -42,6 +42,7 @@ module.exports = class Square {
     this.setHeadingDegrees(positionObj.heading);
     this.speed = positionObj.speed;
     this.speedPixelPerMs = 0;
+    this.speedTarget = 250;
     this.setSpeed(positionObj.speed, false, false);
     this.speedMin = getPerformance(planeObj.airframe).speedMin;
     this.speedLanding = getPerformance(planeObj.airframe).speedLanding;
@@ -81,7 +82,7 @@ module.exports = class Square {
 
   setIsTouchedDown(isTouchedDown) {
     this.isTouchedDown = !!isTouchedDown;
-    this.speedDeltaPerMs = 0.0075;
+    this.speedDeltaPerMs = this.speedDeltaPerMs * 3;
   }
 
   setLanding(isLanding) {
@@ -244,7 +245,7 @@ module.exports = class Square {
     this.heading = convHdgRadToThreeDigits(headingRadNew);
     this.altitude = altitudeNew;
     this.speed = speedNew;
-    this.speedPixelPerMs = convertKnotsToPixelsPerMs(speedNew);
+    this.speedPixelPerMs = this.speedRatePerMs * deltaTimeMs * speedNew / 3600000;
 
     const speedPixels = this.speedPixelPerMs * deltaTimeMs;
     draw(this, 'greenyellow', speedPixels);
@@ -279,8 +280,6 @@ module.exports = class Square {
 ////////////////////////////////////////////////////////////
 // end class Square
 ////////////////////////////////////////////////////////////
-
-const convertKnotsToPixelsPerMs = knots => parseInt(knots) / 36000;
 
 const draw = (self, color, speedPixels) => {
   self.ctx.fillStyle = color;

@@ -11,9 +11,9 @@ const airframes = {
     speedLanding: 135,
     speedMax: 450,
     speedDeltaPerMs: 0.0015,
-    speedRatePerMs: 0.0005,
+    speedRatePerMs: 0.03,
     altitudeRatePerMs: 0.025,
-    turnRateRadPerMs: 0.0001,
+    turnRateRadPerMs: 0.00005,
     wake: 'M',
   }
 };
