@@ -20,7 +20,7 @@
         <div class="col large">
           <b>{{ plane.waypoint }}</b>
         </div>
-        <div class="col">{{ plane.airframe }} / {{ plane.wakeRating }}</div>
+        <div class="col">{{ plane.airframe }} / {{ plane.wake }}</div>
         <div class="col fixed-width">
           <!-- <div>Way1</div>
           <div>Fl 10 12:15</div>

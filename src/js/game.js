@@ -21,8 +21,8 @@ export const setup = (argObj) => {
     entityCreate(entityManagerArr, () => create(canvasObj).square);
   }
 
-  const updateIntervalMs = 2000;
-  let timestampPrev = -2000;
+  const updateIntervalMs = 1000;
+  let timestampPrev = -1000;
 
   const gameTick = timestamp => {
     const deltaTime = timestamp - timestampPrev;

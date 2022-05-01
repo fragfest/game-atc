@@ -5,6 +5,7 @@ const {
   convHdgRadToThreeDigits,
 } = require('./utils');
 const entityFns = require('./entity');
+const { getPerformance } = require('./aircraft/airframe');
 
 ////////////////////////////////////////////////////////////
 // class Square
@@ -42,26 +43,26 @@ module.exports = class Square {
     this.speed = positionObj.speed;
     this.speedPixelPerMs = 0;
     this.setSpeed(positionObj.speed, false, false);
-    this.speedMin = 180;
-    this.speedLanding = 135;
-    this.speedMax = 450;
+    this.speedMin = getPerformance(planeObj.airframe).speedMin;
+    this.speedLanding = getPerformance(planeObj.airframe).speedLanding;
+    this.speedMax = getPerformance(planeObj.airframe).speedMax;
 
     this.onGlidePath = false;
     this.isTouchedDown = false;
     this.landing = false;
     this.distPrev = Infinity;
 
-    // planeObj
+    // flightstrip info
     this.destinationType = planeObj.destinationType || "";
     this.runway = planeObj.runway || "";
     this.waypoint = planeObj.waypoint || "";
     this.airframe = planeObj.airframe || "";
-    this.wakeRating = planeObj.wakeRating || "";
+    this.wake = getPerformance(planeObj.airframe).wake;
 
-    this.speedDeltaPerMs = 0.0015;
-    this.speedRatePerMs = 0.0005;
-    this.altitudeRatePerMs = 0.025;
-    this.turnRateRadPerMs = 0.0001;
+    this.speedDeltaPerMs = getPerformance(planeObj.airframe).speedDeltaPerMs;
+    this.speedRatePerMs = getPerformance(planeObj.airframe).speedRatePerMs;
+    this.altitudeRatePerMs = getPerformance(planeObj.airframe).altitudeRatePerMs;
+    this.turnRateRadPerMs = getPerformance(planeObj.airframe).turnRateRadPerMs;
     this.width = 5;
     this.height = 5;
     this.squareOneDiv.style.width = 22 + 'px';

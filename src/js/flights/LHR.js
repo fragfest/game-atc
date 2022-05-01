@@ -20,7 +20,6 @@ const flightsArrival = [
     airlineCode: 'VS',
     airline: 'Virgin Atlantic',
     airframe: 'A333',
-    wake: 'H',
   },
   {
     type: 'arrival',
@@ -31,7 +30,6 @@ const flightsArrival = [
     airlineCode: 'UA',
     airline: 'United Airlines',
     airframe: 'B763',
-    wake: 'H',
   },
   {
     type: 'arrival',
@@ -42,7 +40,6 @@ const flightsArrival = [
     airlineCode: 'AA',
     airline: 'American Airlines',
     airframe: 'B77W',
-    wake: 'H',
   },
   {
     type: 'arrival',
@@ -53,7 +50,6 @@ const flightsArrival = [
     airlineCode: 'BA',
     airline: 'British Airways',
     airframe: 'A320',
-    wake: 'M',
   },
   {
     type: 'arrival',
@@ -64,6 +60,5 @@ const flightsArrival = [
     airlineCode: 'EK',
     airline: 'Emirates',
     airframe: 'A388',
-    wake: 'J',
   },
 ];

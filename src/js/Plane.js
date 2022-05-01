@@ -8,7 +8,7 @@ export const DestinationType = Object.freeze({
 });
 
 export const create = ({ width, height, canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl, clickCB }) => {
-  // set runway (based on half day)
+  const runway = '27R';
 
   let destinationType = DestinationType.Departure;
   if (Math.random() > isArrivalIfRndAbove) destinationType = DestinationType.Arrival;
@@ -20,6 +20,7 @@ export const create = ({ width, height, canvasObjEntity, canvasObjText, canvasOb
     const section = Math.ceil(Math.random() * sectionsCount);
     const newPlane = spawn(width, height, section);
     const altitude = setAlt();
+    const speed = setSpd();
 
     let newFlight;
     if (destinationType === DestinationType.Arrival) {
@@ -34,8 +35,9 @@ export const create = ({ width, height, canvasObjEntity, canvasObjText, canvasOb
     square = new Square(
       setRndFlightTitle(newFlight),
       canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl,
-      { x: newPlane.x, y: newPlane.y, heading: newPlane.heading, altitude, speed: 250 },
-      { destinationType, airframe: newFlight.airframe, wakeRating: newFlight.wake, waypoint: 'LAM', runway: '27R' }
+      { x: newPlane.x, y: newPlane.y, heading: newPlane.heading, altitude, speed },
+      // { x: width / 2 + 100, y: height / 2 + 15, heading: '270', altitude: 1000, speed: 200 },
+      { destinationType, airframe: newFlight.airframe, waypoint: newPlane.waypoint, runway }
     );
     square.clickEventCB = () => clickCB(square);
   }
@@ -51,6 +53,7 @@ let spawned = [];
 const rand = (min, max) => min + Math.random() * (max - min);
 const setRndFlightTitle = obj => obj.airlineCode + Math.floor((Math.random() * 1000));
 const setAlt = () => Math.floor(rand(7000, 10000) / 100) * 100;
+const setSpd = () => Math.floor(rand(250, 300) / 5) * 5;
 
 const spawn = (width, height, sectionInt) => {
   if (sectionInt === 1) {
@@ -58,6 +61,7 @@ const spawn = (width, height, sectionInt) => {
       x: 0,
       y: rand(0, height / 2 - 200),
       heading: convHdgDegToThreeDigits(rand(120, 140)),
+      waypoint: 'LAM',
     };
   }
   if (sectionInt === 2) {
@@ -65,6 +69,7 @@ const spawn = (width, height, sectionInt) => {
       x: rand(0, width / 2 - 200),
       y: 0,
       heading: convHdgDegToThreeDigits(rand(120, 140)),
+      waypoint: 'LAM',
     };
   }
   if (sectionInt === 3) {
@@ -72,6 +77,7 @@ const spawn = (width, height, sectionInt) => {
       x: rand(width / 2 + 200, width),
       y: 0,
       heading: convHdgDegToThreeDigits(rand(220, 240)),
+      waypoint: 'LAM',
     };
   }
   if (sectionInt === 4) {
@@ -79,6 +85,7 @@ const spawn = (width, height, sectionInt) => {
       x: width,
       y: rand(0, height / 2 - 200),
       heading: convHdgDegToThreeDigits(rand(220, 240)),
+      waypoint: 'LAM',
     };
   }
   if (sectionInt === 5) {
@@ -86,6 +93,7 @@ const spawn = (width, height, sectionInt) => {
       x: width,
       y: rand(height / 2 + 200, height),
       heading: convHdgDegToThreeDigits(rand(310, 330)),
+      waypoint: 'LAM',
     };
   }
   if (sectionInt === 6) {
@@ -93,6 +101,7 @@ const spawn = (width, height, sectionInt) => {
       x: rand(width / 2 + 200, width),
       y: height,
       heading: convHdgDegToThreeDigits(rand(310, 330)),
+      waypoint: 'LAM',
     };
   }
   if (sectionInt === 7) {
@@ -100,6 +109,7 @@ const spawn = (width, height, sectionInt) => {
       x: rand(0, width / 2 - 200),
       y: height,
       heading: convHdgDegToThreeDigits(rand(40, 60)),
+      waypoint: 'LAM',
     };
   }
   if (sectionInt === 8) {
@@ -107,6 +117,7 @@ const spawn = (width, height, sectionInt) => {
       x: 0,
       y: rand(height / 2 + 200, height),
       heading: convHdgDegToThreeDigits(rand(40, 60)),
+      waypoint: 'LAM',
     };
   }
 };
