@@ -1,3 +1,5 @@
+import { Airframes, DestinationType } from '../aircraft/airframe';
+
 export const getFlightArrival = (spawned) => {
   const isNotSpawned = obj => !spawned.find(x => x.flight === obj.flight)
 
@@ -12,53 +14,53 @@ export const getFlightArrival = (spawned) => {
 ////////////// PRIVATE //////////////////////////////////////
 const flightsArrival = [
   {
-    type: 'arrival',
+    type: DestinationType.Arrival,
     time: '06:20',
     flight: 'VS4',
     city: 'New York',
     airport: 'JFK',
     airlineCode: 'VS',
     airline: 'Virgin Atlantic',
-    airframe: 'A333',
+    airframe: Airframes.A333,
   },
   {
-    type: 'arrival',
+    type: DestinationType.Arrival,
     time: '06:20',
     flight: 'UA110',
     city: 'New York',
     airport: 'EWR',
     airlineCode: 'UA',
     airline: 'United Airlines',
-    airframe: 'B763',
+    airframe: Airframes.B763,
   },
   {
-    type: 'arrival',
+    type: DestinationType.Arrival,
     time: '06:25',
     flight: 'AA50',
     city: 'Dallas',
     airport: 'DFW',
     airlineCode: 'AA',
     airline: 'American Airlines',
-    airframe: 'B77W',
+    airframe: Airframes.B77W,
   },
   {
-    type: 'arrival',
+    type: DestinationType.Arrival,
     time: '07:25',
     flight: 'BA303',
     city: 'Paris',
     airport: 'CDG',
     airlineCode: 'BA',
     airline: 'British Airways',
-    airframe: 'A320',
+    airframe: Airframes.A320,
   },
   {
-    type: 'arrival',
+    type: DestinationType.Arrival,
     time: '07:05',
     flight: 'EK7',
     city: 'Dubai',
     airport: 'DXB',
     airlineCode: 'EK',
     airline: 'Emirates',
-    airframe: 'A388',
+    airframe: Airframes.A388,
   },
 ];

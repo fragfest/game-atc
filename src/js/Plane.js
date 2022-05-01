@@ -1,11 +1,8 @@
-const Square = require('./Square');
-const { convHdgDegToThreeDigits } = require('./utils');
-const { getFlightArrival } = require('./flights/LHR');
-
-export const DestinationType = Object.freeze({
-  Arrival: 'arrival',
-  Departure: 'departure',
-});
+// const Square = require('./Square');
+import Square from './Square';
+import { convHdgDegToThreeDigits } from './utils';
+import { getFlightArrival } from './flights/LHR';
+import { DestinationType } from './aircraft/airframe';
 
 export const create = ({ width, height, canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl, clickCB }) => {
   const runway = '27R';
