@@ -54,6 +54,7 @@ module.exports = class Square {
     this.distPrev = Infinity;
 
     // flightstrip info
+    this.hasProximityAlert = false;
     this.destinationType = planeObj.destinationType || "";
     this.runway = planeObj.runway || "";
     this.waypoint = planeObj.waypoint || "";
@@ -273,9 +274,12 @@ module.exports = class Square {
     const isClose = entityManagerArr.reduce(accAnySquaresClose, false);
 
     if (isClose) {
+      this.hasProximityAlert = true;
       this.hide();
       const speedPixels = this.speedPixelPerMs * deltaTimeMs;
       draw(this, 'orangered', speedPixels);
+    } else {
+      this.hasProximityAlert = false;
     }
   }
 };

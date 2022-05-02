@@ -1,7 +1,7 @@
 <template>
   <div class="circle-panel">
     <div class="btn-info-panel">
-      <button class="land" :disabled="isDisabled" @click="btnClick('land')">
+      <button class="land" :disabled="isDisabled" @click="landClick">
         land
       </button>
       <div class="info" v-show="planeSelected.id">
@@ -214,9 +214,9 @@ export default {
       this.$refs.inputHeading.focus();
     },
 
-    btnClick: function (direction) {
+    landClick: function () {
       if (!this.planeSelected.setLanding) return;
-      if (direction === "land") this.planeSelected.setLanding(true);
+      this.planeSelected.setLanding(true);
     },
 
     inputClick: function (el) {

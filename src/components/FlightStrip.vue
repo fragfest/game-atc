@@ -21,12 +21,16 @@
           <b>{{ plane.waypoint }}</b>
         </div>
         <div class="col">{{ plane.airframe }} / {{ plane.wake }}</div>
-        <div class="col fixed-width-large landing">
-          <div v-show="isLanding">
+        <div class="col fixed-width-large">
+          <div v-if="hasProximityAlert" class="conflict">
+            <div class="large"><b>Traffic</b></div>
+            <div>TCAS conflict</div>
+          </div>
+          <div v-else-if="isLanding" class="landing">
             <div class="large"><b>Landing</b></div>
             <div>ILS approach</div>
           </div>
-          <div v-show="isTouchedDown">
+          <div v-else-if="isTouchedDown" class="landing">
             <div class="large"><b>Landing</b></div>
             <div>touchdown</div>
           </div>
@@ -132,6 +136,11 @@ export default {
   },
 
   computed: {
+    hasProximityAlert: function () {
+      if (!this.plane.id) return false;
+      const plane = this.planes.find((x) => x.id === this.plane.id);
+      return plane.hasProximityAlert;
+    },
     isLanding: function () {
       if (!this.plane.id) return false;
       const plane = this.planes.find((x) => x.id === this.plane.id);
@@ -268,12 +277,6 @@ export default {
       text-align: center;
       border-right: solid 1px #b2b0b0;
     }
-    .title {
-      color: lightgreen;
-    }
-    .landing {
-      color: yellow;
-    }
     .no-border {
       border: none;
     }
@@ -282,6 +285,19 @@ export default {
     }
     .fixed-width-large {
       width: 70px;
+    }
+
+    .title {
+      color: lightgreen;
+    }
+    .landing {
+      color: yellow;
+    }
+    .conflict {
+      background-color: red;
+      border-radius: 4px;
+      padding: 4px 0px;
+      color: white;
     }
   }
 }
