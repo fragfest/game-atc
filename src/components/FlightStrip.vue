@@ -22,20 +22,16 @@
         </div>
         <div class="col">{{ plane.airframe }} / {{ plane.wake }}</div>
         <div class="col fixed-width-large landing">
-          <div v-show="plane.landing && !plane.isTouchedDown">
+          <div v-show="isLanding">
             <div class="large"><b>Landing</b></div>
             <div>ILS approach</div>
           </div>
-          <!-- <div v-show="plane.isTouchedDown">
+          <div v-show="isTouchedDown">
             <div class="large"><b>Landing</b></div>
             <div>touchdown</div>
-          </div> -->
+          </div>
         </div>
-        <div class="col fixed-width no-border">
-          <!-- <div>Way2</div>
-          <div>Fl 07 12:25</div>
-          <div>12:25</div> -->
-        </div>
+        <div class="col fixed-width no-border"></div>
       </div>
 
       <svg viewBox="0 0 100 20">
@@ -126,6 +122,7 @@ export default {
   props: {
     plane: { type: Square },
     planeSelected: { type: Object },
+    planes: { type: Object },
   },
 
   data() {
@@ -135,6 +132,17 @@ export default {
   },
 
   computed: {
+    isLanding: function () {
+      if (!this.plane.id) return false;
+      const plane = this.planes.find((x) => x.id === this.plane.id);
+      return plane.landing && !plane.isTouchedDown;
+    },
+    isTouchedDown: function () {
+      if (!this.plane.id) return false;
+      const plane = this.planes.find((x) => x.id === this.plane.id);
+      return plane.isTouchedDown;
+    },
+
     stripClass: function () {
       const isSelected = this.plane.id === this.planeSelected.id;
       const isHover = this.isHover;

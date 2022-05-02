@@ -210,6 +210,10 @@ export default {
 
   // methods
   methods: {
+    setFocus: function () {
+      this.$refs.inputHeading.focus();
+    },
+
     btnClick: function (direction) {
       if (!this.planeSelected.setLanding) return;
       if (direction === "land") this.planeSelected.setLanding(true);

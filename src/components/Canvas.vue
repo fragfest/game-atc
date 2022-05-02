@@ -46,6 +46,7 @@
         <div class="row-bottom-left"></div>
         <div class="row-bottom-right">
           <ControlPanel
+            ref="controlPanel"
             :planeSelected="squareClicked"
             :planes="planes"
           ></ControlPanel>
@@ -59,6 +60,7 @@
           <FlightStrip
             :plane="plane"
             :planeSelected="squareClicked"
+            :planes="planes"
           ></FlightStrip>
         </li>
       </ul>
@@ -150,6 +152,7 @@ export default {
       headingLayerObj: layerFourObj,
       entityDiv: layerSixDiv,
       squareClickEventCB: (squareObj) => {
+        this.$refs.controlPanel.setFocus();
         squareClicked.value = squareObj;
       },
       gameUpdateCB: (updateObj) => {
