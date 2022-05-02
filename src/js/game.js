@@ -20,7 +20,6 @@ export const setup = (argObj) => {
   const createPlane = () => {
     entityCreate(entityManagerArr, () => create(canvasObj).square);
   }
-  entityManagerAdd(entityManagerArr)(create(canvasObj).square);
 
   const updateIntervalMs = 2000;
   let timestampPrev = -2000;
@@ -47,8 +46,9 @@ export const setup = (argObj) => {
   }
 
   if (gameLoopRunning) return;
-  window.requestAnimationFrame(gameTick);
   gameLoopRunning = true;
+  entityManagerAdd(entityManagerArr)(create(canvasObj).square);
+  window.requestAnimationFrame(gameTick);
 };
 
 export const setupEntities = (argObj) => {
