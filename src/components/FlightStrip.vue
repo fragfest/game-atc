@@ -21,10 +21,15 @@
           <b>{{ plane.waypoint }}</b>
         </div>
         <div class="col">{{ plane.airframe }} / {{ plane.wake }}</div>
-        <div class="col fixed-width">
-          <!-- <div>Way1</div>
-          <div>Fl 10 12:15</div>
-          <div>12:15</div> -->
+        <div class="col fixed-width-large landing">
+          <div v-show="plane.landing && !plane.isTouchedDown">
+            <div class="large"><b>Landing</b></div>
+            <div>ILS approach</div>
+          </div>
+          <!-- <div v-show="plane.isTouchedDown">
+            <div class="large"><b>Landing</b></div>
+            <div>touchdown</div>
+          </div> -->
         </div>
         <div class="col fixed-width no-border">
           <!-- <div>Way2</div>
@@ -44,67 +49,66 @@
           d="M0,2.67 4.29,0"
           fill="none"
           :stroke="outerLineStroke"
-          stroke-width="0.2"
+          :stroke-width="outerLineSmall"
         />
         <path
           d="M4.29,0 50.07,0"
           fill="none"
           :stroke="outerLineStroke"
-          stroke-width="0.4"
+          :stroke-width="outerLineMed"
         />
         <path
           d="M50.07,0 54.36,1.33 78.68,1.33 82.98,0"
           fill="none"
           :stroke="outerLineStroke"
-          stroke-width="0.2"
+          :stroke-width="outerLineSmall"
         />
         <path
           d="M82.98,0 98,0"
           fill="none"
           :stroke="outerLineStroke"
-          stroke-width="0.4"
+          :stroke-width="outerLineMed"
         />
         <path
           d="M98,0 100,2"
           fill="none"
           :stroke="outerLineStroke"
-          stroke-width="0.2"
+          :stroke-width="outerLineSmall"
         />
         <path
           d="M100,2 100,18.4"
           fill="none"
           :stroke="outerLineStroke"
-          stroke-width="0.4"
+          :stroke-width="outerLineMed"
         />
         <path
           d="M100,18.4 98.23,20"
           fill="none"
           :stroke="outerLineStroke"
-          stroke-width="0.2"
+          :stroke-width="outerLineSmall"
         />
         <path
           d="M98.28,20 4.29,20"
           fill="none"
           :stroke="outerLineStroke"
-          stroke-width="0.2"
+          :stroke-width="outerLineSmall"
         />
         <path
           d="M0,17.33 4.29,20"
           fill="none"
           :stroke="outerLineStroke"
-          stroke-width="0.2"
+          :stroke-width="outerLineSmall"
         />
         <path
           d="M0,2.67 0,17.33"
           fill="none"
           :stroke="outerLineStroke"
-          stroke-width="0.4"
+          :stroke-width="outerLineMed"
         />
 
         <path
           :fill="'url(#gradient-' + plane.id + ')'"
           d="M0.76,3 4.29,0.8 50.07,0.8 54.36,2.0 78.68,2.0 82.83,0.8 97.8,0.8 99.2,2.2 99.2,18.1 97.8,19.3 4.48,19.3 0.76,17.1 0.76,2"
-          class="clickable"
           @click="click(plane)"
           @mouseover="hover()"
           @mouseout="flatten()"
@@ -143,8 +147,19 @@ export default {
       return stripClasses.join(" ");
     },
 
+    outerLineSmall: function () {
+      const isSelected = this.plane.id === this.planeSelected.id;
+      return isSelected ? 0.4 : 0.2;
+    },
+    outerLineMed: function () {
+      const isSelected = this.plane.id === this.planeSelected.id;
+      return isSelected ? 0.8 : 0.4;
+    },
+
     outerLineStroke: function () {
       const type = this.plane.destinationType || "arrival";
+      const isSelected = this.plane.id === this.planeSelected.id;
+      if (isSelected) return "limegreen";
       if (type === "arrival") return "#c98301";
       if (type === "departure") return "#24b3c9";
       return "#c98301";
@@ -210,15 +225,16 @@ export default {
   position: relative;
   width: 360px;
   height: 71px;
-  margin-left: 12px;
+  margin-left: 16px;
   cursor: pointer;
 
   &.hover {
-    left: 4px;
+    right: 6px;
   }
 
   &.selected {
-    left: 10px;
+    right: 12px;
+    margin-bottom: 1.5px;
   }
 
   .strip-info {
@@ -247,11 +263,17 @@ export default {
     .title {
       color: lightgreen;
     }
+    .landing {
+      color: yellow;
+    }
     .no-border {
       border: none;
     }
     .fixed-width {
-      width: 60px;
+      width: 50px;
+    }
+    .fixed-width-large {
+      width: 70px;
     }
   }
 }

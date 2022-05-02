@@ -1,6 +1,6 @@
 // const Square = require('./Square');
 import Square from './Square';
-import { convHdgDegToThreeDigits } from './utils';
+import { leftPadZeros, convHdgDegToThreeDigits } from './utils';
 import { getFlightArrival } from './flights/LHR';
 import { DestinationType } from './aircraft/airframe';
 
@@ -48,7 +48,9 @@ const isArrivalIfRndAbove = 0 // 0.5;
 let spawned = [];
 
 const rand = (min, max) => min + Math.random() * (max - min);
-const setRndFlightTitle = obj => obj.airlineCode + Math.floor((Math.random() * 1000));
+const setRndFlightTitle = obj => {
+  return obj.airlineCode + leftPadZeros(Math.floor((Math.random() * 1000)));
+};
 const setAlt = () => Math.floor(rand(7000, 10000) / 100) * 100;
 const setSpd = () => Math.floor(rand(250, 300) / 5) * 5;
 

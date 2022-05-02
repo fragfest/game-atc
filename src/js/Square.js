@@ -248,7 +248,8 @@ module.exports = class Square {
     this.speedPixelPerMs = this.speedRatePerMs * deltaTimeMs * speedNew / 3600000;
 
     const speedPixels = this.speedPixelPerMs * deltaTimeMs;
-    draw(this, 'greenyellow', speedPixels);
+    const color = this.landing ? 'yellow' : 'white';
+    draw(this, color, speedPixels);
 
     const outsideCanvasWidth = (x, offset) => (x > (this.canvasWidth + offset)) || (x < (0 - offset));
     const outsideCanvasHeight = (y, offset) => (y > (this.canvasHeight + offset)) || (y < (0 - offset));
