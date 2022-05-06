@@ -32,8 +32,8 @@ export const create = ({ width, height, canvasObjEntity, canvasObjText, canvasOb
     square = new Square(
       setRndFlightTitle(newFlight),
       canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl,
-      { x: newPlane.x, y: newPlane.y, heading: newPlane.heading, altitude, speed },
-      // { x: width / 2 + 100, y: height / 2 + 15, heading: '270', altitude: 1000, speed: 200 },
+      // { x: newPlane.x, y: newPlane.y, heading: newPlane.heading, altitude, speed },
+      { x: width / 2 + 20, y: height / 2 + 15, heading: '270', altitude: 1000, speed: 200 },
       { destinationType, airframe: newFlight.airframe, waypoint: newPlane.waypoint, runway }
     );
     square.clickEventCB = () => clickCB(square);

@@ -3,6 +3,7 @@ const {
   convertToSmallRad,
   convertToPosRad,
   convHdgRadToThreeDigits,
+  leftPadZeros,
 } = require('./utils');
 const entityFns = require('./entity');
 const { getPerformance } = require('./aircraft/airframe');
@@ -48,6 +49,7 @@ module.exports = class Square {
     this.speedLanding = getPerformance(planeObj.airframe).speedLanding;
     this.speedMax = getPerformance(planeObj.airframe).speedMax;
 
+    this.destroyFlag = false;
     this.onGlidePath = false;
     this.isTouchedDown = false;
     this.landing = false;
@@ -153,7 +155,13 @@ module.exports = class Square {
     this.ctx.clearRect(this.x - 1, this.y - 1, this.width + 2, this.height + 2)
   }
 
-  destroy(entityManagerArr) {
+  setDestroyFlag(shouldDestroy) {
+    this.destroyFlag = !!shouldDestroy;
+  }
+
+  updateDestroy({ entityManagerArr }) {
+    if (!this.destroyFlag) return;
+
     this.hide();
     this.squareOneDiv.remove();
     const index = entityManagerArr.findIndex(entity => entity.id === this.id);
@@ -219,7 +227,7 @@ module.exports = class Square {
     return (speedDecrease < speedTarget) ? speedTarget : speedDecrease;
   }
 
-  update({ deltaTimeMs, entityManagerArr }) {
+  update({ deltaTimeMs }) {
     const headingOld = this.headingRad;
     const headingTarget = this.headingTargetRad;
     const headingChange = this.turnRateRadPerMs * deltaTimeMs;
@@ -259,7 +267,7 @@ module.exports = class Square {
       this.setNonInteractive();
     }
     if (outsideCanvasWidth(this.x, 15) || outsideCanvasHeight(this.y, 15)) {
-      this.destroy(entityManagerArr);
+      this.setDestroyFlag(true);
     }
   }
 
@@ -303,9 +311,7 @@ const draw = (self, color, speedPixels) => {
   self.headingLayerObj.ctx.stroke();
 
   const degreesDisplay = self.heading;
-  let speedDisplay = self.speed;
-  if (self.speed < 10) speedDisplay = '00' + self.speed;
-  else if (self.speed < 100) speedDisplay = '0' + self.speed;
+  const speedDisplay = leftPadZeros(self.speed);
 
   self.textLayerObj.ctx.fillStyle = color;
   self.textLayerObj.ctx.font = "11px Arial"

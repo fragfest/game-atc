@@ -46,6 +46,7 @@ module.exports = class Runway {
       const distObj = distToRunwayObj(this, entity);
       const isGettingCloser = distObj.dist < entity.distPrev;
 
+      if (entity.destroyFlag) return;
       if (!entity.landing) return;
       if (!isGettingCloser && !isEntityOnRunway(entity)) { return this.updateGoAround(entity); }
       if (isEntityOnRunway(entity)) return;
@@ -144,7 +145,7 @@ const landingRollout = (self, entityManagerArr, entity) => {
   if (speedNew <= 0) {
     console.log(entity.title + ' :: landing complete');
     removeFromRunway(entity);
-    entity.destroy(entityManagerArr);
+    entity.setDestroyFlag(true);
   }
 };
 

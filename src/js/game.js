@@ -29,13 +29,14 @@ export const setup = (argObj) => {
     if (deltaTime > updateIntervalMs) {
       timestampPrev = timestamp;
       // cleanup
+      entityManagerArr.forEach(callFn('updateDestroy', { entityManagerArr }));
       entityManagerArr.forEach(callFn('removeLanded', { entityManagerArr }));
       argObj.textLayerObj.ctx.clearRect(0, 0, argObj.width, argObj.height);
       argObj.headingLayerObj.ctx.clearRect(0, 0, argObj.width, argObj.height);
       // update
       createPlane();
       entityManagerArr.forEach(callFn('update', ({ deltaTimeMs: updateIntervalMs, entityManagerArr })));
-      entityManagerArr.forEach(callFn('setProximity', { entityManagerArr, deltaTimeMs: updateIntervalMs }));
+      entityManagerArr.forEach(callFn('setProximity', { deltaTimeMs: updateIntervalMs, entityManagerArr }));
       // callbacks
       argObj.gameUpdateCB({
         planes: entityManagerArr.filter(isSquare),
@@ -70,7 +71,7 @@ export const setupEntities = (argObj) => {
 //////////////////////////////////////////////////////////////////////////////
 // PRIVATE
 //////////////////////////////////////////////////////////////////////////////
-const shouldCreatePlaneIfRndAbove = 0.9;
+const shouldCreatePlaneIfRndAbove = 0.4;
 
 const entityCreate = (entityManagerArr, createEntityFn) => {
   const addObj = entityManagerAdd(entityManagerArr);

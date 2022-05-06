@@ -254,6 +254,7 @@ export default {
     margin-bottom: 1.5px;
   }
 
+  // strip-info
   .strip-info {
     display: flex;
     align-items: center;
@@ -300,6 +301,7 @@ export default {
       color: white;
     }
   }
+  // strip-info end
 }
 // strip end
 </style>
