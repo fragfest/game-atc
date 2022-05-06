@@ -159,7 +159,6 @@ export default {
         planes.value = updateObj.planes || [];
         if (!squareClicked.value) return;
         if (!squareClicked.value.id) return;
-
         const planeSelId = squareClicked.value.id;
         const isFound = (plane) => plane.id === planeSelId;
         const planeSelFound = planes.value.find(isFound);

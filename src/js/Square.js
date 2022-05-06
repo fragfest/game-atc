@@ -162,11 +162,15 @@ module.exports = class Square {
   updateDestroy({ entityManagerArr }) {
     if (!this.destroyFlag) return;
 
-    this.hide();
-    this.squareOneDiv.remove();
+    this.destroy();
     const index = entityManagerArr.findIndex(entity => entity.id === this.id);
     if (index === -1) return;
     entityManagerArr.splice(index, 1);
+  }
+
+  destroy() {
+    this.hide();
+    this.squareOneDiv.remove();
   }
 
   setNonInteractive() {

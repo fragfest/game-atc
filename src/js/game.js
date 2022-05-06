@@ -17,8 +17,14 @@ export const setup = (argObj) => {
     clickCB: argObj.squareClickEventCB,
   };
 
+  let firstPlane = true;
   const createPlane = () => {
-    entityCreate(entityManagerArr, () => create(canvasObj).square);
+    let chanceOfPlane = 0.9;
+    if (firstPlane) {
+      firstPlane = false;
+      chanceOfPlane = 1;
+    }
+    entityCreate(entityManagerArr, chanceOfPlane, () => create(canvasObj).square);
   }
 
   const updateIntervalMs = 2000;
@@ -34,7 +40,7 @@ export const setup = (argObj) => {
       argObj.textLayerObj.ctx.clearRect(0, 0, argObj.width, argObj.height);
       argObj.headingLayerObj.ctx.clearRect(0, 0, argObj.width, argObj.height);
       // update
-      createPlane();
+      createPlane()
       entityManagerArr.forEach(callFn('update', ({ deltaTimeMs: updateIntervalMs, entityManagerArr })));
       entityManagerArr.forEach(callFn('setProximity', { deltaTimeMs: updateIntervalMs, entityManagerArr }));
       // callbacks
@@ -48,7 +54,6 @@ export const setup = (argObj) => {
 
   if (gameLoopRunning) return;
   gameLoopRunning = true;
-  entityManagerAdd(entityManagerArr)(create(canvasObj).square);
   window.requestAnimationFrame(gameTick);
 };
 
@@ -71,18 +76,21 @@ export const setupEntities = (argObj) => {
 //////////////////////////////////////////////////////////////////////////////
 // PRIVATE
 //////////////////////////////////////////////////////////////////////////////
-const shouldCreatePlaneIfRndAbove = 0.4;
 
-const entityCreate = (entityManagerArr, createEntityFn) => {
+const entityCreate = (entityManagerArr, chanceOfPlane, createEntityFn) => {
   const addObj = entityManagerAdd(entityManagerArr);
   const isCloseToPlane = newObj => otherObj => isCloseToEntity(newObj)(otherObj) && isSquare(otherObj);
 
-  if (Math.random() > shouldCreatePlaneIfRndAbove) {
+  if (Math.random() > 1 - chanceOfPlane) {
     const newEntity = createEntityFn();
     if (!newEntity) return;
 
     const entityClose = entityManagerArr.find(isCloseToPlane(newEntity));
-    if (!entityClose) addObj(newEntity);
+    if (entityClose) {
+      newEntity.destroy();
+      return;
+    }
+    addObj(newEntity);
   }
 }
 
