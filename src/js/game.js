@@ -19,7 +19,7 @@ export const setup = (argObj) => {
 
   let firstPlane = true;
   const createPlane = () => {
-    let chanceOfPlane = 0.9;
+    let chanceOfPlane = 0.04;
     if (firstPlane) {
       firstPlane = false;
       chanceOfPlane = 1;
@@ -62,9 +62,9 @@ export const setupEntities = (argObj) => {
     argObj.backgroundObj, argObj.imgLayerObj,
     { x: argObj.width / 2 - 140, y: argObj.height / 2 + 26, heading: 270 });
 
-  const waypointOne = new Waypoint('WAYONE',
+  const waypointOne = new Waypoint('LAM',
     argObj.backgroundObj, argObj.headingLayerObj,
-    { x: argObj.width / 2 + 200, y: argObj.height / 2 });
+    { x: argObj.width / 2 + 400, y: argObj.height / 2 - 150 });
 
   const entityManagerArr = [];
   const entityAdd = entityManagerAdd(entityManagerArr);

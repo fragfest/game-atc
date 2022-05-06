@@ -32,8 +32,8 @@ export const create = ({ width, height, canvasObjEntity, canvasObjText, canvasOb
     square = new Square(
       setRndFlightTitle(newFlight),
       canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl,
-      // { x: newPlane.x, y: newPlane.y, heading: newPlane.heading, altitude, speed },
-      { x: width / 2 + 20, y: height / 2 + 15, heading: '270', altitude: 1000, speed: 200 },
+      { x: newPlane.x, y: newPlane.y, heading: newPlane.heading, altitude, speed },
+      // { x: width / 2 + 20, y: height / 2 + 15, heading: '270', altitude: 1000, speed: 200 },
       { destinationType, airframe: newFlight.airframe, waypoint: newPlane.waypoint, runway }
     );
     square.clickEventCB = () => clickCB(square);
@@ -60,7 +60,7 @@ const spawn = (width, height, sectionInt) => {
       x: 0,
       y: rand(0, height / 2 - 200),
       heading: convHdgDegToThreeDigits(rand(120, 140)),
-      waypoint: 'LAM',
+      waypoint: '- - -',
     };
   }
   if (sectionInt === 2) {
@@ -68,7 +68,7 @@ const spawn = (width, height, sectionInt) => {
       x: rand(0, width / 2 - 200),
       y: 0,
       heading: convHdgDegToThreeDigits(rand(120, 140)),
-      waypoint: 'LAM',
+      waypoint: '- - -',
     };
   }
   if (sectionInt === 3) {
@@ -92,7 +92,7 @@ const spawn = (width, height, sectionInt) => {
       x: width,
       y: rand(height / 2 + 200, height),
       heading: convHdgDegToThreeDigits(rand(310, 330)),
-      waypoint: 'LAM',
+      waypoint: '- - -',
     };
   }
   if (sectionInt === 6) {
@@ -100,7 +100,7 @@ const spawn = (width, height, sectionInt) => {
       x: rand(width / 2 + 200, width),
       y: height,
       heading: convHdgDegToThreeDigits(rand(310, 330)),
-      waypoint: 'LAM',
+      waypoint: '- - -',
     };
   }
   if (sectionInt === 7) {
@@ -108,7 +108,7 @@ const spawn = (width, height, sectionInt) => {
       x: rand(0, width / 2 - 200),
       y: height,
       heading: convHdgDegToThreeDigits(rand(40, 60)),
-      waypoint: 'LAM',
+      waypoint: '- - -',
     };
   }
   if (sectionInt === 8) {
@@ -116,7 +116,7 @@ const spawn = (width, height, sectionInt) => {
       x: 0,
       y: rand(height / 2 + 200, height),
       heading: convHdgDegToThreeDigits(rand(40, 60)),
-      waypoint: 'LAM',
+      waypoint: '- - -',
     };
   }
 };
