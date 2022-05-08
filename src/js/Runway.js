@@ -66,7 +66,7 @@ module.exports = class Runway {
   updateGoAround(entity) {
     console.log(entity.title + ' :: go-around');
     entity.setHeadingTarget(this.runwayHeading, false);
-    entity.setSpeed(220, false, false);
+    entity.setSpeed(220, false, true);
     entity.setAltitude(2000, false);
   }
 
@@ -81,7 +81,7 @@ module.exports = class Runway {
       if (!isSquare) return;
       if (!entity.landing) return;
       if (isEntityOnRunway(entity)) {
-        landingRollout(this, entityManagerArr, entity);
+        landingRollout(this, entity);
       } else if (isEntityTouchedDown(entity)) {
         console.log(entity.title + ' :: touch down');
         entity.setIsTouchedDown(true);
@@ -129,11 +129,11 @@ const updateSpeedAlt = (self, square) => {
     altitudeTarget += 600;
   }
 
-  if (square.speedTarget > speedTarget) square.setSpeed(speedTarget, true, false);
+  if (square.speedTarget > speedTarget) square.setSpeed(speedTarget, true);
   if (square.altitudeTarget > altitudeTarget) square.setAltitude(altitudeTarget, true);
 };
 
-const landingRollout = (self, entityManagerArr, entity) => {
+const landingRollout = (self, entity) => {
   const removeFromRunway = entity => {
     self.landingEntities = self.landingEntities.filter(landing => landing.id !== entity.id);
   };

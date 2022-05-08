@@ -178,7 +178,11 @@ export default {
 
   computed: {
     isDisabled: function () {
-      return !this.planeSelected.title;
+      const planeSel = this.planes.find(
+        (plane) => plane.id === this.planeSelected.id
+      );
+      if (!planeSel) return false;
+      return this.planeSelected.isNonInteractive;
     },
     heading: function () {
       const planeSel = this.planes.find(
@@ -300,7 +304,7 @@ export default {
         return;
       }
 
-      this.planeSelected.setSpeed(this.inputSpeed, false, false);
+      this.planeSelected.setSpeed(this.inputSpeed, false);
       this.$refs.inputHeading.focus();
     },
   },

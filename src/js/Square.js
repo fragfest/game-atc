@@ -43,12 +43,13 @@ module.exports = class Square {
     this.setHeadingDegrees(positionObj.heading);
     this.speed = positionObj.speed;
     this.speedPixelPerMs = 0;
-    this.speedTarget = 250;
-    this.setSpeed(positionObj.speed, false, false);
+    this.speedTarget = 0;
+    this.setSpeed(positionObj.speed, false);
     this.speedMin = getPerformance(planeObj.airframe).speedMin;
     this.speedLanding = getPerformance(planeObj.airframe).speedLanding;
     this.speedMax = getPerformance(planeObj.airframe).speedMax;
 
+    this.isNonInteractive = false;
     this.destroyFlag = false;
     this.onGlidePath = false;
     this.isTouchedDown = false;
@@ -86,6 +87,7 @@ module.exports = class Square {
   setIsTouchedDown(isTouchedDown) {
     this.isTouchedDown = !!isTouchedDown;
     this.speedDeltaPerMs = this.speedDeltaPerMs * 3;
+    this.setNonInteractive();
   }
 
   setLanding(isLanding) {
@@ -100,14 +102,16 @@ module.exports = class Square {
    * @description set speed & landing modes
    * @param {Number|String} speedArg knots
    * @param {Boolean} isLanding set landing mode to attempt glideslope lineup
-   * @param {Boolean} isTouchedDown set when on runway
+   * @param {Boolean} force force speed set
    */
-  setSpeed(speedArg, isLanding, isTouchedDown) {
+  setSpeed(speedArg, isLanding, force) {
+    if (this.isNonInteractive && !force) return;
+
     this.setLanding(isLanding);
     let speed = parseInt(speedArg);
     let speedMin = this.speedMin;
     if (isLanding) speedMin = this.speedLanding;
-    if (isTouchedDown) speedMin = 0;
+    if (this.isTouchedDown) speedMin = 0;
 
     speed = (speed < speedMin) ? speedMin : speed;
     speed = (speed > this.speedMax) ? this.speedMax : speed;
@@ -115,6 +119,8 @@ module.exports = class Square {
   }
 
   setAltitude(altitudeArg, isLanding, isTouchedDown) {
+    if (this.isNonInteractive && !isTouchedDown) return;
+
     this.setLanding(isLanding);
     let altitude = parseInt(altitudeArg);
     if (isTouchedDown) {
@@ -133,6 +139,8 @@ module.exports = class Square {
   }
 
   setHeadingTarget(headingRad, isLanding) {
+    if (this.isNonInteractive) return;
+
     this.setLanding(isLanding);
     this.headingTargetRad = convertToPosRad(convertToSmallRad(headingRad));
   }
@@ -151,10 +159,6 @@ module.exports = class Square {
     this.setHeadingTarget(inputHeadingToRad(heading), false);
   }
 
-  hide() {
-    this.ctx.clearRect(this.x - 1, this.y - 1, this.width + 2, this.height + 2)
-  }
-
   setDestroyFlag(shouldDestroy) {
     this.destroyFlag = !!shouldDestroy;
   }
@@ -169,11 +173,12 @@ module.exports = class Square {
   }
 
   destroy() {
-    this.hide();
+    hide(this);
     this.squareOneDiv.remove();
   }
 
   setNonInteractive() {
+    this.isNonInteractive = true;
     this.squareOneDiv.remove();
   }
 
@@ -249,7 +254,7 @@ module.exports = class Square {
     const altitudeChange = this.altitudeRatePerMs * deltaTimeMs;
     const altitudeNew = this.updateAltitude(altitudeOld, altitudeTarget, altitudeChange);
 
-    this.hide();
+    hide(this);
     this.x += pixelsInX;
     this.y += pixelsInY;
     this.squareOneDiv.style.left = this.x - 10 + 'px';
@@ -287,8 +292,8 @@ module.exports = class Square {
 
     if (isClose) {
       this.hasProximityAlert = true;
-      this.hide();
       const speedPixels = this.speedPixelPerMs * deltaTimeMs;
+      hide(this);
       draw(this, 'orangered', speedPixels);
     } else {
       this.hasProximityAlert = false;
@@ -298,6 +303,9 @@ module.exports = class Square {
 ////////////////////////////////////////////////////////////
 // end class Square
 ////////////////////////////////////////////////////////////
+const hide = (self) => {
+  self.ctx.clearRect(self.x - 1, self.y - 1, self.width + 2, self.height + 2)
+}
 
 const draw = (self, color, speedPixels) => {
   self.ctx.fillStyle = color;

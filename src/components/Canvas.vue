@@ -54,7 +54,7 @@
       </div>
     </div>
 
-    <div class="panel-right">
+    <div class="panel-right" :style="stylePanelRight">
       <ul>
         <li v-for="(plane, index) in planes" :key="index">
           <FlightStrip
@@ -103,6 +103,13 @@ export default {
   },
 
   computed: {
+    stylePanelRight: () => {
+      let minWidth = 376;
+      if (screenSize === ScreenSizes.Small) {
+        minWidth = 296;
+      }
+      return { "min-width": minWidth + "px" };
+    },
     styleFullSize: () => ({
       width: width - 2 + "px",
       height: height - 1 + "px",

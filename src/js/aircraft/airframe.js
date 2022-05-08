@@ -27,7 +27,7 @@ const basePerformance = {
   speedLanding: 135,
   speedMax: 450,
   speedDeltaPerMs: 0.0015,
-  speedRatePerMs: 0.02,
+  speedRatePerMs: 0.02, // TODO consider changing based on screenSize
   altitudeRatePerMs: 0.025,
   turnRateRadPerMs: 0.00005,
   wake: WakeRating.M,
