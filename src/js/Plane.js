@@ -2,9 +2,9 @@
 import Square from './Square';
 import { leftPadZeros, convHdgDegToThreeDigits } from './utils';
 import { getFlightArrival } from './flights/LHR';
-import { DestinationType } from './aircraft/airframe';
+import { DestinationType, getPerformance } from './aircraft/airframe';
 
-export const create = ({ width, height, canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl, clickCB }) => {
+export const create = ({ screenSize, width, height, canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl, clickCB }) => {
   const runway = '27R';
 
   let destinationType = DestinationType.Departure;
@@ -28,13 +28,14 @@ export const create = ({ width, height, canvasObjEntity, canvasObjText, canvasOb
       newFlight = getFlightArrival(spawned);
     }
     spawned.push(newFlight);
+    const airframeObj = getPerformance(newFlight.airframe, screenSize);
 
     square = new Square(
       setRndFlightTitle(newFlight),
       canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl,
       { x: newPlane.x, y: newPlane.y, heading: newPlane.heading, altitude, speed },
-      // { x: width / 2 - 30, y: height / 2 + 15, heading: '270', altitude: 1000, speed: 200 },
-      { destinationType, airframe: newFlight.airframe, waypoint: newPlane.waypoint, runway }
+      // { x: width / 2 - 25, y: height / 2 + 15, heading: '270', altitude: 1200, speed: 200 },
+      { destinationType, airframeObj, waypoint: newPlane.waypoint, runway }
     );
     square.clickEventCB = () => clickCB(square);
   }
@@ -42,7 +43,7 @@ export const create = ({ width, height, canvasObjEntity, canvasObjText, canvasOb
   return { square };
 };
 
-////////////// PRIVATE //////////////////////////////////////
+////////////// PRIVATE ////////////////////////////////////////////////
 const isArrivalIfRndAbove = 0 // 0.5;
 
 let spawned = [];

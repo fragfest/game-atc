@@ -31,17 +31,20 @@ const runways = (runway, screenSize) => {
   const height = getGameSize(screenSize).height;
   let yOffset = 0;
   let length = 0;
+  let runwayWidth = 0;
 
   switch (screenSize) {
     case ScreenSizes.Large:
       xOffset = -140;
       yOffset = 26;
       length = 60;
+      runwayWidth = 4;
       break;
     case ScreenSizes.Small:
       xOffset = -105;
       yOffset = 18;
       length = 40;
+      runwayWidth = 3;
       break;
   }
 
@@ -52,6 +55,7 @@ const runways = (runway, screenSize) => {
         y: height / 2 + yOffset,
         heading: 270,
         length,
+        width: runwayWidth,
       };
   }
 };

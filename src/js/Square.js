@@ -6,7 +6,6 @@ const {
   leftPadZeros,
 } = require('./utils');
 const entityFns = require('./entity');
-const { getPerformance } = require('./aircraft/airframe');
 
 ////////////////////////////////////////////////////////////
 // class Square
@@ -30,9 +29,14 @@ module.exports = class Square {
     this.squareOneDiv.addEventListener('mouseleave', () => this.squareOneDiv.style.cursor = 'none');
     this.squareOneDiv.style.left = positionObj.x - 8 + 'px';
     this.squareOneDiv.style.top = positionObj.y - 8 + 'px';
+    this.squareOneDiv.style.width = 22 + 'px';
+    this.squareOneDiv.style.height = 22 + 'px';
 
+    this.width = 5;
+    this.height = 5;
     this.x = positionObj.x;
     this.y = positionObj.y;
+
     this.altitude = positionObj.altitude;
     this.altitudeMin = 100;
     this.altitudeMax = 40000;
@@ -45,9 +49,9 @@ module.exports = class Square {
     this.speedPixelPerMs = 0;
     this.speedTarget = 0;
     this.setSpeed(positionObj.speed, false);
-    this.speedMin = getPerformance(planeObj.airframe).speedMin;
-    this.speedLanding = getPerformance(planeObj.airframe).speedLanding;
-    this.speedMax = getPerformance(planeObj.airframe).speedMax;
+    this.speedMin = planeObj.airframeObj.speedMin;
+    this.speedLanding = planeObj.airframeObj.speedLanding;
+    this.speedMax = planeObj.airframeObj.speedMax;
 
     this.isNonInteractive = false;
     this.destroyFlag = false;
@@ -61,17 +65,13 @@ module.exports = class Square {
     this.destinationType = planeObj.destinationType || "";
     this.runway = planeObj.runway || "";
     this.waypoint = planeObj.waypoint || "";
-    this.airframe = planeObj.airframe || "";
-    this.wake = getPerformance(planeObj.airframe).wake;
+    this.airframe = planeObj.airframeObj.type || "";
+    this.wake = planeObj.airframeObj.wake;
 
-    this.speedDeltaPerMs = getPerformance(planeObj.airframe).speedDeltaPerMs;
-    this.speedRatePerMs = getPerformance(planeObj.airframe).speedRatePerMs;
-    this.altitudeRatePerMs = getPerformance(planeObj.airframe).altitudeRatePerMs;
-    this.turnRateRadPerMs = getPerformance(planeObj.airframe).turnRateRadPerMs;
-    this.width = 5;
-    this.height = 5;
-    this.squareOneDiv.style.width = 22 + 'px';
-    this.squareOneDiv.style.height = 22 + 'px';
+    this.speedDeltaPerMs = planeObj.airframeObj.speedDeltaPerMs;
+    this.speedRatePerMs = planeObj.airframeObj.speedRatePerMs;
+    this.altitudeRatePerMs = planeObj.airframeObj.altitudeRatePerMs;
+    this.turnRateRadPerMs = planeObj.airframeObj.turnRateRadPerMs;
   }
 
   clickEventCB() { throw new Error('clickEventCB not attached'); }
@@ -265,10 +265,9 @@ module.exports = class Square {
     this.speed = speedNew;
     this.speedPixelPerMs = this.speedRatePerMs * deltaTimeMs * speedNew / 3600000;
 
-    const speedPixels = this.speedPixelPerMs * deltaTimeMs;
     let color = 'white';
     if (this.landing) color = 'yellow';
-    draw(this, color, speedPixels);
+    draw(this, color);
 
     const outsideCanvasWidth = (x, offset) => (x > (this.canvasWidth + offset)) || (x < (0 - offset));
     const outsideCanvasHeight = (y, offset) => (y > (this.canvasHeight + offset)) || (y < (0 - offset));
@@ -280,7 +279,7 @@ module.exports = class Square {
     }
   }
 
-  setProximity({ entityManagerArr, deltaTimeMs }) {
+  setProximity({ entityManagerArr }) {
     const isEntityCloseTo = entityFns.isCloseToEntity(this);
     const accAnySquaresClose = (acc, val) => {
       const entityOther = val;
@@ -292,9 +291,8 @@ module.exports = class Square {
 
     if (isClose) {
       this.hasProximityAlert = true;
-      const speedPixels = this.speedPixelPerMs * deltaTimeMs;
       hide(this);
-      draw(this, 'orangered', speedPixels);
+      draw(this, 'orangered');
     } else {
       this.hasProximityAlert = false;
     }
@@ -307,19 +305,19 @@ const hide = (self) => {
   self.ctx.clearRect(self.x - 1, self.y - 1, self.width + 2, self.height + 2)
 }
 
-const draw = (self, color, speedPixels) => {
+const draw = (self, color) => {
   self.ctx.fillStyle = color;
   self.ctx.globalAlpha = 1;
   self.ctx.fillRect(self.x, self.y, self.width, self.height);
   self.ctx.clearRect(self.x + 1, self.y + 1, self.width - 2, self.height - 2);
 
-  const pixelsInX = Math.cos(self.headingRad) * speedPixels * 1.2;
-  const pixelsInY = Math.sin(self.headingRad) * speedPixels * 1.2;
+  const pixelsInX = Math.cos(self.headingRad) * self.speed / 15;
+  const pixelsInY = Math.sin(self.headingRad) * self.speed / 15;
   const center = { x: self.x + self.width / 2, y: self.y + self.height / 2 };
   self.headingLayerObj.ctx.strokeStyle = color;
   self.headingLayerObj.ctx.beginPath();
   self.headingLayerObj.ctx.moveTo(center.x, center.y);
-  self.headingLayerObj.ctx.lineTo(center.x - pixelsInX * 2, center.y - pixelsInY * 2);
+  self.headingLayerObj.ctx.lineTo(center.x - pixelsInX, center.y - pixelsInY);
   self.headingLayerObj.ctx.stroke();
 
   const degreesDisplay = self.heading;

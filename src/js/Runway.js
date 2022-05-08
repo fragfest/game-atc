@@ -12,7 +12,7 @@ module.exports = class Runway {
     this.y = positionObj.y;
     this.ctx = entityLayerObj.ctx;
     this.imgLayerCtx = imgLayerObj.ctx;
-    this.width = 4;
+    this.width = positionObj.width;
     this.height = positionObj.length;
     this.altitude = 0;
     this.altitudeLanding = this.altitude + 150;
@@ -24,7 +24,7 @@ module.exports = class Runway {
       this.imgLayerCtx.save();
       this.imgLayerCtx.translate(this.x, this.y);
       this.imgLayerCtx.rotate(this.runwayHeading - Math.PI / 2);
-      this.imgLayerCtx.drawImage(img, 0, 0, this.width, this.height);
+      this.imgLayerCtx.drawImage(img, 1, 0, this.width, this.height);
       this.imgLayerCtx.restore();
     };
     img.src = '/img/runway.png';
@@ -56,8 +56,8 @@ module.exports = class Runway {
       entity.setDistPrev(distObj.dist);
       entity.setOnGlidepath(true);
 
-      const interceptHeading = Math.atan(distObj.y / distObj.x) + Math.PI;
       console.log(entity.title + ' :: intercept glidepath ');
+      const interceptHeading = Math.atan(distObj.y / distObj.x) + Math.PI;
       entity.setHeadingTarget(interceptHeading, true);
       updateSpeedAlt(this, entity);
     });

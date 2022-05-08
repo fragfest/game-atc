@@ -1,7 +1,11 @@
-export const getPerformance = (airframe) => {
-  const performance = performanceByAirframe[airframe];
-  if (!performance) return performanceByAirframe['A320'];
-  return performance;
+import { ScreenSizes } from "../utils";
+
+export const getPerformance = (airframe, screenSize) => {
+  const performanceLarge = performanceByAirframe[airframe] || performanceByAirframe['A320'];
+  if (screenSize === ScreenSizes.Small) {
+    return Object.assign(performanceLarge, basePerformanceSmall);
+  }
+  return performanceLarge;
 }
 
 export const DestinationType = Object.freeze({
@@ -27,16 +31,19 @@ const basePerformance = {
   speedLanding: 135,
   speedMax: 450,
   speedDeltaPerMs: 0.0015,
-  speedRatePerMs: 0.02, // TODO consider changing based on screenSize
+  speedRatePerMs: 0.02,
   altitudeRatePerMs: 0.025,
   turnRateRadPerMs: 0.00005,
   wake: WakeRating.M,
 };
+const basePerformanceSmall = {
+  speedRatePerMs: 0.015
+};
 
 const performanceByAirframe = {
-  A320: { ...basePerformance, wake: WakeRating.M },
-  A333: { ...basePerformance, wake: WakeRating.H },
-  B763: { ...basePerformance, wake: WakeRating.H },
-  B77W: { ...basePerformance, wake: WakeRating.H },
-  A388: { ...basePerformance, wake: WakeRating.J },
+  A320: { ...basePerformance, type: 'A320', wake: WakeRating.M },
+  A333: { ...basePerformance, type: 'A333', wake: WakeRating.H },
+  B763: { ...basePerformance, type: 'B763', wake: WakeRating.H },
+  B77W: { ...basePerformance, type: 'B77W', wake: WakeRating.H },
+  A388: { ...basePerformance, type: 'A388', wake: WakeRating.J },
 };

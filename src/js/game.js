@@ -10,6 +10,7 @@ let gameLoopRunning = false;
 export const setup = (argObj) => {
   const entityManagerArr = argObj.entityManagerArr;
   const canvasObj = {
+    screenSize: argObj.screenSize,
     width: getGameSize(argObj.screenSize).width,
     height: getGameSize(argObj.screenSize).height,
     canvasObjEntity: argObj.entityLayerObj,
@@ -26,7 +27,6 @@ export const setup = (argObj) => {
       firstPlane = false;
       chanceOfPlane = 1;
     }
-    // TODO consider using screenSize to set Square airframe performance
     entityCreate(entityManagerArr, chanceOfPlane, () => create(canvasObj).square);
   }
 
