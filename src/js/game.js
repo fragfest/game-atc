@@ -1,15 +1,17 @@
 const Waypoint = require('./Waypoint');
 const Square = require('./Square');
 const Runway = require('./Runway');
-import { hasEntityUpdate } from './entity';
+import { isCloseToEntity, hasEntityUpdate } from './entity';
+import { getGameSize } from "./utils";
 import { create } from './Plane';
-import { isCloseToEntity } from './entity';
+import { getRunway, Runways, Waypoints, getWaypoint } from './airports/LHR';
 
 let gameLoopRunning = false;
 export const setup = (argObj) => {
   const entityManagerArr = argObj.entityManagerArr;
   const canvasObj = {
-    width: argObj.width, height: argObj.height,
+    width: getGameSize(argObj.screenSize).width,
+    height: getGameSize(argObj.screenSize).height,
     canvasObjEntity: argObj.entityLayerObj,
     canvasObjText: argObj.textLayerObj,
     canvasObjHeading: argObj.headingLayerObj,
@@ -24,6 +26,7 @@ export const setup = (argObj) => {
       firstPlane = false;
       chanceOfPlane = 1;
     }
+    // TODO consider using screenSize to set Square airframe performance
     entityCreate(entityManagerArr, chanceOfPlane, () => create(canvasObj).square);
   }
 
@@ -37,8 +40,8 @@ export const setup = (argObj) => {
       // cleanup
       entityManagerArr.forEach(callFn('updateDestroy', { entityManagerArr }));
       entityManagerArr.forEach(callFn('removeLanded', { entityManagerArr }));
-      argObj.textLayerObj.ctx.clearRect(0, 0, argObj.width, argObj.height);
-      argObj.headingLayerObj.ctx.clearRect(0, 0, argObj.width, argObj.height);
+      argObj.textLayerObj.ctx.clearRect(0, 0, canvasObj.width, canvasObj.height);
+      argObj.headingLayerObj.ctx.clearRect(0, 0, canvasObj.width, canvasObj.height);
       // update
       createPlane()
       entityManagerArr.forEach(callFn('update', ({ deltaTimeMs: updateIntervalMs, entityManagerArr })));
@@ -58,13 +61,13 @@ export const setup = (argObj) => {
 };
 
 export const setupEntities = (argObj) => {
-  const runwayOne = new Runway('run1',
-    argObj.backgroundObj, argObj.imgLayerObj,
-    { x: argObj.width / 2 - 140, y: argObj.height / 2 + 26, heading: 270 });
+  const runwayOne = new Runway(
+    Runways.TwoSevenRight, argObj.backgroundObj, argObj.imgLayerObj,
+    getRunway(Runways.TwoSevenRight, argObj.screenSize));
 
-  const waypointOne = new Waypoint('LAM',
-    argObj.backgroundObj, argObj.headingLayerObj,
-    { x: argObj.width / 2 + 400, y: argObj.height / 2 - 150 });
+  const waypointOne = new Waypoint(
+    Waypoints.LAM, argObj.backgroundObj, argObj.headingLayerObj,
+    getWaypoint(Waypoints.LAM, argObj.screenSize));
 
   const entityManagerArr = [];
   const entityAdd = entityManagerAdd(entityManagerArr);

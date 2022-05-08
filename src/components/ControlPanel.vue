@@ -348,7 +348,7 @@ export default {
     }
   }
 }
-// btn-info-panel END
+// btn-info-panel end
 
 // button.land
 button.land {
@@ -388,7 +388,7 @@ button.land {
     }
   }
 }
-// button.land END
+// button.land end
 
 // circle-inputs
 .circle-inputs {
@@ -448,7 +448,7 @@ button.land {
     outline-width: 2px;
   }
 }
-// circle-inputs END
+// circle-inputs end
 
 .circle-div {
   width: 220px;

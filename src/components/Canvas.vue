@@ -61,6 +61,7 @@
             :plane="plane"
             :planeSelected="squareClicked"
             :planes="planes"
+            :screenSize="screenSize"
           ></FlightStrip>
         </li>
       </ul>
@@ -74,9 +75,11 @@ import { ref } from "vue";
 import { setup, setupEntities } from "../js/game";
 import ControlPanel from "./ControlPanel";
 import FlightStrip from "./FlightStrip";
+import { ScreenSizes, getGameSize } from "../js/utils";
 
-const width = 1322;
-const height = 800;
+let screenSize = ScreenSizes.Large;
+let width = getGameSize(ScreenSizes.Large).width;
+let height = getGameSize(ScreenSizes.Large).height;
 
 const planes = ref([]);
 const squareClicked = ref({});
@@ -88,6 +91,7 @@ export default {
 
   data() {
     return {
+      screenSize,
       inputAltitude: "",
       inputHeading: "",
       inputSpeed: "",
@@ -105,7 +109,23 @@ export default {
     }),
   },
 
-  methods: {},
+  beforeCreate() {
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+    const screenOneWidth = 1500;
+    const screenOneHeight = 1000;
+
+    // w/h aspect ratio: 1.6525
+    if (windowWidth < screenOneWidth || windowHeight < screenOneHeight) {
+      console.log("screen size", "small");
+      width = getGameSize(ScreenSizes.Small).width;
+      height = getGameSize(ScreenSizes.Small).height;
+      screenSize = ScreenSizes.Small;
+      return;
+    }
+    console.log("screen size", "large");
+    screenSize = ScreenSizes.Large;
+  },
 
   mounted() {
     const background = this.$refs.background;
@@ -121,9 +141,6 @@ export default {
     const layerFourCtx = layerFour.getContext("2d");
     // const layerFiveCtx = layerFive.getContext('2d');
     const layerSixDiv = document.querySelector(".entity-div");
-
-    // backgroundCtx.fillStyle = 'black';
-    // backgroundCtx.fillRect(0, 0, this.width, this.height);
 
     const backgroundObj = { ctx: backgroundCtx };
     const layerTwoObj = {
@@ -143,8 +160,7 @@ export default {
     };
 
     const setupArg = {
-      width,
-      height,
+      screenSize,
       backgroundObj,
       imgLayerObj: { ctx: layerOneCtx },
       entityLayerObj: layerTwoObj,
@@ -159,6 +175,7 @@ export default {
         planes.value = updateObj.planes || [];
         if (!squareClicked.value) return;
         if (!squareClicked.value.id) return;
+
         const planeSelId = squareClicked.value.id;
         const isFound = (plane) => plane.id === planeSelId;
         const planeSelFound = planes.value.find(isFound);
@@ -172,9 +189,7 @@ export default {
     setup(setupArg);
 
     window.addEventListener("resize", () => {
-      setupArg.width = width;
-      setupArg.height = height;
-      setup(setupArg);
+      // setup(setupArg);
     });
   }, // end mounted
 };
@@ -191,11 +206,8 @@ export default {
 }
 
 .panel-right {
-  height: 1039px;
-  width: 400px;
   overflow: auto;
-  padding-top: 6px;
-  padding-left: 12px;
+  padding: 6px 12px;
   background-image: url("/img/teal-bckgnd.jpg");
   // background-image: linear-gradient(
   //     rgba(255, 255, 255, 0.1),
@@ -218,7 +230,6 @@ export default {
 .row-bottom {
   display: flex;
   justify-content: space-around;
-  height: 240px;
   margin-top: -1px;
   border-right: solid 1px teal;
 
@@ -281,8 +292,8 @@ export default {
 }
 
 .canvas {
-  border: solid 1px;
   position: absolute;
+  border: solid 1px;
 }
 
 p {

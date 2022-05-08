@@ -11,31 +11,30 @@
         <!-- <div class="col">
           <div>12:35</div>
         </div> -->
-        <div class="col large title">
+        <div class="col font-large title">
           <b>{{ plane.title }}</b>
         </div>
-        <div class="col large">
+        <div class="col font-large">
           <b>{{ plane.runway }}</b>
         </div>
-        <div class="col large">
+        <div class="col font-large">
           <b>{{ plane.waypoint }}</b>
         </div>
         <div class="col">{{ plane.airframe }} / {{ plane.wake }}</div>
-        <div class="col fixed-width-large">
+        <div class="col fixed-width no-border">
           <div v-if="hasProximityAlert" class="conflict">
-            <div class="large"><b>Traffic</b></div>
+            <div class="font-large"><b>Traffic</b></div>
             <div>TCAS conflict</div>
           </div>
           <div v-else-if="isLanding" class="landing">
-            <div class="large"><b>Landing</b></div>
+            <div class="font-large"><b>Landing</b></div>
             <div>ILS approach</div>
           </div>
           <div v-else-if="isTouchedDown" class="landing">
-            <div class="large"><b>Landing</b></div>
+            <div class="font-large"><b>Landing</b></div>
             <div>touchdown</div>
           </div>
         </div>
-        <div class="col fixed-width no-border"></div>
       </div>
 
       <svg viewBox="0 0 100 20">
@@ -119,6 +118,7 @@
 </template>
 
 <script>
+import { ScreenSizes } from "../js/utils";
 const Square = require("../js/Square");
 
 export default {
@@ -127,6 +127,7 @@ export default {
     plane: { type: Square },
     planeSelected: { type: Object },
     planes: { type: Object },
+    screenSize: { type: String },
   },
 
   data() {
@@ -155,13 +156,17 @@ export default {
     stripClass: function () {
       const isSelected = this.plane.id === this.planeSelected.id;
       const isHover = this.isHover;
-      const type = this.plane.destinationType || "arrival";
+      const isSizeSmall = this.screenSize === ScreenSizes.Small;
+      const isSizeLarge = this.screenSize === ScreenSizes.Large;
 
-      const typeClass = type === "arrival" ? "arrival" : "";
-      const hoverClass = isHover ? "hover" : "";
-      const selectedClass = isSelected ? "selected" : "";
-      const stripClasses = [].concat(hoverClass, selectedClass, typeClass);
-      return stripClasses.join(" ");
+      const hover = isHover ? "hover" : "";
+      const selected = isSelected ? "selected" : "";
+      let size = "";
+      if (isSizeSmall) size = "small";
+      if (isSizeLarge) size = "large";
+
+      const classes = [].concat(hover, selected, size);
+      return classes.join(" ");
     },
 
     outerLineSmall: function () {
@@ -211,7 +216,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-// TODO backgrounds stack up below container when there are enough strips to allow scrolling
+// TODO BUG: backgrounds stack up below container when there are enough strips to allow scrolling
 // .background {
 //   position: absolute;
 //   height: 70px;
@@ -237,7 +242,38 @@ export default {
 //   }
 // }
 
-// strip start
+// strip small
+.strip.small {
+  width: 280px;
+  height: 56px;
+
+  // strip-info
+  .strip-info {
+    top: 10px;
+    left: 4px;
+
+    .font-large {
+      font-size: 12px;
+    }
+
+    .col {
+      height: 20px;
+      padding: 6px;
+    }
+    .conflict {
+      width: 100%;
+      margin-left: 4px;
+      padding: 2px 4px;
+    }
+    .fixed-width {
+      width: 75px;
+    }
+  }
+  // strip-info end
+}
+// strip small end
+
+// strip (large)
 .strip {
   position: relative;
   width: 360px;
@@ -265,7 +301,7 @@ export default {
 
     font: 11px Arial;
     color: white;
-    .large {
+    .font-large {
       font-size: 14px;
     }
 
@@ -273,19 +309,16 @@ export default {
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 6px;
-      height: 30px;
+      padding: 8px;
+      height: 26px;
       text-align: center;
       border-right: solid 1px #b2b0b0;
     }
+    .fixed-width {
+      width: 120px;
+    }
     .no-border {
       border: none;
-    }
-    .fixed-width {
-      width: 50px;
-    }
-    .fixed-width-large {
-      width: 70px;
     }
 
     .title {
@@ -295,13 +328,15 @@ export default {
       color: yellow;
     }
     .conflict {
+      width: 80%;
       background-color: red;
       border-radius: 4px;
-      padding: 4px 0px;
+      padding: 4px 8px;
+      margin-left: 8px;
       color: white;
     }
   }
   // strip-info end
 }
-// strip end
+// strip (large) end
 </style>

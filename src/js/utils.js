@@ -1,4 +1,14 @@
-// HEADING
+// SETUP /////////////////////////////////////////////////////////////////
+export const ScreenSizes = Object.freeze({
+  Small: 'small',
+  Large: 'large',
+});
+export const getGameSize = (screenSize) => {
+  const obj = gameSizes[screenSize] ? gameSizes[screenSize] : gameSizes['large'];
+  return { ...obj };
+}
+
+// HEADING /////////////////////////////////////////////////////////////////
 export const convertToPosRad = rad => (rad >= 0) ? rad : (2 * Math.PI + rad);
 export const convertToSmallRad = rad => (rad < 2 * Math.PI) ? rad : (rad - 2 * Math.PI);
 export const convertToSmallDegrees = degrees => (degrees <= 360) ? degrees : (degrees - 360);
@@ -15,7 +25,7 @@ export const convHdgRadToThreeDigits = rad => {
   return leftPadZeros(degrees);
 }
 
-// UTIL
+// UTIL /////////////////////////////////////////////////////////////////
 export const leftPadZeros = str => ("000" + str).slice(-3);
 
 export const isValidHeading = str => {
@@ -31,7 +41,17 @@ export const isValidSpeed = str => {
   return isValidThreeDigitInput(str, isInRange);
 }
 
-////////////// PRIVATE //////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+// PRIVATE
+///////////////////////////////////////////////////////////////////////////
+
+// SETUP /////////////////////////////////////////////////////////////////
+const gameSizes = {
+  small: { width: 991, height: 600 },
+  large: { width: 1322, height: 800 },
+};
+
+// HEADING /////////////////////////////////////////////////////////////////
 const isValidThreeDigitInput = (str, isInRange) => {
   if (str.length > 3) return false;
 

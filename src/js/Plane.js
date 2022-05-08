@@ -12,7 +12,7 @@ export const create = ({ width, height, canvasObjEntity, canvasObjText, canvasOb
 
   let square;
   if (destinationType === DestinationType.Arrival) {
-    // sections numbered from NW going clockwise: 1 - 8
+    // sections numbered from WNW going clockwise: 1 - 8
     const sectionsCount = 8;
     const section = Math.ceil(Math.random() * sectionsCount);
     const newPlane = spawn(width, height, section);
