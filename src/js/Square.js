@@ -86,7 +86,7 @@ module.exports = class Square {
 
   setIsTouchedDown(isTouchedDown) {
     this.isTouchedDown = !!isTouchedDown;
-    this.speedDeltaPerMs = this.speedDeltaPerMs * 3;
+    this.speedDeltaPerMs = this.speedDeltaPerMs * 2;
     this.setNonInteractive();
   }
 

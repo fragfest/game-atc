@@ -2,7 +2,7 @@
   <div class="container">
     <div class="row-left">
       <div class="scope">
-        <div class="entity-div layer-six" :style="styleFullSize" />
+        <div class="entity-div layer-six" :style="styleEntityDiv" />
         <!-- <canvas
           ref="layerFive"
           class="canvas layer-five"
@@ -106,12 +106,17 @@ export default {
   computed: {
     stylePanelRight: () => {
       let minWidth = 376;
+      let maxHeight = 1035;
       if (screenSize === ScreenSizes.Small) {
         minWidth = 296;
+        maxHeight = 795;
       }
-      return { "min-width": minWidth + "px" };
+      return {
+        "min-width": minWidth + "px",
+        "max-height": maxHeight + "px",
+      };
     },
-    styleFullSize: () => ({
+    styleEntityDiv: () => ({
       width: width - 2 + "px",
       height: height - 1 + "px",
     }),
@@ -214,7 +219,7 @@ export default {
 }
 
 .panel-right {
-  overflow: auto;
+  overflow-y: auto;
   padding: 6px 12px;
   background-image: url("/img/teal-bckgnd.jpg");
   // background-image: linear-gradient(
