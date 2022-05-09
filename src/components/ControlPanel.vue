@@ -1,7 +1,12 @@
 <template>
   <div class="circle-panel">
-    <div class="btn-info-panel">
-      <button class="land" :disabled="isDisabled" @click="landClick">
+    <div class="btn-info-panel" :class="sizeClass">
+      <button
+        class="land"
+        :class="sizeClass"
+        :disabled="isDisabled"
+        @click="landClick"
+      >
         land
       </button>
       <div class="info" v-show="planeSelected.id">
@@ -26,7 +31,7 @@
       </div>
     </div>
 
-    <div class="circle-inputs">
+    <div class="circle-inputs" :class="sizeClass">
       <label class="heading" for="inputHeading">hdg</label>
       <input
         id="inputHeading"
@@ -66,7 +71,7 @@
       />
     </div>
 
-    <div class="circle-div">
+    <div class="circle-div" :class="sizeClass">
       <svg viewBox="-250 -250 500 500" id="svg">
         <defs>
           <radialGradient id="circle">
@@ -123,6 +128,7 @@ const {
   isValidSpeed,
   leftPadZeros,
 } = require("../js/utils");
+import { ScreenSizes } from "../js/utils";
 
 const inputFilter = (value) => {
   let inputHeading = value;
@@ -152,6 +158,7 @@ export default {
     // Then changes to planeSelected will be picked up.
     planeSelected: { type: Object },
     planes: { type: Object },
+    screenSize: { type: String },
   },
 
   data() {
@@ -177,11 +184,21 @@ export default {
   },
 
   computed: {
+    sizeClass: function () {
+      const isSizeSmall = this.screenSize === ScreenSizes.Small;
+      const isSizeLarge = this.screenSize === ScreenSizes.Large;
+
+      let size = "";
+      if (isSizeSmall) size = "small";
+      if (isSizeLarge) size = "large";
+      return size;
+    },
+
     isDisabled: function () {
       const planeSel = this.planes.find(
         (plane) => plane.id === this.planeSelected.id
       );
-      if (!planeSel) return false;
+      if (!planeSel) return true;
       return this.planeSelected.isNonInteractive;
     },
     heading: function () {
@@ -354,6 +371,18 @@ export default {
 }
 // btn-info-panel end
 
+// btn-info-panel small
+.btn-info-panel.small {
+  max-width: 100px;
+  .info {
+    font-size: 12px;
+  }
+  .title {
+    font-size: 14px;
+  }
+}
+// btn-info-panel small end
+
 // button.land
 button.land {
   width: 120px;
@@ -393,6 +422,14 @@ button.land {
   }
 }
 // button.land end
+
+// button.land small
+button.land.small {
+  width: 100px;
+  height: 30px;
+  font-size: 14px;
+}
+// button.land small end
 
 // circle-inputs
 .circle-inputs {
@@ -454,8 +491,25 @@ button.land {
 }
 // circle-inputs end
 
+// circle-inputs small
+.circle-inputs.small {
+  left: 115px;
+  padding-top: 30px;
+  label {
+    font-size: 12px;
+  }
+  input {
+    width: 22px;
+    font-size: 12px;
+  }
+}
+// circle-inputs small end
+
 .circle-div {
   width: 220px;
+}
+.circle-div.small {
+  width: 180px;
 }
 
 svg {

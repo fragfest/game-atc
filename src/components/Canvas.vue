@@ -49,6 +49,7 @@
             ref="controlPanel"
             :planeSelected="squareClicked"
             :planes="planes"
+            :screenSize="screenSize"
           ></ControlPanel>
         </div>
       </div>
