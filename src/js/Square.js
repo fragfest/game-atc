@@ -4,6 +4,7 @@ const {
   convertToPosRad,
   convHdgRadToThreeDigits,
   leftPadZeros,
+  altitudeDisplay,
 } = require('./utils');
 const entityFns = require('./entity');
 
@@ -68,6 +69,8 @@ module.exports = class Square {
     this.airframe = planeObj.airframeObj.type || "";
     this.wake = planeObj.airframeObj.wake;
 
+    // constants
+    this.pixelsBasePerKnot = 0.001;
     this.speedDeltaPerMs = planeObj.airframeObj.speedDeltaPerMs;
     this.speedRatePerMs = planeObj.airframeObj.speedRatePerMs;
     this.altitudeRatePerMs = planeObj.airframeObj.altitudeRatePerMs;
@@ -86,7 +89,7 @@ module.exports = class Square {
 
   setIsTouchedDown(isTouchedDown) {
     this.isTouchedDown = !!isTouchedDown;
-    this.speedDeltaPerMs = this.speedDeltaPerMs * 2;
+    this.speedDeltaPerMs = this.speedDeltaPerMs * 2.5;
     this.setNonInteractive();
   }
 
@@ -159,8 +162,18 @@ module.exports = class Square {
     this.setHeadingTarget(inputHeadingToRad(heading), false);
   }
 
+  setNonInteractive() {
+    this.isNonInteractive = true;
+    this.squareOneDiv.remove();
+  }
+
   setDestroyFlag(shouldDestroy) {
     this.destroyFlag = !!shouldDestroy;
+  }
+
+  destroy() {
+    hide(this);
+    this.squareOneDiv.remove();
   }
 
   updateDestroy({ entityManagerArr }) {
@@ -170,16 +183,6 @@ module.exports = class Square {
     const index = entityManagerArr.findIndex(entity => entity.id === this.id);
     if (index === -1) return;
     entityManagerArr.splice(index, 1);
-  }
-
-  destroy() {
-    hide(this);
-    this.squareOneDiv.remove();
-  }
-
-  setNonInteractive() {
-    this.isNonInteractive = true;
-    this.squareOneDiv.remove();
   }
 
   updateHeading(headingOld, headingTarget, headingChange) {
@@ -213,11 +216,8 @@ module.exports = class Square {
     else return (headingLargeDecrease < headingTargetSmall) ? headingTargetSmall : headingLargeDecrease;
   }
 
-  updateAltitude(altitudeOldArg, altitudeTargetArg, altitudeChangeArg) {
-    const altitudeOld = Math.round(altitudeOldArg / 50) * 50;
-    const altitudeTarget = Math.round(altitudeTargetArg / 50) * 50;
-    const altitudeChange = Math.round(altitudeChangeArg / 50) * 50;
-    const delta = altitudeTarget - altitudeOld;
+  updateAltitude(altitudeOld, altitudeTarget, altitudeChange) {
+    const delta = Math.round(altitudeTarget - altitudeOld);
     const altitudeIncrease = altitudeOld + altitudeChange;
     const altitudeDecrease = altitudeOld - altitudeChange;
     if (delta === 0) return altitudeOld;
@@ -225,12 +225,10 @@ module.exports = class Square {
     else return (altitudeDecrease < altitudeTarget) ? altitudeTarget : altitudeDecrease;
   }
 
-  updateSpeed(speedArg, speedTargetArg, speedIncreaseArg, speedDecreaseArg) {
-    const speed = Math.round(speedArg);
-    const speedTarget = Math.round(speedTargetArg);
-    const delta = speedTarget - speed;
-    const speedIncrease = speed + Math.round(speedIncreaseArg);
-    const speedDecrease = speed - Math.round(speedDecreaseArg);
+  updateSpeed(speed, speedTarget, speedIncreaseArg, speedDecreaseArg) {
+    const delta = Math.round(speedTarget - speed);
+    const speedIncrease = speed + speedIncreaseArg;
+    const speedDecrease = speed - speedDecreaseArg;
     if (delta === 0) return speed;
     if (delta > 0) return (speedIncrease > speedTarget) ? speedTarget : speedIncrease;
     return (speedDecrease < speedTarget) ? speedTarget : speedDecrease;
@@ -243,11 +241,13 @@ module.exports = class Square {
     const headingRadNewLarge = this.updateHeading(headingOld, headingTarget, headingChange);
     const headingRadNew = convertToPosRad(convertToSmallRad(headingRadNewLarge));
 
-    const speedDelta = this.speedDeltaPerMs * deltaTimeMs;
+    const pixelsSpeedDeltaBase = this.speedDeltaPerMs * deltaTimeMs;
+    const speedDelta = pixelsSpeedDeltaBase * this.pixelsBasePerKnot;
     const speedNew = this.updateSpeed(this.speed, this.speedTarget, speedDelta, speedDelta);
-    const pixels = (this.speedPixelPerMs * deltaTimeMs);
-    const pixelsInX = Math.cos(headingRadNew) * pixels;
-    const pixelsInY = Math.sin(headingRadNew) * pixels;
+    const pixelsSpeedRateBase = this.speedRatePerMs * deltaTimeMs;
+    const pixelsSpeed = pixelsSpeedRateBase * this.pixelsBasePerKnot * speedNew;
+    const pixelsInX = Math.cos(headingRadNew) * pixelsSpeed;
+    const pixelsInY = Math.sin(headingRadNew) * pixelsSpeed;
 
     const altitudeOld = this.altitude;
     const altitudeTarget = this.altitudeTarget;
@@ -263,7 +263,6 @@ module.exports = class Square {
     this.heading = convHdgRadToThreeDigits(headingRadNew);
     this.altitude = altitudeNew;
     this.speed = speedNew;
-    this.speedPixelPerMs = this.speedRatePerMs * deltaTimeMs * speedNew / 3600000;
 
     let color = 'white';
     if (this.landing) color = 'yellow';
@@ -321,13 +320,14 @@ const draw = (self, color) => {
   self.headingLayerObj.ctx.stroke();
 
   const degreesDisplay = self.heading;
-  const speedDisplay = leftPadZeros(self.speed);
+  const speedDisplay = leftPadZeros(Math.round(self.speed));
+  const altDisplay = altitudeDisplay(self.altitude);
 
   self.textLayerObj.ctx.fillStyle = color;
   self.textLayerObj.ctx.font = "11px Arial"
   self.textLayerObj.ctx.fillText(self.title, self.x, self.y - 2);
   self.textLayerObj.ctx.fillStyle = color;
   self.textLayerObj.ctx.fillText('              ' + degreesDisplay + '\u00B0', self.x, self.y - 2);
-  self.textLayerObj.ctx.fillText('              ' + self.altitude + ' ft', self.x, self.y + 8);
+  self.textLayerObj.ctx.fillText('              ' + altDisplay + ' ft', self.x, self.y + 8);
   self.textLayerObj.ctx.fillText('              ' + speedDisplay + ' kts', self.x, self.y + 18);
 };

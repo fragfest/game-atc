@@ -140,9 +140,8 @@ const landingRollout = (self, entity) => {
 
   console.log(entity.title + ' :: landing rollout');
   entity.setHeadingRad(self.runwayHeading, true);
-  const speedNew = entity.speed - 30;
-  entity.setSpeed(speedNew, true, true);
-  if (speedNew <= 0) {
+  entity.setSpeed(0, true, true);
+  if (entity.speed <= 30) {
     console.log(entity.title + ' :: landing complete');
     removeFromRunway(entity);
     entity.setDestroyFlag(true);

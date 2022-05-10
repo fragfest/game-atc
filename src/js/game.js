@@ -21,8 +21,9 @@ export const setup = (argObj) => {
   };
 
   let firstPlane = true;
-  const createPlane = () => {
-    let chanceOfPlane = 0.04;
+  const createPlane = (deltaTimeMs) => {
+    const chanceOfPlanePerSec = 0.02;
+    let chanceOfPlane = chanceOfPlanePerSec * deltaTimeMs / 1000
     if (firstPlane) {
       firstPlane = false;
       chanceOfPlane = 1;
@@ -30,8 +31,8 @@ export const setup = (argObj) => {
     entityCreate(entityManagerArr, chanceOfPlane, () => create(canvasObj).square);
   }
 
-  const updateIntervalMs = 2000;
-  let timestampPrev = -2000;
+  const updateIntervalMs = 500;
+  let timestampPrev = -500;
 
   const gameTick = timestamp => {
     const deltaTime = timestamp - timestampPrev;
@@ -43,7 +44,7 @@ export const setup = (argObj) => {
       argObj.textLayerObj.ctx.clearRect(0, 0, canvasObj.width, canvasObj.height);
       argObj.headingLayerObj.ctx.clearRect(0, 0, canvasObj.width, canvasObj.height);
       // update
-      createPlane()
+      createPlane(updateIntervalMs)
       entityManagerArr.forEach(callFn('update', ({ deltaTimeMs: updateIntervalMs, entityManagerArr })));
       entityManagerArr.forEach(callFn('setProximity', { deltaTimeMs: updateIntervalMs, entityManagerArr }));
       // callbacks

@@ -22,11 +22,11 @@
         </div>
         <div class="row">
           <span><b>Alt</b></span>
-          <span>{{ planeSelected.altitude }} ft</span>
+          <span>{{ altitude }} ft</span>
         </div>
         <div class="row">
           <span><b>Spd</b></span>
-          <span>{{ planeSelected.speed }} kts</span>
+          <span>{{ speed }} kts</span>
         </div>
       </div>
     </div>
@@ -127,6 +127,7 @@ const {
   isValidAltitude,
   isValidSpeed,
   leftPadZeros,
+  altitudeDisplay,
 } = require("../js/utils");
 import { ScreenSizes } from "../js/utils";
 
@@ -195,19 +196,26 @@ export default {
     },
 
     isDisabled: function () {
-      const planeSel = this.planes.find(
-        (plane) => plane.id === this.planeSelected.id
-      );
+      const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
       if (!planeSel) return true;
       return this.planeSelected.isNonInteractive;
     },
+
     heading: function () {
-      const planeSel = this.planes.find(
-        (plane) => plane.id === this.planeSelected.id
-      );
+      const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
       if (!planeSel) return "";
       setCompass(planeSel.headingRad);
       return planeSel.heading;
+    },
+    speed: function () {
+      const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
+      if (!planeSel) return "";
+      return Math.round(planeSel.speed);
+    },
+    altitude: function () {
+      const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
+      if (!planeSel) return "";
+      return altitudeDisplay(planeSel.altitude);
     },
   },
 

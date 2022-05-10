@@ -8,6 +8,9 @@ export const getGameSize = (screenSize) => {
   return { ...obj };
 }
 
+// ALTITUDE /////////////////////////////////////////////////////////////////
+export const altitudeDisplay = alt => Math.round(alt / 10) * 10;
+
 // HEADING /////////////////////////////////////////////////////////////////
 export const convertToPosRad = rad => (rad >= 0) ? rad : (2 * Math.PI + rad);
 export const convertToSmallRad = rad => (rad < 2 * Math.PI) ? rad : (rad - 2 * Math.PI);
