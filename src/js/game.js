@@ -2,10 +2,12 @@ const Waypoint = require('./Waypoint');
 const Square = require('./Square');
 const Runway = require('./Runway');
 import { isCloseToEntity, hasEntityUpdate } from './entity';
+import { getRunway, Runways, Waypoints, getWaypoint } from './airports/LHR';
 import { getGameSize } from "./utils";
 import { create } from './Plane';
-import { getRunway, Runways, Waypoints, getWaypoint } from './airports/LHR';
+import { setup as setupKeyboard } from './input/keyboard';
 
+// SETUP ////////////////////////////////////////////////////////////////
 let gameLoopRunning = false;
 export const setup = (argObj) => {
   const entityManagerArr = argObj.entityManagerArr;
@@ -28,7 +30,7 @@ export const setup = (argObj) => {
       firstPlane = false;
       chanceOfPlane = 1;
     }
-    entityCreate(entityManagerArr, chanceOfPlane, () => create(canvasObj).square);
+    createSquare(entityManagerArr, chanceOfPlane, () => create(canvasObj).square);
   }
 
   const updateIntervalMs = 500;
@@ -56,10 +58,15 @@ export const setup = (argObj) => {
     window.requestAnimationFrame(gameTick);
   }
 
+  // INIT GAME LOOP
   if (gameLoopRunning) return;
   gameLoopRunning = true;
+
+  setupKeyboard();
+
   window.requestAnimationFrame(gameTick);
 };
+// SETUP END ////////////////////////////////////////////////////////////
 
 export const setupEntities = (argObj) => {
   const runwayOne = new Runway(
@@ -81,11 +88,11 @@ export const setupEntities = (argObj) => {
 // PRIVATE
 //////////////////////////////////////////////////////////////////////////////
 
-const entityCreate = (entityManagerArr, chanceOfPlane, createEntityFn) => {
+const createSquare = (entityManagerArr, chanceOfSquare, createEntityFn) => {
   const addObj = entityManagerAdd(entityManagerArr);
   const isCloseToPlane = newObj => otherObj => isCloseToEntity(newObj)(otherObj) && isSquare(otherObj);
 
-  if (Math.random() > 1 - chanceOfPlane) {
+  if (Math.random() > 1 - chanceOfSquare) {
     const newEntity = createEntityFn();
     if (!newEntity) return;
 

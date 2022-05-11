@@ -73,10 +73,11 @@
 <script>
 import { ref } from "vue";
 
-import { setup, setupEntities } from "../js/game";
 import ControlPanel from "./ControlPanel";
 import FlightStrip from "./FlightStrip";
+import { setup, setupEntities } from "../js/game";
 import { ScreenSizes, getGameSize } from "../js/utils";
+import { KeyboardEvents, subscribe } from "../js/input/keyboard";
 
 let screenSize = ScreenSizes.Large;
 let width = getGameSize(ScreenSizes.Large).width;
@@ -185,12 +186,10 @@ export default {
         squareClicked.value = squareObj;
       },
       gameUpdateCB: (updateObj) => {
-        planes.value = updateObj.planes || [];
-        if (!squareClicked.value) return;
-        if (!squareClicked.value.id) return;
-
         const planeSelId = squareClicked.value.id;
         const isFound = (plane) => plane.id === planeSelId;
+
+        planes.value = updateObj.planes || [];
         const planeSelFound = planes.value.find(isFound);
         if (!planeSelFound) {
           squareClicked.value = {};
@@ -201,9 +200,38 @@ export default {
     setupArg.entityManagerArr = entityManagerArr;
     setup(setupArg);
 
+    // EVENTS //////////////////////////////////////////////////////////////////////
     window.addEventListener("resize", () => {
       // setup(setupArg);
     });
+
+    const arrowDownEV = (index) => {
+      if (planes.value.length === 0) return;
+
+      let newIndex = index + 1;
+      if (newIndex >= planes.value.length) newIndex = 0;
+      squareClicked.value = planes.value[newIndex];
+    };
+    const arrowUpEV = (index) => {
+      if (planes.value.length === 0) return;
+
+      let newIndex = index - 1;
+      if (newIndex < 0) newIndex = planes.value.length - 1;
+      squareClicked.value = planes.value[newIndex];
+    };
+
+    const getPlaneSelectedIndex = () => {
+      const planeSelId = squareClicked.value.id;
+      const isSelected = (plane) => plane.id === planeSelId;
+      return planes.value.findIndex(isSelected);
+    };
+    subscribe(KeyboardEvents.KeyboardArrowDownEV, () =>
+      arrowDownEV(getPlaneSelectedIndex())
+    );
+    subscribe(KeyboardEvents.KeyboardArrowUpEV, () =>
+      arrowUpEV(getPlaneSelectedIndex())
+    );
+    // EVENTS END ///////////////////////////////////////////////////////////////////
   }, // end mounted
 };
 </script>
