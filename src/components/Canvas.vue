@@ -205,12 +205,21 @@ export default {
       // setup(setupArg);
     });
 
+    const landingEV = (index) => {
+      if (planes.value.length === 0) return;
+
+      const planeSelected = planes.value[index];
+      if (!planeSelected) return;
+      planeSelected.setLanding(true);
+    };
+
     const arrowDownEV = (index) => {
       if (planes.value.length === 0) return;
 
       let newIndex = index + 1;
       if (newIndex >= planes.value.length) newIndex = 0;
       squareClicked.value = planes.value[newIndex];
+      this.$refs.controlPanel.setFocus();
     };
     const arrowUpEV = (index) => {
       if (planes.value.length === 0) return;
@@ -218,6 +227,7 @@ export default {
       let newIndex = index - 1;
       if (newIndex < 0) newIndex = planes.value.length - 1;
       squareClicked.value = planes.value[newIndex];
+      this.$refs.controlPanel.setFocus();
     };
 
     const getPlaneSelectedIndex = () => {
@@ -225,6 +235,9 @@ export default {
       const isSelected = (plane) => plane.id === planeSelId;
       return planes.value.findIndex(isSelected);
     };
+    subscribe(KeyboardEvents.KeyboardLetter_L_EV, () =>
+      landingEV(getPlaneSelectedIndex())
+    );
     subscribe(KeyboardEvents.KeyboardArrowDownEV, () =>
       arrowDownEV(getPlaneSelectedIndex())
     );

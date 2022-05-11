@@ -31,13 +31,13 @@ const basePerformance = {
   speedLanding: 135,
   speedMax: 450,
   speedDeltaPerMs: 2,
-  speedRatePerMs: 0.015,
+  speedRatePerMs: 0.012,
   altitudeRatePerMs: 0.025,
   turnRateRadPerMs: 0.00005,
   wake: WakeRating.M,
 };
 const basePerformanceSmall = {
-  speedRatePerMs: 0.01
+  speedRatePerMs: 0.007,
 };
 
 const performanceByAirframe = {

@@ -1,7 +1,8 @@
 // NOTE: key & values must match
 export const KeyboardEvents = Object.freeze({
   KeyboardArrowDownEV: 'KeyboardArrowDownEV',
-  KeyboardArrowUpEV: 'KeyboardArrowUpEV'
+  KeyboardArrowUpEV: 'KeyboardArrowUpEV',
+  KeyboardLetter_L_EV: 'KeyboardLetter_L_EV',
 });
 
 let isSetup = false;
@@ -16,6 +17,11 @@ export const setup = () => {
         break;
       case 'ArrowUp':
         document.dispatchEvent(new Event(KeyboardEvents.KeyboardArrowUpEV));
+        break;
+      case 'l':
+      case 'L':
+        ev.preventDefault();
+        document.dispatchEvent(new Event(KeyboardEvents.KeyboardLetter_L_EV));
         break;
     }
   });
