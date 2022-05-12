@@ -75,7 +75,7 @@ import { ref } from "vue";
 
 import ControlPanel from "./ControlPanel";
 import FlightStrip from "./FlightStrip";
-import { setup, setupEntities } from "../js/game";
+import { setup, setupEntities, setPlaneSelected } from "../js/game";
 import { ScreenSizes, getGameSize } from "../js/utils";
 import { KeyboardEvents, subscribe } from "../js/input/keyboard";
 
@@ -182,8 +182,9 @@ export default {
       headingLayerObj: layerFourObj,
       entityDiv: layerSixDiv,
       squareClickEventCB: (squareObj) => {
-        this.$refs.controlPanel.setFocus();
         squareClicked.value = squareObj;
+        this.$refs.controlPanel.setFocus();
+        setPlaneSelected(setupArg, squareObj);
       },
       gameUpdateCB: (updateObj) => {
         const planeSelId = squareClicked.value.id;
@@ -196,6 +197,7 @@ export default {
         }
       },
     };
+
     const entityManagerArr = setupEntities(setupArg);
     setupArg.entityManagerArr = entityManagerArr;
     setup(setupArg);
@@ -220,6 +222,7 @@ export default {
       if (newIndex >= planes.value.length) newIndex = 0;
       squareClicked.value = planes.value[newIndex];
       this.$refs.controlPanel.setFocus();
+      setPlaneSelected(setupArg, squareClicked.value);
     };
     const arrowUpEV = (index) => {
       if (planes.value.length === 0) return;
@@ -228,6 +231,7 @@ export default {
       if (newIndex < 0) newIndex = planes.value.length - 1;
       squareClicked.value = planes.value[newIndex];
       this.$refs.controlPanel.setFocus();
+      setPlaneSelected(setupArg, squareClicked.value);
     };
 
     const getPlaneSelectedIndex = () => {

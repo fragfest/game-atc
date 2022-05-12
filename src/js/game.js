@@ -48,7 +48,7 @@ export const setup = (argObj) => {
       // update
       createPlane(updateIntervalMs)
       entityManagerArr.forEach(callFn('update', ({ deltaTimeMs: updateIntervalMs, entityManagerArr })));
-      entityManagerArr.forEach(callFn('setProximity', { deltaTimeMs: updateIntervalMs, entityManagerArr }));
+      entityManagerArr.forEach(callFn('setProximity', { entityManagerArr }));
       // callbacks
       argObj.gameUpdateCB({
         planes: entityManagerArr.filter(isSquare),
@@ -82,6 +82,19 @@ export const setupEntities = (argObj) => {
   entityAdd(runwayOne);
   entityAdd(waypointOne);
   return entityManagerArr;
+};
+
+export const setPlaneSelected = (argObj, square) => {
+  const width = getGameSize(argObj.screenSize).width;
+  const height = getGameSize(argObj.screenSize).height;
+  const entityManagerArr = argObj.entityManagerArr;
+
+  argObj.textLayerObj.ctx.clearRect(0, 0, width, height);
+  argObj.headingLayerObj.ctx.clearRect(0, 0, width, height);
+  entityManagerArr.forEach(callFn('setSelected', false));
+  square.setSelected(true);
+  entityManagerArr.forEach(callFn('setProximity', { entityManagerArr }));
+  entityManagerArr.forEach(callFn('draw'));
 };
 
 //////////////////////////////////////////////////////////////////////////////

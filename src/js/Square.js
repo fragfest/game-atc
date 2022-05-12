@@ -54,6 +54,10 @@ module.exports = class Square {
     this.speedLanding = planeObj.airframeObj.speedLanding;
     this.speedMax = planeObj.airframeObj.speedMax;
 
+    // display
+    this.isSelected = false;
+
+    // states
     this.isNonInteractive = false;
     this.destroyFlag = false;
     this.onGlidePath = false;
@@ -266,6 +270,8 @@ module.exports = class Square {
 
     let color = 'white';
     if (this.landing) color = 'yellow';
+    if (this.hasProximityAlert) color = 'orangered';
+    if (this.isSelected) color = 'limegreen';
     draw(this, color);
 
     const outsideCanvasWidth = (x, offset) => (x > (this.canvasWidth + offset)) || (x < (0 - offset));
@@ -276,6 +282,19 @@ module.exports = class Square {
     if (outsideCanvasWidth(this.x, 15) || outsideCanvasHeight(this.y, 15)) {
       this.setDestroyFlag(true);
     }
+  }
+
+  draw() {
+    let color = 'white';
+    if (this.landing) color = 'yellow';
+    if (this.hasProximityAlert) color = 'orangered';
+    if (this.isSelected) color = 'limegreen';
+    hide(this);
+    draw(this, color);
+  }
+
+  setSelected(isSelected) {
+    this.isSelected = !!isSelected;
   }
 
   setProximity({ entityManagerArr }) {
@@ -291,7 +310,9 @@ module.exports = class Square {
     if (isClose) {
       this.hasProximityAlert = true;
       hide(this);
-      draw(this, 'orangered');
+      let color = 'orangered';
+      if (this.isSelected) color = 'limegreen';
+      draw(this, color);
     } else {
       this.hasProximityAlert = false;
     }

@@ -3,24 +3,34 @@
 ////////////////////////////////////////////////////////////
 module.exports = class Waypoint {
   constructor(title, entityLayerObj, textLayerObj, positionObj) {
-      this.id = Math.random();
-      this.title = title.trim();
-      this.ctx = entityLayerObj.ctx
-      this.textLayerObj = textLayerObj;
+    this.id = Math.random();
+    this.title = title.trim();
+    this.ctx = entityLayerObj.ctx
+    this.textLayerObj = textLayerObj;
 
-      this.x = positionObj.x;
-      this.y = positionObj.y;
-      this.width = 5;
-      this.height = 5;
-      this.altitude = 0;
+    this.x = positionObj.x;
+    this.y = positionObj.y;
+    this.width = 5;
+    this.height = 5;
+    this.altitude = 0;
   }
 
   update() {
-    this.ctx.fillStyle = 'greenyellow';
-    this.ctx.globalAlpha = 1;
-    this.ctx.fillRect(this.x, this.y, this.width, this.height);
-    this.textLayerObj.ctx.fillStyle = 'greenyellow';
-    this.textLayerObj.ctx.font = "bold 10px Arial"
-    this.textLayerObj.ctx.fillText(this.title, this.x, this.y - 2);
-  } 
+    _draw(this);
+  }
+
+  draw() {
+    _draw(this);
+  }
 };
+
+// PRIVATE ////////////////////////////////////////////////////////
+
+const _draw = (self) => {
+  self.ctx.fillStyle = 'greenyellow';
+  self.ctx.globalAlpha = 1;
+  self.ctx.fillRect(self.x, self.y, self.width, self.height);
+  self.textLayerObj.ctx.fillStyle = 'greenyellow';
+  self.textLayerObj.ctx.font = "bold 10px Arial"
+  self.textLayerObj.ctx.fillText(self.title, self.x, self.y - 2);
+}
