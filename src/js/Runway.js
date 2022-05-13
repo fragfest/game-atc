@@ -66,8 +66,8 @@ module.exports = class Runway {
   updateGoAround(entity) {
     console.log(entity.title + ' :: go-around');
     entity.setHeadingTarget(this.runwayHeading, false);
-    entity.setSpeed(220, false, true);
-    entity.setAltitude(2000, false);
+    if (entity.speedTarget <= 220) entity.setSpeed(220, false, true);
+    if (entity.altitudeTarget <= 2000) entity.setAltitude(2000, false);
   }
 
   removeLanded({ entityManagerArr }) {

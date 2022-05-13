@@ -271,7 +271,7 @@ module.exports = class Square {
     let color = 'white';
     if (this.landing) color = 'yellow';
     if (this.hasProximityAlert) color = 'orangered';
-    if (this.isSelected) color = 'limegreen';
+    if (this.isSelected) color = 'greenyellow';
     draw(this, color);
 
     const outsideCanvasWidth = (x, offset) => (x > (this.canvasWidth + offset)) || (x < (0 - offset));
@@ -288,7 +288,7 @@ module.exports = class Square {
     let color = 'white';
     if (this.landing) color = 'yellow';
     if (this.hasProximityAlert) color = 'orangered';
-    if (this.isSelected) color = 'limegreen';
+    if (this.isSelected) color = 'greenyellow';
     hide(this);
     draw(this, color);
   }
@@ -309,9 +309,9 @@ module.exports = class Square {
 
     if (isClose) {
       this.hasProximityAlert = true;
-      hide(this);
       let color = 'orangered';
-      if (this.isSelected) color = 'limegreen';
+      if (this.isSelected) color = 'greenyellow';
+      hide(this);
       draw(this, color);
     } else {
       this.hasProximityAlert = false;
