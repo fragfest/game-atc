@@ -77,7 +77,7 @@ import ControlPanel from "./ControlPanel";
 import FlightStrip from "./FlightStrip";
 import { setup, setupEntities, setPlaneSelected } from "../js/game";
 import { ScreenSizes, getGameSize } from "../js/utils";
-import { KeyboardEvents, subscribe } from "../js/input/keyboard";
+import { KeyboardEvents, subscribe } from "../js/events/keyboard";
 
 let screenSize = ScreenSizes.Large;
 let width = getGameSize(ScreenSizes.Large).width;
@@ -311,7 +311,6 @@ export default {
   display: flex;
   width: 100%;
   padding: 8px;
-  padding-right: 40px;
 }
 
 .layer-six {

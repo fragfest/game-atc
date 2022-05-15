@@ -1,5 +1,9 @@
 <template>
-  <div class="circle-panel">
+  <div class="control-panel">
+    <div class="message-panel" :class="sizeClass">
+      <textarea readonly v-model="messagesDisplay"></textarea>
+    </div>
+
     <div class="btn-info-panel" :class="sizeClass">
       <button
         class="land"
@@ -31,47 +35,50 @@
       </div>
     </div>
 
-    <div class="circle-inputs" :class="sizeClass">
-      <label class="heading" for="inputHeading">hdg</label>
-      <input
-        id="inputHeading"
-        ref="inputHeading"
-        type="text"
-        @keydown.enter="inputHeadingKeyDown"
-        @input="inputEventHeading"
-        @click="inputClick"
-        v-model="inputHeading"
-        :disabled="isDisabled"
-      />
+    <!-- circle-panel -->
+    <div class="circle-panel" :class="sizeClass">
+      <!-- circle-inputs -->
+      <div class="circle-inputs" :class="sizeClass">
+        <label class="heading" for="inputHeading">hdg</label>
+        <input
+          id="inputHeading"
+          ref="inputHeading"
+          type="text"
+          @keydown.enter="inputHeadingKeyDown"
+          @input="inputEventHeading"
+          @click="inputClick"
+          v-model="inputHeading"
+          :disabled="isDisabled"
+        />
 
-      <label class="altitude" for="inputAltitude">
-        alt <small>x100</small>
-      </label>
-      <input
-        id="inputAltitude"
-        ref="inputAltitude"
-        type="text"
-        @keydown.enter="inputAltitudeKeyDown"
-        @input="inputEventAltitude"
-        @click="inputClick"
-        v-model="inputAltitude"
-        :disabled="isDisabled"
-      />
+        <label class="altitude" for="inputAltitude">
+          alt <small>x100</small>
+        </label>
+        <input
+          id="inputAltitude"
+          ref="inputAltitude"
+          type="text"
+          @keydown.enter="inputAltitudeKeyDown"
+          @input="inputEventAltitude"
+          @click="inputClick"
+          v-model="inputAltitude"
+          :disabled="isDisabled"
+        />
 
-      <label class="speed" for="inputSpeed">spd</label>
-      <input
-        id="inputSpeed"
-        ref="inputSpeed"
-        type="text"
-        @keydown.enter="inputSpeedKeyDown"
-        @input="inputEventSpeed"
-        @click="inputClick"
-        v-model="inputSpeed"
-        :disabled="isDisabled"
-      />
-    </div>
+        <label class="speed" for="inputSpeed">spd</label>
+        <input
+          id="inputSpeed"
+          ref="inputSpeed"
+          type="text"
+          @keydown.enter="inputSpeedKeyDown"
+          @input="inputEventSpeed"
+          @click="inputClick"
+          v-model="inputSpeed"
+          :disabled="isDisabled"
+        />
+      </div>
+      <!-- circle-inputs end -->
 
-    <div class="circle-div" :class="sizeClass">
       <svg viewBox="-250 -250 500 500" id="svg">
         <defs>
           <radialGradient id="circle">
@@ -115,6 +122,7 @@
         </g>
       </svg>
     </div>
+    <!-- circle-panel end -->
   </div>
 </template>
 
@@ -130,6 +138,7 @@ const {
   altitudeDisplay,
 } = require("../js/utils");
 import { ScreenSizes } from "../js/utils";
+import { MessageEvents, subscribe } from "../js/events/messages";
 
 const inputFilter = (value) => {
   let inputHeading = value;
@@ -167,6 +176,7 @@ export default {
       inputHeading: null,
       inputAltitude: null,
       inputSpeed: null,
+      messages: [],
     };
   },
 
@@ -182,9 +192,19 @@ export default {
       new_tick.id = "tick-" + leftPadZeros(i);
       gauge.appendChild(new_tick);
     }
+
+    subscribe(MessageEvents.MessageAllEV, (msg) => {
+      this.messages.unshift(msg);
+      if (this.messages.length > 20) this.messages.splice(-1, 1);
+    });
   },
 
+  // computed
   computed: {
+    messagesDisplay: function () {
+      return this.messages.join("\n");
+    },
+
     sizeClass: function () {
       const isSizeSmall = this.screenSize === ScreenSizes.Small;
       const isSizeLarge = this.screenSize === ScreenSizes.Large;
@@ -218,6 +238,7 @@ export default {
       return altitudeDisplay(planeSel.altitude);
     },
   },
+  // computed end
 
   watch: {
     planeSelected(newPlane) {
@@ -338,11 +359,45 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.circle-panel {
+.control-panel {
   display: flex;
   justify-content: flex-end;
   width: 100%;
 }
+
+// message-panel
+.message-panel {
+  width: 280px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-right: 20px;
+
+  background-color: #2c5c816f;
+  border: 1px solid lightgreen;
+  border-radius: 8px;
+  box-shadow: 3px 3px rgb(0, 84, 84);
+
+  textarea {
+    height: 93.5%;
+    width: 92%;
+    padding: 4px 10px;
+
+    border: none;
+    background: transparent;
+    resize: none;
+    overflow: hidden;
+    color: white;
+    font-size: 14px;
+  }
+}
+
+.message-panel.small {
+  width: 220px;
+  textarea {
+    font-size: 11px;
+  }
+}
+// message-panel end
 
 // btn-info-panel
 .btn-info-panel {
@@ -351,6 +406,7 @@ export default {
   justify-content: flex-start;
   max-width: 120px;
   margin-top: 10px;
+  margin-right: 16px;
 
   .info {
     hr {
@@ -363,7 +419,7 @@ export default {
     padding: 10px;
 
     background-color: #2c5c816f;
-    border: 1px solid limegreen;
+    border: 1px solid lightgreen;
     border-radius: 8px;
     box-shadow: 3px 3px rgb(0, 84, 84);
     .row {
@@ -377,9 +433,7 @@ export default {
     }
   }
 }
-// btn-info-panel end
 
-// btn-info-panel small
 .btn-info-panel.small {
   max-width: 100px;
   .info {
@@ -389,7 +443,7 @@ export default {
     font-size: 14px;
   }
 }
-// btn-info-panel small end
+// btn-info-panel end
 
 // button.land
 button.land {
@@ -421,31 +475,28 @@ button.land {
   }
 
   &:active {
-    margin-right: 1px;
-    box-shadow: 0px 0px black;
-    &[disabled] {
-      margin-right: 0;
-      box-shadow: 3px 2px rgb(119, 119, 119);
-    }
+    box-shadow: none;
+  }
+
+  &[disabled] {
+    box-shadow: none;
   }
 }
-// button.land end
 
-// button.land small
 button.land.small {
   width: 100px;
   height: 30px;
   font-size: 14px;
 }
-// button.land small end
+// button.land end
 
 // circle-inputs
 .circle-inputs {
-  position: relative;
+  top: 40px;
+  left: 86px;
+  position: absolute;
   display: flex;
   flex-direction: column;
-  left: 138px;
-  padding-top: 41px;
 
   label {
     margin-bottom: 4px;
@@ -497,12 +548,10 @@ button.land.small {
     outline-width: 2px;
   }
 }
-// circle-inputs end
 
-// circle-inputs small
 .circle-inputs.small {
-  left: 115px;
-  padding-top: 30px;
+  left: 70px;
+  top: 30px;
   label {
     font-size: 12px;
   }
@@ -511,13 +560,15 @@ button.land.small {
     font-size: 12px;
   }
 }
-// circle-inputs small end
+// circle-inputs end
 
-.circle-div {
+.circle-panel {
   width: 220px;
+  position: relative;
 }
-.circle-div.small {
+.circle-panel.small {
   width: 180px;
+  position: relative;
 }
 
 svg {

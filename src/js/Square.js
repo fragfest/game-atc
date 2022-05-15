@@ -8,6 +8,8 @@ const {
 } = require('./utils');
 const entityFns = require('./entity');
 
+const { MessageEvents, publish } = require('./events/messages');
+
 ////////////////////////////////////////////////////////////
 // class Square
 ////////////////////////////////////////////////////////////
@@ -281,6 +283,7 @@ module.exports = class Square {
     }
     if (outsideCanvasWidth(this.x, 15) || outsideCanvasHeight(this.y, 15)) {
       this.setDestroyFlag(true);
+      publish(MessageEvents.MessageAllEV, this.title + ' exited area of control');
     }
   }
 

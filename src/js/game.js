@@ -5,7 +5,7 @@ import { isCloseToEntity, hasEntityUpdate } from './entity';
 import { getRunway, Runways, Waypoints, getWaypoint } from './airports/LHR';
 import { getGameSize } from "./utils";
 import { create } from './Plane';
-import { setup as setupKeyboard } from './input/keyboard';
+import { setup as setupKeyboard } from './events/keyboard';
 
 // SETUP ////////////////////////////////////////////////////////////////
 let gameLoopRunning = false;
@@ -25,7 +25,7 @@ export const setup = (argObj) => {
   let firstPlane = true;
   const createPlane = (deltaTimeMs) => {
     const chanceOfPlanePerSec = 0.02;
-    let chanceOfPlane = chanceOfPlanePerSec * deltaTimeMs / 1000
+    let chanceOfPlane = chanceOfPlanePerSec * deltaTimeMs / 1000;
     if (firstPlane) {
       firstPlane = false;
       chanceOfPlane = 1;
