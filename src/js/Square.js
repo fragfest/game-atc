@@ -178,7 +178,7 @@ module.exports = class Square {
   }
 
   destroy() {
-    hide(this);
+    this.hide();
     this.squareOneDiv.remove();
   }
 
@@ -260,7 +260,6 @@ module.exports = class Square {
     const altitudeChange = this.altitudeRatePerMs * deltaTimeMs;
     const altitudeNew = this.updateAltitude(altitudeOld, altitudeTarget, altitudeChange);
 
-    hide(this);
     this.x += pixelsInX;
     this.y += pixelsInY;
     this.squareOneDiv.style.left = this.x - 10 + 'px';
@@ -269,12 +268,6 @@ module.exports = class Square {
     this.heading = convHdgRadToThreeDigits(headingRadNew);
     this.altitude = altitudeNew;
     this.speed = speedNew;
-
-    let color = 'white';
-    if (this.landing) color = 'yellow';
-    if (this.hasProximityAlert) color = 'orangered';
-    if (this.isSelected) color = 'greenyellow';
-    draw(this, color);
 
     const outsideCanvasWidth = (x, offset) => (x > (this.canvasWidth + offset)) || (x < (0 - offset));
     const outsideCanvasHeight = (y, offset) => (y > (this.canvasHeight + offset)) || (y < (0 - offset));
@@ -292,8 +285,12 @@ module.exports = class Square {
     if (this.landing) color = 'yellow';
     if (this.hasProximityAlert) color = 'orangered';
     if (this.isSelected) color = 'greenyellow';
-    hide(this);
-    draw(this, color);
+    this.hide();
+    _draw(this, color);
+  }
+
+  hide() {
+    this.ctx.clearRect(this.x - 1, this.y - 1, this.width + 2, this.height + 2)
   }
 
   setSelected(isSelected) {
@@ -312,23 +309,15 @@ module.exports = class Square {
 
     if (isClose) {
       this.hasProximityAlert = true;
-      let color = 'orangered';
-      if (this.isSelected) color = 'greenyellow';
-      hide(this);
-      draw(this, color);
-    } else {
-      this.hasProximityAlert = false;
     }
+    this.hasProximityAlert = false;
   }
 };
 ////////////////////////////////////////////////////////////
 // end class Square
 ////////////////////////////////////////////////////////////
-const hide = (self) => {
-  self.ctx.clearRect(self.x - 1, self.y - 1, self.width + 2, self.height + 2)
-}
 
-const draw = (self, color) => {
+const _draw = (self, color) => {
   self.ctx.fillStyle = color;
   self.ctx.globalAlpha = 1;
   self.ctx.fillRect(self.x, self.y, self.width, self.height);

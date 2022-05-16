@@ -47,8 +47,10 @@ export const setup = (argObj) => {
       argObj.headingLayerObj.ctx.clearRect(0, 0, canvasObj.width, canvasObj.height);
       // update
       createPlane(updateIntervalMs)
-      entityManagerArr.forEach(callFn('update', ({ deltaTimeMs: updateIntervalMs, entityManagerArr })));
+      entityManagerArr.forEach(callFn('hide'));
+      entityManagerArr.forEach(callFn('update', { deltaTimeMs: updateIntervalMs, entityManagerArr }));
       entityManagerArr.forEach(callFn('setProximity', { entityManagerArr }));
+      entityManagerArr.forEach(callFn('draw'));
       // callbacks
       argObj.gameUpdateCB({
         planes: entityManagerArr.filter(isSquare),
