@@ -43,7 +43,9 @@
       </div>
 
       <div class="row-bottom">
-        <div class="row-bottom-left"></div>
+        <div class="row-bottom-left">
+          <ScorePanel></ScorePanel>
+        </div>
         <div class="row-bottom-right">
           <ControlPanel
             ref="controlPanel"
@@ -73,6 +75,7 @@
 <script>
 import { ref } from "vue";
 
+import ScorePanel from "./ScorePanel";
 import ControlPanel from "./ControlPanel";
 import FlightStrip from "./FlightStrip";
 import { setup, setupEntities, setPlaneSelected } from "../js/game";
@@ -88,7 +91,7 @@ const squareClicked = ref({});
 
 export default {
   name: "Canvas",
-  components: { FlightStrip, ControlPanel },
+  components: { FlightStrip, ControlPanel, ScorePanel },
   props: {},
 
   data() {
@@ -209,29 +212,27 @@ export default {
 
     const landingEV = (index) => {
       if (planes.value.length === 0) return;
-
       const planeSelected = planes.value[index];
       if (!planeSelected) return;
       planeSelected.setLanding(true);
     };
 
-    const arrowDownEV = (index) => {
-      if (planes.value.length === 0) return;
-
-      let newIndex = index + 1;
-      if (newIndex >= planes.value.length) newIndex = 0;
+    const selectEV = (newIndex) => {
       squareClicked.value = planes.value[newIndex];
       this.$refs.controlPanel.setFocus();
       setPlaneSelected(setupArg, squareClicked.value);
     };
+    const arrowDownEV = (index) => {
+      if (planes.value.length === 0) return;
+      let newIndex = index + 1;
+      if (newIndex >= planes.value.length) newIndex = 0;
+      selectEV(newIndex);
+    };
     const arrowUpEV = (index) => {
       if (planes.value.length === 0) return;
-
       let newIndex = index - 1;
       if (newIndex < 0) newIndex = planes.value.length - 1;
-      squareClicked.value = planes.value[newIndex];
-      this.$refs.controlPanel.setFocus();
-      setPlaneSelected(setupArg, squareClicked.value);
+      selectEV(newIndex);
     };
 
     const getPlaneSelectedIndex = () => {
@@ -305,6 +306,7 @@ export default {
 .row-bottom-left {
   display: flex;
   width: 100%;
+  padding: 8px;
 }
 
 .row-bottom-right {

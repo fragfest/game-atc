@@ -32,7 +32,7 @@ const basePerformance = {
   speedMax: 450,
   speedDeltaPerMs: 2,
   speedRatePerMs: 0.012,
-  altitudeRatePerMs: 0.025,
+  altitudeRatePerMs: 0.04,
   turnRateRadPerMs: 0.00005,
   wake: WakeRating.M,
 };

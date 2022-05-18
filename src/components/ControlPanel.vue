@@ -388,6 +388,10 @@ export default {
     overflow: hidden;
     color: white;
     font-size: 14px;
+
+    &:focus-visible {
+      outline: none;
+    }
   }
 }
 

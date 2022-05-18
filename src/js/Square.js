@@ -7,8 +7,8 @@ const {
   altitudeDisplay,
 } = require('./utils');
 const entityFns = require('./entity');
-
 const { MessageEvents, publish } = require('./events/messages');
+const { planeLandSuccess, planeLeaveFail } = require('./panelBottom/score');
 
 ////////////////////////////////////////////////////////////
 // class Square
@@ -60,6 +60,7 @@ module.exports = class Square {
     this.isSelected = false;
 
     // states
+    this.isFlyingOutOfArea = false;
     this.isNonInteractive = false;
     this.destroyFlag = false;
     this.onGlidePath = false;
@@ -180,6 +181,16 @@ module.exports = class Square {
   destroy() {
     this.hide();
     this.squareOneDiv.remove();
+    if (this.isTouchedDown) {
+      const scoreAdded = planeLandSuccess();
+      publish(MessageEvents.MessageAllEV, this.title + ' landing complete (+' + scoreAdded + ')');
+      return;
+    }
+    if (this.isFlyingOutOfArea) {
+      const scoreRemoved = planeLeaveFail();
+      publish(MessageEvents.MessageAllEV, this.title + ' failed handoff leaving area of control (' + scoreRemoved + ')');
+      return;
+    }
   }
 
   updateDestroy({ entityManagerArr }) {
@@ -276,7 +287,7 @@ module.exports = class Square {
     }
     if (outsideCanvasWidth(this.x, 15) || outsideCanvasHeight(this.y, 15)) {
       this.setDestroyFlag(true);
-      publish(MessageEvents.MessageAllEV, this.title + ' exited area of control');
+      this.isFlyingOutOfArea = true;
     }
   }
 
@@ -309,6 +320,7 @@ module.exports = class Square {
 
     if (isClose) {
       this.hasProximityAlert = true;
+      return;
     }
     this.hasProximityAlert = false;
   }
