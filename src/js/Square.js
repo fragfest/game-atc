@@ -8,7 +8,7 @@ const {
 } = require('./utils');
 const entityFns = require('./entity');
 const { MessageEvents, publish } = require('./events/messages');
-const { planeLandSuccess, planeLeaveFail } = require('./panelBottom/score');
+const { uniqueProximityPair, planeProximityPenalty, planeLandSuccess, planeLeaveFail } = require('./panelBottom/score');
 
 ////////////////////////////////////////////////////////////
 // class Square
@@ -310,19 +310,31 @@ module.exports = class Square {
 
   setProximity({ entityManagerArr }) {
     const isEntityCloseTo = entityFns.isCloseToEntity(this);
-    const accAnySquaresClose = (acc, val) => {
-      const entityOther = val;
-      const isSquare = val instanceof Square;
-      const areBothFlying = !this.isTouchedDown && !entityOther.isTouchedDown;
-      return acc || (isEntityCloseTo(entityOther) && isSquare && areBothFlying);
-    };
-    const isClose = entityManagerArr.reduce(accAnySquaresClose, false);
+    const isValidClosePlane = plane => {
+      const isSquare = plane instanceof Square;
+      const areBothFlying = !this.isTouchedDown && !plane.isTouchedDown;
+      return isEntityCloseTo(plane) && isSquare && areBothFlying;
+    }
 
-    if (isClose) {
-      this.hasProximityAlert = true;
+    const planeClose = entityManagerArr.find(isValidClosePlane);
+    if (!planeClose) {
+      this.hasProximityAlert = false;
       return;
     }
-    this.hasProximityAlert = false;
+
+    this.hasProximityAlert = true;
+    const pairFound = uniqueProximityPair(this, planeClose);
+    if (pairFound) {
+      const scoreDecrease = planeProximityPenalty(this, planeClose);
+      if (scoreDecrease === null) return;
+
+      const msg = this.title + ' & ' + planeClose.title + ' conflict alert';
+      publish(MessageEvents.MessageProximityEV, {
+        id: this.id + '|' + planeClose.id,
+        msg,
+        scoreDecrease,
+      });
+    }
   }
 };
 ////////////////////////////////////////////////////////////

@@ -6,6 +6,7 @@ import { getRunway, Runways, Waypoints, getWaypoint } from './airports/LHR';
 import { getGameSize } from "./utils";
 import { create } from './Plane';
 import { setup as setupKeyboard } from './events/keyboard';
+import { resetProximity } from './panelBottom/score';
 
 // SETUP ////////////////////////////////////////////////////////////////
 let gameLoopRunning = false;
@@ -51,6 +52,8 @@ export const setup = (argObj) => {
       entityManagerArr.forEach(callFn('update', { deltaTimeMs: updateIntervalMs, entityManagerArr }));
       entityManagerArr.forEach(callFn('setProximity', { entityManagerArr }));
       entityManagerArr.forEach(callFn('draw'));
+      // cleanup
+      resetProximity();
       // callbacks
       argObj.gameUpdateCB({
         planes: entityManagerArr.filter(isSquare),

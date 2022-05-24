@@ -136,8 +136,9 @@ const {
   isValidSpeed,
   leftPadZeros,
   altitudeDisplay,
+  ScreenSizes,
 } = require("../js/utils");
-import { ScreenSizes } from "../js/utils";
+
 import { MessageEvents, subscribe } from "../js/events/messages";
 
 const inputFilter = (value) => {
@@ -180,6 +181,7 @@ export default {
     };
   },
 
+  // mounted
   mounted() {
     const gauge = document.querySelector("#gauge");
     const tick = document.querySelector("#gauge-tick");
@@ -194,15 +196,47 @@ export default {
     }
 
     subscribe(MessageEvents.MessageAllEV, (msg) => {
-      this.messages.unshift(msg);
+      this.messages.unshift({ msg });
+      if (this.messages.length > 20) this.messages.splice(-1, 1);
+    });
+
+    subscribe(MessageEvents.MessageProximityEV, (msgObj) => {
+      const isProximityMsg = (msg) => {
+        if(typeof msg === 'string') return false;
+        if(!msg.id) return false;
+        if(msg.id === msgObj.id) return true;
+        return false;
+      };
+      const objFound = this.messages.find(isProximityMsg);
+      const objFoundIndex = this.messages.findIndex(isProximityMsg);
+
+      if(objFound){
+        const scoreDecrease = objFound.scoreDecrease + msgObj.scoreDecrease;
+        const objNew = {
+          id: objFound.id,
+          msg: msgObj.msg + ' (' + scoreDecrease + ')',
+          scoreDecrease,          
+        };
+        this.messages.splice(objFoundIndex, 1, objNew);
+      }
+      if(!objFound){
+        this.messages.unshift({
+          id: msgObj.id,
+          msg: msgObj.msg + ' (' + msgObj.scoreDecrease + ')',
+          scoreDecrease: msgObj.scoreDecrease,
+        });
+      }
+
       if (this.messages.length > 20) this.messages.splice(-1, 1);
     });
   },
+  // mounted end
 
   // computed
   computed: {
     messagesDisplay: function () {
-      return this.messages.join("\n");
+      const arr = this.messages.map(obj => obj.msg);
+      return arr.join("\n");
     },
 
     sizeClass: function () {

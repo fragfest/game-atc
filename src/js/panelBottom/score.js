@@ -36,6 +36,28 @@ export const subscribe = (scoreEvent, cb) => {
   });
 };
 
+export const resetProximity = () => {
+  proximityPairs = {};
+};
+
+export const uniqueProximityPair = (planeOne, planeTwo) => {
+  const oppositePairFound = proximityPairs[planeTwo.id] === planeOne.id;
+  if (oppositePairFound) return false;
+
+  proximityPairs[planeOne.id] = planeTwo.id;
+  return true;
+}
+
+export const planeProximityPenalty = (planeOne, planeTwo) => {
+  const bothPlanesInConflict = planeOne.hasProximityAlert && planeTwo.hasProximityAlert;
+  if (!bothPlanesInConflict) return null;
+
+  _scoreTotal -= 1;
+  const score = { ...Score, scoreTotal: _scoreTotal };
+  publishScore(score);
+  return -1;
+};
+
 export const planeLandSuccess = () => {
   _scoreTotal += 10;
   const score = { ...Score, scoreTotal: _scoreTotal };
@@ -52,6 +74,7 @@ export const planeLeaveFail = () => {
 
 // PRIVATE //////////////////////////////////////////////////
 let _scoreTotal = 0;
+let proximityPairs = {};
 
 /**
  * @param {Score} score
