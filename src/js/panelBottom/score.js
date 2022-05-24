@@ -36,10 +36,16 @@ export const subscribe = (scoreEvent, cb) => {
   });
 };
 
+export const planeGoAroundPenalty = () => {
+  _scoreTotal -= 3;
+  const score = { ...Score, scoreTotal: _scoreTotal };
+  publishScore(score);
+  return -3;
+};
+
 export const resetProximity = () => {
   proximityPairs = {};
 };
-
 export const uniqueProximityPair = (planeOne, planeTwo) => {
   const oppositePairFound = proximityPairs[planeTwo.id] === planeOne.id;
   if (oppositePairFound) return false;
@@ -47,7 +53,6 @@ export const uniqueProximityPair = (planeOne, planeTwo) => {
   proximityPairs[planeOne.id] = planeTwo.id;
   return true;
 }
-
 export const planeProximityPenalty = (planeOne, planeTwo) => {
   const bothPlanesInConflict = planeOne.hasProximityAlert && planeTwo.hasProximityAlert;
   if (!bothPlanesInConflict) return null;

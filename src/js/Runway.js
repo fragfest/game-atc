@@ -1,5 +1,7 @@
 const { inputHeadingToRad, radToDegrees, convertToSmallDegrees } = require('./utils');
 const Square = require('./Square');
+const { MessageEvents, publish } = require('./events/messages');
+const { planeGoAroundPenalty } = require('./panelBottom/score');
 
 ////////////////////////////////////////////////////////////
 // class Runway
@@ -24,13 +26,13 @@ module.exports = class Runway {
       this.imgLayerCtx.save();
       this.imgLayerCtx.translate(this.x, this.y);
       this.imgLayerCtx.rotate(this.runwayHeading - Math.PI / 2);
-      this.imgLayerCtx.drawImage(img, 1, 0, this.width, this.height);
+      this.imgLayerCtx.drawImage(img, 1, -6, this.width, this.height);
       this.imgLayerCtx.restore();
     };
     img.src = '/img/runway.png';
 
     // this.ctx.fillStyle = 'greenyellow';
-    // this.ctx.fillRect(this.x, this.y, 5, 5);
+    // this.ctx.fillRect(this.x, this.y - 1, 8, 8);
 
     this.imgLayerCtx.fillStyle = 'greenyellow';
     this.imgLayerCtx.font = "bold 10px Arial"
@@ -56,7 +58,7 @@ module.exports = class Runway {
       entity.setDistPrev(distObj.dist);
       entity.setOnGlidepath(true);
 
-      console.log(entity.title + ' :: intercept glidepath ');
+      // console.log(entity.title + ' :: intercept glidepath ');
       const interceptHeading = Math.atan(distObj.y / distObj.x) + Math.PI;
       entity.setHeadingTarget(interceptHeading, true);
       updateSpeedAlt(this, entity);
@@ -64,7 +66,8 @@ module.exports = class Runway {
   }
 
   updateGoAround(entity) {
-    console.log(entity.title + ' :: go-around');
+    const scoreRemoved = planeGoAroundPenalty();
+    publish(MessageEvents.MessageAllEV, entity.title + ' landing go-around (' + scoreRemoved + ')');
     entity.setHeadingTarget(this.runwayHeading, false);
     if (entity.speedTarget <= 220) entity.setSpeed(220, false, true);
     if (entity.altitudeTarget <= 2000) entity.setAltitude(2000, false);
@@ -83,7 +86,7 @@ module.exports = class Runway {
       if (isEntityOnRunway(entity)) {
         landingRollout(this, entity);
       } else if (isEntityTouchedDown(entity)) {
-        console.log(entity.title + ' :: touch down');
+        // console.log(entity.title + ' :: touch down');
         entity.setIsTouchedDown(true);
         entity.setAltitude(this.altitude, true, true);
         entity.setHeadingRad(this.runwayHeading, true);
@@ -138,11 +141,11 @@ const landingRollout = (self, entity) => {
     self.landingEntities = self.landingEntities.filter(landing => landing.id !== entity.id);
   };
 
-  console.log(entity.title + ' :: landing rollout');
+  // console.log(entity.title + ' :: landing rollout');
   entity.setHeadingRad(self.runwayHeading, true);
   entity.setSpeed(0, true, true);
   if (entity.speed <= 30) {
-    console.log(entity.title + ' :: landing complete');
+    // console.log(entity.title + ' :: landing complete');
     removeFromRunway(entity);
     entity.setDestroyFlag(true);
   }
