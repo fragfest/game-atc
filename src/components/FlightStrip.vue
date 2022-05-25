@@ -118,7 +118,7 @@
 </template>
 
 <script>
-import { ScreenSizes } from "../js/utils";
+import { getClassSize } from "../js/utils";
 const Square = require("../js/Square");
 
 export default {
@@ -155,15 +155,10 @@ export default {
 
     stripClass: function () {
       const isSelected = this.plane.id === this.planeSelected.id;
-      const isHover = this.isHover;
-      const isSizeSmall = this.screenSize === ScreenSizes.Small;
-      const isSizeLarge = this.screenSize === ScreenSizes.Large;
-
-      const hover = isHover ? "hover" : "";
       const selected = isSelected ? "selected" : "";
-      let size = "";
-      if (isSizeSmall) size = "small";
-      if (isSizeLarge) size = "large";
+      const isHover = this.isHover;
+      const hover = isHover ? "hover" : "";
+      const size = getClassSize(this.screenSize);
 
       const classes = [].concat(hover, selected, size);
       return classes.join(" ");

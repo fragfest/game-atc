@@ -1,7 +1,7 @@
 <template>
   <div class="score-panel">
     <div class="score-info">
-      <div class="score-row">
+      <div class="score-row" :class="sizeClass">
         <span class="label">score</span>
         <span>{{ scoreTotal }}</span>
       </div>
@@ -13,10 +13,13 @@
 
 <script>
 import { ScoreEvents, subscribe } from '../js/panelBottom/score';
+import { getClassSize } from "../js/utils";
 
 export default {
   name: "ScorePanel",
-  props: {},
+  props: {
+    screenSize: { type: String },
+  },
   data() {
     return {
       scoreTotal: 0,
@@ -27,7 +30,13 @@ export default {
     subscribe(ScoreEvents.ScoreEV, (score) => {
       this.scoreTotal = score.scoreTotal;
     });
-  }
+  },
+
+  computed: {
+    sizeClass: function () {
+      return getClassSize(this.screenSize);
+    },
+  },
 };
 
 </script>
@@ -58,9 +67,17 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-size: 16px;
   .label {
     font-size: 18px;
     font-weight: 800;
+  }
+}
+
+.score-row.small {
+  font-size: 14px;
+  .label {
+    font-size: 16px;
   }
 }
 </style>

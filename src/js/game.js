@@ -74,18 +74,18 @@ export const setup = (argObj) => {
 // SETUP END ////////////////////////////////////////////////////////////
 
 export const setupEntities = (argObj) => {
-  const runwayOne = new Runway(
+  const runway27R = new Runway(
     Runways.TwoSevenRight, argObj.backgroundObj, argObj.imgLayerObj,
     getRunway(Runways.TwoSevenRight, argObj.screenSize));
 
-  const waypointOne = new Waypoint(
+  const waypointLam = new Waypoint(
     Waypoints.LAM, argObj.backgroundObj, argObj.headingLayerObj,
     getWaypoint(Waypoints.LAM, argObj.screenSize));
 
   const entityManagerArr = [];
   const entityAdd = entityManagerAdd(entityManagerArr);
-  entityAdd(runwayOne);
-  entityAdd(waypointOne);
+  entityAdd(runway27R);
+  entityAdd(waypointLam);
   return entityManagerArr;
 };
 

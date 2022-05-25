@@ -5,14 +5,25 @@
     </div>
 
     <div class="btn-info-panel" :class="sizeClass">
-      <button
-        class="land"
-        :class="sizeClass"
-        :disabled="isDisabled"
-        @click="landClick"
-      >
-        land
-      </button>
+      <div class="btn">
+        <button
+          class="land"
+          :class="sizeClass"
+          :disabled="isDisabled"
+          @click="landClick"
+        >
+          land
+        </button>
+        <button
+          class="hold"
+          :class="sizeClass"
+          :disabled="isDisabled"
+          @click="holdClick"
+        >
+          hold
+        </button>
+      </div>
+
       <div class="info" v-show="planeSelected.id">
         <div class="row title">
           <span>
@@ -136,7 +147,7 @@ const {
   isValidSpeed,
   leftPadZeros,
   altitudeDisplay,
-  ScreenSizes,
+  getClassSize,
 } = require("../js/utils");
 
 import { MessageEvents, subscribe } from "../js/events/messages";
@@ -240,13 +251,7 @@ export default {
     },
 
     sizeClass: function () {
-      const isSizeSmall = this.screenSize === ScreenSizes.Small;
-      const isSizeLarge = this.screenSize === ScreenSizes.Large;
-
-      let size = "";
-      if (isSizeSmall) size = "small";
-      if (isSizeLarge) size = "large";
-      return size;
+      return getClassSize(this.screenSize);
     },
 
     isDisabled: function () {
@@ -297,6 +302,10 @@ export default {
     setFocus: function () {
       this.$refs.inputHeading.focus();
     },
+
+    holdClick: function () {
+      console.log('holdClick')
+    },    
 
     landClick: function () {
       if (!this.planeSelected.setLanding) return;
@@ -442,9 +451,14 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  max-width: 120px;
+  width: 120px;
   margin-top: 10px;
   margin-right: 16px;
+
+  .btn {
+    display: flex;
+    justify-content: space-between;
+  }
 
   .info {
     hr {
@@ -473,7 +487,7 @@ export default {
 }
 
 .btn-info-panel.small {
-  max-width: 100px;
+  width: 100px;
   .info {
     font-size: 12px;
   }
@@ -484,8 +498,15 @@ export default {
 // btn-info-panel end
 
 // button.land
-button.land {
-  width: 120px;
+.btn-info-panel button {
+  &.hold {
+    font-weight: 400;
+  }
+  &.land {
+    font-weight: 600;
+  }
+
+  width: 55px;
   height: 40px;
   background-color: #2c5c81;
   border: none;
@@ -493,7 +514,6 @@ button.land {
   box-shadow: 2px 2px rgb(0, 84, 84);
 
   color: white;
-  font-weight: 600;
   font-size: 15px;
   font-family: sans-serif;
 
@@ -521,10 +541,10 @@ button.land {
   }
 }
 
-button.land.small {
-  width: 100px;
+.btn-info-panel.small button {
+  width: 45px;
   height: 30px;
-  font-size: 14px;
+  font-size: 12px;
 }
 // button.land end
 

@@ -23,6 +23,7 @@ module.exports = class Waypoint {
     _draw(this);
   }
 };
+// end class Waypoint
 
 // PRIVATE ////////////////////////////////////////////////////////
 

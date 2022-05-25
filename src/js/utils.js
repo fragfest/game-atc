@@ -7,6 +7,11 @@ export const getGameSize = (screenSize) => {
   const obj = gameSizes[screenSize] ? gameSizes[screenSize] : gameSizes['large'];
   return { ...obj };
 }
+export const getClassSize = (screenSize) => {
+  if (screenSize === ScreenSizes.Small) return 'small';
+  if (screenSize === ScreenSizes.Large) return 'large';
+  return '';
+};
 
 // ALTITUDE /////////////////////////////////////////////////////////////////
 export const altitudeDisplay = alt => Math.round(alt / 10) * 10;

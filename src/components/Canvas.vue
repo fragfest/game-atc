@@ -44,7 +44,9 @@
 
       <div class="row-bottom">
         <div class="row-bottom-left">
-          <ScorePanel></ScorePanel>
+          <ScorePanel
+            :screenSize="screenSize"
+          ></ScorePanel>
         </div>
         <div class="row-bottom-right">
           <ControlPanel
