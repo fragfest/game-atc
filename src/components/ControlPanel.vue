@@ -16,7 +16,7 @@
         </button>
         <button
           class="hold"
-          :class="sizeClass"
+          :class="holdBtnClass"
           :disabled="isDisabled"
           @click="holdClick"
         >
@@ -59,7 +59,7 @@
           @input="inputEventHeading"
           @click="inputClick"
           v-model="inputHeading"
-          :disabled="isDisabled"
+          :disabled="isDisabledHeading"
         />
 
         <label class="altitude" for="inputAltitude">
@@ -250,29 +250,41 @@ export default {
       return arr.join("\n");
     },
 
+    holdBtnClass: function(){
+      let classes = getClassSize(this.screenSize);
+      if(this.planeSelected.isHolding) classes += ' is-holding';
+      return classes;
+    },
+
     sizeClass: function () {
       return getClassSize(this.screenSize);
     },
 
+    isDisabledHeading: function(){
+      const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
+      if (!planeSel) return true;
+      return this.planeSelected.isNonInteractive || this.planeSelected.isHolding;
+    },
+
     isDisabled: function () {
-      const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
+      const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
       if (!planeSel) return true;
       return this.planeSelected.isNonInteractive;
     },
 
     heading: function () {
-      const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
+      const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
       if (!planeSel) return "";
       setCompass(planeSel.headingRad);
       return planeSel.heading;
     },
     speed: function () {
-      const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
+      const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
       if (!planeSel) return "";
       return Math.round(planeSel.speed);
     },
     altitude: function () {
-      const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
+      const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
       if (!planeSel) return "";
       return altitudeDisplay(planeSel.altitude);
     },
@@ -291,8 +303,9 @@ export default {
       if (!newPlane.id) setCompass((-1 * Math.PI) / 2);
 
       this.$nextTick(() => {
-        if (newPlane.id) this.$refs.inputHeading.focus();
-        if (!newPlane.id) this.$refs.inputHeading.blur();
+        const field = newPlane.isHolding ? 'inputAltitude' : 'inputHeading';
+        if (newPlane.id) this.$refs[field].focus();
+        if (!newPlane.id) this.$refs[field].blur();
       });
     },
   },
@@ -300,11 +313,21 @@ export default {
   // methods
   methods: {
     setFocus: function () {
-      this.$refs.inputHeading.focus();
+      const field = this.planeSelected.isHolding ? 'inputAltitude' : 'inputHeading';
+      this.$nextTick(() => {
+        this.$refs[field].focus();
+      });
     },
 
     holdClick: function () {
-      console.log('holdClick')
+      const waypoint = this.planeSelected.waypoint;
+      if (!waypoint) return;
+      const isHoldingToggled = !this.planeSelected.isHolding;
+      this.planeSelected.setHolding(isHoldingToggled, waypoint);
+      this.$nextTick(() => {
+        const field = isHoldingToggled ? 'inputAltitude' : 'inputHeading';
+        this.$refs[field].focus()
+      });
     },    
 
     landClick: function () {
@@ -394,6 +417,10 @@ export default {
       }
 
       this.planeSelected.setSpeed(this.inputSpeed, false);
+      if(this.planeSelected.isHolding){
+        this.$refs.inputAltitude.focus();
+        return;
+      }
       this.$refs.inputHeading.focus();
     },
   },
@@ -501,6 +528,11 @@ export default {
 .btn-info-panel button {
   &.hold {
     font-weight: 400;
+    &.is-holding {
+      outline-style: solid;
+      outline-color: limegreen;
+      outline-width: 2px;
+    }
   }
   &.land {
     font-weight: 600;

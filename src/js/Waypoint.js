@@ -1,3 +1,10 @@
+// const { radToDegrees, convHdgDegToThreeDigits } = require('./utils');
+const Square = require('./Square');
+// const {
+//   isEntityGettingCloser,
+//   distBetweenEntities
+// } = require('./entity');
+
 ////////////////////////////////////////////////////////////
 // class Waypoint
 ////////////////////////////////////////////////////////////
@@ -15,8 +22,27 @@ module.exports = class Waypoint {
     this.altitude = 0;
   }
 
-  update() {
-    _draw(this);
+  updateDestroy() { }
+
+  update({ entityManagerArr }) {
+    // const isGettingCloser = isEntityGettingCloser(this);
+    const planeHolding = (entity) => {
+      if (!(entity instanceof Square)) return false;
+      if (!entity.isHolding) return false;
+      if (entity.waypoint === this.title) return true;
+      return false;
+    };
+    const planesHolding = entityManagerArr.filter(planeHolding);
+
+    planesHolding.forEach((plane) => {
+      const deltaY = this.y - plane.y;
+      const deltaX = this.x - plane.x;
+      let headingRad = Math.atan(deltaY / deltaX);
+      if (deltaX < 0) headingRad += Math.PI;
+
+      plane.setHeadingTarget(headingRad, false, true);
+      // plane.setDistPrev(distBetweenEntities(this)(plane));
+    });
   }
 
   draw() {

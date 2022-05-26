@@ -146,6 +146,7 @@ export default {
     screenSize = ScreenSizes.Large;
   },
 
+  // mounted
   mounted() {
     const background = this.$refs.background;
     const layerOne = this.$refs.layerOne;
@@ -212,11 +213,11 @@ export default {
       // setup(setupArg);
     });
 
-    const landingEV = (index) => {
+    const callMethodEV = (index, methodFn) => {
       if (planes.value.length === 0) return;
       const planeSelected = planes.value[index];
       if (!planeSelected) return;
-      planeSelected.setLanding(true);
+      methodFn(planeSelected);
     };
 
     const selectEV = (newIndex) => {
@@ -242,8 +243,14 @@ export default {
       const isSelected = (plane) => plane.id === planeSelId;
       return planes.value.findIndex(isSelected);
     };
+    subscribe(KeyboardEvents.KeyboardLetter_H_EV, () =>
+      callMethodEV(getPlaneSelectedIndex(), plane => {
+        plane.setHolding(!plane.isHolding, plane.waypoint)
+        this.$refs.controlPanel.setFocus();
+      })
+    );
     subscribe(KeyboardEvents.KeyboardLetter_L_EV, () =>
-      landingEV(getPlaneSelectedIndex())
+      callMethodEV(getPlaneSelectedIndex(), plane => plane.setLanding(true))
     );
     subscribe(KeyboardEvents.KeyboardArrowDownEV, () =>
       arrowDownEV(getPlaneSelectedIndex())
@@ -252,6 +259,7 @@ export default {
       arrowUpEV(getPlaneSelectedIndex())
     );
     // EVENTS END ///////////////////////////////////////////////////////////////////
+
   }, // end mounted
 };
 </script>

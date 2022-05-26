@@ -5,8 +5,25 @@ const hasEntityState = state => {
     && 'altitude' in state;
 };
 
-export const hasEntityUpdate = (entity) => {
-  return typeof entity.update === 'function'
+export const hasEntityUpdate = entity => {
+  return (
+    typeof entity.update === 'function' &&
+    typeof entity.updateDestroy === 'function' &&
+    typeof entity.draw === 'function'
+  );
+};
+
+export const distBetweenEntities = entityOne => entityTwo => {
+  const x = entityOne.x - entityTwo.x;
+  const y = entityOne.y - entityTwo.y;
+  return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+};
+export const isEntityGettingCloser = entityDestination => entity => {
+  if (!Object.hasOwn(entity, 'distPrev')) return false;
+  if (entityDestination.id === entity.id) return false;
+
+  const dist = distBetweenEntities(entityDestination)(entity);
+  return dist < entity.distPrev;
 };
 
 export const isCloseToEntity = entity => entityOther => {

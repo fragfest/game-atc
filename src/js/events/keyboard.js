@@ -3,6 +3,7 @@ export const KeyboardEvents = Object.freeze({
   KeyboardArrowDownEV: 'KeyboardArrowDownEV',
   KeyboardArrowUpEV: 'KeyboardArrowUpEV',
   KeyboardLetter_L_EV: 'KeyboardLetter_L_EV',
+  KeyboardLetter_H_EV: 'KeyboardLetter_H_EV',
 });
 
 let isSetup = false;
@@ -22,6 +23,11 @@ export const setup = () => {
       case 'L':
         ev.preventDefault();
         document.dispatchEvent(new Event(KeyboardEvents.KeyboardLetter_L_EV));
+        break;
+      case 'h':
+      case 'H':
+        ev.preventDefault();
+        document.dispatchEvent(new Event(KeyboardEvents.KeyboardLetter_H_EV));
         break;
     }
   });

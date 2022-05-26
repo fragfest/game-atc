@@ -43,7 +43,6 @@ export const setup = (argObj) => {
       timestampPrev = timestamp;
       // cleanup
       entityManagerArr.forEach(callFn('updateDestroy', { entityManagerArr }));
-      entityManagerArr.forEach(callFn('removeLanded', { entityManagerArr }));
       argObj.textLayerObj.ctx.clearRect(0, 0, canvasObj.width, canvasObj.height);
       argObj.headingLayerObj.ctx.clearRect(0, 0, canvasObj.width, canvasObj.height);
       // update

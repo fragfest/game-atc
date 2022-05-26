@@ -3,6 +3,7 @@ import Square from './Square';
 import { leftPadZeros, convHdgDegToThreeDigits } from './utils';
 import { getFlightArrival } from './flights/LHR';
 import { DestinationType, getPerformance } from './aircraft/airframe';
+import { Waypoints } from './airports/LHR';
 
 export const create = ({ screenSize, width, height, canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl, clickCB }) => {
   const runway = '27R';
@@ -33,8 +34,8 @@ export const create = ({ screenSize, width, height, canvasObjEntity, canvasObjTe
     square = new Square(
       setRndFlightTitle(newFlight),
       canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl,
+      // { x: width / 2 + 500, y: height / 2 + 0, heading: '360', altitude: 1200, speed: 200 },
       { x: newPlane.x, y: newPlane.y, heading: newPlane.heading, altitude, speed },
-      // { x: width / 2 - 25, y: height / 2 + 15, heading: '270', altitude: 1200, speed: 200 },
       { destinationType, airframeObj, waypoint: newPlane.waypoint, runway }
     );
     square.clickEventCB = () => clickCB(square);
@@ -77,7 +78,7 @@ const spawn = (width, height, sectionInt) => {
       x: rand(width / 2 + 200, width),
       y: 0,
       heading: convHdgDegToThreeDigits(rand(220, 240)),
-      waypoint: 'LAM',
+      waypoint: Waypoints.LAM,
     };
   }
   if (sectionInt === 4) {
@@ -85,7 +86,7 @@ const spawn = (width, height, sectionInt) => {
       x: width,
       y: rand(0, height / 2 - 200),
       heading: convHdgDegToThreeDigits(rand(220, 240)),
-      waypoint: 'LAM',
+      waypoint: Waypoints.LAM,
     };
   }
   if (sectionInt === 5) {

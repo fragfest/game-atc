@@ -8,7 +8,12 @@ const {
 } = require('./utils');
 const entityFns = require('./entity');
 const { MessageEvents, publish } = require('./events/messages');
-const { uniqueProximityPair, planeProximityPenalty, planeLandSuccess, planeLeaveFail } = require('./panelBottom/score');
+const {
+  uniqueProximityPair,
+  planeProximityPenalty,
+  planeLandSuccess,
+  planeLeaveFail
+} = require('./panelBottom/score');
 
 ////////////////////////////////////////////////////////////
 // class Square
@@ -66,6 +71,7 @@ module.exports = class Square {
     this.onGlidePath = false;
     this.isTouchedDown = false;
     this.landing = false;
+    this.isHolding = false;
     this.distPrev = Infinity;
 
     // flightstrip info
@@ -85,6 +91,11 @@ module.exports = class Square {
   }
 
   clickEventCB() { throw new Error('clickEventCB not attached'); }
+
+  setHolding(isHolding, waypoint) {
+    this.waypoint = waypoint;
+    this.isHolding = !!isHolding;
+  }
 
   setOnGlidepath(arg) {
     this.onGlidePath = !!arg;
@@ -148,9 +159,16 @@ module.exports = class Square {
     this.setHeadingTarget(headingRad, isLanding);
   }
 
-  setHeadingTarget(headingRad, isLanding) {
+  /**
+   * @param {Number} headingRad Heading in rad. Zero is East, positive angle is CW
+   * @param {Boolean} isLanding set/cancel landing mode
+   * @param {Boolean} isHolding set/cancel holding mode
+   * @returns 
+   */
+  setHeadingTarget(headingRad, isLanding, isHolding) {
     if (this.isNonInteractive) return;
 
+    this.setHolding(isHolding, this.waypoint);
     this.setLanding(isLanding);
     this.headingTargetRad = convertToPosRad(convertToSmallRad(headingRad));
   }
