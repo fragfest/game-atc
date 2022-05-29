@@ -25,7 +25,7 @@ export const setup = (argObj) => {
 
   let firstPlane = true;
   const createPlane = (deltaTimeMs) => {
-    const chanceOfPlanePerSec = 0.01; // 0.02;
+    const chanceOfPlanePerSec = 0.01;
     let chanceOfPlane = chanceOfPlanePerSec * deltaTimeMs / 1000;
     if (firstPlane) {
       firstPlane = false;
@@ -80,11 +80,15 @@ export const setupEntities = (argObj) => {
   const waypointLam = new Waypoint(
     Waypoints.LAM, argObj.backgroundObj, argObj.headingLayerObj,
     getWaypoint(Waypoints.LAM, argObj.screenSize));
+  const waypointBig = new Waypoint(
+    Waypoints.BIG, argObj.backgroundObj, argObj.headingLayerObj,
+    getWaypoint(Waypoints.BIG, argObj.screenSize));
 
   const entityManagerArr = [];
   const entityAdd = entityManagerAdd(entityManagerArr);
   entityAdd(runway27R);
   entityAdd(waypointLam);
+  entityAdd(waypointBig);
   return entityManagerArr;
 };
 

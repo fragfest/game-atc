@@ -8,7 +8,7 @@
       <div class="btn">
         <button
           class="land"
-          :class="sizeClass"
+          :class="landBtnClass"
           :disabled="isDisabled"
           @click="landClick"
         >
@@ -250,6 +250,12 @@ export default {
       return arr.join("\n");
     },
 
+    landBtnClass: function(){
+      let classes = getClassSize(this.screenSize);
+      if(this.planeSelected.landing) classes += ' is-landing';
+      return classes;      
+    },
+
     holdBtnClass: function(){
       let classes = getClassSize(this.screenSize);
       if(this.planeSelected.isHolding) classes += ' is-holding';
@@ -296,9 +302,9 @@ export default {
       const heading = convHdgRadToThreeDigits(newPlane.headingTargetRad);
       const altShort = Math.floor(newPlane.altitudeTarget / 100).toString();
 
-      this.inputSpeed = newPlane.id ? leftPadZeros(newPlane.speedTarget) : "";
       this.inputHeading = newPlane.id ? leftPadZeros(heading) : "";
       this.inputAltitude = newPlane.id ? leftPadZeros(altShort) : "";
+      this.inputSpeed = newPlane.id ? leftPadZeros(newPlane.speedTarget) : "";
       if (newPlane.id) setCompass(newPlane.headingRad);
       if (!newPlane.id) setCompass((-1 * Math.PI) / 2);
 
@@ -536,6 +542,11 @@ export default {
   }
   &.land {
     font-weight: 600;
+    &.is-landing {
+      outline-style: solid;
+      outline-color: yellow;
+      outline-width: 2px;
+    }
   }
 
   width: 55px;

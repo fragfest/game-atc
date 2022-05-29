@@ -62,7 +62,7 @@ const spawn = (width, height, sectionInt) => {
       x: 0,
       y: rand(0, height / 2 - 200),
       heading: convHdgDegToThreeDigits(rand(120, 140)),
-      waypoint: '- - -',
+      waypoint: Waypoints.LAM,
     };
   }
   if (sectionInt === 2) {
@@ -70,7 +70,7 @@ const spawn = (width, height, sectionInt) => {
       x: rand(0, width / 2 - 200),
       y: 0,
       heading: convHdgDegToThreeDigits(rand(120, 140)),
-      waypoint: '- - -',
+      waypoint: Waypoints.LAM,
     };
   }
   if (sectionInt === 3) {
@@ -94,7 +94,7 @@ const spawn = (width, height, sectionInt) => {
       x: width,
       y: rand(height / 2 + 200, height),
       heading: convHdgDegToThreeDigits(rand(310, 330)),
-      waypoint: '- - -',
+      waypoint: Waypoints.BIG,
     };
   }
   if (sectionInt === 6) {
@@ -102,7 +102,7 @@ const spawn = (width, height, sectionInt) => {
       x: rand(width / 2 + 200, width),
       y: height,
       heading: convHdgDegToThreeDigits(rand(310, 330)),
-      waypoint: '- - -',
+      waypoint: Waypoints.BIG,
     };
   }
   if (sectionInt === 7) {
@@ -110,7 +110,7 @@ const spawn = (width, height, sectionInt) => {
       x: rand(0, width / 2 - 200),
       y: height,
       heading: convHdgDegToThreeDigits(rand(40, 60)),
-      waypoint: '- - -',
+      waypoint: Waypoints.BIG,
     };
   }
   if (sectionInt === 8) {
@@ -118,7 +118,7 @@ const spawn = (width, height, sectionInt) => {
       x: 0,
       y: rand(height / 2 + 200, height),
       heading: convHdgDegToThreeDigits(rand(40, 60)),
-      waypoint: '- - -',
+      waypoint: Waypoints.BIG,
     };
   }
 };
