@@ -14,9 +14,11 @@ export const setup = () => {
   document.addEventListener('keydown', (ev) => {
     switch (ev.key) {
       case 'ArrowDown':
+        ev.preventDefault();
         document.dispatchEvent(new Event(KeyboardEvents.KeyboardArrowDownEV));
         break;
       case 'ArrowUp':
+        ev.preventDefault();
         document.dispatchEvent(new Event(KeyboardEvents.KeyboardArrowUpEV));
         break;
       case 'l':
