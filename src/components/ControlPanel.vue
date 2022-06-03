@@ -6,22 +6,26 @@
 
     <div class="btn-info-panel" :class="sizeClass">
       <div class="btn">
-        <button
-          class="land"
-          :class="landBtnClass"
-          :disabled="isDisabled"
-          @click="landClick"
-        >
-          land
-        </button>
-        <button
-          class="hold"
-          :class="holdBtnClass"
-          :disabled="isDisabled"
-          @click="holdClick"
-        >
-          hold
-        </button>
+        <ToolTip :disabled="isDisabled" :size="sizeClass">
+          <button
+            class="land"
+            :class="landBtnClass"
+            :disabled="isDisabled"
+            @click="landClick"
+          >land
+          </button>
+          <template v-slot:hover>cleared ILS approach (L)</template>
+        </ToolTip>
+        <ToolTip :disabled="isDisabled" :size="sizeClass">
+          <button
+            class="hold"
+            :class="holdBtnClass"
+            :disabled="isDisabled"
+            @click="holdClick"
+          >hold
+          </button>
+          <template v-slot:hover>hold at waypoint (H)</template>
+        </ToolTip>
       </div>
 
       <div class="info" v-show="planeSelected.id">
@@ -149,8 +153,9 @@ const {
   altitudeDisplay,
   getClassSize,
 } = require("../js/utils");
-
 import { MessageEvents, subscribe } from "../js/events/messages";
+
+import ToolTip from "./common/ToolTip";
 
 const inputFilter = (value) => {
   let inputHeading = value;
@@ -182,6 +187,7 @@ export default {
     planes: { type: Object },
     screenSize: { type: String },
   },
+  components: { ToolTip },
 
   data() {
     return {
@@ -251,6 +257,8 @@ export default {
     },
 
     landBtnClass: function(){
+      const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
+      if (!planeSel) return '';
       let classes = getClassSize(this.screenSize);
       if(this.planeSelected.landing) classes += ' is-landing';
       return classes;      
@@ -501,7 +509,7 @@ export default {
     font-size: 16px;
     margin-top: 12px;
     margin-left: 2px;
-    padding: 10px;
+    padding: 6px 10px;
 
     background-color: #2c5c816f;
     border: 1px solid lightgreen;
