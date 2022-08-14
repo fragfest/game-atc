@@ -217,6 +217,7 @@ export default {
       if (planes.value.length === 0) return;
       const planeSelected = planes.value[index];
       if (!planeSelected) return;
+      if (planeSelected.isNonInteractive) return;
       methodFn(planeSelected);
     };
 

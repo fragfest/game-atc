@@ -14,6 +14,7 @@ const {
   planeLandSuccess,
   planeLeaveFail
 } = require('./panelBottom/score');
+const { DestinationType } = require('./aircraft/airframe');
 
 ////////////////////////////////////////////////////////////
 // class Square
@@ -28,17 +29,19 @@ module.exports = class Square {
     this.textLayerObj = textLayerObj;
     this.headingLayerObj = headingLayerObj;
 
-    this.squareOneDiv = document.createElement('div');
-    htmlDiv.appendChild(this.squareOneDiv);
-    this.squareOneDiv.id = this.title;
-    this.squareOneDiv.style.position = 'absolute';
-    this.squareOneDiv.addEventListener('mouseup', () => this.clickEventCB());
-    this.squareOneDiv.addEventListener('mouseenter', () => this.squareOneDiv.style.cursor = 'pointer');
-    this.squareOneDiv.addEventListener('mouseleave', () => this.squareOneDiv.style.cursor = 'none');
-    this.squareOneDiv.style.left = positionObj.x - 8 + 'px';
-    this.squareOneDiv.style.top = positionObj.y - 8 + 'px';
-    this.squareOneDiv.style.width = 22 + 'px';
-    this.squareOneDiv.style.height = 22 + 'px';
+    const createHtmlEl = () => {
+      this.squareOneDiv = document.createElement('div');
+      htmlDiv.appendChild(this.squareOneDiv);
+      this.squareOneDiv.id = this.title;
+      this.squareOneDiv.style.position = 'absolute';
+      this.squareOneDiv.addEventListener('mouseup', () => this.clickEventCB());
+      this.squareOneDiv.addEventListener('mouseenter', () => this.squareOneDiv.style.cursor = 'pointer');
+      this.squareOneDiv.addEventListener('mouseleave', () => this.squareOneDiv.style.cursor = 'none');
+      this.squareOneDiv.style.left = positionObj.x - 8 + 'px';
+      this.squareOneDiv.style.top = positionObj.y - 8 + 'px';
+      this.squareOneDiv.style.width = 22 + 'px';
+      this.squareOneDiv.style.height = 22 + 'px';
+    }
 
     this.width = 5;
     this.height = 5;
@@ -70,6 +73,7 @@ module.exports = class Square {
     this.isNonInteractive = false;
     this.destroyFlag = false;
     this.onGlidePath = false;
+    this.isTaxiing = false;
     this.isTouchedDown = false;
     this.landing = false;
     this.isHolding = false;
@@ -89,6 +93,15 @@ module.exports = class Square {
     this.speedRatePerMs = planeObj.airframeObj.speedRatePerMs;
     this.altitudeRatePerMs = planeObj.airframeObj.altitudeRatePerMs;
     this.turnRateRadPerMs = planeObj.airframeObj.turnRateRadPerMs;
+
+    // DEPARTURE
+    if (this.destinationType !== DestinationType.Departure) {
+      createHtmlEl();
+      return;
+    }
+    this.setAltitude(0, false, true);
+    this.isNonInteractive = true;
+    this.isTaxiing = true;
   }
 
   clickEventCB() { throw new Error('clickEventCB not attached'); }
@@ -191,7 +204,7 @@ module.exports = class Square {
 
   setNonInteractive() {
     this.isNonInteractive = true;
-    this.squareOneDiv.remove();
+    if (this.squareOneDiv) this.squareOneDiv.remove();
   }
 
   setDestroyFlag(shouldDestroy) {
@@ -200,7 +213,7 @@ module.exports = class Square {
 
   destroy() {
     this.hide();
-    this.squareOneDiv.remove();
+    if (this.squareOneDiv) this.squareOneDiv.remove();
     if (this.isTouchedDown) {
       const scoreAdded = planeLandSuccess();
       publish(MessageEvents.MessageAllEV, this.title + ' landing complete (+' + scoreAdded + ')');
@@ -293,8 +306,10 @@ module.exports = class Square {
 
     this.x += pixelsInX;
     this.y += pixelsInY;
-    this.squareOneDiv.style.left = this.x - 10 + 'px';
-    this.squareOneDiv.style.top = this.y - 10 + 'px';
+    if (this.squareOneDiv) {
+      this.squareOneDiv.style.left = this.x - 10 + 'px';
+      this.squareOneDiv.style.top = this.y - 10 + 'px';
+    }
     this.headingRad = headingRadNew;
     this.heading = convHdgRadToThreeDigits(headingRadNew);
     this.altitude = altitudeNew;
@@ -312,11 +327,13 @@ module.exports = class Square {
   }
 
   draw() {
+    this.hide();
+    if (this.isTaxiing) return;
+
     let color = 'white';
     if (this.landing) color = 'yellow';
     if (this.hasProximityAlert) color = 'orangered';
     if (this.isSelected) color = 'greenyellow';
-    this.hide();
     _draw(this, color);
   }
 

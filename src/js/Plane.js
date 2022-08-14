@@ -67,7 +67,6 @@ export const create = ({ runway, screenSize, width, height, canvasObjEntity, can
       { destinationType, airframeObj, waypoint: newPlane.waypoint, runway: runwayTitle }
     );
     square.clickEventCB = () => clickCB(square);
-    square.setAltitude(0, false, true);
   }
 
   return { square };

@@ -5,7 +5,7 @@
     </div>
 
     <div class="btn-info-panel" :class="sizeClass">
-      <div class="btn">
+      <div v-show="!isTaxiing" class="btn">
         <ToolTip :disabled="isDisabled" :size="sizeClass">
           <button
             class="land"
@@ -25,6 +25,16 @@
           >hold
           </button>
           <template v-slot:hover>hold at waypoint (H)</template>
+        </ToolTip>
+      </div>
+      <div v-show="isTaxiing" class="btn">
+        <ToolTip :disabled="isDisabled" :size="sizeClass">
+          <button
+            class="takeoff"
+            @click="takeoffClick"
+          >take off
+          </button>
+          <template v-slot:hover>take off (T)</template>
         </ToolTip>
       </div>
 
@@ -256,6 +266,12 @@ export default {
       return arr.join("\n");
     },
 
+    isTaxiing: function() {
+      const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
+      if (!planeSel) return false;
+      return this.planeSelected.isTaxiing;
+    },
+
     landBtnClass: function(){
       const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
       if (!planeSel) return '';
@@ -333,6 +349,10 @@ export default {
       this.$nextTick(() => {
         this.$refs[field].focus();
       });
+    },
+
+    takeoffClick: function () {
+      console.error('TODO take off not implemented');
     },
 
     holdClick: function () {
@@ -542,6 +562,11 @@ export default {
 
 // button.land
 .btn-info-panel button {
+&.takeoff {
+  width: 80px;
+  font-weight: 600;
+}
+
   &.hold {
     font-weight: 400;
     &.is-holding {
