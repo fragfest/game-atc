@@ -13,6 +13,7 @@ let gameLoopRunning = false;
 export const setup = (argObj) => {
   const entityManagerArr = argObj.entityManagerArr;
   const canvasObj = {
+    runway: entityManagerArr.find(x => x.title === Runways.TwoSevenRight),
     screenSize: argObj.screenSize,
     width: getGameSize(argObj.screenSize).width,
     height: getGameSize(argObj.screenSize).height,

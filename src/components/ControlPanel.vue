@@ -265,6 +265,8 @@ export default {
     },
 
     holdBtnClass: function(){
+      const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
+      if (!planeSel) return '';
       let classes = getClassSize(this.screenSize);
       if(this.planeSelected.isHolding) classes += ' is-holding';
       return classes;

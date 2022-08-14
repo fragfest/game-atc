@@ -1,17 +1,23 @@
 import { Airframes, DestinationType } from '../aircraft/airframe';
 
 export const getFlightArrival = (spawned) => {
-  const isNotSpawned = obj => !spawned.find(x => x.flight === obj.flight)
-
-  const flightsUnspawned = flightsArrival.filter(isNotSpawned);
+  const flightsUnspawned = flightsArrival.filter(isNotSpawned(spawned));
   const total = flightsUnspawned.length;
   if (total === 0) return null;
+  return flightsUnspawned[getRndIndex(total)];
+};
 
-  const index = Math.floor(Math.random() * total);
-  return flightsUnspawned[index];
-}
+export const getFlightDeparture = (spawned) => {
+  const flightsUnspawned = flightsDeparture.filter(isNotSpawned(spawned));
+  const total = flightsUnspawned.length;
+  if (total === 0) return null;
+  return flightsUnspawned[getRndIndex(total)];
+};
 
 ////////////// PRIVATE //////////////////////////////////////
+const getRndIndex = total => Math.floor(Math.random() * total);
+const isNotSpawned = spawnedArr => obj => !spawnedArr.find(x => x.flight === obj.flight)
+
 const flightsArrival = [
   {
     type: DestinationType.Arrival,
@@ -61,6 +67,59 @@ const flightsArrival = [
     airport: 'DXB',
     airlineCode: 'EK',
     airline: 'Emirates',
+    airframe: Airframes.A388,
+  },
+];
+
+const flightsDeparture = [
+  {
+    type: DestinationType.Departure,
+    time: '06:15',
+    flight: 'BA472',
+    city: 'Barcelona',
+    airport: 'BCN',
+    airlineCode: 'BA',
+    airline: 'British Airways',
+    airframe: Airframes.A320,
+  },
+  {
+    type: DestinationType.Departure,
+    time: '09:20',
+    flight: 'VS3',
+    city: 'New York',
+    airport: 'JFK',
+    airlineCode: 'VS',
+    airline: 'Virgin Atlantic',
+    airframe: Airframes.A333,
+  },
+  {
+    type: DestinationType.Departure,
+    time: '08:00',
+    flight: 'UA883',
+    city: 'New York',
+    airport: 'EWR',
+    airlineCode: 'UA',
+    airline: 'United Airlines',
+    airframe: Airframes.B763,
+  },
+  {
+    type: DestinationType.Departure,
+    time: '08:40',
+    flight: 'AA51',
+    city: 'Dallas',
+    airport: 'DFW',
+    airlineCode: 'AA',
+    airline: 'American Airlines',
+    airframe: Airframes.B77W,
+  },
+  {
+    type: DestinationType.Departure,
+    time: '10:25',
+    flight: 'BA295',
+    city: 'Chicago',
+    airport: 'ORD',
+    airlineCode: 'BA',
+    airline: 'British Airways',
     airframe: Airframes.A388,
   },
 ];

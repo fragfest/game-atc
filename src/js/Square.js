@@ -46,6 +46,7 @@ module.exports = class Square {
     this.y = positionObj.y;
 
     this.altitude = positionObj.altitude;
+    this.altitudeTarget = 0;
     this.altitudeMin = 100;
     this.altitudeMax = 40000;
     this.setAltitude(positionObj.altitude, false);
@@ -145,7 +146,8 @@ module.exports = class Square {
     this.setLanding(isLanding);
     let altitude = parseInt(altitudeArg);
     if (isTouchedDown) {
-      return this.altitudeTarget = altitude;
+      this.altitudeTarget = altitude;
+      return;
     }
 
     altitude = (altitude < this.altitudeMin) ? this.altitudeMin : altitude;

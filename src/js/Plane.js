@@ -1,12 +1,12 @@
 // const Square = require('./Square');
 import Square from './Square';
-import { leftPadZeros, convHdgDegToThreeDigits } from './utils';
-import { getFlightArrival } from './flights/LHR';
+import { leftPadZeros, convHdgDegToThreeDigits, convHdgRadToThreeDigits } from './utils';
+import { getFlightArrival, getFlightDeparture } from './flights/LHR';
 import { DestinationType, getPerformance } from './aircraft/airframe';
 import { Waypoints } from './airports/LHR';
 
-export const create = ({ screenSize, width, height, canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl, clickCB }) => {
-  const runway = '27R';
+export const create = ({ runway, screenSize, width, height, canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl, clickCB }) => {
+  const runwayTitle = runway.title;
 
   let destinationType = DestinationType.Departure;
   if (Math.random() > isArrivalIfRndAbove) destinationType = DestinationType.Arrival;
@@ -21,9 +21,7 @@ export const create = ({ screenSize, width, height, canvasObjEntity, canvasObjTe
     const speed = setSpd();
 
     let newFlight;
-    if (destinationType === DestinationType.Arrival) {
-      newFlight = getFlightArrival(spawned);
-    }
+    newFlight = getFlightArrival(spawned);
     if (!newFlight) {
       spawned = [];
       newFlight = getFlightArrival(spawned);
@@ -36,16 +34,47 @@ export const create = ({ screenSize, width, height, canvasObjEntity, canvasObjTe
       canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl,
       // { x: width / 2 + 500, y: height / 2 + 0, heading: '360', altitude: 1200, speed: 200 },
       { x: newPlane.x, y: newPlane.y, heading: newPlane.heading, altitude, speed },
-      { destinationType, airframeObj, waypoint: newPlane.waypoint, runway }
+      { destinationType, airframeObj, waypoint: newPlane.waypoint, runway: runwayTitle }
     );
     square.clickEventCB = () => clickCB(square);
+  }
+
+  if (destinationType === DestinationType.Departure) {
+    // TODO lanes instead of sections for departures
+
+    const newPlane = {
+      x: runway.x,
+      y: runway.y,
+      heading: convHdgRadToThreeDigits(runway.runwayHeading),
+      waypoint: Waypoints.LAM,
+    };
+    const altitude = 0;
+    const speed = 0;
+
+    let newFlight;
+    newFlight = getFlightDeparture(spawned);
+    if (!newFlight) {
+      spawned = [];
+      newFlight = getFlightDeparture(spawned);
+    }
+    spawned.push(newFlight);
+    const airframeObj = getPerformance(newFlight.airframe, screenSize);
+
+    square = new Square(
+      setRndFlightTitle(newFlight),
+      canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl,
+      { x: newPlane.x, y: newPlane.y, heading: newPlane.heading, altitude, speed },
+      { destinationType, airframeObj, waypoint: newPlane.waypoint, runway: runwayTitle }
+    );
+    square.clickEventCB = () => clickCB(square);
+    square.setAltitude(0, false, true);
   }
 
   return { square };
 };
 
 ////////////// PRIVATE ////////////////////////////////////////////////
-const isArrivalIfRndAbove = 0 // 0.5;
+const isArrivalIfRndAbove = 0.5;
 
 let spawned = [];
 
