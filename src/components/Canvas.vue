@@ -217,7 +217,7 @@ export default {
       if (planes.value.length === 0) return;
       const planeSelected = planes.value[index];
       if (!planeSelected) return;
-      if (planeSelected.isNonInteractive) return;
+      if (planeSelected.isNonInteractive && !planeSelected.isTaxiing) return;
       methodFn(planeSelected);
     };
 
@@ -243,7 +243,12 @@ export default {
       const planeSelId = squareClicked.value.id;
       const isSelected = (plane) => plane.id === planeSelId;
       return planes.value.findIndex(isSelected);
-    };
+    };    
+    subscribe(KeyboardEvents.KeyboardLetter_T_EV, () =>
+      callMethodEV(getPlaneSelectedIndex(), plane => {
+        plane.startTakeoff();
+      })
+    );
     subscribe(KeyboardEvents.KeyboardLetter_H_EV, () =>
       callMethodEV(getPlaneSelectedIndex(), plane => {
         plane.setHolding(!plane.isHolding, plane.waypoint)
