@@ -5,37 +5,39 @@
     </div>
 
     <div class="btn-info-panel" :class="sizeClass">
-      <div v-show="!isTaxiing" class="btn">
-        <ToolTip :disabled="isDisabled" :size="sizeClass">
-          <button
-            class="land"
-            :class="landBtnClass"
-            :disabled="isDisabled"
-            @click="landClick"
-          >land
-          </button>
-          <template v-slot:hover>cleared ILS approach (L)</template>
-        </ToolTip>
-        <ToolTip :disabled="isDisabled" :size="sizeClass">
-          <button
-            class="hold"
-            :class="holdBtnClass"
-            :disabled="isDisabled"
-            @click="holdClick"
-          >hold
-          </button>
-          <template v-slot:hover>hold at waypoint (H)</template>
-        </ToolTip>
-      </div>
-      <div v-show="isTaxiing" class="btn">
-        <ToolTip :size="sizeClass">
-          <button
-            class="takeoff"
-            @click="takeoffClick"
-          >take off
-          </button>
-          <template v-slot:hover>take off (T)</template>
-        </ToolTip>
+      <div class="btn-container">
+        <div v-show="!isTaxiing && isArrival" class="btn">
+          <ToolTip :disabled="isDisabled" :size="sizeClass">
+            <button
+              class="land"
+              :class="landBtnClass"
+              :disabled="isDisabled"
+              @click="landClick"
+            >land
+            </button>
+            <template v-slot:hover>cleared ILS approach (L)</template>
+          </ToolTip>
+          <ToolTip :disabled="isDisabled" :size="sizeClass">
+            <button
+              class="hold"
+              :class="holdBtnClass"
+              :disabled="isDisabled"
+              @click="holdClick"
+            >hold
+            </button>
+            <template v-slot:hover>hold at waypoint (H)</template>
+          </ToolTip>
+        </div>
+        <div v-show="isTaxiing" class="btn">
+          <ToolTip :size="sizeClass">
+            <button
+              class="takeoff"
+              @click="takeoffClick"
+            >take off
+            </button>
+            <template v-slot:hover>take off (T)</template>
+          </ToolTip>
+        </div>
       </div>
 
       <div class="info" v-show="planeSelected.id">
@@ -164,6 +166,7 @@ const {
   getClassSize,
 } = require("../js/utils");
 import { MessageEvents, subscribe } from "../js/events/messages";
+import { DestinationType } from "../js/aircraft/airframe";
 
 import ToolTip from "./common/ToolTip";
 
@@ -264,6 +267,12 @@ export default {
     messagesDisplay: function () {
       const arr = this.messages.map(obj => obj.msg);
       return arr.join("\n");
+    },
+
+    isArrival: function() {
+      const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
+      if (!planeSel) return false;
+      return this.planeSelected.destinationType === DestinationType.Arrival;
     },
 
     isTaxiing: function() {
@@ -519,6 +528,10 @@ export default {
   margin-top: 10px;
   margin-right: 16px;
 
+  .btn-container {
+    height: 40px;
+  }
+
   .btn {
     display: flex;
     justify-content: space-between;
@@ -552,6 +565,11 @@ export default {
 
 .btn-info-panel.small {
   width: 100px;
+
+  .btn-container {
+    height: 30px;
+  }
+
   .info {
     font-size: 12px;
   }
@@ -621,6 +639,11 @@ export default {
 }
 
 .btn-info-panel.small button {
+  &.takeoff {
+    width: 65px;
+    font-weight: 600;
+  }
+
   width: 45px;
   height: 30px;
   font-size: 12px;
