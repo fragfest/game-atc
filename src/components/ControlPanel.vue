@@ -414,7 +414,7 @@ export default {
       }
 
       this.inputAltitude = inputFilter(value);
-      if (!isValidAltitude(this.inputAltitude)) {
+      if (!isValidAltitude(this.planeSelected, this.inputAltitude)) {
         this.inputAltitude = "---";
         return;
       }
@@ -440,7 +440,7 @@ export default {
       }
 
       this.inputSpeed = inputFilter(value);
-      if (!isValidSpeed(this.inputSpeed)) {
+      if (!isValidSpeed(this.planeSelected, this.inputSpeed)) {
         this.inputSpeed = "---";
         return;
       }

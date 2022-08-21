@@ -40,12 +40,21 @@ export const isValidHeading = str => {
   const isInRange = parseInt(str) >= 0 && parseInt(str) <= 360;
   return isValidThreeDigitInput(str, isInRange);
 }
-export const isValidAltitude = str => {
-  const isInRange = parseInt(str) >= 1 && parseInt(str) <= 400;
+export const isValidAltitude = (plane, str) => {
+  let min = 1000;
+  if (plane.landing) min = plane.altitudeMin;
+  if (plane.isTouchedDown) min = 0;
+
+  const isInRange = (parseInt(str) >= min / 100) && (parseInt(str) <= (plane.altitudeMax / 100));
   return isValidThreeDigitInput(str, isInRange);
 }
-export const isValidSpeed = str => {
-  const isInRange = parseInt(str) >= 135 && parseInt(str) <= 500;
+export const isValidSpeed = (plane, str) => {
+  let min = plane.speedMin;
+  if (plane.landing) min = plane.speedLanding;
+  if (plane.isTouchedDown) min = 0;
+  if (plane.takeoff) min = 0;
+
+  const isInRange = (parseInt(str) >= min) && (parseInt(str) <= plane.speedMax);
   return isValidThreeDigitInput(str, isInRange);
 }
 
