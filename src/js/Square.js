@@ -28,26 +28,14 @@ module.exports = class Square {
     this.canvasHeight = entityLayerObj.height;
     this.textLayerObj = textLayerObj;
     this.headingLayerObj = headingLayerObj;
+    this.htmlDiv = htmlDiv;
+    this.positionObj = positionObj;
 
-    const createHtmlEl = () => {
-      this.squareOneDiv = document.createElement('div');
-      htmlDiv.appendChild(this.squareOneDiv);
-      this.squareOneDiv.id = this.title;
-      this.squareOneDiv.style.position = 'absolute';
-      this.squareOneDiv.addEventListener('mouseup', () => this.clickEventCB());
-      this.squareOneDiv.addEventListener('mouseenter', () => this.squareOneDiv.style.cursor = 'pointer');
-      this.squareOneDiv.addEventListener('mouseleave', () => this.squareOneDiv.style.cursor = 'none');
-      this.squareOneDiv.style.left = positionObj.x - 8 + 'px';
-      this.squareOneDiv.style.top = positionObj.y - 8 + 'px';
-      this.squareOneDiv.style.width = 22 + 'px';
-      this.squareOneDiv.style.height = 22 + 'px';
-    }
-
+    this.squareOneDiv = null;
     this.width = 5;
     this.height = 5;
     this.x = positionObj.x;
     this.y = positionObj.y;
-
     this.altitude = positionObj.altitude;
     this.altitudeTarget = 0;
     this.altitudeMin = 100;
@@ -64,6 +52,7 @@ module.exports = class Square {
     this.speedMin = planeObj.airframeObj.speedMin;
     this.speedLanding = planeObj.airframeObj.speedLanding;
     this.speedMax = planeObj.airframeObj.speedMax;
+    this.speedTakeoff = planeObj.airframeObj.speedTakeoff;
 
     // display
     this.isSelected = false;
@@ -78,6 +67,7 @@ module.exports = class Square {
     this.landing = false;
     this.isHolding = false;
     this.distPrev = Infinity;
+    this.takeoff = false;
 
     // flightstrip info
     this.hasProximityAlert = false;
@@ -94,9 +84,9 @@ module.exports = class Square {
     this.altitudeRatePerMs = planeObj.airframeObj.altitudeRatePerMs;
     this.turnRateRadPerMs = planeObj.airframeObj.turnRateRadPerMs;
 
-    // DEPARTURE
-    if (this.destinationType !== DestinationType.Departure) {
-      createHtmlEl();
+    // departure
+    if (this.destinationType === DestinationType.Arrival) {
+      _createHtmlEl(this);
       return;
     }
     this.setAltitude(0, false, true);
@@ -105,6 +95,18 @@ module.exports = class Square {
   }
 
   clickEventCB() { throw new Error('clickEventCB not attached'); }
+
+  startTakeoff() {
+    this.setIsTaxiing(false);
+    this.takeoff = true;
+  }
+
+  setIsTaxiing(isTaxiing) {
+    this.isTaxiing = !!isTaxiing;
+    if (!this.squareOneDiv) {
+      _createHtmlEl(this);
+    }
+  }
 
   setHolding(isHolding, waypoint) {
     this.waypoint = waypoint;
@@ -284,6 +286,30 @@ module.exports = class Square {
     return (speedDecrease < speedTarget) ? speedTarget : speedDecrease;
   }
 
+  getSpeedDelta(speed, deltaTimeMs) {
+    const speedDeltaPerMs = this.speedDeltaPerMs;
+    const speedTakeoff = this.speedTakeoff;
+    const calcDelta = speedDeltaPerMsArg => {
+      const pixelsSpeedDeltaBase = speedDeltaPerMsArg * deltaTimeMs;
+      return pixelsSpeedDeltaBase * this.pixelsBasePerKnot;
+    }
+
+    if (!this.takeoff) return calcDelta(speedDeltaPerMs);
+    if (speed < 6) return calcDelta(speedDeltaPerMs * 0.5);
+    if (speed > 6 && speed < 10) return calcDelta(speedDeltaPerMs);
+    if (speed > 10 && speed < 20) return calcDelta(speedDeltaPerMs * 1.5);
+    if (speed > 20 && speed < 30) return calcDelta(speedDeltaPerMs * 2);
+    if (speed > 30 && speed < 40) return calcDelta(speedDeltaPerMs * 2.5);
+    if (speed > 40 && speed < 100) return calcDelta(speedDeltaPerMs * 3.6);
+    if (speed > 100 && speed < 110) return calcDelta(speedDeltaPerMs * 2.8);
+    if (speed > 110 && speed < 120) return calcDelta(speedDeltaPerMs * 2.6);
+    if (speed > 120 && speed < 140) return calcDelta(speedDeltaPerMs * 2.2);
+    if (speed > 140 && speed < 150) return calcDelta(speedDeltaPerMs * 1.6);
+    if (speed > 150) return calcDelta(speedDeltaPerMs * 1.2);
+    if (speed > speedTakeoff) return calcDelta(speedDeltaPerMs);
+    return calcDelta(speedDeltaPerMs);
+  }
+
   update({ deltaTimeMs }) {
     const headingOld = this.headingRad;
     const headingTarget = this.headingTargetRad;
@@ -291,8 +317,15 @@ module.exports = class Square {
     const headingRadNewLarge = this.updateHeading(headingOld, headingTarget, headingChange);
     const headingRadNew = convertToPosRad(convertToSmallRad(headingRadNewLarge));
 
-    const pixelsSpeedDeltaBase = this.speedDeltaPerMs * deltaTimeMs;
-    const speedDelta = pixelsSpeedDeltaBase * this.pixelsBasePerKnot;
+    if (this.takeoff) this.setSpeed(250, false, true);
+    if (this.takeoff && (this.speed > this.speedTakeoff)) {
+      this.isNonInteractive = false;
+      this.takeoff = false;
+      this.setSpeed(250, false, false);
+      this.setAltitude(2000, false, false);
+    }
+
+    const speedDelta = this.getSpeedDelta(this.speed, deltaTimeMs);
     const speedNew = this.updateSpeed(this.speed, this.speedTarget, speedDelta, speedDelta);
     const pixelsSpeedRateBase = this.speedRatePerMs * deltaTimeMs;
     const pixelsSpeed = pixelsSpeedRateBase * this.pixelsBasePerKnot * speedNew;
@@ -300,9 +333,8 @@ module.exports = class Square {
     const pixelsInY = Math.sin(headingRadNew) * pixelsSpeed;
 
     const altitudeOld = this.altitude;
-    const altitudeTarget = this.altitudeTarget;
     const altitudeChange = this.altitudeRatePerMs * deltaTimeMs;
-    const altitudeNew = this.updateAltitude(altitudeOld, altitudeTarget, altitudeChange);
+    const altitudeNew = this.updateAltitude(altitudeOld, this.altitudeTarget, altitudeChange);
 
     this.x += pixelsInX;
     this.y += pixelsInY;
@@ -346,11 +378,11 @@ module.exports = class Square {
   }
 
   setProximity({ entityManagerArr }) {
+    const isNotTaxiing = plane => !plane.isTaxiing && !this.isTaxiing;
     const isEntityCloseTo = entityFns.isCloseToEntity(this);
     const isValidClosePlane = plane => {
       const isSquare = plane instanceof Square;
-      const areBothFlying = !this.isTouchedDown && !plane.isTouchedDown;
-      return isEntityCloseTo(plane) && isSquare && areBothFlying;
+      return isEntityCloseTo(plane) && isSquare && isNotTaxiing(plane);
     }
 
     const planeClose = entityManagerArr.find(isValidClosePlane);
@@ -377,6 +409,20 @@ module.exports = class Square {
 ////////////////////////////////////////////////////////////
 // end class Square
 ////////////////////////////////////////////////////////////
+
+const _createHtmlEl = (self) => {
+  self.squareOneDiv = document.createElement('div');
+  self.htmlDiv.appendChild(self.squareOneDiv);
+  self.squareOneDiv.id = self.title;
+  self.squareOneDiv.style.position = 'absolute';
+  self.squareOneDiv.addEventListener('mouseup', () => self.clickEventCB());
+  self.squareOneDiv.addEventListener('mouseenter', () => self.squareOneDiv.style.cursor = 'pointer');
+  self.squareOneDiv.addEventListener('mouseleave', () => self.squareOneDiv.style.cursor = 'none');
+  self.squareOneDiv.style.left = self.positionObj.x - 8 + 'px';
+  self.squareOneDiv.style.top = self.positionObj.y - 8 + 'px';
+  self.squareOneDiv.style.width = 22 + 'px';
+  self.squareOneDiv.style.height = 22 + 'px';
+}
 
 const _draw = (self, color) => {
   self.ctx.fillStyle = color;

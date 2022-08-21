@@ -28,7 +28,7 @@
         </ToolTip>
       </div>
       <div v-show="isTaxiing" class="btn">
-        <ToolTip :disabled="isDisabled" :size="sizeClass">
+        <ToolTip :size="sizeClass">
           <button
             class="takeoff"
             @click="takeoffClick"
@@ -352,7 +352,8 @@ export default {
     },
 
     takeoffClick: function () {
-      console.error('TODO take off not implemented');
+      if(!this.planeSelected.id) return;
+      this.planeSelected.startTakeoff();
     },
 
     holdClick: function () {
@@ -364,7 +365,7 @@ export default {
         const field = isHoldingToggled ? 'inputAltitude' : 'inputHeading';
         this.$refs[field].focus()
       });
-    },    
+    },
 
     landClick: function () {
       if (!this.planeSelected.setLanding) return;

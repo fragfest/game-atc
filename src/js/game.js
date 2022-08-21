@@ -109,7 +109,6 @@ export const setPlaneSelected = (argObj, square) => {
 //////////////////////////////////////////////////////////////////////////////
 // PRIVATE
 //////////////////////////////////////////////////////////////////////////////
-
 const createSquare = (entityManagerArr, chanceOfSquare, createEntityFn) => {
   const addObj = entityManagerAdd(entityManagerArr);
   const isCloseToPlane = newObj => otherObj => isCloseToEntity(newObj)(otherObj) && isSquare(otherObj);

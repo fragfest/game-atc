@@ -27,6 +27,7 @@ export const WakeRating = Object.freeze({
 
 ////////////// PRIVATE //////////////////////////////////////
 const basePerformance = {
+  speedTakeoff: 155,
   speedMin: 180,
   speedLanding: 135,
   speedMax: 450,

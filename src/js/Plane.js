@@ -1,4 +1,3 @@
-// const Square = require('./Square');
 import Square from './Square';
 import { leftPadZeros, convHdgDegToThreeDigits, convHdgRadToThreeDigits } from './utils';
 import { getFlightArrival, getFlightDeparture } from './flights/LHR';
