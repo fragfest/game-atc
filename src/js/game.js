@@ -111,7 +111,10 @@ export const setPlaneSelected = (argObj, square) => {
 //////////////////////////////////////////////////////////////////////////////
 const createSquare = (entityManagerArr, chanceOfSquare, createEntityFn) => {
   const addObj = entityManagerAdd(entityManagerArr);
-  const isCloseToPlane = newObj => otherObj => isCloseToEntity(newObj)(otherObj) && isSquare(otherObj);
+  const isCloseToPlane = newObj => otherObj =>
+    isCloseToEntity(newObj)(otherObj) &&
+    isSquare(otherObj) &&
+    isNotTaxiing(otherObj);
 
   if (Math.random() > 1 - chanceOfSquare) {
     const newEntity = createEntityFn();
@@ -136,4 +139,5 @@ const callFn = (fnStr, argsObj) => entity => {
   entity[fnStr] ? entity[fnStr](argsObj) : null;
 }
 
-const isSquare = obj => obj instanceof Square
+const isSquare = obj => obj instanceof Square;
+const isNotTaxiing = obj => !obj.isTaxiing;
