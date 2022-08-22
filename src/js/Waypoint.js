@@ -10,6 +10,7 @@ const Square = require('./Square');
 ////////////////////////////////////////////////////////////
 module.exports = class Waypoint {
   constructor(title, entityLayerObj, textLayerObj, positionObj) {
+    this.type = 'waypoint';
     this.id = Math.random();
     this.title = title.trim();
     this.ctx = entityLayerObj.ctx
@@ -19,7 +20,7 @@ module.exports = class Waypoint {
     this.y = positionObj.y;
     this.width = 5;
     this.height = 5;
-    this.altitude = 0;
+    this.altitude = 6000;
   }
 
   updateDestroy() { }

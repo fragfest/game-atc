@@ -15,7 +15,7 @@ export const create = ({ runway, screenSize, width, height, canvasObjEntity, can
     // sections numbered from WNW going clockwise: 1 - 8
     const sectionsCount = 8;
     const section = Math.ceil(Math.random() * sectionsCount);
-    const newPlane = spawn(width, height, section);
+    const newPlane = spawnArrival(width, height, section);
     const altitude = setAlt();
     const speed = setSpd();
 
@@ -39,13 +39,11 @@ export const create = ({ runway, screenSize, width, height, canvasObjEntity, can
   }
 
   if (destinationType === DestinationType.Departure) {
-    // TODO lanes instead of sections for departures
-
     const newPlane = {
       x: runway.x,
       y: runway.y,
       heading: convHdgRadToThreeDigits(runway.runwayHeading),
-      waypoint: Waypoints.LAM,
+      waypoint: runway.waypoint,
     };
     const altitude = 0;
     const speed = 0;
@@ -62,6 +60,7 @@ export const create = ({ runway, screenSize, width, height, canvasObjEntity, can
     square = new Square(
       setRndFlightTitle(newFlight),
       canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl,
+      // { x: width / 2 + 200, y: 40, heading: '270', altitude: 6500, speed: 200 },
       { x: newPlane.x, y: newPlane.y, heading: newPlane.heading, altitude, speed },
       { destinationType, airframeObj, waypoint: newPlane.waypoint, runway: runwayTitle }
     );
@@ -83,7 +82,7 @@ const setRndFlightTitle = obj => {
 const setAlt = () => Math.floor(rand(7000, 10000) / 100) * 100;
 const setSpd = () => Math.floor(rand(250, 300) / 5) * 5;
 
-const spawn = (width, height, sectionInt) => {
+const spawnArrival = (width, height, sectionInt) => {
   if (sectionInt === 1) {
     return {
       x: 0,

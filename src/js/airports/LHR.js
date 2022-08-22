@@ -13,8 +13,11 @@ export const getRunway = (runway, screenSize) => {
 };
 
 export const Waypoints = Object.freeze({
+  // arrival
   LAM: 'LAM',
   BIG: 'BIG',
+  // departure
+  BPK: 'BPK',
 });
 
 export const getWaypoint = (waypoint, screenSize) => {
@@ -57,6 +60,7 @@ const runways = (runway, screenSize) => {
         heading: 270,
         length,
         width: runwayWidth,
+        waypoint: Waypoints.BPK,
       };
   }
 };
@@ -77,6 +81,11 @@ const waypoints = (waypoint, screenSize) => {
           x: width / 2 + 350,
           y: height / 2 + 160,
         };
+      case 'BPK':
+        return {
+          x: width / 2 + 70,
+          y: 50,
+        };
     }
   }
 
@@ -91,6 +100,11 @@ const waypoints = (waypoint, screenSize) => {
         return {
           x: width / 2 + 260,
           y: height / 2 + 115,
+        };
+      case 'BPK':
+        return {
+          x: width / 2 + 60,
+          y: 35,
         };
     }
   }

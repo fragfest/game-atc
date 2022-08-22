@@ -12,7 +12,8 @@ const {
   uniqueProximityPair,
   planeProximityPenalty,
   planeLandSuccess,
-  planeLeaveFail
+  planeLeaveFail,
+  planeHandoffSuccess,
 } = require('./panelBottom/score');
 const { DestinationType } = require('./aircraft/airframe');
 
@@ -58,6 +59,7 @@ module.exports = class Square {
     this.isSelected = false;
 
     // states
+    this.isHandoff = false;
     this.isFlyingOutOfArea = false;
     this.isNonInteractive = false;
     this.destroyFlag = false;
@@ -216,6 +218,11 @@ module.exports = class Square {
   destroy() {
     this.hide();
     if (this.squareOneDiv) this.squareOneDiv.remove();
+    if (this.isHandoff) {
+      const scoreAdded = planeHandoffSuccess();
+      publish(MessageEvents.MessageAllEV, this.title + ' handoff complete (+' + scoreAdded + ')');
+      return;
+    }
     if (this.isTouchedDown) {
       const scoreAdded = planeLandSuccess();
       publish(MessageEvents.MessageAllEV, this.title + ' landing complete (+' + scoreAdded + ')');
@@ -225,6 +232,21 @@ module.exports = class Square {
       const scoreRemoved = planeLeaveFail();
       publish(MessageEvents.MessageAllEV, this.title + ' failed handoff leaving area of control (' + scoreRemoved + ')');
       return;
+    }
+  }
+
+  updateHandoff({ entityManagerArr }) {
+    if (this.destinationType !== DestinationType.Departure) return;
+
+    const isTargetWaypoint = entity =>
+      entity.type === 'waypoint' &&
+      entity.title === this.waypoint;
+
+    const waypointObj = entityManagerArr.find(isTargetWaypoint);
+    if (!waypointObj) return;
+    if (entityFns.isCloseToWaypoint(waypointObj)(this)) {
+      this.setDestroyFlag(true);
+      this.isHandoff = true;
     }
   }
 
@@ -347,6 +369,7 @@ module.exports = class Square {
     this.altitude = altitudeNew;
     this.speed = speedNew;
 
+    // square leaving canvas
     const outsideCanvasWidth = (x, offset) => (x > (this.canvasWidth + offset)) || (x < (0 - offset));
     const outsideCanvasHeight = (y, offset) => (y > (this.canvasHeight + offset)) || (y < (0 - offset));
     if (outsideCanvasWidth(this.x, 0) || outsideCanvasHeight(this.y, 0)) {

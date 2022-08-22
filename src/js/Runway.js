@@ -19,6 +19,7 @@ module.exports = class Runway {
     this.altitude = 0;
     this.altitudeLanding = this.altitude + 150;
     this.runwayHeading = inputHeadingToRad(positionObj.heading);
+    this.waypoint = positionObj.waypoint;
     this.landingEntities = [];
 
     const img = new Image();

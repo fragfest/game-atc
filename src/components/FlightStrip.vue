@@ -247,8 +247,9 @@ export default {
     top: 10px;
     left: 4px;
 
+    font: 10px Arial;
     .font-large {
-      font-size: 12px;
+      font-size: 11px;
     }
 
     .col {
@@ -256,7 +257,7 @@ export default {
       padding: 6px;
     }
     .conflict {
-      width: 100%;
+      width: 90%;
       margin-left: 4px;
       padding: 2px 4px;
     }

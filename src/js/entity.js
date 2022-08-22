@@ -26,6 +26,24 @@ export const isEntityGettingCloser = entityDestination => entity => {
   return dist < entity.distPrev;
 };
 
+export const isCloseToWaypoint = waypoint => entity => {
+  if (!hasEntityState(waypoint) || !hasEntityState(entity)) {
+    console.error('entity is missing required state props');
+    return false;
+  }
+  if (waypoint.id === entity.id) return false;
+
+  const distX = Math.abs(waypoint.x - entity.x);
+  const distY = Math.abs(waypoint.y - entity.y);
+  const isCloseHorizontal = distX < 10 && distY < 10;
+
+  const distVert = entity.altitude - waypoint.altitude;
+  const isAboveWaypoint = distVert >= 0;
+
+  if (isCloseHorizontal && isAboveWaypoint) return true;
+  return false;
+};
+
 export const isCloseToEntity = entity => entityOther => {
   if (!hasEntityState(entity) || !hasEntityState(entityOther)) {
     console.error('entity is missing required state props');

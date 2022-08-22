@@ -63,6 +63,13 @@ export const planeProximityPenalty = (planeOne, planeTwo) => {
   return -1;
 };
 
+export const planeHandoffSuccess = () => {
+  _scoreTotal += 10;
+  const score = { ...Score, scoreTotal: _scoreTotal };
+  publishScore(score);
+  return 10;
+}
+
 export const planeLandSuccess = () => {
   _scoreTotal += 10;
   const score = { ...Score, scoreTotal: _scoreTotal };

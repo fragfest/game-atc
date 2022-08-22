@@ -50,6 +50,7 @@ export const setup = (argObj) => {
       createPlane(updateIntervalMs)
       entityManagerArr.forEach(callFn('hide'));
       entityManagerArr.forEach(callFn('update', { deltaTimeMs: updateIntervalMs, entityManagerArr }));
+      entityManagerArr.forEach(callFn('updateHandoff', { entityManagerArr }));
       entityManagerArr.forEach(callFn('setProximity', { entityManagerArr }));
       entityManagerArr.forEach(callFn('draw'));
       // cleanup
@@ -84,12 +85,16 @@ export const setupEntities = (argObj) => {
   const waypointBig = new Waypoint(
     Waypoints.BIG, argObj.backgroundObj, argObj.headingLayerObj,
     getWaypoint(Waypoints.BIG, argObj.screenSize));
+  const waypointBpk = new Waypoint(
+    Waypoints.BPK, argObj.backgroundObj, argObj.headingLayerObj,
+    getWaypoint(Waypoints.BPK, argObj.screenSize));
 
   const entityManagerArr = [];
   const entityAdd = entityManagerAdd(entityManagerArr);
   entityAdd(runway27R);
   entityAdd(waypointLam);
   entityAdd(waypointBig);
+  entityAdd(waypointBpk);
   return entityManagerArr;
 };
 

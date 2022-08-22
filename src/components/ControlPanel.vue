@@ -28,6 +28,18 @@
             <template v-slot:hover>hold at waypoint (H)</template>
           </ToolTip>
         </div>
+        <div v-show="!isTaxiing && isDeparture" class="btn">
+          <ToolTip :disabled="isDisabled" :size="sizeClass">
+            <button
+              class="takeoff"
+              :class="holdBtnClass"
+              :disabled="isDisabled"
+              @click="holdClick"
+            >handoff
+            </button>
+            <template v-slot:hover>Handoff (H)</template>
+          </ToolTip>
+        </div>
         <div v-show="isTaxiing" class="btn">
           <ToolTip :size="sizeClass">
             <button
@@ -267,6 +279,12 @@ export default {
     messagesDisplay: function () {
       const arr = this.messages.map(obj => obj.msg);
       return arr.join("\n");
+    },
+
+    isDeparture: function() {
+      const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
+      if (!planeSel) return false;
+      return this.planeSelected.destinationType === DestinationType.Departure;
     },
 
     isArrival: function() {
@@ -581,18 +599,12 @@ export default {
 
 // button.land
 .btn-info-panel button {
-&.takeoff {
+  &.takeoff {
   width: 80px;
   font-weight: 600;
-}
-
+  }
   &.hold {
     font-weight: 400;
-    &.is-holding {
-      outline-style: solid;
-      outline-color: limegreen;
-      outline-width: 2px;
-    }
   }
   &.land {
     font-weight: 600;
@@ -601,6 +613,12 @@ export default {
       outline-color: yellow;
       outline-width: 2px;
     }
+  }
+
+  &.is-holding {
+    outline-style: solid;
+    outline-color: limegreen;
+    outline-width: 2px;
   }
 
   width: 55px;
