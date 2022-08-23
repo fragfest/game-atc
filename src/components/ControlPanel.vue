@@ -353,11 +353,13 @@ export default {
   watch: {
     planeSelected(newPlane) {
       const heading = convHdgRadToThreeDigits(newPlane.headingTargetRad);
-      const altShort = Math.floor(newPlane.altitudeTarget / 100).toString();
+      const altTarget = newPlane.altitudeTarget;
+      const altShort = altTarget ? Math.floor(altTarget / 100).toString() : '---';
+      const speedTarget = newPlane.speedTarget ? newPlane.speedTarget : '---';
 
       this.inputHeading = newPlane.id ? leftPadZeros(heading) : "";
       this.inputAltitude = newPlane.id ? leftPadZeros(altShort) : "";
-      this.inputSpeed = newPlane.id ? leftPadZeros(newPlane.speedTarget) : "";
+      this.inputSpeed = newPlane.id ? leftPadZeros(speedTarget) : "";
       if (newPlane.id) setCompass(newPlane.headingRad);
       if (!newPlane.id) setCompass((-1 * Math.PI) / 2);
 
