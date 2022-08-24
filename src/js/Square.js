@@ -29,10 +29,12 @@ module.exports = class Square {
     this.canvasHeight = entityLayerObj.height;
     this.textLayerObj = textLayerObj;
     this.headingLayerObj = headingLayerObj;
-    this.htmlDiv = htmlDiv;
     this.positionObj = positionObj;
 
-    this.squareOneDiv = null;
+    this.htmlDiv = htmlDiv;
+    this.htmlSquareDiv = null;
+    this.htmlImgEl = null;
+
     this.width = 5;
     this.height = 5;
     this.x = positionObj.x;
@@ -54,6 +56,10 @@ module.exports = class Square {
     this.speedLanding = planeObj.airframeObj.speedLanding;
     this.speedMax = planeObj.airframeObj.speedMax;
     this.speedTakeoff = planeObj.airframeObj.speedTakeoff;
+    this.iconDefault = planeObj.airframeObj.iconDefault;
+    this.iconSelected = planeObj.airframeObj.iconSelected;
+    this.iconConflict = planeObj.airframeObj.iconConflict;
+    this.iconLanding = planeObj.airframeObj.iconLanding;
 
     // display
     this.isSelected = false;
@@ -105,7 +111,7 @@ module.exports = class Square {
 
   setIsTaxiing(isTaxiing) {
     this.isTaxiing = !!isTaxiing;
-    if (!this.squareOneDiv) {
+    if (!this.htmlSquareDiv) {
       _createHtmlEl(this);
     }
   }
@@ -208,7 +214,7 @@ module.exports = class Square {
 
   setNonInteractive() {
     this.isNonInteractive = true;
-    if (this.squareOneDiv) this.squareOneDiv.remove();
+    if (this.htmlSquareDiv) this.htmlSquareDiv.remove();
   }
 
   setDestroyFlag(shouldDestroy) {
@@ -217,7 +223,7 @@ module.exports = class Square {
 
   destroy() {
     this.hide();
-    if (this.squareOneDiv) this.squareOneDiv.remove();
+    if (this.htmlSquareDiv) this.htmlSquareDiv.remove();
     if (this.isHandoff) {
       const scoreAdded = planeHandoffSuccess();
       publish(MessageEvents.MessageAllEV, this.title + ' handoff complete (+' + scoreAdded + ')');
@@ -230,7 +236,7 @@ module.exports = class Square {
     }
     if (this.isFlyingOutOfArea) {
       const scoreRemoved = planeLeaveFail();
-      publish(MessageEvents.MessageAllEV, this.title + ' failed handoff leaving area of control (' + scoreRemoved + ')');
+      publish(MessageEvents.MessageAllEV, this.title + ' failed handoff (' + scoreRemoved + ')');
       return;
     }
   }
@@ -360,9 +366,9 @@ module.exports = class Square {
 
     this.x += pixelsInX;
     this.y += pixelsInY;
-    if (this.squareOneDiv) {
-      this.squareOneDiv.style.left = this.x - 10 + 'px';
-      this.squareOneDiv.style.top = this.y - 10 + 'px';
+    if (this.htmlSquareDiv) {
+      this.htmlSquareDiv.style.left = this.x - 10 + 'px';
+      this.htmlSquareDiv.style.top = this.y - 10 + 'px';
     }
     this.headingRad = headingRadNew;
     this.heading = convHdgRadToThreeDigits(headingRadNew);
@@ -386,15 +392,25 @@ module.exports = class Square {
     if (this.isTaxiing) return;
 
     let color = 'white';
-    if (this.landing) color = 'yellow';
-    if (this.hasProximityAlert) color = 'orangered';
-    if (this.isSelected) color = 'greenyellow';
+    if (this.landing) {
+      color = 'yellow';
+      this.htmlImgEl.src = this.iconLanding;
+    } else if (this.hasProximityAlert) {
+      color = 'orangered';
+      this.htmlImgEl.src = this.iconConflict;
+    } else if (this.isSelected) {
+      color = 'greenyellow';
+      this.htmlImgEl.src = this.iconSelected;
+    } else {
+      color = 'white';
+      this.htmlImgEl.src = this.iconDefault
+    }
+
+    this.htmlImgEl.style.transform = 'rotate(' + this.heading + 'deg)';
     _draw(this, color);
   }
 
-  hide() {
-    this.ctx.clearRect(this.x - 1, this.y - 1, this.width + 2, this.height + 2)
-  }
+  hide() { }
 
   setSelected(isSelected) {
     this.isSelected = !!isSelected;
@@ -420,7 +436,7 @@ module.exports = class Square {
       const scoreDecrease = planeProximityPenalty(this, planeClose);
       if (scoreDecrease === null) return;
 
-      const msg = this.title + ' & ' + planeClose.title + ' conflict alert';
+      const msg = this.title + ' & ' + planeClose.title + ' conflict';
       publish(MessageEvents.MessageProximityEV, {
         id: this.id + '|' + planeClose.id,
         msg,
@@ -434,28 +450,32 @@ module.exports = class Square {
 ////////////////////////////////////////////////////////////
 
 const _createHtmlEl = (self) => {
-  self.squareOneDiv = document.createElement('div');
-  self.htmlDiv.appendChild(self.squareOneDiv);
-  self.squareOneDiv.id = self.title;
-  self.squareOneDiv.style.position = 'absolute';
-  self.squareOneDiv.addEventListener('mouseup', () => self.clickEventCB());
-  self.squareOneDiv.addEventListener('mouseenter', () => self.squareOneDiv.style.cursor = 'pointer');
-  self.squareOneDiv.addEventListener('mouseleave', () => self.squareOneDiv.style.cursor = 'none');
-  self.squareOneDiv.style.left = self.positionObj.x - 8 + 'px';
-  self.squareOneDiv.style.top = self.positionObj.y - 8 + 'px';
-  self.squareOneDiv.style.width = 22 + 'px';
-  self.squareOneDiv.style.height = 22 + 'px';
+  self.htmlSquareDiv = document.createElement('div');
+  self.htmlDiv.appendChild(self.htmlSquareDiv);
+  self.htmlSquareDiv.id = self.title;
+  self.htmlSquareDiv.style.position = 'absolute';
+  self.htmlSquareDiv.addEventListener('mouseup', () => self.clickEventCB());
+  self.htmlSquareDiv.addEventListener('mouseenter', () => self.htmlSquareDiv.style.cursor = 'pointer');
+  self.htmlSquareDiv.addEventListener('mouseleave', () => self.htmlSquareDiv.style.cursor = 'none');
+  self.htmlSquareDiv.style.left = self.positionObj.x - 8 + 'px';
+  self.htmlSquareDiv.style.top = self.positionObj.y - 8 + 'px';
+  self.htmlSquareDiv.style.width = 22 + 'px';
+  self.htmlSquareDiv.style.height = 22 + 'px';
+
+  self.htmlImgEl = new Image();
+  self.htmlSquareDiv.appendChild(self.htmlImgEl);
+  self.htmlImgEl.id = self.title + '-icon';
+  self.htmlImgEl.src = self.iconDefault;
+  self.htmlImgEl.width = 20;
+  self.htmlImgEl.style.transform = 'rotate(' + self.heading + 'deg)';
 }
 
 const _draw = (self, color) => {
-  self.ctx.fillStyle = color;
-  self.ctx.globalAlpha = 1;
-  self.ctx.fillRect(self.x, self.y, self.width, self.height);
-  self.ctx.clearRect(self.x + 1, self.y + 1, self.width - 2, self.height - 2);
-
   const pixelsInX = Math.cos(self.headingRad) * self.speed / 15;
   const pixelsInY = Math.sin(self.headingRad) * self.speed / 15;
   const center = { x: self.x + self.width / 2, y: self.y + self.height / 2 };
+
+  self.ctx.fillStyle = color;
   self.headingLayerObj.ctx.strokeStyle = color;
   self.headingLayerObj.ctx.beginPath();
   self.headingLayerObj.ctx.moveTo(center.x, center.y);

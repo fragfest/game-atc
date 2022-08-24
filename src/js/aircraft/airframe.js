@@ -36,6 +36,10 @@ const basePerformance = {
   altitudeRatePerMs: 0.04,
   turnRateRadPerMs: 0.00005,
   wake: WakeRating.M,
+  iconDefault: '/img/plane-icon/A380-white.png',
+  iconSelected: '/img/plane-icon/A380-green.png',
+  iconConflict: '/img/plane-icon/A380-red.png',
+  iconLanding: '/img/plane-icon/A380-yellow.png',
 };
 const basePerformanceSmall = {
   speedRatePerMs: 0.007,
