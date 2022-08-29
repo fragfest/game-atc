@@ -27,13 +27,13 @@ module.exports = class Runway {
       this.imgLayerCtx.save();
       this.imgLayerCtx.translate(this.x, this.y);
       this.imgLayerCtx.rotate(this.runwayHeading - Math.PI / 2);
-      this.imgLayerCtx.drawImage(img, 1, -6, this.width, this.height);
+      this.imgLayerCtx.drawImage(img, -1 * this.width / 2, 0, this.width, this.height);
       this.imgLayerCtx.restore();
     };
     img.src = '/img/runway.png';
 
     // this.ctx.fillStyle = 'greenyellow';
-    // this.ctx.fillRect(this.x, this.y - 1, 8, 8);
+    // this.ctx.fillRect(this.x - 2, this.y - 2, 4, 4);
 
     this.imgLayerCtx.fillStyle = 'greenyellow';
     this.imgLayerCtx.font = "bold 10px Arial"

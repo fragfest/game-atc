@@ -367,13 +367,16 @@ module.exports = class Square {
     this.x += pixelsInX;
     this.y += pixelsInY;
     if (this.htmlSquareDiv) {
-      this.htmlSquareDiv.style.left = this.x - 10 + 'px';
-      this.htmlSquareDiv.style.top = this.y - 10 + 'px';
+      this.htmlSquareDiv.style.left = this.x - 13 + 'px';
+      this.htmlSquareDiv.style.top = this.y - 13 + 'px';
     }
     this.headingRad = headingRadNew;
     this.heading = convHdgRadToThreeDigits(headingRadNew);
     this.altitude = altitudeNew;
     this.speed = speedNew;
+
+    // this.ctx.fillStyle = 'red';
+    // this.ctx.fillRect(this.x - 2, this.y - 2, 4, 4);
 
     // square leaving canvas
     const outsideCanvasWidth = (x, offset) => (x > (this.canvasWidth + offset)) || (x < (0 - offset));
@@ -457,30 +460,32 @@ const _createHtmlEl = (self) => {
   self.htmlSquareDiv.addEventListener('mouseup', () => self.clickEventCB());
   self.htmlSquareDiv.addEventListener('mouseenter', () => self.htmlSquareDiv.style.cursor = 'pointer');
   self.htmlSquareDiv.addEventListener('mouseleave', () => self.htmlSquareDiv.style.cursor = 'none');
-  self.htmlSquareDiv.style.left = self.positionObj.x - 8 + 'px';
-  self.htmlSquareDiv.style.top = self.positionObj.y - 8 + 'px';
+  self.htmlSquareDiv.style.left = self.x - 13 + 'px';
+  self.htmlSquareDiv.style.top = self.y - 13 + 'px';
   self.htmlSquareDiv.style.width = 22 + 'px';
   self.htmlSquareDiv.style.height = 22 + 'px';
+  // self.htmlSquareDiv.style.border = '1px solid yellow';
 
   self.htmlImgEl = new Image();
   self.htmlSquareDiv.appendChild(self.htmlImgEl);
   self.htmlImgEl.id = self.title + '-icon';
   self.htmlImgEl.src = self.iconDefault;
-  self.htmlImgEl.width = 20;
+  self.htmlImgEl.width = 22;
   self.htmlImgEl.style.transform = 'rotate(' + self.heading + 'deg)';
+  // self.htmlSquareDiv.style.border = '1px solid orange';
 }
 
 const _draw = (self, color) => {
-  const pixelsInX = Math.cos(self.headingRad) * self.speed / 15;
-  const pixelsInY = Math.sin(self.headingRad) * self.speed / 15;
-  const center = { x: self.x + self.width / 2, y: self.y + self.height / 2 };
+  // const pixelsInX = Math.cos(self.headingRad) * self.speed / 15;
+  // const pixelsInY = Math.sin(self.headingRad) * self.speed / 15;
+  // const center = { x: self.x + self.width / 2, y: self.y + self.height / 2 };
 
-  self.ctx.fillStyle = color;
-  self.headingLayerObj.ctx.strokeStyle = color;
-  self.headingLayerObj.ctx.beginPath();
-  self.headingLayerObj.ctx.moveTo(center.x, center.y);
-  self.headingLayerObj.ctx.lineTo(center.x - pixelsInX, center.y - pixelsInY);
-  self.headingLayerObj.ctx.stroke();
+  // self.ctx.fillStyle = color;
+  // self.headingLayerObj.ctx.strokeStyle = color;
+  // self.headingLayerObj.ctx.beginPath();
+  // self.headingLayerObj.ctx.moveTo(center.x, center.y);
+  // self.headingLayerObj.ctx.lineTo(center.x - pixelsInX, center.y - pixelsInY);
+  // self.headingLayerObj.ctx.stroke();
 
   const degreesDisplay = self.heading;
   const speedDisplay = leftPadZeros(Math.round(self.speed));
