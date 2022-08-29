@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="row-left">
-      <div class="scope">
+      <div class="scope" :style="styleScope">
         <div class="entity-div layer-six" :style="styleEntityDiv" />
         <!-- <canvas
           ref="layerFive"
@@ -42,7 +42,7 @@
         <img src="/img/london.png" :height="height" />
       </div>
 
-      <div class="row-bottom">
+      <div class="row-bottom layer-seven">
         <div class="row-bottom-left">
           <ScorePanel
             :screenSize="screenSize"
@@ -59,7 +59,7 @@
       </div>
     </div>
 
-    <div class="panel-right" :style="stylePanelRight">
+    <div class="panel-right layer-seven" :style="stylePanelRight">
       <ul>
         <li v-for="(plane, index) in planes" :key="index">
           <FlightStrip
@@ -110,6 +110,11 @@ export default {
   },
 
   computed: {
+    styleScope: () => ({
+      width: width + 1 + "px",
+      height: height + 3 + "px",
+    }),
+
     stylePanelRight: () => {
       let minWidth = 376;
       let maxHeight = 1035;
@@ -291,6 +296,7 @@ export default {
   //   url("/img/teal-bckgnd.jpg");
   background-size: cover;
 
+  border-left: solid 1px teal;
   border-right: solid 3px teal;
   border-top-right-radius: 6px;
   border-bottom-right-radius: 6px;
@@ -305,10 +311,9 @@ export default {
 .row-bottom {
   display: flex;
   justify-content: space-around;
-  margin-top: -1px;
-  border-right: solid 1px teal;
+  margin-top: -3px;
+  border-top: solid 2px teal;
 
-  // background-image: url("/img/teal-bckgnd.jpg");
   background-image: linear-gradient(
       rgba(255, 255, 255, 0.1),
       rgba(255, 255, 255, 0.1)
@@ -331,6 +336,9 @@ export default {
   padding: 8px;
 }
 
+.layer-seven {
+  z-index: 7;
+}
 .layer-six {
   z-index: 6;
 }
@@ -360,10 +368,6 @@ export default {
 
 .entity-div {
   position: absolute;
-  border-color: teal;
-  border-width: 3px;
-  border-right-width: 2px;
-  border-style: inset;
 }
 
 .canvas {

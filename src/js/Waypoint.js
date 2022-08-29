@@ -18,8 +18,8 @@ module.exports = class Waypoint {
 
     this.x = positionObj.x;
     this.y = positionObj.y;
-    this.width = 5;
-    this.height = 5;
+    this.width = 4;
+    this.height = 4;
     this.altitude = 6000;
   }
 
@@ -59,6 +59,6 @@ const _draw = (self) => {
   self.ctx.globalAlpha = 1;
   self.ctx.fillRect(self.x - (self.width / 2), self.y - (self.height / 2), self.width, self.height);
   self.textLayerObj.ctx.fillStyle = 'greenyellow';
-  self.textLayerObj.ctx.font = "bold 10px Arial"
-  self.textLayerObj.ctx.fillText(self.title, self.x, self.y - 2);
+  self.textLayerObj.ctx.font = "bold 9px Arial"
+  self.textLayerObj.ctx.fillText(self.title, self.x + 2, self.y - 4);
 }

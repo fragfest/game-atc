@@ -36,7 +36,7 @@ module.exports = class Runway {
     // this.ctx.fillRect(this.x - 2, this.y - 2, 4, 4);
 
     this.imgLayerCtx.fillStyle = 'greenyellow';
-    this.imgLayerCtx.font = "bold 10px Arial"
+    this.imgLayerCtx.font = "bold 9px Arial"
     this.imgLayerCtx.fillText('27R', this.x, this.y - 5);
   }
 

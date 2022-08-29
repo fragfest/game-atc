@@ -27,6 +27,7 @@ export const WakeRating = Object.freeze({
 
 ////////////// PRIVATE //////////////////////////////////////
 const basePerformance = {
+  isSmall: false,
   speedTakeoff: 155,
   speedMin: 180,
   speedLanding: 135,
@@ -42,6 +43,7 @@ const basePerformance = {
   iconLanding: '/img/plane-icon/A380-yellow.png',
 };
 const basePerformanceSmall = {
+  isSmall: true,
   speedRatePerMs: 0.007,
 };
 

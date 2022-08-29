@@ -60,6 +60,7 @@ module.exports = class Square {
     this.iconSelected = planeObj.airframeObj.iconSelected;
     this.iconConflict = planeObj.airframeObj.iconConflict;
     this.iconLanding = planeObj.airframeObj.iconLanding;
+    this.isSmall = planeObj.airframeObj.isSmall;
 
     // display
     this.isSelected = false;
@@ -339,6 +340,8 @@ module.exports = class Square {
   }
 
   update({ deltaTimeMs }) {
+    const squareOrigin = this.isSmall ? 10 : 13;
+
     const headingOld = this.headingRad;
     const headingTarget = this.headingTargetRad;
     const headingChange = this.turnRateRadPerMs * deltaTimeMs;
@@ -367,8 +370,8 @@ module.exports = class Square {
     this.x += pixelsInX;
     this.y += pixelsInY;
     if (this.htmlSquareDiv) {
-      this.htmlSquareDiv.style.left = this.x - 13 + 'px';
-      this.htmlSquareDiv.style.top = this.y - 13 + 'px';
+      this.htmlSquareDiv.style.left = (this.x - squareOrigin) + 'px';
+      this.htmlSquareDiv.style.top = (this.y - squareOrigin) + 'px';
     }
     this.headingRad = headingRadNew;
     this.heading = convHdgRadToThreeDigits(headingRadNew);
@@ -453,6 +456,9 @@ module.exports = class Square {
 ////////////////////////////////////////////////////////////
 
 const _createHtmlEl = (self) => {
+  const squareSize = self.isSmall ? 15 : 22;
+  const squareOrigin = self.isSmall ? 10 : 13;
+
   self.htmlSquareDiv = document.createElement('div');
   self.htmlDiv.appendChild(self.htmlSquareDiv);
   self.htmlSquareDiv.id = self.title;
@@ -460,19 +466,20 @@ const _createHtmlEl = (self) => {
   self.htmlSquareDiv.addEventListener('mouseup', () => self.clickEventCB());
   self.htmlSquareDiv.addEventListener('mouseenter', () => self.htmlSquareDiv.style.cursor = 'pointer');
   self.htmlSquareDiv.addEventListener('mouseleave', () => self.htmlSquareDiv.style.cursor = 'none');
-  self.htmlSquareDiv.style.left = self.x - 13 + 'px';
-  self.htmlSquareDiv.style.top = self.y - 13 + 'px';
-  self.htmlSquareDiv.style.width = 22 + 'px';
-  self.htmlSquareDiv.style.height = 22 + 'px';
+  self.htmlSquareDiv.style.left = (self.x - squareOrigin) + 'px';
+  self.htmlSquareDiv.style.top = (self.y - squareOrigin) + 'px';
+  self.htmlSquareDiv.style.marginTop = 2.6 + 'px';
+  self.htmlSquareDiv.style.width = squareSize + 'px';
+  self.htmlSquareDiv.style.height = squareSize + 'px';
   // self.htmlSquareDiv.style.border = '1px solid yellow';
 
   self.htmlImgEl = new Image();
   self.htmlSquareDiv.appendChild(self.htmlImgEl);
   self.htmlImgEl.id = self.title + '-icon';
   self.htmlImgEl.src = self.iconDefault;
-  self.htmlImgEl.width = 22;
+  self.htmlImgEl.width = squareSize;
   self.htmlImgEl.style.transform = 'rotate(' + self.heading + 'deg)';
-  // self.htmlSquareDiv.style.border = '1px solid orange';
+  // self.htmlImgEl.style.border = '1px solid orange';
 }
 
 const _draw = (self, color) => {
