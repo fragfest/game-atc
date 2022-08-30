@@ -75,8 +75,10 @@ module.exports = class Square {
     this.isTouchedDown = false;
     this.landing = false;
     this.isHolding = false;
-    this.distPrev = Infinity;
     this.takeoff = false;
+    this.distPrev = Infinity;
+    this.trailPixelMs = 0;
+    this.trailPixelArr = [];
 
     // flightstrip info
     this.hasProximityAlert = false;
@@ -386,6 +388,7 @@ module.exports = class Square {
     const outsideCanvasHeight = (y, offset) => (y > (this.canvasHeight + offset)) || (y < (0 - offset));
     if (outsideCanvasWidth(this.x, 0) || outsideCanvasHeight(this.y, 0)) {
       this.setNonInteractive();
+      _clearTrailPixelsAll(this);
     }
     if (outsideCanvasWidth(this.x, 15) || outsideCanvasHeight(this.y, 15)) {
       this.setDestroyFlag(true);
@@ -393,7 +396,7 @@ module.exports = class Square {
     }
   }
 
-  draw() {
+  draw(timestamp) {
     this.hide();
     if (this.isTaxiing) return;
 
@@ -414,9 +417,36 @@ module.exports = class Square {
 
     this.htmlImgEl.style.transform = 'rotate(' + this.heading + 'deg)';
     _draw(this, color);
+
+    // create trail of pixels
+    const shiftX = this.isSmall ? 3 : 3
+    const shiftY = this.isSmall ? 0 : 2
+    const intervalSecs = 3;
+    if (this.takeoff) return;
+    if (!timestamp) return;
+    if (timestamp > (this.trailPixelMs + intervalSecs * 1000)) {
+      this.trailPixelMs = timestamp;
+      const pixelsInX = Math.cos(this.headingRad);
+      const pixelsInY = Math.sin(this.headingRad);
+      const x = this.x - pixelsInX - shiftX;
+      const y = this.y - pixelsInY - shiftY;
+      this.ctx.fillStyle = 'white';
+      this.ctx.fillRect(x - 1, y - 1, 2, 2);
+      this.trailPixelArr.unshift({ x, y });
+    }
   }
 
-  hide() { }
+  hide() {
+    this.trailPixelArr.forEach((pixel, index) => {
+      const fracMaxIndex = index / _trailMax;
+      _clearTrailPixel(this, pixel);
+      _drawTrailPixel(this, pixel, 1 - fracMaxIndex);
+      if (index > _trailMax - 1) {
+        _clearTrailPixel(this, pixel);
+        this.trailPixelArr.pop();
+      }
+    });
+  }
 
   setSelected(isSelected) {
     this.isSelected = !!isSelected;
@@ -455,6 +485,19 @@ module.exports = class Square {
 // end class Square
 ////////////////////////////////////////////////////////////
 
+const _trailMax = 12;
+const _clearTrailPixelsAll = (self) => {
+  self.trailPixelArr.forEach((pixel) => _clearTrailPixel(self, pixel));
+  self.trailPixelArr = [];
+}
+const _clearTrailPixel = (self, pixel) => self.ctx.clearRect(pixel.x - 2, pixel.y - 2, 4, 4);
+const _drawTrailPixel = (self, pixel, opacity) => {
+  self.ctx.globalAlpha = opacity;
+  self.ctx.fillStyle = 'white';
+  self.ctx.fillRect(pixel.x - 1, pixel.y - 1, 2, 2);
+  self.ctx.globalAlpha = 1;
+}
+
 const _createHtmlEl = (self) => {
   const squareSize = self.isSmall ? 15 : 22;
   const squareOrigin = self.isSmall ? 10 : 13;
@@ -475,34 +518,24 @@ const _createHtmlEl = (self) => {
 
   self.htmlImgEl = new Image();
   self.htmlSquareDiv.appendChild(self.htmlImgEl);
+  self.htmlImgEl.style.transform = 'rotate(' + self.heading + 'deg)';
   self.htmlImgEl.id = self.title + '-icon';
   self.htmlImgEl.src = self.iconDefault;
   self.htmlImgEl.width = squareSize;
-  self.htmlImgEl.style.transform = 'rotate(' + self.heading + 'deg)';
+  self.htmlImgEl.draggable = false;
   // self.htmlImgEl.style.border = '1px solid orange';
 }
 
 const _draw = (self, color) => {
-  // const pixelsInX = Math.cos(self.headingRad) * self.speed / 15;
-  // const pixelsInY = Math.sin(self.headingRad) * self.speed / 15;
-  // const center = { x: self.x + self.width / 2, y: self.y + self.height / 2 };
-
-  // self.ctx.fillStyle = color;
-  // self.headingLayerObj.ctx.strokeStyle = color;
-  // self.headingLayerObj.ctx.beginPath();
-  // self.headingLayerObj.ctx.moveTo(center.x, center.y);
-  // self.headingLayerObj.ctx.lineTo(center.x - pixelsInX, center.y - pixelsInY);
-  // self.headingLayerObj.ctx.stroke();
-
   const degreesDisplay = self.heading;
   const speedDisplay = leftPadZeros(Math.round(self.speed));
   const altDisplay = altitudeDisplay(self.altitude);
 
   self.textLayerObj.ctx.fillStyle = color;
-  self.textLayerObj.ctx.font = "11px Arial"
-  self.textLayerObj.ctx.fillText(self.title, self.x, self.y - 2);
+  self.textLayerObj.ctx.font = "10px Arial"
+  self.textLayerObj.ctx.fillText(self.title, self.x + 10, self.y - 6);
   self.textLayerObj.ctx.fillStyle = color;
-  self.textLayerObj.ctx.fillText('              ' + degreesDisplay + '\u00B0', self.x, self.y - 2);
-  self.textLayerObj.ctx.fillText('              ' + altDisplay + ' ft', self.x, self.y + 8);
-  self.textLayerObj.ctx.fillText('              ' + speedDisplay + ' kts', self.x, self.y + 18);
+  self.textLayerObj.ctx.fillText('                ' + degreesDisplay + '\u00B0', self.x, self.y - 6);
+  self.textLayerObj.ctx.fillText('                ' + altDisplay + ' ft', self.x, self.y + 4);
+  self.textLayerObj.ctx.fillText('                ' + speedDisplay + ' kts', self.x, self.y + 14);
 };

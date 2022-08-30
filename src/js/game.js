@@ -52,7 +52,7 @@ export const setup = (argObj) => {
       entityManagerArr.forEach(callFn('update', { deltaTimeMs: updateIntervalMs, entityManagerArr }));
       entityManagerArr.forEach(callFn('updateHandoff', { entityManagerArr }));
       entityManagerArr.forEach(callFn('setProximity', { entityManagerArr }));
-      entityManagerArr.forEach(callFn('draw'));
+      entityManagerArr.forEach(callFn('draw', timestamp));
       // cleanup
       resetProximity();
       // callbacks
