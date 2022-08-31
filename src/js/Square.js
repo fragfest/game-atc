@@ -80,7 +80,7 @@ module.exports = class Square {
 
     // flightstrip info
     this.hasProximityAlert = false;
-    this.destinationType = planeObj.destinationType || "";
+    this.destinationType = planeObj.destinationType || ""; // TODO consolidate with WaypointType
     this.runway = planeObj.runway || "";
     this.waypoint = planeObj.waypoint || "";
     this.airframe = planeObj.airframeObj.type || "";

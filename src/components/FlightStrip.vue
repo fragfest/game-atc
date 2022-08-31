@@ -17,9 +17,20 @@
         <div class="col font-large">
           <b>{{ plane.runway }}</b>
         </div>
-        <div class="col font-large">
+
+        <div v-if="!isArrival" class="col font-large">
           <b>{{ plane.waypoint }}</b>
         </div>
+        <ToolTip v-if="isArrival">
+          <div class="col font-large">
+            <button
+              @click="editWaypointClick"
+            ><b>{{ plane.waypoint }}</b>
+            </button>
+          </div>
+          <template v-slot:hover>edit waypoint (E)</template>
+        </ToolTip>
+
         <div class="col">{{ plane.airframe }} / {{ plane.wake }}</div>
         <div class="col fixed-width no-border">
           <div v-if="hasProximityAlert" class="conflict">
@@ -121,6 +132,8 @@
 import { getClassSize } from "../js/utils";
 const Square = require("../js/Square");
 
+import ToolTip from "./common/ToolTip";
+
 export default {
   name: "FlightStrip",
   props: {
@@ -129,6 +142,7 @@ export default {
     planes: { type: Object },
     screenSize: { type: String },
   },
+  components: { ToolTip },
 
   data() {
     return {
@@ -137,6 +151,11 @@ export default {
   },
 
   computed: {
+    isArrival: function() {
+      const isArrival = this.plane.destinationType === "arrival";
+      return isArrival ? true : false;
+    },
+
     hasProximityAlert: function () {
       if (!this.plane.id) return false;
       const plane = this.planes.find((x) => x.id === this.plane.id);
@@ -197,6 +216,9 @@ export default {
   },
 
   methods: {
+    editWaypointClick: function() {
+      console.log('editWaypointClick')
+    },
     click: function (plane) {
       plane.clickEventCB();
     },
@@ -310,6 +332,24 @@ export default {
       text-align: center;
       border-right: solid 1px #b2b0b0;
     }
+
+    button {
+      border: none;
+      padding: 2px;
+
+      color: white;
+      background-color: rgba(255, 255, 255, 0.2);
+
+      &:hover {
+        cursor: pointer;
+        background-color: rgba(255, 255, 255, 0.4);
+      }
+      &:focus-visible {
+        outline: 1px solid lightgreen;
+      }
+    }
+
+
     .fixed-width {
       width: 120px;
     }

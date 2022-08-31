@@ -37,7 +37,7 @@
               @click="holdClick"
             >handoff
             </button>
-            <template v-slot:hover>Handoff (H)</template>
+            <template v-slot:hover>handoff (H)</template>
           </ToolTip>
         </div>
         <div v-show="isTaxiing" class="btn">
