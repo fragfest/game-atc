@@ -1,4 +1,4 @@
-const { inputHeadingToRad, radToDegrees, convertToSmallDegrees } = require('./utils');
+const { inputHeadingToRad, radToDegrees, convertToSmallDegrees, ScreenSizes } = require('./utils');
 const Square = require('./Square');
 const { MessageEvents, publish } = require('./events/messages');
 const { planeGoAroundPenalty } = require('./panelBottom/score');
@@ -7,37 +7,60 @@ const { planeGoAroundPenalty } = require('./panelBottom/score');
 // class Runway
 ////////////////////////////////////////////////////////////
 module.exports = class Runway {
-  constructor(title, entityLayerObj, imgLayerObj, positionObj) {
+  constructor(title, imgLayerObj, screenSize, runwayObj) {
     this.id = Math.random();
     this.title = title.trim();
-    this.x = positionObj.x;
-    this.y = positionObj.y;
-    this.ctx = entityLayerObj.ctx;
-    this.imgLayerCtx = imgLayerObj.ctx;
-    this.width = positionObj.width;
-    this.height = positionObj.length;
+    this.x = runwayObj.x;
+    this.y = runwayObj.y;
+    this.isSmall = (screenSize === ScreenSizes.Small) ? true : false;
+    this.ctx = imgLayerObj.ctx;
+    this.width = runwayObj.width;
+    this.height = runwayObj.length;
     this.altitude = 0;
     this.altitudeLanding = this.altitude + 150;
-    this.runwayHeading = inputHeadingToRad(positionObj.heading);
-    this.waypoint = positionObj.waypoint;
+    this.runwayHeading = inputHeadingToRad(runwayObj.heading);
+    this.waypoint = runwayObj.waypoint;
     this.landingEntities = [];
-
-    const img = new Image();
-    img.onload = () => {
-      this.imgLayerCtx.save();
-      this.imgLayerCtx.translate(this.x, this.y);
-      this.imgLayerCtx.rotate(this.runwayHeading - Math.PI / 2);
-      this.imgLayerCtx.drawImage(img, -1 * this.width / 2, 0, this.width, this.height);
-      this.imgLayerCtx.restore();
-    };
-    img.src = '/img/runway.png';
 
     // this.ctx.fillStyle = 'greenyellow';
     // this.ctx.fillRect(this.x - 2, this.y - 2, 4, 4);
 
-    this.imgLayerCtx.fillStyle = 'greenyellow';
-    this.imgLayerCtx.font = "bold 9px Arial"
-    this.imgLayerCtx.fillText('27R', this.x, this.y - 5);
+    const img = new Image();
+    img.onload = () => {
+      this.ctx.save();
+      this.ctx.translate(this.x, this.y);
+      this.ctx.rotate(this.runwayHeading - Math.PI / 2);
+      this.ctx.drawImage(img, -1 * this.width / 2, 0, this.width, this.height);
+      this.ctx.restore();
+    };
+    img.src = '/img/runway.png';
+
+    this.ctx.fillStyle = 'greenyellow';
+    this.ctx.font = "bold 9px Arial"
+    this.ctx.fillText('27R', this.x, this.y - 5);
+
+    // draw runway heading dashes
+    const length = this.isSmall ? 90 : 125;
+    const dashLength = this.isSmall ? 4 : 6;
+    const dashSpaceMultiple = 4;
+    const reverseRunwayHeading = this.runwayHeading + Math.PI;
+    const dashLengthInX = Math.cos(reverseRunwayHeading) * dashLength;
+    const dashLengthInY = Math.sin(reverseRunwayHeading) * dashLength;
+    const numDashes = length / dashLength;
+
+    this.ctx.strokeStyle = 'greenyellow';
+    this.ctx.lineWidth = 1.2;
+    this.ctx.beginPath();
+    let dashX = this.x + 4 * dashLengthInX;
+    let dashY = this.y + 4 * dashLengthInY;
+
+    for (let i = 0; i < numDashes; i++) {
+      this.ctx.moveTo(dashX, dashY);
+      this.ctx.lineTo(dashX + dashLengthInX, dashY + dashLengthInY);
+      dashX = dashX + dashSpaceMultiple * dashLengthInX
+      dashY = dashY + dashSpaceMultiple * dashLengthInY;
+    }
+    this.ctx.stroke();
   }
 
   updateGoAround(entity) {

@@ -76,7 +76,7 @@ export const setup = (argObj) => {
 
 export const setupEntities = (argObj) => {
   const runway27R = new Runway(
-    Runways.TwoSevenRight, argObj.backgroundObj, argObj.imgLayerObj,
+    Runways.TwoSevenRight, argObj.imgLayerObj, argObj.screenSize,
     getRunway(Runways.TwoSevenRight, argObj.screenSize));
 
   // arrival waypoints
