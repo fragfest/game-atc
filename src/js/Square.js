@@ -217,7 +217,10 @@ module.exports = class Square {
 
   setNonInteractive() {
     this.isNonInteractive = true;
-    if (this.htmlSquareDiv) this.htmlSquareDiv.remove();
+    if (this.htmlSquareDiv) {
+      this.htmlSquareDiv.addEventListener('mouseup', () => { });
+      this.htmlSquareDiv.addEventListener('mouseenter', () => this.htmlSquareDiv.style.cursor = 'default');
+    }
   }
 
   setDestroyFlag(shouldDestroy) {
@@ -226,6 +229,7 @@ module.exports = class Square {
 
   destroy() {
     this.hide();
+    _clearTrailPixelsAll(this);
     if (this.htmlSquareDiv) this.htmlSquareDiv.remove();
     if (this.isHandoff) {
       const scoreAdded = planeHandoffSuccess();
