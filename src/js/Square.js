@@ -527,15 +527,17 @@ const _createHtmlEl = (self) => {
 }
 
 const _draw = (self, color) => {
+  if (self.takeoff || self.isTouchedDown) return;
+
   const degreesDisplay = self.heading;
   const speedDisplay = leftPadZeros(Math.round(self.speed));
   const altDisplay = altitudeDisplay(self.altitude);
 
   self.textLayerObj.ctx.fillStyle = color;
   self.textLayerObj.ctx.font = "10px Arial"
-  self.textLayerObj.ctx.fillText(self.title, self.x + 10, self.y - 6);
+  self.textLayerObj.ctx.fillText(self.title, self.x + 10, self.y - 8);
   self.textLayerObj.ctx.fillStyle = color;
-  self.textLayerObj.ctx.fillText('                ' + degreesDisplay + '\u00B0', self.x, self.y - 6);
-  self.textLayerObj.ctx.fillText('                ' + altDisplay + ' ft', self.x, self.y + 4);
-  self.textLayerObj.ctx.fillText('                ' + speedDisplay + ' kts', self.x, self.y + 14);
+  self.textLayerObj.ctx.fillText('                ' + degreesDisplay + '\u00B0', self.x, self.y - 8);
+  self.textLayerObj.ctx.fillText('                ' + altDisplay + ' ft', self.x, self.y + 2);
+  self.textLayerObj.ctx.fillText('                ' + speedDisplay + ' kts', self.x, self.y + 12);
 };
