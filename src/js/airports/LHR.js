@@ -14,11 +14,22 @@ export const getRunway = (runway, screenSize) => {
 
 export const Waypoints = Object.freeze({
   // arrival
+  BNN: 'BNN',
+  OCK: 'OCK',
   LAM: 'LAM',
   BIG: 'BIG',
   // departure
+  DET: 'DET',
+  MID: 'MID',
+  CPT: 'CPT',
   BPK: 'BPK',
 });
+
+export const getWaypointDeparture = () => {
+  const waypointsDeparture = ['DET', 'MID', 'CPT', 'BPK'];
+  const indexDeparture = Math.floor(Math.random() * waypointsDeparture.length);
+  return waypointsDeparture[indexDeparture];
+}
 
 export const getWaypoint = (waypoint, screenSize) => {
   const obj = waypoints(waypoint, screenSize);
@@ -60,7 +71,6 @@ const runways = (runway, screenSize) => {
         heading: 270,
         length,
         width: runwayWidth,
-        waypoint: Waypoints.BPK,
       };
   }
 };
@@ -71,6 +81,16 @@ const waypoints = (waypoint, screenSize) => {
 
   if (screenSize === ScreenSizes.Large) {
     switch (waypoint) {
+      case 'BNN':
+        return {
+          x: width / 2 - 215,
+          y: height / 2 - 155,
+        };
+      case 'OCK':
+        return {
+          x: 465,
+          y: height - 160,
+        };
       case 'LAM':
         return {
           x: width / 2 + 400,
@@ -80,6 +100,21 @@ const waypoints = (waypoint, screenSize) => {
         return {
           x: width / 2 + 350,
           y: height / 2 + 160,
+        };
+      case 'DET':
+        return {
+          x: width / 2 + 150,
+          y: height - 28,
+        };
+      case 'MID':
+        return {
+          x: 270,
+          y: height - 42,
+        };
+      case 'CPT':
+        return {
+          x: 50,
+          y: height / 2 - 45,
         };
       case 'BPK':
         return {
@@ -91,6 +126,16 @@ const waypoints = (waypoint, screenSize) => {
 
   if (screenSize === ScreenSizes.Small) {
     switch (waypoint) {
+      case 'BNN':
+        return {
+          x: width / 2 - 160,
+          y: height / 2 - 118,
+        };
+      case 'OCK':
+        return {
+          x: 350,
+          y: height - 120,
+        };
       case 'LAM':
         return {
           x: width / 2 + 290,
@@ -100,6 +145,21 @@ const waypoints = (waypoint, screenSize) => {
         return {
           x: width / 2 + 260,
           y: height / 2 + 115,
+        };
+      case 'DET':
+        return {
+          x: width / 2 + 112,
+          y: height - 22,
+        };
+      case 'MID':
+        return {
+          x: 202,
+          y: height - 30,
+        };
+      case 'CPT':
+        return {
+          x: 39,
+          y: height / 2 - 33,
         };
       case 'BPK':
         return {

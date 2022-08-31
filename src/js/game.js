@@ -79,12 +79,29 @@ export const setupEntities = (argObj) => {
     Runways.TwoSevenRight, argObj.backgroundObj, argObj.imgLayerObj,
     getRunway(Runways.TwoSevenRight, argObj.screenSize));
 
+  // arrival waypoints
+  const waypointBnn = new Waypoint(
+    Waypoints.BNN, argObj.backgroundObj, argObj.headingLayerObj,
+    getWaypoint(Waypoints.BNN, argObj.screenSize));
+  const waypointOck = new Waypoint(
+    Waypoints.OCK, argObj.backgroundObj, argObj.headingLayerObj,
+    getWaypoint(Waypoints.OCK, argObj.screenSize));
   const waypointLam = new Waypoint(
     Waypoints.LAM, argObj.backgroundObj, argObj.headingLayerObj,
     getWaypoint(Waypoints.LAM, argObj.screenSize));
   const waypointBig = new Waypoint(
     Waypoints.BIG, argObj.backgroundObj, argObj.headingLayerObj,
     getWaypoint(Waypoints.BIG, argObj.screenSize));
+  // departure waypoints
+  const waypointDet = new Waypoint(
+    Waypoints.DET, argObj.backgroundObj, argObj.headingLayerObj,
+    getWaypoint(Waypoints.DET, argObj.screenSize));
+  const waypointMid = new Waypoint(
+    Waypoints.MID, argObj.backgroundObj, argObj.headingLayerObj,
+    getWaypoint(Waypoints.MID, argObj.screenSize));
+  const waypointCpt = new Waypoint(
+    Waypoints.CPT, argObj.backgroundObj, argObj.headingLayerObj,
+    getWaypoint(Waypoints.CPT, argObj.screenSize));
   const waypointBpk = new Waypoint(
     Waypoints.BPK, argObj.backgroundObj, argObj.headingLayerObj,
     getWaypoint(Waypoints.BPK, argObj.screenSize));
@@ -92,8 +109,13 @@ export const setupEntities = (argObj) => {
   const entityManagerArr = [];
   const entityAdd = entityManagerAdd(entityManagerArr);
   entityAdd(runway27R);
+  entityAdd(waypointBnn);
+  entityAdd(waypointOck);
   entityAdd(waypointLam);
   entityAdd(waypointBig);
+  entityAdd(waypointDet);
+  entityAdd(waypointMid);
+  entityAdd(waypointCpt);
   entityAdd(waypointBpk);
   return entityManagerArr;
 };

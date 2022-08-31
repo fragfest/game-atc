@@ -2,7 +2,7 @@ import Square from './Square';
 import { leftPadZeros, convHdgDegToThreeDigits, convHdgRadToThreeDigits } from './utils';
 import { getFlightArrival, getFlightDeparture } from './flights/LHR';
 import { DestinationType, getPerformance } from './aircraft/airframe';
-import { Waypoints } from './airports/LHR';
+import { Waypoints, getWaypointDeparture } from './airports/LHR';
 
 export const create = ({ runway, screenSize, width, height, canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl, clickCB }) => {
   const runwayTitle = runway.title;
@@ -43,7 +43,7 @@ export const create = ({ runway, screenSize, width, height, canvasObjEntity, can
       x: runway.x,
       y: runway.y,
       heading: convHdgRadToThreeDigits(runway.runwayHeading),
-      waypoint: runway.waypoint,
+      waypoint: getWaypointDeparture(),
     };
     const altitude = 0;
     const speed = 0;

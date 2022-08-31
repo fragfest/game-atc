@@ -62,10 +62,8 @@ module.exports = class Square {
     this.iconLanding = planeObj.airframeObj.iconLanding;
     this.isSmall = planeObj.airframeObj.isSmall;
 
-    // display
-    this.isSelected = false;
-
     // states
+    this.isSelected = false;
     this.isHandoff = false;
     this.isFlyingOutOfArea = false;
     this.isNonInteractive = false;
