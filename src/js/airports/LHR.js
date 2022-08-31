@@ -1,4 +1,5 @@
 import { getGameSize, ScreenSizes } from "../utils";
+import { WaypointType } from '../types';
 
 export const Runways = Object.freeze({
   TwoSevenRight: '27R',
@@ -12,6 +13,7 @@ export const getRunway = (runway, screenSize) => {
   return obj;
 };
 
+// TODO split into departure and arrivals
 export const Waypoints = Object.freeze({
   // arrival
   BNN: 'BNN',
@@ -83,41 +85,49 @@ const waypoints = (waypoint, screenSize) => {
     switch (waypoint) {
       case 'BNN':
         return {
+          type: WaypointType.Arrival,
           x: width / 2 - 215,
           y: height / 2 - 155,
         };
       case 'OCK':
         return {
+          type: WaypointType.Arrival,
           x: 465,
           y: height - 160,
         };
       case 'LAM':
         return {
+          type: WaypointType.Arrival,
           x: width / 2 + 400,
           y: height / 2 - 150,
         };
       case 'BIG':
         return {
+          type: WaypointType.Arrival,
           x: width / 2 + 350,
           y: height / 2 + 160,
         };
       case 'DET':
         return {
+          type: WaypointType.Departure,
           x: width / 2 + 150,
           y: height - 28,
         };
       case 'MID':
         return {
+          type: WaypointType.Departure,
           x: 270,
           y: height - 42,
         };
       case 'CPT':
         return {
+          type: WaypointType.Departure,
           x: 50,
           y: height / 2 - 45,
         };
       case 'BPK':
         return {
+          type: WaypointType.Departure,
           x: width / 2 + 70,
           y: 50,
         };
@@ -128,41 +138,49 @@ const waypoints = (waypoint, screenSize) => {
     switch (waypoint) {
       case 'BNN':
         return {
+          type: WaypointType.Arrival,
           x: width / 2 - 160,
           y: height / 2 - 118,
         };
       case 'OCK':
         return {
+          type: WaypointType.Arrival,
           x: 350,
           y: height - 120,
         };
       case 'LAM':
         return {
+          type: WaypointType.Arrival,
           x: width / 2 + 290,
           y: height / 2 - 112,
         };
       case 'BIG':
         return {
+          type: WaypointType.Arrival,
           x: width / 2 + 260,
           y: height / 2 + 115,
         };
       case 'DET':
         return {
+          type: WaypointType.Departure,
           x: width / 2 + 112,
           y: height - 22,
         };
       case 'MID':
         return {
+          type: WaypointType.Departure,
           x: 202,
           y: height - 30,
         };
       case 'CPT':
         return {
+          type: WaypointType.Departure,
           x: 39,
           y: height / 2 - 33,
         };
       case 'BPK':
         return {
+          type: WaypointType.Departure,
           x: width / 2 + 60,
           y: 35,
         };

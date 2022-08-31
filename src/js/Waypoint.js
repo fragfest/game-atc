@@ -1,23 +1,20 @@
-// const { radToDegrees, convHdgDegToThreeDigits } = require('./utils');
 const Square = require('./Square');
-// const {
-//   isEntityGettingCloser,
-//   distBetweenEntities
-// } = require('./entity');
+const { WaypointType } = require('./types');
 
 ////////////////////////////////////////////////////////////
 // class Waypoint
 ////////////////////////////////////////////////////////////
 module.exports = class Waypoint {
-  constructor(title, entityLayerObj, textLayerObj, positionObj) {
+  constructor(title, entityLayerObj, textLayerObj, waypointObj) {
     this.type = 'waypoint';
     this.id = Math.random();
     this.title = title.trim();
+    this.type = waypointObj.type || WaypointType.Arrival;
+
     this.ctx = entityLayerObj.ctx
     this.textLayerObj = textLayerObj;
-
-    this.x = positionObj.x;
-    this.y = positionObj.y;
+    this.x = waypointObj.x - 2;
+    this.y = waypointObj.y - 2;
     this.width = 4;
     this.height = 4;
     this.altitude = 6000;
@@ -42,7 +39,6 @@ module.exports = class Waypoint {
       if (deltaX < 0) headingRad += Math.PI;
 
       plane.setHeadingTarget(headingRad, false, true);
-      // plane.setDistPrev(distBetweenEntities(this)(plane));
     });
   }
 
@@ -55,10 +51,10 @@ module.exports = class Waypoint {
 // PRIVATE ////////////////////////////////////////////////////////
 
 const _draw = (self) => {
-  self.ctx.fillStyle = 'greenyellow';
+  self.ctx.fillStyle = (self.type === WaypointType.Arrival) ? 'orange' : 'deepskyblue';
   self.ctx.globalAlpha = 1;
   self.ctx.fillRect(self.x - (self.width / 2), self.y - (self.height / 2), self.width, self.height);
-  self.textLayerObj.ctx.fillStyle = 'greenyellow';
+  self.textLayerObj.ctx.fillStyle = (self.type === WaypointType.Arrival) ? 'orange' : 'deepskyblue';
   self.textLayerObj.ctx.font = "bold 9px Arial"
   self.textLayerObj.ctx.fillText(self.title, self.x + 2, self.y - 4);
 }
