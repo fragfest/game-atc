@@ -1,6 +1,5 @@
 <template>
   <div>
-    <div class="background" :class="stripClass"></div>
     <div class="strip" :class="stripClass">
       <div
         class="strip-info"
@@ -23,19 +22,28 @@
             <b class="select-border">{{ waypointSel }}</b>
           </div>
           <hr />
-          <div>
-            <button @click="cycleClick">cycle</button>
-            <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <button @click="selectClick">select</button>
+          <div class="btn-group">
+            <div>
+              <button @click="cycleClick">
+                <span>cycle</span>
+              </button>
+            </div>
+            <div>
+              <button @click="selectClick">
+                <span>select</span>
+              </button>
+            </div>
           </div>
         </div>
         <div v-else-if="!isArrival" class="col font-large">
           <b>{{ plane.waypoint }}</b>
         </div>
         <ToolTip v-else>
-          <div class="col font-large">
+          <div class="col">
             <button @click="editWaypointClick">
-              <b>{{ plane.waypoint }}</b>
+              <span class="font-large">
+                <b>{{ plane.waypoint }}</b>
+              </span>
             </button>
           </div>
           <template v-slot:hover>edit waypoint (E)</template>
@@ -142,6 +150,9 @@
 </template>
 
 <script>
+// TODO safari bug. flightstrip background sometimes goes black. occurs when flighstrips are removed
+
+import { KeyboardEvents, subscribe as subscribeKeyboard } from "../js/events/keyboard";
 import { getClassSize } from "../js/utils";
 import { Waypoints, getWaypoint } from '../js/airports/LHR';
 import { WaypointType } from '../js/types';
@@ -168,6 +179,11 @@ export default {
 
   mounted() {
     this.waypointSel = this.plane.waypoint;
+
+    subscribeKeyboard(KeyboardEvents.KeyboardLetter_E_EV, () => {
+      if(this.plane.id !== this.planeSelected.id) return;
+      this.editWaypointClick();
+    });
   },
 
   computed: {
@@ -321,6 +337,13 @@ export default {
       font-size: 11px;
     }
 
+    button {
+      font: 11px Arial;
+      padding-top: 1px;
+      padding-bottom: 1px;
+      box-shadow: 1px 1px rgb(0, 84, 84);
+    }
+
     .col {
       height: 20px;
       padding: 6px;
@@ -394,10 +417,14 @@ export default {
       text-align: center;
       border-right: solid 1px #b2b0b0;
     }
+    .btn-group {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-evenly;
+    }
 
     button {
       height: 100%;
-
       border: none;
       padding: 4px;
       color: white;
