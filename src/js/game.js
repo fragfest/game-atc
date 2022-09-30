@@ -11,7 +11,7 @@ import { resetProximity } from './panelBottom/score';
 // SETUP ////////////////////////////////////////////////////////////////
 let gameLoopRunning = false;
 export const setup = (argObj) => {
-  const entityManagerArr = argObj.entityManagerArr;
+  const entityManagerArr = argObj.entityManagerArr
   const canvasObj = {
     runway: entityManagerArr.find(x => x.title === Runways.TwoSevenRight),
     screenSize: argObj.screenSize,
@@ -47,7 +47,7 @@ export const setup = (argObj) => {
       argObj.textLayerObj.ctx.clearRect(0, 0, canvasObj.width, canvasObj.height);
       argObj.headingLayerObj.ctx.clearRect(0, 0, canvasObj.width, canvasObj.height);
       // update
-      createPlane(updateIntervalMs)
+      createPlane(updateIntervalMs);
       entityManagerArr.forEach(callFn('hide'));
       entityManagerArr.forEach(callFn('update', { deltaTimeMs: updateIntervalMs, entityManagerArr }));
       entityManagerArr.forEach(callFn('updateHandoff', { entityManagerArr }));
@@ -56,9 +56,7 @@ export const setup = (argObj) => {
       // cleanup
       resetProximity();
       // callbacks
-      argObj.gameUpdateCB({
-        planes: entityManagerArr.filter(isSquare),
-      });
+      argObj.gameUpdateCB();
     }
 
     window.requestAnimationFrame(gameTick);
@@ -106,8 +104,7 @@ export const setupEntities = (argObj) => {
     Waypoints.BPK, argObj.backgroundObj, argObj.headingLayerObj,
     getWaypoint(Waypoints.BPK, argObj.screenSize));
 
-  const entityManagerArr = [];
-  const entityAdd = entityManagerAdd(entityManagerArr);
+  const entityAdd = entityManagerAdd(argObj.entityManagerArr);
   entityAdd(runway27R);
   entityAdd(waypointBnn);
   entityAdd(waypointOck);
@@ -117,7 +114,6 @@ export const setupEntities = (argObj) => {
   entityAdd(waypointMid);
   entityAdd(waypointCpt);
   entityAdd(waypointBpk);
-  return entityManagerArr;
 };
 
 export const setPlaneSelected = (argObj, square) => {

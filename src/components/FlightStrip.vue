@@ -18,21 +18,34 @@
           <b>{{ plane.runway }}</b>
         </div>
 
-        <div v-if="!isArrival" class="col font-large">
+        <div v-if="isArrival && isEditWaypoint" class="col fixed-width font-large">
+          <div>
+            <b class="select-border">ABC</b>
+          </div>
+          <hr />
+          <div>
+            <button @click="cycleClick">cycle</button>
+            <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <button>select</button>
+          </div>
+        </div>
+        <div v-else-if="!isArrival" class="col font-large">
           <b>{{ plane.waypoint }}</b>
         </div>
-        <ToolTip v-if="isArrival">
+        <ToolTip v-else>
           <div class="col font-large">
-            <button
-              @click="editWaypointClick"
-            ><b>{{ plane.waypoint }}</b>
+            <button @click="editWaypointClick">
+              <b>{{ plane.waypoint }}</b>
             </button>
           </div>
           <template v-slot:hover>edit waypoint (E)</template>
         </ToolTip>
 
-        <div class="col">{{ plane.airframe }} / {{ plane.wake }}</div>
-        <div class="col fixed-width no-border">
+        <div v-if="!isEditWaypoint" class="col">
+          {{ plane.airframe }} / {{ plane.wake }}
+        </div>
+
+        <div v-if="!isEditWaypoint" class="col fixed-width no-border">
           <div v-if="hasProximityAlert" class="conflict">
             <div class="font-large"><b>Traffic</b></div>
             <div>TCAS conflict</div>
@@ -151,7 +164,14 @@ export default {
   },
 
   computed: {
+    isEditWaypoint: function() {
+      if (!this.plane.id) return false;
+      const plane = this.planes.find((x) => x.id === this.plane.id);
+      return plane.isEditWaypoint;      
+    },
+
     isArrival: function() {
+      if (!this.plane.id) return true;
       const isArrival = this.plane.destinationType === "arrival";
       return isArrival ? true : false;
     },
@@ -217,7 +237,8 @@ export default {
 
   methods: {
     editWaypointClick: function() {
-      console.log('editWaypointClick')
+      console.log(this.plane.title, 'waypoint click')
+      this.plane.setIsEditWaypoint(true);
     },
     click: function (plane) {
       plane.clickEventCB();
@@ -299,6 +320,21 @@ export default {
   margin-left: 16px;
   cursor: pointer;
 
+  hr {
+    width: 100%;
+    margin-top: 1px;
+    margin-bottom: 4px;
+    border: none;
+    border-top: 1px solid lightgreen;
+  }
+
+  .select-border {
+    border: 1px solid lightgreen;
+    border-bottom: none;
+    border-radius: 6px;
+    padding: 2px 12px;
+  }
+
   &.hover {
     right: 6px;
   }
@@ -334,11 +370,15 @@ export default {
     }
 
     button {
-      border: none;
-      padding: 2px;
+      height: 100%;
 
+      border: none;
+      padding: 4px;
       color: white;
       background-color: rgba(255, 255, 255, 0.2);
+      border: none;
+      border-radius: 6px;
+      box-shadow: 2px 2px rgb(0, 84, 84);
 
       &:hover {
         cursor: pointer;
@@ -347,8 +387,10 @@ export default {
       &:focus-visible {
         outline: 1px solid lightgreen;
       }
+      &:active {
+        box-shadow: none;
+      }
     }
-
 
     .fixed-width {
       width: 120px;

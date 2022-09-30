@@ -12,6 +12,7 @@ export const setup = () => {
   if (isSetup) return;
   isSetup = true;
 
+  // TODO firefox bug. keydown event does not fire after a Departure flightstrip is selected and ArrowDown is pressed
   document.addEventListener('keydown', (ev) => {
     switch (ev.key) {
       case 'ArrowDown':

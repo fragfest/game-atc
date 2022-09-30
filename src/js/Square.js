@@ -79,6 +79,7 @@ module.exports = class Square {
     this.trailPixelArr = [];
 
     // flightstrip info
+    this.isEditWaypoint = false;
     this.hasProximityAlert = false;
     this.destinationType = planeObj.destinationType || ""; // TODO consolidate with WaypointType
     this.runway = planeObj.runway || "";
@@ -104,6 +105,10 @@ module.exports = class Square {
   }
 
   clickEventCB() { throw new Error('clickEventCB not attached'); }
+
+  setIsEditWaypoint(isEditWaypoint) {
+    this.isEditWaypoint = !!isEditWaypoint;
+  }
 
   startTakeoff() {
     this.setIsTaxiing(false);
