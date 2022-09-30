@@ -6,7 +6,7 @@ const { WaypointType } = require('./types');
 ////////////////////////////////////////////////////////////
 module.exports = class Waypoint {
   constructor(title, entityLayerObj, textLayerObj, waypointObj) {
-    this.type = 'waypoint';
+    this.class = 'waypoint';
     this.id = Math.random();
     this.title = title.trim();
     this.type = waypointObj.type || WaypointType.Arrival;

@@ -106,6 +106,10 @@ module.exports = class Square {
 
   clickEventCB() { throw new Error('clickEventCB not attached'); }
 
+  setWaypoint(waypoint) {
+    this.waypoint = waypoint;
+  }
+
   setIsEditWaypoint(isEditWaypoint) {
     this.isEditWaypoint = !!isEditWaypoint;
   }
@@ -255,7 +259,7 @@ module.exports = class Square {
     if (this.destinationType !== DestinationType.Departure) return;
 
     const isTargetWaypoint = entity =>
-      entity.type === 'waypoint' &&
+      entity.class === 'waypoint' &&
       entity.title === this.waypoint;
 
     const waypointObj = entityManagerArr.find(isTargetWaypoint);

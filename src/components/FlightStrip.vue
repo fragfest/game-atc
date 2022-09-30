@@ -20,13 +20,13 @@
 
         <div v-if="isArrival && isEditWaypoint" class="col fixed-width font-large">
           <div>
-            <b class="select-border">ABC</b>
+            <b class="select-border">{{ waypointSel }}</b>
           </div>
           <hr />
           <div>
             <button @click="cycleClick">cycle</button>
             <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <button>select</button>
+            <button @click="selectClick">select</button>
           </div>
         </div>
         <div v-else-if="!isArrival" class="col font-large">
@@ -143,6 +143,8 @@
 
 <script>
 import { getClassSize } from "../js/utils";
+import { Waypoints, getWaypoint } from '../js/airports/LHR';
+import { WaypointType } from '../js/types';
 const Square = require("../js/Square");
 
 import ToolTip from "./common/ToolTip";
@@ -160,7 +162,12 @@ export default {
   data() {
     return {
       isHover: false,
+      waypointSel: '',
     };
+  },
+
+  mounted() {
+    this.waypointSel = this.plane.waypoint;
   },
 
   computed: {
@@ -236,16 +243,35 @@ export default {
   },
 
   methods: {
+    cycleClick: function() {
+      const isArrival = waypoint => getWaypoint(waypoint, this.screenSize).type === WaypointType.Arrival;
+      const waypoints = Object.values(Waypoints);
+      const waypointArrivals = waypoints.filter(isArrival);
+
+      const indexSel = waypointArrivals.findIndex(str => str === this.waypointSel);
+      let indexNext = indexSel + 1;
+      if(indexNext >= waypointArrivals.length) indexNext = 0;
+      const waypointNext = waypointArrivals[indexNext];
+      this.waypointSel = waypointNext;
+    },
+
+    selectClick: function() {
+      this.plane.setWaypoint(this.waypointSel);
+      this.plane.setIsEditWaypoint(false);
+    },
+
     editWaypointClick: function() {
-      console.log(this.plane.title, 'waypoint click')
       this.plane.setIsEditWaypoint(true);
     },
+
     click: function (plane) {
       plane.clickEventCB();
     },
+
     hover: function () {
       this.isHover = true;
     },
+
     flatten: function () {
       this.isHover = false;
     },

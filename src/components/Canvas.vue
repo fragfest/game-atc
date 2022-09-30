@@ -157,7 +157,6 @@ export default {
     screenSize = ScreenSizes.Large;
   },
 
-  // mounted
   mounted() {
     const background = this.$refs.background;
     const layerOne = this.$refs.layerOne;
@@ -275,7 +274,7 @@ export default {
     );
     // EVENTS END ///////////////////////////////////////////////////////////////////
 
-  }, // end mounted
+  },
 };
 </script>
 
