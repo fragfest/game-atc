@@ -55,6 +55,6 @@ const _draw = (self) => {
   self.ctx.globalAlpha = 1;
   self.ctx.fillRect(self.x - (self.width / 2), self.y - (self.height / 2), self.width, self.height);
   self.textLayerObj.ctx.fillStyle = (self.type === WaypointType.Arrival) ? 'orange' : 'deepskyblue';
-  self.textLayerObj.ctx.font = "bold 9px Arial"
+  self.textLayerObj.ctx.font = "9px Arial"
   self.textLayerObj.ctx.fillText(self.title, self.x + 2, self.y - 4);
 }

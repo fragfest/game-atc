@@ -40,13 +40,13 @@ module.exports = class Runway {
     this.ctx.fillText('27R', this.x, this.y - 5);
 
     // draw runway heading dashes
-    const length = this.isSmall ? 90 : 125;
+    const length = this.isSmall ? 65 : 100;
     const dashLength = this.isSmall ? 4 : 6;
     const dashSpaceMultiple = 4;
     const reverseRunwayHeading = this.runwayHeading + Math.PI;
     const dashLengthInX = Math.cos(reverseRunwayHeading) * dashLength;
     const dashLengthInY = Math.sin(reverseRunwayHeading) * dashLength;
-    const numDashes = length / dashLength;
+    const numDashes = Math.ceil(length / dashLength);
 
     this.ctx.strokeStyle = 'greenyellow';
     this.ctx.lineWidth = 1.2;

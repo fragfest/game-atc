@@ -23,16 +23,18 @@
           </div>
           <hr />
           <div class="btn-group">
-            <div>
+            <ToolTip>
               <button @click="cycleClick">
                 <span>cycle</span>
               </button>
-            </div>
-            <div>
+              <template v-slot:hover>scroll waypoints (E)</template>
+            </ToolTip>
+            <ToolTip>
               <button @click="selectClick">
                 <span>select</span>
               </button>
-            </div>
+              <template v-slot:hover>select waypoint (S)</template>
+            </ToolTip>
           </div>
         </div>
         <div v-else-if="!isArrival" class="col font-large">
@@ -182,7 +184,17 @@ export default {
 
     subscribeKeyboard(KeyboardEvents.KeyboardLetter_E_EV, () => {
       if(this.plane.id !== this.planeSelected.id) return;
-      this.editWaypointClick();
+      if(!this.plane.isEditWaypoint) {
+        this.editWaypointClick();
+        return;
+      }
+      this.cycleClick();
+    });
+
+    subscribeKeyboard(KeyboardEvents.KeyboardLetter_S_EV, () => {
+      if(this.plane.id !== this.planeSelected.id) return;
+      if(!this.plane.isEditWaypoint) return;
+      this.selectClick();
     });
   },
 
@@ -296,32 +308,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-// TODO BUG: backgrounds stack up below container when there are enough strips to allow scrolling
-// .background {
-//   position: absolute;
-//   height: 70px;
-//   width: 360px;
-//   margin-top: 6px;
-//   margin-left: 18px;
-//   border-radius: 12px;
-//   background-color: #24b3c960;
-//   filter: blur(2px);
-
-//   &.hover {
-//     height: 68px;
-//     width: 358px;
-//     margin-left: 22px;
-//   }
-
-//   &.selected {
-//     display: none;
-//   }
-
-//   &.arrival {
-//     background-color: #c9830160;
-//   }
-// }
-
 // strip small
 .strip.small {
   width: 280px;
