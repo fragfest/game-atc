@@ -44,6 +44,9 @@
 
       <div class="row-bottom layer-seven">
         <div class="row-bottom-left">
+          <HelpPanel
+            :screenSize="screenSize"
+          ></HelpPanel>
           <ScorePanel
             :screenSize="screenSize"
           ></ScorePanel>
@@ -78,6 +81,7 @@
 import { ref } from "vue";
 
 import Square from "../js/Square";
+import HelpPanel from "./HelpPanel"
 import ScorePanel from "./ScorePanel";
 import ControlPanel from "./ControlPanel";
 import FlightStrip from "./FlightStrip";
@@ -96,7 +100,7 @@ const squareClicked = ref({});
 
 export default {
   name: "Canvas",
-  components: { FlightStrip, ControlPanel, ScorePanel },
+  components: { FlightStrip, ControlPanel, ScorePanel, HelpPanel },
   props: {},
 
   data() {
@@ -217,9 +221,9 @@ export default {
     setup(setupArg);
 
     // EVENTS //////////////////////////////////////////////////////////////////////
-    window.addEventListener("resize", () => {
-      // setup(setupArg);
-    });
+    // window.addEventListener("resize", () => {
+    //   // setup(setupArg);
+    // });
 
     const callMethodEV = (index, methodFn) => {
       if (this.planes.length === 0) return;
