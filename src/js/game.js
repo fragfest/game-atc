@@ -11,7 +11,8 @@ import { resetProximity } from './panelBottom/score';
 // SETUP ////////////////////////////////////////////////////////////////
 let gameLoopRunning = false;
 export const setup = (argObj) => {
-  const entityManagerArr = argObj.entityManagerArr
+  const entityManagerArr = argObj.entityManagerArr;
+  const screenSize = argObj.screenSize;
   const canvasObj = {
     runway: entityManagerArr.find(x => x.title === Runways.TwoSevenRight),
     screenSize: argObj.screenSize,
@@ -26,14 +27,14 @@ export const setup = (argObj) => {
 
   let firstPlane = true;
   const createPlane = (deltaTimeMs) => {
-    const chanceOfPlanePerSec = 0.1;
+    const chanceOfPlanePerSec = 1;
     // const chanceOfPlanePerSec = 0.02;
     let chanceOfPlane = chanceOfPlanePerSec * deltaTimeMs / 1000;
     if (firstPlane) {
       firstPlane = false;
       chanceOfPlane = 1;
     }
-    createSquare(entityManagerArr, chanceOfPlane, () => create(canvasObj).square);
+    createSquare(argObj, entityManagerArr, chanceOfPlane, () => create(canvasObj).square);
   }
 
   const updateIntervalMs = 500;
@@ -52,7 +53,7 @@ export const setup = (argObj) => {
       entityManagerArr.forEach(callFn('hide'));
       entityManagerArr.forEach(callFn('update', { deltaTimeMs: updateIntervalMs, entityManagerArr }));
       entityManagerArr.forEach(callFn('updateHandoff', { entityManagerArr }));
-      entityManagerArr.forEach(callFn('setProximity', { entityManagerArr }));
+      entityManagerArr.forEach(callFn('setProximity', { entityManagerArr, screenSize }));
       entityManagerArr.forEach(callFn('draw', timestamp));
       // cleanup
       resetProximity();
@@ -118,6 +119,7 @@ export const setupEntities = (argObj) => {
 };
 
 export const setPlaneSelected = (argObj, square) => {
+  const screenSize = argObj.screenSize;
   const width = getGameSize(argObj.screenSize).width;
   const height = getGameSize(argObj.screenSize).height;
   const entityManagerArr = argObj.entityManagerArr;
@@ -126,17 +128,17 @@ export const setPlaneSelected = (argObj, square) => {
   argObj.headingLayerObj.ctx.clearRect(0, 0, width, height);
   entityManagerArr.forEach(callFn('setSelected', false));
   square.setSelected(true);
-  entityManagerArr.forEach(callFn('setProximity', { entityManagerArr }));
+  entityManagerArr.forEach(callFn('setProximity', { entityManagerArr, screenSize }));
   entityManagerArr.forEach(callFn('draw'));
 };
 
 //////////////////////////////////////////////////////////////////////////////
 // PRIVATE
 //////////////////////////////////////////////////////////////////////////////
-const createSquare = (entityManagerArr, chanceOfSquare, createEntityFn) => {
+const createSquare = (argObj, entityManagerArr, chanceOfSquare, createEntityFn) => {
   const addObj = entityManagerAdd(entityManagerArr);
   const isCloseToPlane = newObj => otherObj =>
-    isCloseToEntity(newObj)(otherObj) &&
+    isCloseToEntity(argObj.screenSize)(newObj)(otherObj) &&
     isSquare(otherObj) &&
     isNotTaxiing(otherObj);
 

@@ -4,7 +4,10 @@ import { getFlightArrival, getFlightDeparture } from './flights/LHR';
 import { DestinationType, getPerformance } from './aircraft/airframe';
 import { Waypoints, getWaypointDeparture } from './airports/LHR';
 
-export const create = ({ runway, screenSize, width, height, canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl, clickCB }) => {
+export const create = ({
+  runway, screenSize, width, height,
+  canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl, clickCB
+}) => {
   const runwayTitle = runway.title;
 
   let destinationType = DestinationType.Departure;

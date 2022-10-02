@@ -23,7 +23,6 @@ module.exports = class Waypoint {
   updateDestroy() { }
 
   update({ entityManagerArr }) {
-    // const isGettingCloser = isEntityGettingCloser(this);
     const planeHolding = (entity) => {
       if (!(entity instanceof Square)) return false;
       if (!entity.isHolding) return false;

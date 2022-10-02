@@ -44,7 +44,7 @@ const basePerformance = {
 };
 const basePerformanceSmall = {
   isSmall: true,
-  speedRatePerMs: 0.007,
+  speedRatePerMs: 0.009,
 };
 
 const performanceByAirframe = {

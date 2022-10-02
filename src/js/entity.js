@@ -1,3 +1,5 @@
+import { ScreenSizes } from "./utils";
+
 const hasEntityState = state => {
   return 'id' in state
     && 'x' in state
@@ -44,16 +46,16 @@ export const isCloseToWaypoint = waypoint => entity => {
   return false;
 };
 
-export const isCloseToEntity = entity => entityOther => {
+export const isCloseToEntity = screenSize => entity => entityOther => {
   if (!hasEntityState(entity) || !hasEntityState(entityOther)) {
     console.error('entity is missing required state props');
     return false;
   }
   if (entityOther.id === entity.id) return false;
-
+  const distMax = (screenSize === ScreenSizes.Large) ? 51 : 37;
   const distX = Math.abs(entity.x - entityOther.x);
   const distY = Math.abs(entity.y - entityOther.y);
-  const isCloseHorizontal = (distX < 51 && distY < 51);
+  const isCloseHorizontal = (distX < distMax) && (distY < distMax);
 
   const distVert = Math.abs(entity.altitude - entityOther.altitude);
   const isCloseVertical = distVert < 1000;

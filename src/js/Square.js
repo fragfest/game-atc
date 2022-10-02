@@ -339,15 +339,11 @@ module.exports = class Square {
     if (!this.takeoff) return calcDelta(speedDeltaPerMs);
     if (speed < 6) return calcDelta(speedDeltaPerMs * 0.5);
     if (speed > 6 && speed < 10) return calcDelta(speedDeltaPerMs);
-    if (speed > 10 && speed < 20) return calcDelta(speedDeltaPerMs * 1.5);
-    if (speed > 20 && speed < 30) return calcDelta(speedDeltaPerMs * 2);
-    if (speed > 30 && speed < 40) return calcDelta(speedDeltaPerMs * 2.5);
-    if (speed > 40 && speed < 100) return calcDelta(speedDeltaPerMs * 3.6);
-    if (speed > 100 && speed < 110) return calcDelta(speedDeltaPerMs * 2.8);
-    if (speed > 110 && speed < 120) return calcDelta(speedDeltaPerMs * 2.6);
-    if (speed > 120 && speed < 140) return calcDelta(speedDeltaPerMs * 2.2);
-    if (speed > 140 && speed < 150) return calcDelta(speedDeltaPerMs * 1.6);
-    if (speed > 150) return calcDelta(speedDeltaPerMs * 1.2);
+    if (speed > 10 && speed < 20) return calcDelta(speedDeltaPerMs * 1.8);
+    if (speed > 20 && speed < 30) return calcDelta(speedDeltaPerMs * 2.2);
+    if (speed > 30 && speed < 40) return calcDelta(speedDeltaPerMs * 3.2);
+    if (speed > 40 && speed < 100) return calcDelta(speedDeltaPerMs * 3.7);
+    if (speed > 100) return calcDelta(speedDeltaPerMs * 4);
     if (speed > speedTakeoff) return calcDelta(speedDeltaPerMs);
     return calcDelta(speedDeltaPerMs);
   }
@@ -463,9 +459,9 @@ module.exports = class Square {
     this.isSelected = !!isSelected;
   }
 
-  setProximity({ entityManagerArr }) {
+  setProximity({ entityManagerArr, screenSize }) {
     const isNotTaxiing = plane => !plane.isTaxiing && !this.isTaxiing;
-    const isEntityCloseTo = entityFns.isCloseToEntity(this);
+    const isEntityCloseTo = entityFns.isCloseToEntity(screenSize)(this);
     const isValidClosePlane = plane => {
       const isSquare = plane instanceof Square;
       return isEntityCloseTo(plane) && isSquare && isNotTaxiing(plane);

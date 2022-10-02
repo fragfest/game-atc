@@ -185,8 +185,9 @@ const distToRunwayObj = (self, entity) => {
 };
 
 const isCloseToGlidepath = (self, entity) => {
+  const isSmall = self.isSmall;
   const angleMaxDeg = 6;
-  const maxDistFromRunway = 400;
+  const maxDistFromRunway = isSmall ? 300 : 400;
 
   const dist = distToRunwayObj(self, entity).dist;
   const x = Math.abs(self.x - entity.x);
