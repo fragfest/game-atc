@@ -34,7 +34,7 @@ export const create = ({
     square = new Square(
       setRndFlightTitle(newFlight),
       canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl,
-      // { x: width / 2 + 50, y: height / 2 + 15, heading: '270', altitude: 1200, speed: 200 },
+      // { x: width / 1.42, y: height / 1.88, heading: '270', altitude: 1200, speed: 200 },
       { x: newPlane.x, y: newPlane.y, heading: newPlane.heading, altitude, speed },
       { destinationType, airframeObj, waypoint: newPlane.waypoint, runway: runwayTitle }
     );

@@ -5,8 +5,6 @@
         <span class="label">score</span>
         <span>{{ scoreTotal }}</span>
       </div>
-      <div class="score-row">
-      </div>
     </div>
   </div>
 </template>
@@ -28,7 +26,9 @@ export default {
 
   mounted() {
     subscribe(ScoreEvents.ScoreEV, (score) => {
-      this.scoreTotal = score.scoreTotal;
+      let scoreTotal = score.scoreTotal;
+      if(scoreTotal >= 99999) scoreTotal = 99999;
+      this.scoreTotal = scoreTotal.toLocaleString('en-CA');
     });
   },
 

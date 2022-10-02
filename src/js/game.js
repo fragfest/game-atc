@@ -27,8 +27,8 @@ export const setup = (argObj) => {
 
   let firstPlane = true;
   const createPlane = (deltaTimeMs) => {
-    const chanceOfPlanePerSec = 1;
-    // const chanceOfPlanePerSec = 0.02;
+    // const chanceOfPlanePerSec = 0.1;
+    const chanceOfPlanePerSec = 0.02;
     let chanceOfPlane = chanceOfPlanePerSec * deltaTimeMs / 1000;
     if (firstPlane) {
       firstPlane = false;
