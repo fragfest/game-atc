@@ -17,7 +17,7 @@
       <div class="row tab-left"><b>cycle waypoints</b><span> click waypoint on flight strip, press cycle. Shortcut 'E' key</span></div>
       <div class="row tab-left"><b>select waypoint</b><span> click waypoint on flight strip, press select. Shortcut 'S' key</span></div>
       <div class="row green"><b>Rules</b></div>
-      <div class="row tab-left"><b>spacing (TCAS)</b><span> between planes is 3 miles laterally or 1,000ft vertically</span></div>
+      <div class="row tab-left"><b>traffic (TCAS)</b><span> spacing between planes is 3 miles laterally or 1,000ft vertically</span></div>
     </div>
   </div>
 </template>

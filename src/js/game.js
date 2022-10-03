@@ -7,9 +7,11 @@ import { getGameSize } from "./utils";
 import { create } from './Plane';
 import { setup as setupKeyboard } from './events/keyboard';
 import { resetProximity } from './panelBottom/score';
+import { draw as drawScale } from './canvas/scale';
 
 // SETUP ////////////////////////////////////////////////////////////////
 let gameLoopRunning = false;
+
 export const setup = (argObj) => {
   const entityManagerArr = argObj.entityManagerArr;
   const screenSize = argObj.screenSize;
@@ -27,7 +29,7 @@ export const setup = (argObj) => {
 
   let firstPlane = true;
   const createPlane = (deltaTimeMs) => {
-    // const chanceOfPlanePerSec = 0.1;
+    // const chanceOfPlanePerSec = 1;
     const chanceOfPlanePerSec = 0.02;
     let chanceOfPlane = chanceOfPlanePerSec * deltaTimeMs / 1000;
     if (firstPlane) {
@@ -68,6 +70,7 @@ export const setup = (argObj) => {
   if (gameLoopRunning) return;
   gameLoopRunning = true;
 
+  drawInertElements(argObj.imgLayerObj, canvasObj);
   setupKeyboard();
 
   window.requestAnimationFrame(gameTick);
@@ -135,6 +138,10 @@ export const setPlaneSelected = (argObj, square) => {
 //////////////////////////////////////////////////////////////////////////////
 // PRIVATE
 //////////////////////////////////////////////////////////////////////////////
+const drawInertElements = (layerObj, canvasObj) => {
+  drawScale(layerObj, canvasObj.screenSize, canvasObj.width, canvasObj.height);
+}
+
 const createSquare = (argObj, entityManagerArr, chanceOfSquare, createEntityFn) => {
   const addObj = entityManagerAdd(entityManagerArr);
   const isCloseToPlane = newObj => otherObj =>
