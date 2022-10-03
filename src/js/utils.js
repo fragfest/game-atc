@@ -13,6 +13,13 @@ export const getClassSize = (screenSize) => {
   return '';
 };
 
+export const setupGameLoadAndExit = () => {
+  if (process.env.NODE_ENV !== 'production') return;
+  // browser prompts on reload and close
+  window.onbeforeunload = function () { return ''; }
+  window.close = function () { return ''; }
+}
+
 // ALTITUDE /////////////////////////////////////////////////////////////////
 export const altitudeDisplay = alt => Math.round(alt / 10) * 10;
 

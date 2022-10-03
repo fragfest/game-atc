@@ -11,7 +11,7 @@ export const Score = Object.freeze({
   scoreTotal: 0,
 });
 
-// TODO save score to session and load in setup or start new game
+// TODO save score and load in setup or start new game
 let isSetup = false;
 export const setup = () => {
   if (isSetup) return;

@@ -3,10 +3,10 @@ const Square = require('./Square');
 const Runway = require('./Runway');
 import { isCloseToEntity, hasEntityUpdate } from './entity';
 import { getRunway, Runways, Waypoints, getWaypoint } from './airports/LHR';
-import { getGameSize } from "./utils";
+import { getGameSize, setupGameLoadAndExit } from "./utils";
 import { create } from './Plane';
 import { setup as setupKeyboard } from './events/keyboard';
-import { resetProximity } from './panelBottom/score';
+import { resetProximity, setup as setupScore } from './panelBottom/score';
 import { draw as drawScale } from './canvas/scale';
 
 // SETUP ////////////////////////////////////////////////////////////////
@@ -66,12 +66,14 @@ export const setup = (argObj) => {
     window.requestAnimationFrame(gameTick);
   }
 
-  // INIT GAME LOOP
+  // SETUP
   if (gameLoopRunning) return;
   gameLoopRunning = true;
 
-  drawInertElements(argObj.imgLayerObj, canvasObj);
+  setupGameLoadAndExit();
   setupKeyboard();
+  setupScore();
+  drawInertElements(argObj.imgLayerObj, canvasObj);
 
   window.requestAnimationFrame(gameTick);
 };
