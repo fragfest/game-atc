@@ -369,8 +369,8 @@ export default {
 }
 
 .background {
-  opacity: 50%;
   background-color: black;
+  opacity: 0.5;
 }
 
 .entity-div {
