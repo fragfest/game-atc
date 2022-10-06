@@ -37,7 +37,7 @@ export default {
       'The handoff button steers the plane to its waypoint, the plane must be at or above 6000ft in order to complete the hand off.',
       arrivalContent: 'Arriving aircraft have orange flight strips. Planes can be optionally directed to hold at the editable waypoint set on its flight strip. ' +
       'The land button will guide a plane onto the runway. The land button is available when the plane is steered towards the runway, shown on the flight strip, ' +
-      'and at a low enough altitude. At 3000ft or lower depending on distance to the runway. ',
+      'and at a low enough altitude. At 5000ft or lower depending on distance to the runway. ',
     };
   },
 

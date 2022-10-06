@@ -255,7 +255,12 @@ export default {
       const planeSelId = squareClicked.value.id;
       const isSelected = (plane) => plane.id === planeSelId;
       return this.planes.findIndex(isSelected);
-    };    
+    };
+    subscribe(KeyboardEvents.KeyboardLetter_W_EV, () => {
+      callMethodEV(getPlaneSelectedIndex(), plane => {
+        plane.setIsEditWaypoint(true)
+      });
+    });
     subscribe(KeyboardEvents.KeyboardLetter_T_EV, () =>
       callMethodEV(getPlaneSelectedIndex(), plane => {
         plane.startTakeoff();

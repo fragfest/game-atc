@@ -37,10 +37,10 @@ export const subscribe = (scoreEvent, cb) => {
 };
 
 export const planeGoAroundPenalty = () => {
-  _scoreTotal -= 3;
+  _scoreTotal -= 5;
   const score = { ...Score, scoreTotal: _scoreTotal };
   publishScore(score);
-  return -3;
+  return -5;
 };
 
 export const resetProximity = () => {

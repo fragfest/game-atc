@@ -27,7 +27,7 @@
               <button @click="cycleClick">
                 <span>cycle</span>
               </button>
-              <template v-slot:hover>scroll waypoints (E)</template>
+              <template v-slot:hover>scroll waypoints (C)</template>
             </ToolTip>
             <ToolTip>
               <button @click="selectClick">
@@ -182,12 +182,9 @@ export default {
   mounted() {
     this.waypointSel = this.plane.waypoint;
 
-    subscribeKeyboard(KeyboardEvents.KeyboardLetter_E_EV, () => {
+    subscribeKeyboard(KeyboardEvents.KeyboardLetter_C_EV, () => {
       if(this.plane.id !== this.planeSelected.id) return;
-      if(!this.plane.isEditWaypoint) {
-        this.editWaypointClick();
-        return;
-      }
+      if(!this.plane.isEditWaypoint) return;
       this.cycleClick();
     });
 
