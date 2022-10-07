@@ -204,6 +204,14 @@ module.exports = class Square {
     if (this.isNonInteractive) return;
 
     this.setHolding(isHolding, this.waypoint);
+    // cancel landing 
+    if (this.landing && !isLanding) {
+      const speed = (this.speedTarget < this.speedMin) ? this.speedMin : this.speed;
+      const alt = (this.altitudeTarget < this.altitudeMin) ? this.altitudeMin : this.altitude;
+      this.setSpeed(speed);
+      this.setAltitude(alt);
+    }
+
     this.setLanding(isLanding);
     this.headingTargetRad = convertToPosRad(convertToSmallRad(headingRad));
   }
