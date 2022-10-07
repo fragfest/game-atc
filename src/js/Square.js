@@ -115,6 +115,7 @@ module.exports = class Square {
   }
 
   startTakeoff() {
+    if (!this.isTaxiing) return
     this.setIsTaxiing(false);
     this.takeoff = true;
   }
