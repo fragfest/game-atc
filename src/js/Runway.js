@@ -18,6 +18,7 @@ module.exports = class Runway {
     this.height = runwayObj.length;
     this.altitude = 0;
     this.altitudeLanding = this.altitude + 150;
+    this.altitudeMax = 5000;
     this.runwayHeading = inputHeadingToRad(runwayObj.heading);
     this.waypoint = runwayObj.waypoint;
     this.landingEntities = [];
@@ -87,6 +88,7 @@ module.exports = class Runway {
 
       if (!isHeadingClose(this, entity) && !entity.onGlidePath) { return entity.setLanding(false); }
       if (!isCloseToGlidepath(this, entity) && !entity.onGlidePath) { return entity.setLanding(false); }
+      if (isTooHigh(this, entity)) { return entity.setLanding(false); };
       entity.setDistPrev(distObj.dist);
       entity.setOnGlidepath(true);
 
@@ -126,6 +128,11 @@ module.exports = class Runway {
 ////////////////////////////////////////////////////////////
 // end class Runway
 ////////////////////////////////////////////////////////////
+
+const isTooHigh = (self, entity) => {
+  if (entity.altitude > self.altitudeMax) return true;
+  return false
+};
 
 const isHeadingClose = (self, entity) => {
   const dist = distToRunwayObj(self, entity).dist;
@@ -171,7 +178,6 @@ const landingRollout = (self, entity) => {
   entity.setHeadingRad(self.runwayHeading, true);
   entity.setSpeed(0, true, true);
   if (entity.speed <= 30) {
-    // console.log(entity.title + ' :: landing complete');
     removeFromRunway(entity);
     entity.setDestroyFlag(true);
   }
