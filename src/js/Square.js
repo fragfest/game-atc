@@ -417,12 +417,12 @@ module.exports = class Square {
     if (this.isTaxiing) return;
 
     let color = 'white';
-    if (this.landing) {
-      color = 'yellow';
-      this.htmlImgEl.src = this.iconLanding;
-    } else if (this.hasProximityAlert) {
+    if (this.hasProximityAlert) {
       color = 'orangered';
       this.htmlImgEl.src = this.iconConflict;
+    } else if (this.landing) {
+      color = 'yellow';
+      this.htmlImgEl.src = this.iconLanding;
     } else if (this.isSelected) {
       color = 'greenyellow';
       this.htmlImgEl.src = this.iconSelected;
