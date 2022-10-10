@@ -46,6 +46,7 @@ export default {
   display: flex;
   justify-content: flex-end;
   width: 100%;
+  max-height: 100px;
   margin-top: 10px;
   margin-bottom: 10px;
   margin-right: 6px;

@@ -48,7 +48,7 @@
               </span>
             </button>
           </div>
-          <template v-slot:hover>edit waypoint (E)</template>
+          <template v-slot:hover>edit waypoint (W)</template>
         </ToolTip>
 
         <div v-if="!isEditWaypoint" class="col">

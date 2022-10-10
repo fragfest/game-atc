@@ -14,7 +14,8 @@
       <div class="row tab-left"><b>handoff</b><span> click button after take off. Shortcut 'H' key</span></div>
       <div class="row tab-left"><b>land</b><span> click button when plane in position. Shortcut 'L' key</span></div>
       <div class="row tab-left"><b>hold</b><span> click button to hold at waypoint. Shortcut 'H' key</span></div>
-      <div class="row tab-left"><b>cycle waypoints</b><span> click waypoint on flight strip, press cycle. Shortcut 'E' key</span></div>
+      <div class="row tab-left"><b>edit waypoint</b><span> click waypoint on flight strip. Shortcut 'W' key</span></div>
+      <div class="row tab-left"><b>cycle waypoints</b><span> click waypoint on flight strip, press cycle. Shortcut 'C' key</span></div>
       <div class="row tab-left"><b>select waypoint</b><span> click waypoint on flight strip, press select. Shortcut 'S' key</span></div>
       <div class="row green"><b>Rules</b></div>
       <div class="row tab-left"><b>traffic (TCAS)</b><span> spacing between planes is 3 miles laterally or 1,000ft vertically</span></div>
@@ -63,7 +64,7 @@ export default {
 // help-panel small
 .help-panel.small {
   .help-info {
-    height: 156px;
+    height: 100%;
     width: 240px;
     .row {
       font-size: 11px;
@@ -82,7 +83,7 @@ export default {
     display: flex;
     flex-direction: column;
     overflow-y: auto;
-    height: 199px;
+    height: 100%;
     width: 440px;
 
     border: 1px solid darkgrey;
@@ -95,7 +96,6 @@ export default {
 
     .row {
       font-size: 14px;
-      // font-weight: 400;
     }
   }
 }

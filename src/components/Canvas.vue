@@ -127,14 +127,16 @@ export default {
 
     stylePanelRight: () => {
       let minWidth = 376;
-      let maxHeight = 1035;
+      // let maxHeight = 1035;
       if (screenSize === ScreenSizes.Small) {
         minWidth = 296;
-        maxHeight = 795;
+        // maxHeight = 795;
       }
       return {
         "min-width": minWidth + "px",
-        "max-height": maxHeight + "px",
+        "width": "100%",
+        "min-height": "100vh",
+        // "max-height": maxHeight + "px",
       };
     },
     styleEntityDiv: () => ({
@@ -323,6 +325,7 @@ export default {
 .row-bottom {
   display: flex;
   justify-content: space-around;
+  height: 100%;
   margin-top: -3px;
   border-top: solid 2px teal;
 
@@ -331,21 +334,22 @@ export default {
       rgba(255, 255, 255, 0.1)
     ),
     url("/img/teal-bckgnd.jpg");
-  // background-size: cover;
-  background-size: contain;
-  // background-position: right;
+  background-size: cover;
+  background-position: right;
 }
 
 .row-bottom-left {
   display: flex;
   width: 100%;
   padding: 8px;
+  max-height: 780px;
 }
 
 .row-bottom-right {
   display: flex;
   width: 100%;
   padding: 8px;
+  max-height: 780px;
 }
 
 .layer-seven {
