@@ -504,6 +504,7 @@ export default {
 // message-panel
 .message-panel {
   width: 280px;
+  max-height: 330px;
   margin-top: 10px;
   margin-bottom: 10px;
   margin-right: 20px;
@@ -533,6 +534,7 @@ export default {
 
 .message-panel.small {
   width: 220px;
+  max-height: 270px;
   textarea {
     font-size: 11px;
   }
