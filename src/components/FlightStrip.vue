@@ -60,13 +60,17 @@
             <div class="font-large"><b>Traffic</b></div>
             <div>TCAS conflict</div>
           </div>
-          <div v-else-if="isLanding" class="landing">
+          <div v-else-if="isLanding" class="takeoff-landing">
             <div class="font-large"><b>Landing</b></div>
             <div>ILS approach</div>
           </div>
-          <div v-else-if="isTouchedDown" class="landing">
+          <div v-else-if="isTouchedDown" class="takeoff-landing">
             <div class="font-large"><b>Landing</b></div>
             <div>touchdown</div>
+          </div>
+          <div v-else-if="isTaxiing"  class="takeoff-landing">
+            <div class="font-large"><b>Taxiing</b></div>
+            <div>ready for take off</div>
           </div>
         </div>
       </div>
@@ -196,6 +200,12 @@ export default {
   },
 
   computed: {
+    isTaxiing: function() {
+      if (!this.plane.id) return false;
+      const plane = this.planes.find((x) => x.id === this.plane.id);
+      return plane.isTaxiing;            
+    },
+
     isEditWaypoint: function() {
       if (!this.plane.id) return false;
       const plane = this.planes.find((x) => x.id === this.plane.id);
@@ -438,7 +448,7 @@ export default {
     .title {
       color: lightgreen;
     }
-    .landing {
+    .takeoff-landing {
       color: yellow;
     }
     .conflict {
