@@ -135,7 +135,7 @@ export default {
       return {
         "min-width": minWidth + "px",
         "width": "100%",
-        "min-height": "100vh",
+        "min-height": "99vh",
         // "max-height": maxHeight + "px",
       };
     },
@@ -300,7 +300,6 @@ export default {
 }
 
 .panel-right {
-  overflow-y: auto;
   padding: 6px 12px;
   background-image: url("/img/teal-bckgnd.jpg");
   // background-image: linear-gradient(
