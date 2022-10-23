@@ -1,4 +1,5 @@
 const {
+  Direction,
   inputHeadingToRad,
   convertToSmallRad,
   convertToPosRad,
@@ -34,9 +35,10 @@ module.exports = class Square {
     this.htmlDiv = htmlDiv;
     this.htmlSquareDiv = null;
     this.htmlImgEl = null;
-
     this.width = 5;
     this.height = 5;
+
+    this.direction = Direction.None;
     this.x = positionObj.x;
     this.y = positionObj.y;
     this.altitude = positionObj.altitude;
@@ -73,6 +75,7 @@ module.exports = class Square {
     this.isTouchedDown = false;
     this.landing = false;
     this.isHolding = false;
+    this.isAtWaypoint = false;
     this.takeoff = false;
     this.distPrev = Infinity;
     this.trailPixelMs = 0;
@@ -106,7 +109,17 @@ module.exports = class Square {
 
   clickEventCB() { throw new Error('clickEventCB not attached'); }
 
+  setDirection(direction) {
+    if (!direction) return;
+    this.direction = direction;
+  }
+
+  setIsAtWaypoint(isHoldingAtWaypoint) {
+    this.isAtWaypoint = !!isHoldingAtWaypoint;
+  }
+
   setWaypoint(waypoint) {
+    this.setDirection(Direction.None);
     this.waypoint = waypoint;
   }
 
@@ -130,6 +143,10 @@ module.exports = class Square {
   setHolding(isHolding, waypoint) {
     this.waypoint = waypoint;
     this.isHolding = !!isHolding;
+    if (!isHolding) {
+      this.setIsAtWaypoint(false);
+      this.setDirection(Direction.None);
+    }
   }
 
   setOnGlidepath(arg) {
@@ -196,12 +213,13 @@ module.exports = class Square {
   }
 
   /**
-   * @param {Number} headingRad Heading in rad. Zero is East, positive angle is CW
+   * @param {Number} headingRad heading in rad. Zero is East, positive angle is CW
    * @param {Boolean} isLanding set/cancel landing mode
    * @param {Boolean} isHolding set/cancel holding mode
+   * @param {Direction} direction heading turn direction
    * @returns 
    */
-  setHeadingTarget(headingRad, isLanding, isHolding) {
+  setHeadingTarget(headingRad, isLanding, isHolding, direction) {
     if (this.isNonInteractive) return;
 
     this.setHolding(isHolding, this.waypoint);
@@ -214,6 +232,7 @@ module.exports = class Square {
     }
 
     this.setLanding(isLanding);
+    this.setDirection(direction);
     this.headingTargetRad = convertToPosRad(convertToSmallRad(headingRad));
   }
 
@@ -288,7 +307,7 @@ module.exports = class Square {
     entityManagerArr.splice(index, 1);
   }
 
-  updateHeading(headingOld, headingTarget, headingChange) {
+  updateHeading(headingOld, headingTarget, headingChange, direction) {
     const headingSmall = convertToSmallRad(headingOld);
     const headingTargetSmall = convertToSmallRad(headingTarget);
     const headingLarge = headingSmall + 2 * Math.PI;
@@ -308,6 +327,8 @@ module.exports = class Square {
     if (headingTargetSmall === headingSmall) return headingTargetSmall;
     if (isOppositeHeading) return headingIncrease;
 
+    if (direction === Direction.Right) return headingIncrease;
+    if (direction === Direction.Left) return headingDecrease;
     if (isClosestSmall) {
       const turnRight = headingTargetSmall > headingSmall;
       if (turnRight) return (headingIncrease > headingTargetSmall) ? headingTargetSmall : headingIncrease;
@@ -363,7 +384,8 @@ module.exports = class Square {
     const headingOld = this.headingRad;
     const headingTarget = this.headingTargetRad;
     const headingChange = this.turnRateRadPerMs * deltaTimeMs;
-    const headingRadNewLarge = this.updateHeading(headingOld, headingTarget, headingChange);
+    const direction = this.direction;
+    const headingRadNewLarge = this.updateHeading(headingOld, headingTarget, headingChange, direction);
     const headingRadNew = convertToPosRad(convertToSmallRad(headingRadNewLarge));
 
     if (this.takeoff) this.setSpeed(250, false, true);

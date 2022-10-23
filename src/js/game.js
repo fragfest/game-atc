@@ -1,7 +1,7 @@
 const Waypoint = require('./Waypoint');
 const Square = require('./Square');
 const Runway = require('./Runway');
-import { isCloseToEntity, hasEntityUpdate } from './entity';
+import { isCloseToEntity, hasEntityFuncs } from './entity';
 import { getRunway, Runways, Waypoints, getWaypoint } from './airports/LHR';
 import { getGameSize, setupGameLoadAndExit } from "./utils";
 import { create } from './Plane';
@@ -164,7 +164,7 @@ const createSquare = (argObj, entityManagerArr, chanceOfSquare, createEntityFn) 
 }
 
 const entityManagerAdd = entityManagerArr => obj => {
-  if (hasEntityUpdate(obj)) entityManagerArr.push(obj);
+  if (hasEntityFuncs(obj)) entityManagerArr.push(obj);
   else throw new Error('non-entity not added \n' + JSON.stringify(obj));
 }
 

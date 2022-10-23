@@ -1,5 +1,11 @@
 const Square = require('./Square');
-const { WaypointType } = require('./types');
+const { WaypointType, HoldingPosition } = require('./types');
+const { isCloseToWaypoint } = require('./entity');
+const {
+  Direction,
+  convertToSmallDegrees,
+  radToDegrees,
+} = require('./utils');
 
 ////////////////////////////////////////////////////////////
 // class Waypoint
@@ -10,6 +16,15 @@ module.exports = class Waypoint {
     this.id = Math.random();
     this.title = title.trim();
     this.type = waypointObj.type || WaypointType.Arrival;
+    const holdingPosition = waypointObj.holdingPosition || HoldingPosition.North;
+    if (holdingPosition === HoldingPosition.North) {
+      this.westSideTurnDirection = Direction.Right;
+      this.eastSideTurnDirection = Direction.Left;
+    }
+    if (holdingPosition === HoldingPosition.South) {
+      this.westSideTurnDirection = Direction.Left;
+      this.eastSideTurnDirection = Direction.Right;
+    }
 
     this.ctx = entityLayerObj.ctx
     this.textLayerObj = textLayerObj;
@@ -20,8 +35,6 @@ module.exports = class Waypoint {
     this.altitude = 6000;
   }
 
-  updateDestroy() { }
-
   update({ entityManagerArr }) {
     const planeHolding = (entity) => {
       if (!(entity instanceof Square)) return false;
@@ -29,15 +42,25 @@ module.exports = class Waypoint {
       if (entity.waypoint === this.title) return true;
       return false;
     };
-    const planesHolding = entityManagerArr.filter(planeHolding);
+    const isClose = isCloseToWaypoint({ ...this, altitude: 0 });
 
+    const planesHolding = entityManagerArr.filter(planeHolding);
     planesHolding.forEach((plane) => {
       const deltaY = this.y - plane.y;
       const deltaX = this.x - plane.x;
+      let direction = null;
       let headingRad = Math.atan(deltaY / deltaX);
       if (deltaX < 0) headingRad += Math.PI;
+      const headingDeg = convertToSmallDegrees(radToDegrees(headingRad));
 
-      plane.setHeadingTarget(headingRad, false, true);
+      if (plane.isAtWaypoint) direction = null;
+      if (!plane.isAtWaypoint && isClose(plane)) {
+        plane.setIsAtWaypoint(true);
+        if (180 <= headingDeg && headingDeg <= 360) direction = this.westSideTurnDirection;
+        if (0 < headingDeg && headingDeg < 180) direction = this.eastSideTurnDirection;
+      }
+
+      plane.setHeadingTarget(headingRad, false, true, direction);
     });
   }
 

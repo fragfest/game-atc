@@ -83,7 +83,7 @@ const setRndFlightTitle = obj => {
   return obj.airlineCode + leftPadZeros(Math.floor((Math.random() * 1000)));
 };
 const setAlt = () => Math.floor(rand(7000, 10000) / 100) * 100;
-const setSpd = () => Math.floor(rand(250, 300) / 5) * 5;
+const setSpd = () => Math.floor(rand(250, 280) / 5) * 5;
 
 const spawnArrival = (width, height, sectionInt) => {
   if (sectionInt === 1) {

@@ -7,10 +7,9 @@ const hasEntityState = state => {
     && 'altitude' in state;
 };
 
-export const hasEntityUpdate = entity => {
+export const hasEntityFuncs = entity => {
   return (
     typeof entity.update === 'function' &&
-    typeof entity.updateDestroy === 'function' &&
     typeof entity.draw === 'function'
   );
 };

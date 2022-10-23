@@ -1,24 +1,9 @@
-// SETUP /////////////////////////////////////////////////////////////////
-export const ScreenSizes = Object.freeze({
-  Small: 'small',
-  Large: 'large',
+// WAYPOINT /////////////////////////////////////////////////////////////////
+export const Direction = Object.freeze({
+  None: 'none',
+  Left: 'left',
+  Right: 'right',
 });
-export const getGameSize = (screenSize) => {
-  const obj = gameSizes[screenSize] ? gameSizes[screenSize] : gameSizes['large'];
-  return { ...obj };
-}
-export const getClassSize = (screenSize) => {
-  if (screenSize === ScreenSizes.Small) return 'small';
-  if (screenSize === ScreenSizes.Large) return 'large';
-  return '';
-};
-
-export const setupGameLoadAndExit = () => {
-  if (process.env.NODE_ENV !== 'production') return;
-  // browser prompts on reload and close
-  window.onbeforeunload = function () { return ''; }
-  window.close = function () { return ''; }
-}
 
 // ALTITUDE /////////////////////////////////////////////////////////////////
 export const altitudeDisplay = alt => Math.round(alt / 10) * 10;
@@ -63,6 +48,28 @@ export const isValidSpeed = (plane, str) => {
 
   const isInRange = (parseInt(str) >= min) && (parseInt(str) <= plane.speedMax);
   return isValidThreeDigitInput(str, isInRange);
+}
+
+// SETUP /////////////////////////////////////////////////////////////////
+export const ScreenSizes = Object.freeze({
+  Small: 'small',
+  Large: 'large',
+});
+export const getGameSize = (screenSize) => {
+  const obj = gameSizes[screenSize] ? gameSizes[screenSize] : gameSizes['large'];
+  return { ...obj };
+}
+export const getClassSize = (screenSize) => {
+  if (screenSize === ScreenSizes.Small) return 'small';
+  if (screenSize === ScreenSizes.Large) return 'large';
+  return '';
+};
+
+export const setupGameLoadAndExit = () => {
+  if (process.env.NODE_ENV !== 'production') return;
+  // browser prompts on reload and close
+  window.onbeforeunload = function () { return ''; }
+  window.close = function () { return ''; }
 }
 
 ////////////////////////////////////////////////////////////////////////////

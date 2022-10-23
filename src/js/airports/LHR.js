@@ -1,5 +1,6 @@
 import { getGameSize, ScreenSizes } from "../utils";
-import { WaypointType } from '../types';
+import { WaypointType, HoldingPosition } from '../types';
+
 
 export const Runways = Object.freeze({
   TwoSevenRight: '27R',
@@ -85,24 +86,28 @@ const waypoints = (waypoint, screenSize) => {
     switch (waypoint) {
       case 'BNN':
         return {
+          holdingPosition: HoldingPosition.North,
           type: WaypointType.Arrival,
           x: width / 2 - 215,
           y: height / 2 - 155,
         };
       case 'OCK':
         return {
+          holdingPosition: HoldingPosition.South,
           type: WaypointType.Arrival,
           x: 465,
           y: height - 160,
         };
       case 'LAM':
         return {
+          holdingPosition: HoldingPosition.North,
           type: WaypointType.Arrival,
           x: width / 2 + 400,
           y: height / 2 - 150,
         };
       case 'BIG':
         return {
+          holdingPosition: HoldingPosition.South,
           type: WaypointType.Arrival,
           x: width / 2 + 350,
           y: height / 2 + 160,
