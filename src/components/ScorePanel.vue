@@ -28,6 +28,7 @@ export default {
     subscribe(ScoreEvents.ScoreEV, (score) => {
       let scoreTotal = score.scoreTotal;
       if(scoreTotal >= 99999) scoreTotal = 99999;
+      if(scoreTotal <= -9999) scoreTotal = -9999;
       this.scoreTotal = scoreTotal.toLocaleString('en-CA');
     });
   },

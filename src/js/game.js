@@ -9,6 +9,9 @@ import { setup as setupKeyboard } from './events/keyboard';
 import { resetProximity, setup as setupScore } from './panelBottom/score';
 import { draw as drawScale } from './canvas/scale';
 
+const isSquare = obj => obj instanceof Square;
+const isNotTaxiing = obj => !obj.isTaxiing;
+
 // SETUP ////////////////////////////////////////////////////////////////
 let gameLoopRunning = false;
 
@@ -172,6 +175,3 @@ const callFn = (fnStr, argsObj) => entity => {
   if (!entity) return null;
   entity[fnStr] ? entity[fnStr](argsObj) : null;
 }
-
-const isSquare = obj => obj instanceof Square;
-const isNotTaxiing = obj => !obj.isTaxiing;

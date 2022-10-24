@@ -47,9 +47,11 @@
           <HelpPanel
             :screenSize="screenSize"
           ></HelpPanel>
-          <ScorePanel
-            :screenSize="screenSize"
-          ></ScorePanel>
+          <div class="col">
+            <ScorePanel
+              :screenSize="screenSize"
+            ></ScorePanel>
+          </div>
         </div>
         <div class="row-bottom-right">
           <ControlPanel
@@ -263,26 +265,26 @@ export default {
         plane.setIsEditWaypoint(true)
       });
     });
-    subscribe(KeyboardEvents.KeyboardLetter_T_EV, () =>
+    subscribe(KeyboardEvents.KeyboardLetter_T_EV, () => {
       callMethodEV(getPlaneSelectedIndex(), plane => {
         plane.startTakeoff();
       })
-    );
-    subscribe(KeyboardEvents.KeyboardLetter_H_EV, () =>
+    });
+    subscribe(KeyboardEvents.KeyboardLetter_H_EV, () => {
       callMethodEV(getPlaneSelectedIndex(), plane => {
         plane.setHolding(!plane.isHolding, plane.waypoint)
         this.$refs.controlPanel.setFocus();
       })
-    );
-    subscribe(KeyboardEvents.KeyboardLetter_L_EV, () =>
+    });
+    subscribe(KeyboardEvents.KeyboardLetter_L_EV, () => {
       callMethodEV(getPlaneSelectedIndex(), plane => plane.setLanding(true))
-    );
+    });
     subscribe(KeyboardEvents.KeyboardArrowDownEV, () => {
       arrowDownEV(getPlaneSelectedIndex())
     });
-    subscribe(KeyboardEvents.KeyboardArrowUpEV, () =>
+    subscribe(KeyboardEvents.KeyboardArrowUpEV, () => {
       arrowUpEV(getPlaneSelectedIndex())
-    );
+    });
     // EVENTS END ///////////////////////////////////////////////////////////////////
 
   },
@@ -319,6 +321,11 @@ export default {
     margin: 0;
     padding: 0 0;
   }
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
 }
 
 .row-bottom {

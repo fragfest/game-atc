@@ -65,18 +65,12 @@ module.exports = class Waypoint {
   }
 
   draw() {
-    _draw(this);
+    this.ctx.fillStyle = (this.type === WaypointType.Arrival) ? 'orange' : 'deepskyblue';
+    this.ctx.globalAlpha = 1;
+    this.ctx.fillRect(this.x - (this.width / 2), this.y - (this.height / 2), this.width, this.height);
+    this.textLayerObj.ctx.fillStyle = (this.type === WaypointType.Arrival) ? 'orange' : 'deepskyblue';
+    this.textLayerObj.ctx.font = "9px Arial"
+    this.textLayerObj.ctx.fillText(this.title, this.x + 2, this.y - 4);
   }
 };
 // end class Waypoint
-
-// PRIVATE ////////////////////////////////////////////////////////
-
-const _draw = (self) => {
-  self.ctx.fillStyle = (self.type === WaypointType.Arrival) ? 'orange' : 'deepskyblue';
-  self.ctx.globalAlpha = 1;
-  self.ctx.fillRect(self.x - (self.width / 2), self.y - (self.height / 2), self.width, self.height);
-  self.textLayerObj.ctx.fillStyle = (self.type === WaypointType.Arrival) ? 'orange' : 'deepskyblue';
-  self.textLayerObj.ctx.font = "9px Arial"
-  self.textLayerObj.ctx.fillText(self.title, self.x + 2, self.y - 4);
-}

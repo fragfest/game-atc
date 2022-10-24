@@ -348,6 +348,7 @@ export default {
     }
     .fixed-width {
       width: 75px;
+      padding-left: 12px;
     }
   }
   // strip-info end
@@ -405,7 +406,7 @@ export default {
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 8px;
+      padding: 6px;
       height: 26px;
       text-align: center;
       border-right: solid 1px #b2b0b0;
@@ -440,6 +441,7 @@ export default {
 
     .fixed-width {
       width: 120px;
+      padding-left: 10px;
     }
     .no-border {
       border: none;
