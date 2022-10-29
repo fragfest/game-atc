@@ -101,7 +101,7 @@ const entityManagerArr = ref([]);
 const squareClicked = ref({});
 
 export default {
-  name: "Canvas",
+  name: "atc-game",
   components: { FlightStrip, ControlPanel, ScorePanel, HelpPanel },
   props: {},
 
@@ -303,7 +303,7 @@ export default {
 
 .panel-right {
   padding: 6px 12px;
-  background-image: url("/img/teal-bckgnd.jpg");
+  background-image: url("/public/img/teal-bckgnd.jpg");
   // background-image: linear-gradient(
   //     rgba(255, 255, 255, 0.1),
   //     rgba(255, 255, 255, 0.1)
@@ -339,7 +339,7 @@ export default {
       rgba(255, 255, 255, 0.1),
       rgba(255, 255, 255, 0.1)
     ),
-    url("/img/teal-bckgnd.jpg");
+    url("/public/img/teal-bckgnd.jpg");
   background-size: cover;
   background-position: right;
 }

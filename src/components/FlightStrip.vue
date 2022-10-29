@@ -162,7 +162,7 @@ import { KeyboardEvents, subscribe as subscribeKeyboard } from "../js/events/key
 import { getClassSize } from "../js/utils";
 import { Waypoints, getWaypoint } from '../js/airports/LHR';
 import { WaypointType } from '../js/types';
-const Square = require("../js/Square");
+import Square from '../js/Square';
 
 import ToolTip from "./common/ToolTip";
 

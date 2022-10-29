@@ -1,6 +1,6 @@
-const Waypoint = require('./Waypoint');
-const Square = require('./Square');
-const Runway = require('./Runway');
+import Waypoint from './Waypoint';
+import Square from './Square';
+import Runway from './Runway';
 import { isCloseToEntity, hasEntityFuncs } from './entity';
 import { getRunway, Runways, Waypoints, getWaypoint } from './airports/LHR';
 import { getGameSize, setupGameLoadAndExit } from "./utils";

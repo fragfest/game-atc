@@ -1,12 +1,12 @@
-const { inputHeadingToRad, radToDegrees, convertToSmallDegrees, ScreenSizes } = require('./utils');
-const Square = require('./Square');
-const { MessageEvents, publish } = require('./events/messages');
-const { planeGoAroundPenalty } = require('./panelBottom/score');
+import { inputHeadingToRad, radToDegrees, convertToSmallDegrees, ScreenSizes } from './utils';
+import Square from './Square';
+import { MessageEvents, publish } from './events/messages';
+import { planeGoAroundPenalty } from './panelBottom/score';
 
 ////////////////////////////////////////////////////////////
 // class Runway
 ////////////////////////////////////////////////////////////
-module.exports = class Runway {
+export default class Runway {
   constructor(title, imgLayerObj, screenSize, runwayObj) {
     this.id = Math.random();
     this.title = title.trim();
@@ -88,7 +88,7 @@ module.exports = class Runway {
 
       if (!isHeadingClose(this, entity) && !entity.onGlidePath) { return entity.setLanding(false); }
       if (!isCloseToGlidepath(this, entity) && !entity.onGlidePath) { return entity.setLanding(false); }
-      if (isTooHigh(this, entity)) { return entity.setLanding(false); };
+      if (isTooHigh(this, entity)) { return entity.setLanding(false); }
       entity.setDistPrev(distObj.dist);
       entity.setOnGlidepath(true);
 
@@ -124,7 +124,7 @@ module.exports = class Runway {
   }
 
   draw() { }
-};
+}
 ////////////////////////////////////////////////////////////
 // end class Runway
 ////////////////////////////////////////////////////////////

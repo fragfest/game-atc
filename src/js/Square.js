@@ -1,4 +1,4 @@
-const {
+import {
   Direction,
   inputHeadingToRad,
   convertToSmallRad,
@@ -6,22 +6,22 @@ const {
   convHdgRadToThreeDigits,
   leftPadZeros,
   altitudeDisplay,
-} = require('./utils');
-const entityFns = require('./entity');
-const { MessageEvents, publish } = require('./events/messages');
-const {
+} from './utils';
+import * as entityFns from './entity';
+import { MessageEvents, publish } from './events/messages';
+import {
   uniqueProximityPair,
   planeProximityPenalty,
   planeLandSuccess,
   planeLeaveFail,
   planeHandoffSuccess,
-} = require('./panelBottom/score');
-const { DestinationType } = require('./aircraft/airframe');
+} from './panelBottom/score';
+import { DestinationType } from './aircraft/airframe';
 
 ////////////////////////////////////////////////////////////
 // class Square
 ////////////////////////////////////////////////////////////
-module.exports = class Square {
+export default class Square {
   constructor(title, entityLayerObj, textLayerObj, headingLayerObj, htmlDiv, positionObj, planeObj) {
     this.id = Math.random();
     this.title = title.trim().substring(0, 6);
@@ -518,7 +518,7 @@ module.exports = class Square {
       });
     }
   }
-};
+}
 ////////////////////////////////////////////////////////////
 // end class Square
 ////////////////////////////////////////////////////////////

@@ -1,16 +1,16 @@
-const Square = require('./Square');
-const { WaypointType, HoldingPosition } = require('./types');
-const { isCloseToWaypoint } = require('./entity');
-const {
+import Square from './Square';
+import { WaypointType, HoldingPosition } from './types';
+import { isCloseToWaypoint } from './entity';
+import {
   Direction,
   convertToSmallDegrees,
   radToDegrees,
-} = require('./utils');
+} from './utils';
 
 ////////////////////////////////////////////////////////////
 // class Waypoint
 ////////////////////////////////////////////////////////////
-module.exports = class Waypoint {
+export default class Waypoint {
   constructor(title, entityLayerObj, textLayerObj, waypointObj) {
     this.class = 'waypoint';
     this.id = Math.random();
@@ -72,5 +72,5 @@ module.exports = class Waypoint {
     this.textLayerObj.ctx.font = "9px Arial"
     this.textLayerObj.ctx.fillText(this.title, this.x + 2, this.y - 4);
   }
-};
+}
 // end class Waypoint

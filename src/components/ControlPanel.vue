@@ -166,7 +166,7 @@
 </template>
 
 <script>
-const {
+import {
   convHdgRadToThreeDigits,
   convertToSmallDegrees,
   radToDegrees,
@@ -176,7 +176,7 @@ const {
   leftPadZeros,
   altitudeDisplay,
   getClassSize,
-} = require("../js/utils");
+} from "../js/utils";
 import { MessageEvents, subscribe } from "../js/events/messages";
 import { DestinationType } from "../js/aircraft/airframe";
 

@@ -1,14 +1,14 @@
 <template>
-  <Canvas />
+  <Game />
 </template>
 
 <script>
-import Canvas from './components/Canvas.vue'
+import Game from './components/Game.vue'
 
 export default {
   name: 'App',
   components: {
-    Canvas
+    Game
   }
 }
 </script>
