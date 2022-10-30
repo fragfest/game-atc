@@ -19,7 +19,7 @@
 
         <div v-if="isArrival && isEditWaypoint" class="col fixed-width font-large">
           <div>
-            <b class="select-border">{{ waypointSel }}</b>
+            <b class="select-border">{{ plane.waypointEdit }}</b>
           </div>
           <hr />
           <div class="btn-group">
@@ -68,7 +68,7 @@
             <div class="font-large"><b>Landing</b></div>
             <div>touchdown</div>
           </div>
-          <div v-else-if="isTaxiing"  class="takeoff-landing">
+          <div v-else-if="isTaxiing" class="takeoff-landing">
             <div class="font-large"><b>Taxiing</b></div>
             <div>ready for take off</div>
           </div>
@@ -179,13 +179,10 @@ export default {
   data() {
     return {
       isHover: false,
-      waypointSel: '',
     };
   },
 
   mounted() {
-    this.waypointSel = this.plane.waypoint;
-
     subscribeKeyboard(KeyboardEvents.KeyboardLetter_C_EV, () => {
       if(this.plane.id !== this.planeSelected.id) return;
       if(!this.plane.isEditWaypoint) return;
@@ -279,20 +276,22 @@ export default {
 
   methods: {
     cycleClick: function() {
+      const plane = this.planes.find((x) => x.id === this.plane.id);
       const isArrival = waypoint => getWaypoint(waypoint, this.screenSize).type === WaypointType.Arrival;
       const waypoints = Object.values(Waypoints);
       const waypointArrivals = waypoints.filter(isArrival);
 
-      const indexSel = waypointArrivals.findIndex(str => str === this.waypointSel);
+      const indexSel = waypointArrivals.findIndex(str => str === plane.waypointEdit);
       let indexNext = indexSel + 1;
       if(indexNext >= waypointArrivals.length) indexNext = 0;
       const waypointNext = waypointArrivals[indexNext];
-      this.waypointSel = waypointNext;
+      plane.setWaypointEdit(waypointNext);
     },
 
     selectClick: function() {
-      this.plane.setWaypoint(this.waypointSel);
-      this.plane.setIsEditWaypoint(false);
+      const plane = this.planes.find((x) => x.id === this.plane.id);
+      plane.setWaypoint(plane.waypointEdit);
+      plane.setIsEditWaypoint(false);
     },
 
     editWaypointClick: function() {

@@ -262,7 +262,7 @@ export default {
     };
     subscribe(KeyboardEvents.KeyboardLetter_W_EV, () => {
       callMethodEV(getPlaneSelectedIndex(), plane => {
-        plane.setIsEditWaypoint(true)
+        plane.setIsEditWaypoint(true);
       });
     });
     subscribe(KeyboardEvents.KeyboardLetter_T_EV, () => {
