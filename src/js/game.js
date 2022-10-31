@@ -33,7 +33,13 @@ export const setup = (argObj) => {
   let firstPlane = true;
 
   const createPlane = (deltaTimeMs) => {
-    const chanceOfPlanePerSec = 0.02;
+    const lowCount = 8;
+    const highCount = 16;
+    let chanceOfPlanePerSec = 0.03;
+
+    const count = entityManagerArr.filter(isSquare).length;
+    if (count < lowCount) chanceOfPlanePerSec = 0.1;
+    if (count > highCount) chanceOfPlanePerSec = 0.005;
     let chanceOfPlane = chanceOfPlanePerSec * deltaTimeMs / 1000;
     if (firstPlane) {
       firstPlane = false;
