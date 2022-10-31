@@ -225,6 +225,7 @@ export default {
     setup(setupArg);
 
     // EVENTS //////////////////////////////////////////////////////////////////////
+
     // window.addEventListener("resize", () => {
     //   // setup(setupArg);
     // });
@@ -238,9 +239,10 @@ export default {
     };
 
     const selectEV = (newIndex) => {
-      squareClicked.value = this.planes[newIndex];
+      const planeSelected = this.planes[newIndex];
+      squareClicked.value = planeSelected;
       this.$refs.controlPanel.setFocus();
-      setPlaneSelected(setupArg, squareClicked.value);
+      setPlaneSelected(setupArg, planeSelected);
     };
     const arrowDownEV = (index) => {
       if (this.planes.length === 0) return;

@@ -365,8 +365,12 @@ export default {
 
       this.$nextTick(() => {
         const field = newPlane.isHolding ? 'inputAltitude' : 'inputHeading';
-        if (newPlane.id) this.$refs[field].focus();
-        if (!newPlane.id) this.$refs[field].blur();
+        if (newPlane.id) {
+          this.$refs[field].blur();
+          if (!newPlane.isNonInteractive) this.$refs[field].focus();
+        } else {
+          this.$refs[field].blur();
+        }
       });
     },
   },
@@ -376,12 +380,15 @@ export default {
     setFocus: function () {
       const field = this.planeSelected.isHolding ? 'inputAltitude' : 'inputHeading';
       this.$nextTick(() => {
-        this.$refs[field].focus();
+        this.$refs[field].blur();
+        if (!this.planeSelected.isNonInteractive) {
+          this.$refs[field].focus();
+        }
       });
     },
 
     takeoffClick: function () {
-      if(!this.planeSelected.id) return;
+      if (!this.planeSelected.id) return;
       this.planeSelected.startTakeoff();
     },
 
