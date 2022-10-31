@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@babel/eslint-parser": "^7.19.1",
+    "bowser": "^2.11.0",
     "core-js": "^3.6.5",
     "sass-loader": "^13.1.0",
     "vue": "^3.2.41"

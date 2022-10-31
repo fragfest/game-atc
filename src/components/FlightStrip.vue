@@ -72,6 +72,7 @@
             <div class="font-large"><b>Taxiing</b></div>
             <div>ready for take off</div>
           </div>
+          <div v-else></div>
         </div>
       </div>
 
@@ -143,7 +144,14 @@
           :stroke-width="outerLineMed"
         />
 
-        <path
+        <path v-if="isSafari"
+          :fill="gradientStart"
+          d="M0.76,3 4.29,0.8 50.07,0.8 54.36,2.0 78.68,2.0 82.83,0.8 97.8,0.8 99.2,2.2 99.2,18.1 97.8,19.3 4.48,19.3 0.76,17.1 0.76,2"
+          @click="click(plane)"
+          @mouseover="hover()"
+          @mouseout="flatten()"
+        />
+        <path v-else
           :fill="'url(#gradient-' + plane.id + ')'"
           d="M0.76,3 4.29,0.8 50.07,0.8 54.36,2.0 78.68,2.0 82.83,0.8 97.8,0.8 99.2,2.2 99.2,18.1 97.8,19.3 4.48,19.3 0.76,17.1 0.76,2"
           @click="click(plane)"
@@ -156,14 +164,13 @@
 </template>
 
 <script>
-// TODO safari bug. flightstrip background sometimes goes black. occurs when flighstrips are removed
+import Bowser from "bowser";
 
 import { KeyboardEvents, subscribe as subscribeKeyboard } from "../js/events/keyboard";
 import { getClassSize } from "../js/utils";
 import { Waypoints, getWaypoint } from '../js/airports/LHR';
 import { WaypointType } from '../js/types';
 import Square from '../js/Square';
-
 import ToolTip from "./common/ToolTip";
 
 export default {
@@ -179,10 +186,14 @@ export default {
   data() {
     return {
       isHover: false,
+      isSafari: false,
     };
   },
 
   mounted() {
+    const browser = Bowser.getParser(window.navigator.userAgent).getBrowserName();
+    this.isSafari = browser === 'Safari';
+
     subscribeKeyboard(KeyboardEvents.KeyboardLetter_C_EV, () => {
       if(this.plane.id !== this.planeSelected.id) return;
       if(!this.plane.isEditWaypoint) return;
@@ -280,6 +291,7 @@ export default {
       const isArrival = waypoint => getWaypoint(waypoint, this.screenSize).type === WaypointType.Arrival;
       const waypoints = Object.values(Waypoints);
       const waypointArrivals = waypoints.filter(isArrival);
+      // TODO very rare temp waypointArrivals array reduced length
 
       const indexSel = waypointArrivals.findIndex(str => str === plane.waypointEdit);
       let indexNext = indexSel + 1;
