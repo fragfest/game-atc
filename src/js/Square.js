@@ -82,11 +82,9 @@ export default class Square {
     this.trailPixelArr = [];
 
     // flightstrip info
-    this.isEditWaypoint = false;
     this.hasProximityAlert = false;
     this.destinationType = planeObj.destinationType || ""; // TODO consolidate with WaypointType
     this.runway = planeObj.runway || "";
-    this.waypointEdit = planeObj.waypoint || "";
     this.waypoint = planeObj.waypoint || "";
     this.airframe = planeObj.airframeObj.type || "";
     this.wake = planeObj.airframeObj.wake;
@@ -119,17 +117,9 @@ export default class Square {
     this.isAtWaypoint = !!isHoldingAtWaypoint;
   }
 
-  setWaypointEdit(waypoint) {
-    this.waypointEdit = waypoint;
-  }
-
   setWaypoint(waypoint) {
     this.setDirection(Direction.None);
     this.waypoint = waypoint;
-  }
-
-  setIsEditWaypoint(isEditWaypoint) {
-    this.isEditWaypoint = !!isEditWaypoint;
   }
 
   startTakeoff() {

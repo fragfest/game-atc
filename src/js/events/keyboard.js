@@ -3,8 +3,6 @@ export const KeyboardEvents = Object.freeze({
   KeyboardArrowDownEV: 'KeyboardArrowDownEV',
   KeyboardArrowUpEV: 'KeyboardArrowUpEV',
   KeyboardLetter_W_EV: 'KeyboardLetter_W_EV',
-  KeyboardLetter_C_EV: 'KeyboardLetter_C_EV',
-  KeyboardLetter_S_EV: 'KeyboardLetter_S_EV',
   KeyboardLetter_L_EV: 'KeyboardLetter_L_EV',
   KeyboardLetter_H_EV: 'KeyboardLetter_H_EV',
   KeyboardLetter_T_EV: 'KeyboardLetter_T_EV',
@@ -29,16 +27,6 @@ export const setup = () => {
       case 'W':
         ev.preventDefault();
         document.dispatchEvent(new Event(KeyboardEvents.KeyboardLetter_W_EV));
-        break;
-      case 's':
-      case 'S':
-        ev.preventDefault();
-        document.dispatchEvent(new Event(KeyboardEvents.KeyboardLetter_S_EV));
-        break;
-      case 'c':
-      case 'C':
-        ev.preventDefault();
-        document.dispatchEvent(new Event(KeyboardEvents.KeyboardLetter_C_EV));
         break;
       case 'l':
       case 'L':

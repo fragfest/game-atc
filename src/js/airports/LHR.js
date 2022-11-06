@@ -28,6 +28,10 @@ export const Waypoints = Object.freeze({
   BPK: 'BPK',
 });
 
+export const getWaypointArrivalsAll = () => {
+  return ['BNN', 'OCK', 'LAM', 'BIG'];
+}
+
 export const getWaypointDeparture = () => {
   const waypointsDeparture = ['DET', 'MID', 'CPT', 'BPK'];
   const indexDeparture = Math.floor(Math.random() * waypointsDeparture.length);

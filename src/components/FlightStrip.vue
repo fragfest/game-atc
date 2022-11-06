@@ -17,32 +17,12 @@
           <b>{{ plane.runway }}</b>
         </div>
 
-        <div v-if="isArrival && isEditWaypoint" class="col fixed-width font-large">
-          <div>
-            <b class="select-border">{{ plane.waypointEdit }}</b>
-          </div>
-          <hr />
-          <div class="btn-group">
-            <ToolTip>
-              <button @click="cycleClick">
-                <span>cycle</span>
-              </button>
-              <template v-slot:hover>scroll waypoints (C)</template>
-            </ToolTip>
-            <ToolTip>
-              <button @click="selectClick">
-                <span>select</span>
-              </button>
-              <template v-slot:hover>select waypoint (S)</template>
-            </ToolTip>
-          </div>
-        </div>
-        <div v-else-if="!isArrival" class="col font-large">
+        <div v-if="!isArrival" class="col font-large">
           <b>{{ plane.waypoint }}</b>
         </div>
         <ToolTip v-else>
           <div class="col">
-            <button @click="editWaypointClick">
+            <button @click="waypointClick">
               <span class="font-large">
                 <b>{{ plane.waypoint }}</b>
               </span>
@@ -51,11 +31,11 @@
           <template v-slot:hover>edit waypoint (W)</template>
         </ToolTip>
 
-        <div v-if="!isEditWaypoint" class="col">
+        <div class="col">
           {{ plane.airframe }} / {{ plane.wake }}
         </div>
 
-        <div v-if="!isEditWaypoint" class="col fixed-width no-border">
+        <div class="col fixed-width no-border">
           <div v-if="hasProximityAlert" class="conflict">
             <div class="font-large"><b>Traffic</b></div>
             <div>TCAS conflict</div>
@@ -166,10 +146,8 @@
 <script>
 import Bowser from "bowser";
 
-import { KeyboardEvents, subscribe as subscribeKeyboard } from "../js/events/keyboard";
-import { getClassSize } from "../js/utils";
-import { Waypoints, getWaypoint } from '../js/airports/LHR';
-import { WaypointType } from '../js/types';
+import { getClassSize, nextWaypoint } from "../js/utils";
+import { getWaypointArrivalsAll } from '../js/airports/LHR';
 import Square from '../js/Square';
 import ToolTip from "./common/ToolTip";
 
@@ -193,18 +171,6 @@ export default {
   mounted() {
     const browser = Bowser.getParser(window.navigator.userAgent).getBrowserName();
     this.isSafari = browser === 'Safari';
-
-    subscribeKeyboard(KeyboardEvents.KeyboardLetter_C_EV, () => {
-      if(this.plane.id !== this.planeSelected.id) return;
-      if(!this.plane.isEditWaypoint) return;
-      this.cycleClick();
-    });
-
-    subscribeKeyboard(KeyboardEvents.KeyboardLetter_S_EV, () => {
-      if(this.plane.id !== this.planeSelected.id) return;
-      if(!this.plane.isEditWaypoint) return;
-      this.selectClick();
-    });
   },
 
   computed: {
@@ -212,12 +178,6 @@ export default {
       if (!this.plane.id) return false;
       const plane = this.planes.find((x) => x.id === this.plane.id);
       return plane.isTaxiing;            
-    },
-
-    isEditWaypoint: function() {
-      if (!this.plane.id) return false;
-      const plane = this.planes.find((x) => x.id === this.plane.id);
-      return plane.isEditWaypoint;      
     },
 
     isArrival: function() {
@@ -286,28 +246,10 @@ export default {
   },
 
   methods: {
-    cycleClick: function() {
+    waypointClick: function() {
       const plane = this.planes.find((x) => x.id === this.plane.id);
-      const isArrival = waypoint => getWaypoint(waypoint, this.screenSize).type === WaypointType.Arrival;
-      const waypoints = Object.values(Waypoints);
-      const waypointArrivals = waypoints.filter(isArrival);
-      // TODO very rare temp waypointArrivals array reduced length
-
-      const indexSel = waypointArrivals.findIndex(str => str === plane.waypointEdit);
-      let indexNext = indexSel + 1;
-      if(indexNext >= waypointArrivals.length) indexNext = 0;
-      const waypointNext = waypointArrivals[indexNext];
-      plane.setWaypointEdit(waypointNext);
-    },
-
-    selectClick: function() {
-      const plane = this.planes.find((x) => x.id === this.plane.id);
-      plane.setWaypoint(plane.waypointEdit);
-      plane.setIsEditWaypoint(false);
-    },
-
-    editWaypointClick: function() {
-      this.plane.setIsEditWaypoint(true);
+      const waypoint = nextWaypoint(getWaypointArrivalsAll(), plane);
+      plane.setWaypoint(waypoint);
     },
 
     click: function (plane) {

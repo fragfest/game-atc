@@ -5,6 +5,13 @@ export const Direction = Object.freeze({
   Right: 'right',
 });
 
+export const nextWaypoint = (waypointsArr, plane) => {
+  const indexSel = waypointsArr.findIndex(str => str === plane.waypoint);
+  let indexNext = indexSel + 1;
+  if (indexNext >= waypointsArr.length) indexNext = 0;
+  return waypointsArr[indexNext];
+}
+
 // ALTITUDE /////////////////////////////////////////////////////////////////
 export const altitudeDisplay = alt => Math.round(alt / 10) * 10;
 

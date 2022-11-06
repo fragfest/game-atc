@@ -87,8 +87,10 @@ import HelpPanel from "./HelpPanel"
 import ScorePanel from "./ScorePanel";
 import ControlPanel from "./ControlPanel";
 import FlightStrip from "./FlightStrip";
+
+import { getWaypointArrivalsAll } from '../js/airports/LHR';
 import { setup, setupEntities, setPlaneSelected } from "../js/game";
-import { ScreenSizes, getGameSize } from "../js/utils";
+import { ScreenSizes, getGameSize, nextWaypoint } from "../js/utils";
 import { KeyboardEvents, subscribe } from "../js/events/keyboard";
 
 const isSquare = obj => obj instanceof Square;
@@ -264,7 +266,8 @@ export default {
     };
     subscribe(KeyboardEvents.KeyboardLetter_W_EV, () => {
       callMethodEV(getPlaneSelectedIndex(), plane => {
-        plane.setIsEditWaypoint(true);
+        const waypoint = nextWaypoint(getWaypointArrivalsAll(), plane);
+        plane.setWaypoint(waypoint);
       });
     });
     subscribe(KeyboardEvents.KeyboardLetter_T_EV, () => {
