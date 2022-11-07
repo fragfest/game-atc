@@ -4,13 +4,21 @@ import { WaypointType, HoldingPosition } from '../types';
 
 export const Runways = Object.freeze({
   TwoSevenRight: '27R',
+  TwoSevenLeft: '27L',
 });
+
+export const getRunwaysAll = () => {
+  return ['27R', '27L'];
+}
+
+export const getRunwayRnd = () => {
+  const index = Math.floor(Math.random() * getRunwaysAll().length);
+  return getRunwaysAll()[index];
+}
 
 export const getRunway = (runway, screenSize) => {
   const obj = runways(runway, screenSize);
-  if (!obj) {
-    throw new Error('runway not found: ' + runway);
-  }
+  if (!obj) throw new Error('runway not found: ' + runway);
   return obj;
 };
 
@@ -28,11 +36,15 @@ export const Waypoints = Object.freeze({
   BPK: 'BPK',
 });
 
+export const getWaypointDestinationsAll = () => {
+  return ['DET', 'MID', 'CPT', 'BPK'];
+}
+
 export const getWaypointArrivalsAll = () => {
   return ['BNN', 'OCK', 'LAM', 'BIG'];
 }
 
-export const getWaypointDeparture = () => {
+export const getWaypointDepartureRnd = () => {
   const waypointsDeparture = ['DET', 'MID', 'CPT', 'BPK'];
   const indexDeparture = Math.floor(Math.random() * waypointsDeparture.length);
   return waypointsDeparture[indexDeparture];
@@ -40,9 +52,7 @@ export const getWaypointDeparture = () => {
 
 export const getWaypoint = (waypoint, screenSize) => {
   const obj = waypoints(waypoint, screenSize);
-  if (!obj) {
-    throw new Error('waypoint not found: ' + waypoint);
-  }
+  if (!obj) throw new Error('waypoint not found: ' + waypoint);
   return obj;
 };
 
@@ -78,6 +88,16 @@ const runways = (runway, screenSize) => {
         heading: 270,
         length,
         width: runwayWidth,
+        titlePosition: { x: 0, y: -5 },
+      };
+    case '27L':
+      return {
+        x: width / 2 + xOffset,
+        y: height / 2 + 18 + yOffset,
+        heading: 270,
+        length,
+        width: runwayWidth,
+        titlePosition: { x: 0, y: 11 },
       };
   }
 };

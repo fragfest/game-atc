@@ -2,13 +2,15 @@ import Square from './Square';
 import { leftPadZeros, convHdgDegToThreeDigits, convHdgRadToThreeDigits } from './utils';
 import { getFlightArrival, getFlightDeparture } from './flights/LHR';
 import { DestinationType, getPerformance } from './aircraft/airframe';
-import { Waypoints, getWaypointDeparture } from './airports/LHR';
+import { Waypoints, getWaypointDepartureRnd, getRunwayRnd } from './airports/LHR';
 
 export const create = ({
-  runway, screenSize, width, height,
+  entityManagerArr, screenSize, width, height,
   canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl, clickCB
 }) => {
-  const runwayTitle = runway.title;
+  const runwayTitleRnd = getRunwayRnd();
+  const runway = entityManagerArr.find(x => x.title === runwayTitleRnd);
+  console.log(runway.title, runwayTitleRnd)
 
   let destinationType = DestinationType.Departure;
   if (Math.random() > isArrivalIfRndAbove) destinationType = DestinationType.Arrival;
@@ -36,7 +38,7 @@ export const create = ({
       canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl,
       // { x: width / 1.69, y: height / 1.88, heading: '270', altitude: 1200, speed: 180 },
       { x: newPlane.x, y: newPlane.y, heading: newPlane.heading, altitude, speed },
-      { destinationType, airframeObj, waypoint: newPlane.waypoint, runway: runwayTitle }
+      { destinationType, airframeObj, waypoint: newPlane.waypoint, runway: runway.title }
     );
     square.clickEventCB = () => clickCB(square);
   }
@@ -46,7 +48,7 @@ export const create = ({
       x: runway.x,
       y: runway.y,
       heading: convHdgRadToThreeDigits(runway.runwayHeading),
-      waypoint: getWaypointDeparture(),
+      waypoint: getWaypointDepartureRnd(),
     };
     const altitude = 0;
     const speed = 0;
@@ -65,7 +67,7 @@ export const create = ({
       canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl,
       // { x: width / 2 + 200, y: 40, heading: '270', altitude: 6500, speed: 200 },
       { x: newPlane.x, y: newPlane.y, heading: newPlane.heading, altitude, speed },
-      { destinationType, airframeObj, waypoint: newPlane.waypoint, runway: runwayTitle }
+      { destinationType, airframeObj, waypoint: newPlane.waypoint, runway: runway.title }
     );
     square.clickEventCB = () => clickCB(square);
   }
@@ -83,7 +85,7 @@ const setRndFlightTitle = obj => {
   return obj.airlineCode + leftPadZeros(Math.floor((Math.random() * 1000)));
 };
 const setAlt = () => Math.floor(rand(7000, 10000) / 100) * 100;
-const setSpd = () => Math.floor(rand(250, 280) / 5) * 5;
+const setSpd = () => Math.floor(rand(230, 250) / 5) * 5;
 
 const spawnArrival = (width, height, sectionInt) => {
   if (sectionInt === 1) {

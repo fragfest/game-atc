@@ -22,6 +22,9 @@ export default class Runway {
     this.runwayHeading = inputHeadingToRad(runwayObj.heading);
     this.waypoint = runwayObj.waypoint;
     this.landingEntities = [];
+    this.titlePosition = runwayObj.titlePosition || {};
+    this.titleX = this.titlePosition.x || 0;
+    this.titleY = this.titlePosition.y || 0;
 
     // this.ctx.fillStyle = 'greenyellow';
     // this.ctx.fillRect(this.x - 2, this.y - 2, 4, 4);
@@ -38,7 +41,7 @@ export default class Runway {
 
     this.ctx.fillStyle = 'greenyellow';
     this.ctx.font = "bold 9px Arial"
-    this.ctx.fillText('27R', this.x, this.y - 5);
+    this.ctx.fillText(this.title, this.x + this.titleX, this.y + this.titleY);
 
     // draw runway heading dashes
     const length = this.isSmall ? 65 : 100;
@@ -82,6 +85,7 @@ export default class Runway {
       const isGettingCloser = distObj.dist < entity.distPrev;
 
       if (entity.destroyFlag) return;
+      if (entity.runway !== this.title) return;
       if (!entity.landing) return;
       if (!isGettingCloser && !isEntityOnRunway(entity)) { return this.updateGoAround(entity); }
       if (isEntityOnRunway(entity)) return;

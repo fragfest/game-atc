@@ -437,12 +437,12 @@ export default class Square {
     if (this.hasProximityAlert) {
       color = 'orangered';
       this.htmlImgEl.src = this.iconConflict;
-    } else if (this.landing) {
-      color = 'yellow';
-      this.htmlImgEl.src = this.iconLanding;
     } else if (this.isSelected) {
       color = 'greenyellow';
       this.htmlImgEl.src = this.iconSelected;
+    } else if (this.landing) {
+      color = 'yellow';
+      this.htmlImgEl.src = this.iconLanding;
     } else {
       color = 'white';
       this.htmlImgEl.src = this.iconDefault
