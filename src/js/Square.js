@@ -486,14 +486,17 @@ export default class Square {
   }
 
   setProximity({ entityManagerArr, screenSize }) {
-    const isNotTaxiing = plane => !plane.isTaxiing && !this.isTaxiing;
+    const isPlane = plane => plane instanceof Square;
     const isEntityCloseTo = entityFns.isCloseToEntity(screenSize)(this);
-    const isValidClosePlane = plane => {
-      const isSquare = plane instanceof Square;
-      return isEntityCloseTo(plane) && isSquare && isNotTaxiing(plane);
-    }
+    const isAirborne = plane => !plane.isTaxiing && !plane.takeoff && !plane.isTouchedDown;
+    const isOnRunway = plane => !plane.isTaxiing && (plane.takeoff || plane.isTouchedDown);
+    const isSameRunway = plane => plane.runway === this.runway;
 
-    const planeClose = entityManagerArr.find(isValidClosePlane);
+    const isCloseAirborne = plane => isAirborne(plane) && isAirborne(this);
+    const isCloseRunway = plane => isOnRunway(plane) && isOnRunway(this) && isSameRunway(plane);
+    const isPlaneClose = plane => isPlane(plane) && isEntityCloseTo(plane) && (isCloseAirborne(plane) || isCloseRunway(plane));
+
+    const planeClose = entityManagerArr.find(isPlaneClose);
     if (!planeClose) {
       this.hasProximityAlert = false;
       return;

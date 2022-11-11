@@ -10,7 +10,6 @@ export const create = ({
 }) => {
   const runwayTitleRnd = getRunwayRnd();
   const runway = entityManagerArr.find(x => x.title === runwayTitleRnd);
-  console.log(runway.title, runwayTitleRnd)
 
   let destinationType = DestinationType.Departure;
   if (Math.random() > isArrivalIfRndAbove) destinationType = DestinationType.Arrival;
