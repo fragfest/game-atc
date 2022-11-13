@@ -78,43 +78,49 @@
     <div class="circle-panel" :class="sizeClass">
       <!-- circle-inputs -->
       <div class="circle-inputs" :class="sizeClass">
-        <label class="heading" for="inputHeading">hdg</label>
-        <input
+
+        <InputField
           id="inputHeading"
           ref="inputHeading"
-          type="text"
-          @keydown.enter="inputHeadingKeyDown"
-          @input="inputEventHeading"
-          @click="inputClick"
+          class="heading"
+          :focus="focusHeading"
+          :isDisabled="isDisabledHeading"
           v-model="inputHeading"
-          :disabled="isDisabledHeading"
-        />
+          @inputEvent="inputEventHeading"
+          @inputClick="inputClick"
+          @inputKeyDown="inputHeadingKeyDown"
+        >
+          <span>spd</span>
+        </InputField>
 
-        <label class="altitude" for="inputAltitude">
-          alt <small>x100</small>
-        </label>
-        <input
+        <InputField
           id="inputAltitude"
           ref="inputAltitude"
-          type="text"
-          @keydown.enter="inputAltitudeKeyDown"
-          @input="inputEventAltitude"
-          @click="inputClick"
+          class="altitude"
+          :focus="focusAltitude"
+          :isDisabled="isDisabled"
           v-model="inputAltitude"
-          :disabled="isDisabled"
-        />
+          @inputEvent="inputEventAltitude"
+          @inputClick="inputClick"
+          @inputKeyDown="inputAltitudeKeyDown"
+        >
+          <span>alt <small>x100</small></span>
+        </InputField>
 
-        <label class="speed" for="inputSpeed">spd</label>
-        <input
+        <InputField
           id="inputSpeed"
           ref="inputSpeed"
-          type="text"
-          @keydown.enter="inputSpeedKeyDown"
-          @input="inputEventSpeed"
-          @click="inputClick"
+          class="speed"
+          :focus="focusSpeed"
+          :isDisabled="isDisabled"
           v-model="inputSpeed"
-          :disabled="isDisabled"
-        />
+          @inputEvent="inputEventSpeed"
+          @inputClick="inputClick"
+          @inputKeyDown="inputSpeedKeyDown"
+        >
+          <span>spd</span>
+        </InputField>
+
       </div>
       <!-- circle-inputs end -->
 
@@ -181,6 +187,7 @@ import { MessageEvents, subscribe } from "../js/events/messages";
 import { DestinationType } from "../js/aircraft/airframe";
 
 import ToolTip from "./common/ToolTip";
+import InputField from "./panelBottom/InputField";
 
 const inputFilter = (value) => {
   let inputHeading = value;
@@ -212,18 +219,20 @@ export default {
     planes: { type: Object },
     screenSize: { type: String },
   },
-  components: { ToolTip },
+  components: { ToolTip, InputField },
 
   data() {
     return {
       inputHeading: null,
+      focusHeading: false,
+      focusAltitude: false,
+      focusSpeed: false,
       inputAltitude: null,
       inputSpeed: null,
       messages: [],
     };
   },
 
-  // mounted
   mounted() {
     const gauge = document.querySelector("#gauge");
     const tick = document.querySelector("#gauge-tick");
@@ -272,9 +281,7 @@ export default {
       if (this.messages.length > 20) this.messages.splice(-1, 1);
     });
   },
-  // mounted end
 
-  // computed
   computed: {
     messagesDisplay: function () {
       const arr = this.messages.map(obj => obj.msg);
@@ -348,7 +355,6 @@ export default {
       return altitudeDisplay(planeSel.altitude);
     },
   },
-  // computed end
 
   watch: {
     planeSelected(newPlane) {
@@ -363,26 +369,31 @@ export default {
       if (newPlane.id) setCompass(newPlane.headingRad);
       if (!newPlane.id) setCompass((-1 * Math.PI) / 2);
 
+      this.focusHeading = false;
+      this.focusAltitude = false;
+      this.focusSpeed = false;
       this.$nextTick(() => {
-        const field = newPlane.isHolding ? 'inputAltitude' : 'inputHeading';
         if (newPlane.id) {
-          this.$refs[field].blur();
-          if (!newPlane.isNonInteractive) this.$refs[field].focus();
+          if (!newPlane.isNonInteractive){
+            if(newPlane.isHolding) this.focusAltitude = true;
+            else this.focusHeading = true;
+          } 
         } else {
-          this.$refs[field].blur();
+          if(newPlane.isHolding) this.focusAltitude = false;
+          else this.focusHeading = false;
         }
       });
     },
   },
 
-  // methods
   methods: {
     setFocus: function () {
-      const field = this.planeSelected.isHolding ? 'inputAltitude' : 'inputHeading';
+      if(this.planeSelected.isHolding) this.focusAltitude = false;
+      else this.focusHeading = false;
       this.$nextTick(() => {
-        this.$refs[field].blur();
         if (!this.planeSelected.isNonInteractive) {
-          this.$refs[field].focus();
+          if(this.planeSelected.isHolding) this.focusAltitude = true;
+          else this.focusHeading = true;
         }
       });
     },
@@ -397,9 +408,12 @@ export default {
       if (!waypoint) return;
       const isHoldingToggled = !this.planeSelected.isHolding;
       this.planeSelected.setHolding(isHoldingToggled, waypoint);
+
+      if(isHoldingToggled) this.focusAltitude = false;
+      else this.focusHeading = false;
       this.$nextTick(() => {
-        const field = isHoldingToggled ? 'inputAltitude' : 'inputHeading';
-        this.$refs[field].focus()
+        if(isHoldingToggled) this.focusAltitude = true;
+        else this.focusHeading = true;
       });
     },
 
@@ -439,7 +453,10 @@ export default {
       }
 
       this.planeSelected.setHeadingDegrees(this.inputHeading);
-      this.$refs.inputAltitude.focus();
+      this.focusAltitude = false;
+      this.$nextTick(() => {
+        this.focusAltitude = true;
+      });
     },
 
     inputEventAltitude: function (ev) {
@@ -465,7 +482,10 @@ export default {
 
       const alt = parseInt(this.inputAltitude) * 100;
       this.planeSelected.setAltitude(alt, false);
-      this.$refs.inputSpeed.focus();
+      this.focusSpeed = false;
+      this.$nextTick(() => {
+        this.focusSpeed = true;
+      });
     },
 
     inputEventSpeed: function (ev) {
@@ -491,13 +511,18 @@ export default {
 
       this.planeSelected.setSpeed(this.inputSpeed, false);
       if(this.planeSelected.isHolding){
-        this.$refs.inputAltitude.focus();
+        this.focusAltitude = false;
+        this.$nextTick(() => {
+          this.focusAltitude = true;
+        });
         return;
       }
-      this.$refs.inputHeading.focus();
+      this.focusHeading = false;
+      this.$nextTick(() => {
+        this.focusHeading = true;
+      });
     },
   },
-  // methods END
 };
 </script>
 
@@ -546,7 +571,7 @@ export default {
     font-size: 11px;
   }
 }
-// message-panel end
+// message-panel END
 
 // btn-info-panel
 .btn-info-panel {
@@ -606,9 +631,8 @@ export default {
     font-size: 14px;
   }
 }
-// btn-info-panel end
+// btn-info-panel END
 
-// button.land
 .btn-info-panel button {
   &.takeoff {
   width: 80px;
@@ -677,7 +701,6 @@ export default {
   height: 30px;
   font-size: 12px;
 }
-// button.land end
 
 // circle-inputs
 .circle-inputs {
@@ -686,70 +709,13 @@ export default {
   position: absolute;
   display: flex;
   flex-direction: column;
-
-  label {
-    margin-bottom: 4px;
-    font-size: 14px;
-    font-family: sans-serif;
-    font-weight: 600;
-    color: white;
-    &.heading {
-      margin-left: 12px;
-    }
-    &.altitude {
-      margin-left: 5px;
-    }
-    &.speed {
-      margin-left: 12px;
-    }
-  }
-
-  input {
-    width: 28px;
-    margin-left: 8px;
-    margin-bottom: 6px;
-    padding-top: 1.5px;
-    border-radius: 4px;
-    border-style: none;
-
-    cursor: pointer;
-    font-size: 16px;
-    font-family: sans-serif;
-    font-weight: 600;
-    background-color: lightgreen;
-    color: darkslategray;
-
-    &[disabled] {
-      cursor: default;
-    }
-  }
-
-  ::selection {
-    background: transparent;
-  }
-
-  :focus-visible {
-    background-color: whitesmoke;
-    color: black;
-    caret-color: transparent;
-    outline-style: solid;
-    outline-color: limegreen;
-    outline-width: 2px;
-  }
 }
 
 .circle-inputs.small {
   left: 70px;
   top: 30px;
-  label {
-    font-size: 12px;
-  }
-  input {
-    width: 22px;
-    font-size: 12px;
-  }
 }
-// circle-inputs end
+// circle-inputs END
 
 .circle-panel {
   width: 220px;
