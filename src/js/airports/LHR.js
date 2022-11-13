@@ -76,7 +76,7 @@ const runways = (runway, screenSize) => {
       xOffset = -105;
       yOffset = 18;
       length = 40;
-      runwayWidth = 2.8;
+      runwayWidth = 1.6;
       break;
   }
 
