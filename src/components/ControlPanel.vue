@@ -164,12 +164,6 @@ export default {
 
   data() {
     return {
-      inputHeading: null,
-      focusHeading: false,
-      focusAltitude: false,
-      focusSpeed: false,
-      inputAltitude: null,
-      inputSpeed: null,
       messages: [],
     }
   },
@@ -279,11 +273,13 @@ export default {
       setCompass(planeSel.headingRad);
       return planeSel.heading;
     },
+
     speed: function () {
       const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
       if (!planeSel) return "";
       return Math.round(planeSel.speed);
     },
+
     altitude: function () {
       const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
       if (!planeSel) return "";
@@ -293,12 +289,22 @@ export default {
 
   watch: {
     planeSelected(newPlane) {
-      if (newPlane.id) setCompass(newPlane.headingRad);
       if (!newPlane.id) setCompass((-1 * Math.PI) / 2);
+      if (newPlane.id) setCompass(newPlane.headingRad);
     },
   },
 
   methods: {
+    setFocus: function() {
+      const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
+      if (!planeSel) return;
+
+      this.$nextTick(() => {
+        if(planeSel.isHolding) this.$refs.circleInputs.setFocus();
+        else this.$refs.circleInputs.setFocus();
+      });
+    },
+
     takeoffClick: function () {
       if (!this.planeSelected.id) return;
       this.planeSelected.startTakeoff();
@@ -310,11 +316,8 @@ export default {
       const isHoldingToggled = !this.planeSelected.isHolding;
       this.planeSelected.setHolding(isHoldingToggled, waypoint);
 
-      if(isHoldingToggled) this.focusAltitude = false;
-      else this.focusHeading = false;
       this.$nextTick(() => {
-        if(isHoldingToggled) this.focusAltitude = true;
-        else this.focusHeading = true;
+        this.$refs.circleInputs.setFocus();
       });
     },
 

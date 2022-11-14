@@ -64,9 +64,9 @@ const inputFilter = (value) => {
 
 export default {
   props: {
-    sizeClass: { type: String },
-    planes: { type: Object },
-    planeSelected: { type: Object },
+    sizeClass: { type: String, required: true },
+    planes: { type: Object, required: true },
+    planeSelected: { type: Object, required: true },
   },
   data() {
     return {
@@ -96,13 +96,16 @@ export default {
       this.focusSpeed = false;
       this.$nextTick(() => {
         if (newPlane.id) {
-          if (!newPlane.isNonInteractive){
-            if(newPlane.isHolding) this.focusAltitude = true;
+          if (!newPlane.isNonInteractive) {
+            if(newPlane.isHolding) {
+              this.inputHeading = '---';
+              this.focusAltitude = true;
+            }
             else this.focusHeading = true;
           } 
         } else {
-          if(newPlane.isHolding) this.focusAltitude = false;
-          else this.focusHeading = false;
+          this.focusHeading = false;
+          this.focusAltitude = false;
         }
       });
     },
@@ -124,16 +127,28 @@ export default {
   },
 
   methods: {
+    //////////////////////////////////////////////////////////////////////////////
+    // PUBLIC functions called with $refs
+    //////////////////////////////////////////////////////////////////////////////
     setFocus: function () {
-      if(this.planeSelected.isHolding) this.focusAltitude = false;
-      else this.focusHeading = false;
+      this.focusHeading = false;
+      this.focusAltitude = false;
       this.$nextTick(() => {
         if (!this.planeSelected.isNonInteractive) {
-          if(this.planeSelected.isHolding) this.focusAltitude = true;
-          else this.focusHeading = true;
+          if(this.planeSelected.isHolding) {
+            this.inputHeading = '---';
+            this.focusAltitude = true;
+          }
+          else {
+            const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
+            const heading = convHdgRadToThreeDigits(planeSel.headingTargetRad);
+            this.inputHeading = leftPadZeros(heading);
+            this.focusHeading = true;
+          }
         }
       });
     },
+    // PUBLIC END ////////////////////////////////////////////////////////////////////
 
     inputClick: function (el) {
       const length = el.target.value.length;

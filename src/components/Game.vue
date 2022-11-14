@@ -210,7 +210,7 @@ export default {
       entityManagerArr: entityManagerArr.value,
       squareClickEventCB: (squareObj) => {
         squareClicked.value = squareObj;
-        this.$refs.controlPanel.$refs.circleInputs.setFocus();
+        this.$refs.controlPanel.setFocus();
         setPlaneSelected(setupArg, squareObj);
       },
       gameUpdateCB: () => {
@@ -243,7 +243,7 @@ export default {
     const selectEV = (newIndex) => {
       const planeSelected = this.planes[newIndex];
       squareClicked.value = planeSelected;
-      this.$refs.controlPanel.$refs.circleInputs.setFocus();
+      this.$refs.controlPanel.setFocus();
       setPlaneSelected(setupArg, planeSelected);
     };
     const arrowDownEV = (index) => {
@@ -278,7 +278,7 @@ export default {
     subscribe(KeyboardEvents.KeyboardLetter_H_EV, () => {
       callMethodEV(getPlaneSelectedIndex(), plane => {
         plane.setHolding(!plane.isHolding, plane.waypoint);
-        this.$refs.controlPanel.$refs.circleInputs.setFocus();
+        this.$refs.controlPanel.setFocus();
       })
     });
     subscribe(KeyboardEvents.KeyboardLetter_L_EV, () => {
