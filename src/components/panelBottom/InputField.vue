@@ -9,8 +9,8 @@
     @keydown.enter="$emit('inputKeyDown')"
     @input="$emit('inputEvent', $event)"
     @click="$emit('inputClick', $event)"
-    :disabled="isDisabled"
-    :value="modelValue"
+    :disabled="isDisabled"    
+    :value="isDisabled ? value : modelValue"
   />
 </template>
 
@@ -21,6 +21,7 @@ export default {
     class: { type: String, required: true },
     focus: { type: Boolean, required: true },
     isDisabled: { type: Boolean, required: true },
+    value: { required: false },
     modelValue: { required: true },
   },
   emits: ['update:modelValue', 'inputEvent', 'inputClick', 'inputKeyDown'],
@@ -41,18 +42,18 @@ export default {
 </script>
 
 <style lang="scss">
-  ::selection {
-    background: transparent;
-  }
+::selection {
+  background: transparent;
+}
 
-  :focus-visible {
-    background-color: whitesmoke;
-    color: black;
-    caret-color: transparent;
-    outline-style: solid;
-    outline-color: limegreen;
-    outline-width: 2px;
-  }
+:focus-visible {
+  background-color: whitesmoke;
+  color: black;
+  caret-color: transparent;
+  outline-style: solid;
+  outline-color: limegreen;
+  outline-width: 2px;
+}
 
 label {
   margin-bottom: 4px;
@@ -84,10 +85,12 @@ input {
   font-family: sans-serif;
   font-weight: 600;
   background-color: lightgreen;
-  color: darkslategray;
-
+  color: darkslategrey;
+  
   &[disabled] {
     cursor: default;
+    background-color: darkslategrey;
+    color: white;
   }
 }
 

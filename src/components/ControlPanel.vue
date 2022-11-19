@@ -274,16 +274,16 @@ export default {
       return planeSel.heading;
     },
 
-    speed: function () {
-      const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
-      if (!planeSel) return "";
-      return Math.round(planeSel.speed);
-    },
-
     altitude: function () {
       const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
       if (!planeSel) return "";
       return altitudeDisplay(planeSel.altitude);
+    },
+
+    speed: function () {
+      const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
+      if (!planeSel) return "";
+      return Math.round(planeSel.speed);
     },
   },
 

@@ -5,6 +5,7 @@
       class="heading"
       :focus="focusHeading"
       :isDisabled="isDisabledHeading"
+      :value="heading"
       v-model="inputHeading"
       @inputEvent="inputEventHeading"
       @inputClick="inputClick"
@@ -18,6 +19,7 @@
       class="altitude"
       :focus="focusAltitude"
       :isDisabled="isDisabled"
+      :value="altitude"
       v-model="inputAltitude"
       @inputEvent="inputEventAltitude"
       @inputClick="inputClick"
@@ -31,6 +33,7 @@
       class="speed"
       :focus="focusSpeed"
       :isDisabled="isDisabled"
+      :value="speed"
       v-model="inputSpeed"
       @inputEvent="inputEventSpeed"
       @inputClick="inputClick"
@@ -49,6 +52,7 @@ import {
   isValidHeading,
   isValidAltitude,
   isValidSpeed,
+  altitudeDisplay,
 } from "../../js/utils";
 
 const inputFilter = (value) => {
@@ -94,35 +98,73 @@ export default {
       this.focusHeading = false;
       this.focusAltitude = false;
       this.focusSpeed = false;
+
       this.$nextTick(() => {
         if (newPlane.id) {
           if (!newPlane.isNonInteractive) {
-            if(newPlane.isHolding) {
-              this.inputHeading = '---';
+            if(newPlane.isHolding || newPlane.isHandoff) {
               this.focusAltitude = true;
             }
             else this.focusHeading = true;
-          } 
+          }
         } else {
           this.focusHeading = false;
           this.focusAltitude = false;
         }
       });
     },
+
+    isTakeoff(isTakeoff) {
+      const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
+      if (!planeSel) return false;
+
+      const altTarget = planeSel.altitudeTarget;
+      const altShort = Math.floor(altTarget / 100).toString();
+      const speedTarget = planeSel.speedTarget;
+
+      if(!isTakeoff) {
+        this.inputAltitude = leftPadZeros(altShort);
+        this.inputSpeed = leftPadZeros(speedTarget);
+        this.setFocus();
+      }
+    },
   },
 
   computed: {
-    isDisabledHeading: function(){
-      if(!Array.isArray(this.planes)) return true;
+    isDisabledHeading: function() {
       const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
       if (!planeSel) return true;
       return this.planeSelected.isNonInteractive || this.planeSelected.isHolding;
     },
 
-    isDisabled: function () {
+    isDisabled: function() {
       const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
       if (!planeSel) return true;
       return this.planeSelected.isNonInteractive;
+    },
+
+    isTakeoff: function() {
+      const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
+      if (!planeSel) return false;
+      return planeSel.takeoff;
+    },
+
+    heading: function() {
+      const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
+      if (!planeSel) return "";
+      return planeSel.heading;
+    },
+
+    altitude: function() {
+      const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
+      if (!planeSel) return "";
+      return altitudeDisplay(planeSel.altitude);
+    },
+
+    speed: function() {
+      const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
+      if (!planeSel) return "";
+      return Math.round(planeSel.speed);
     },
   },
 
@@ -133,16 +175,15 @@ export default {
     setFocus: function () {
       this.focusHeading = false;
       this.focusAltitude = false;
+
       this.$nextTick(() => {
-        if (!this.planeSelected.isNonInteractive) {
-          if(this.planeSelected.isHolding) {
-            this.inputHeading = '---';
+        const planeSel = this.planeSelected;
+        if (!planeSel.isNonInteractive) {
+          if(planeSel.isHolding || planeSel.isHandoff) {
             this.focusAltitude = true;
           }
           else {
-            const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
-            const heading = convHdgRadToThreeDigits(planeSel.headingTargetRad);
-            this.inputHeading = leftPadZeros(heading);
+            this.inputHeading = leftPadZeros(convHdgRadToThreeDigits(planeSel.headingTargetRad));
             this.focusHeading = true;
           }
         }
