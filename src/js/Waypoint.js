@@ -1,11 +1,16 @@
 import Square from './Square';
 import { WaypointType, HoldingPosition } from './types';
-import { isCloseToWaypoint } from './entity';
+import {
+  isCloseToWaypoint,
+  isEntityGettingCloser,
+  distBetweenEntities,
+} from './entity';
 import {
   Direction,
   convertToSmallDegrees,
   radToDegrees,
 } from './utils';
+import { DestinationType } from './aircraft/airframe';
 
 ////////////////////////////////////////////////////////////
 // class Waypoint
@@ -36,16 +41,16 @@ export default class Waypoint {
   }
 
   update({ entityManagerArr }) {
-    const planeHolding = (entity) => {
+    const planeHoldingHoldoff = (entity) => {
       if (!(entity instanceof Square)) return false;
-      if (!entity.isHolding) return false;
+      if (!entity.isHolding && !entity.isHandoff) return false;
       if (entity.waypoint === this.title) return true;
       return false;
     };
     const isClose = isCloseToWaypoint({ ...this, altitude: 0 });
 
-    const planesHolding = entityManagerArr.filter(planeHolding);
-    planesHolding.forEach((plane) => {
+    const planes = entityManagerArr.filter(planeHoldingHoldoff);
+    planes.forEach((plane) => {
       const deltaY = this.y - plane.y;
       const deltaX = this.x - plane.x;
       let direction = null;
@@ -53,13 +58,29 @@ export default class Waypoint {
       if (deltaX < 0) headingRad += Math.PI;
       const headingDeg = convertToSmallDegrees(radToDegrees(headingRad));
 
+      // destination plane at waypoint
+      if (plane.destinationType === DestinationType.Departure) {
+        if (isEntityGettingCloser(this)(plane)) {
+          plane.setDistPrev(distBetweenEntities(this)(plane));
+        }
+
+        if (isClose(plane) && !isEntityGettingCloser(this)(plane)) {
+          plane.setHeadingTarget(plane.headingTargetRad, false, false, Direction.None);
+          plane.setHandoff(false);
+          return;
+        }
+        plane.setHeadingTarget(headingRad, false, false, Direction.None);
+        return;
+      }
+
+      // arrival plane at waypoint
+      if (plane.destinationType !== DestinationType.Arrival) return;
       if (plane.isAtWaypoint) direction = null;
       if (!plane.isAtWaypoint && isClose(plane)) {
         plane.setIsAtWaypoint(true);
         if (180 <= headingDeg && headingDeg <= 360) direction = this.westSideTurnDirection;
         if (0 < headingDeg && headingDeg < 180) direction = this.eastSideTurnDirection;
       }
-
       plane.setHeadingTarget(headingRad, false, true, direction);
     });
   }
@@ -73,4 +94,4 @@ export default class Waypoint {
     this.textLayerObj.ctx.fillText(this.title, this.x + 2, this.y - 4);
   }
 }
-// end class Waypoint
+// class Waypoint END

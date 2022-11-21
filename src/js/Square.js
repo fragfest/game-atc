@@ -83,10 +83,10 @@ export default class Square {
 
     // flightstrip info
     this.hasProximityAlert = false;
-    this.destinationType = planeObj.destinationType || ""; // TODO consolidate with WaypointType
-    this.runway = planeObj.runway || "";
-    this.waypoint = planeObj.waypoint || "";
-    this.airframe = planeObj.airframeObj.type || "";
+    this.destinationType = planeObj.destinationType || ''; // TODO consolidate with WaypointType
+    this.runway = planeObj.runway || '';
+    this.setWaypoint(planeObj.waypoint || '');
+    this.airframe = planeObj.airframeObj.type || '';
     this.wake = planeObj.airframeObj.wake;
 
     // constants
@@ -118,6 +118,7 @@ export default class Square {
   }
 
   setWaypoint(waypoint) {
+    if (!waypoint) return;
     this.setDirection(Direction.None);
     this.waypoint = waypoint;
   }
@@ -135,13 +136,18 @@ export default class Square {
     }
   }
 
+  setHandoff(isHandoff, waypoint) {
+    this.isHandoff = !!isHandoff;
+    this.setWaypoint(waypoint);
+  }
+
   setHolding(isHolding, waypoint) {
-    this.waypoint = waypoint;
     this.isHolding = !!isHolding;
     if (!isHolding) {
       this.setIsAtWaypoint(false);
       this.setDirection(Direction.None);
     }
+    this.setWaypoint(waypoint);
   }
 
   setOnGlidepath(arg) {
@@ -261,6 +267,11 @@ export default class Square {
     this.hide();
     _clearTrailPixelsAll(this);
     if (this.htmlSquareDiv) this.htmlSquareDiv.remove();
+    if (this.isFlyingOutOfArea) {
+      const scoreRemoved = planeLeaveFail();
+      publish(MessageEvents.MessageAllEV, this.title + ' failed handoff (' + scoreRemoved + ')');
+      return;
+    }
     if (this.isHandoff) {
       const scoreAdded = planeHandoffSuccess();
       publish(MessageEvents.MessageAllEV, this.title + ' handoff complete (+' + scoreAdded + ')');
@@ -271,25 +282,21 @@ export default class Square {
       publish(MessageEvents.MessageAllEV, this.title + ' landing complete (+' + scoreAdded + ')');
       return;
     }
-    if (this.isFlyingOutOfArea) {
-      const scoreRemoved = planeLeaveFail();
-      publish(MessageEvents.MessageAllEV, this.title + ' failed handoff (' + scoreRemoved + ')');
-      return;
-    }
   }
 
   updateHandoff({ entityManagerArr }) {
     if (this.destinationType !== DestinationType.Departure) return;
 
     const isTargetWaypoint = entity =>
-      entity.class === 'waypoint' &&
+      entity.class === 'waypoint' && // TODO deprecate the class prop
       entity.title === this.waypoint;
 
     const waypointObj = entityManagerArr.find(isTargetWaypoint);
     if (!waypointObj) return;
     if (entityFns.isCloseToWaypoint(waypointObj)(this)) {
+      console.log(this.title, waypointObj, 'handoff complete')
       this.setDestroyFlag(true);
-      this.isHandoff = true;
+      this.setHandoff(true, this.waypoint);
     }
   }
 
@@ -361,15 +368,23 @@ export default class Square {
       return pixelsSpeedDeltaBase * this.pixelsBasePerKnot;
     }
 
+    // touch down rollout
+    if (this.isTouchedDown) {
+      if (speed > 120) return calcDelta(speedDeltaPerMs * 0.5);
+      return calcDelta(speedDeltaPerMs * 2);
+    }
+
+    // takeoff
     if (!this.takeoff) return calcDelta(speedDeltaPerMs);
     if (speed < 6) return calcDelta(speedDeltaPerMs * 0.5);
-    if (speed > 6 && speed < 10) return calcDelta(speedDeltaPerMs);
-    if (speed > 10 && speed < 20) return calcDelta(speedDeltaPerMs * 1.8);
-    if (speed > 20 && speed < 30) return calcDelta(speedDeltaPerMs * 2.2);
-    if (speed > 30 && speed < 40) return calcDelta(speedDeltaPerMs * 3.2);
-    if (speed > 40 && speed < 100) return calcDelta(speedDeltaPerMs * 3.7);
-    if (speed > 100) return calcDelta(speedDeltaPerMs * 4);
+    if (speed >= 6 && speed < 10) return calcDelta(speedDeltaPerMs);
+    if (speed >= 10 && speed < 20) return calcDelta(speedDeltaPerMs * 1.8);
+    if (speed >= 20 && speed < 30) return calcDelta(speedDeltaPerMs * 2.2);
+    if (speed >= 30 && speed < 40) return calcDelta(speedDeltaPerMs * 3.2);
+    if (speed >= 40 && speed < 100) return calcDelta(speedDeltaPerMs * 3.7);
+    if (speed >= 100) return calcDelta(speedDeltaPerMs * 4);
     if (speed > speedTakeoff) return calcDelta(speedDeltaPerMs);
+
     return calcDelta(speedDeltaPerMs);
   }
 

@@ -20,7 +20,7 @@
           <ToolTip :disabled="isDisabled" :size="sizeClass">
             <button
               class="hold"
-              :class="holdBtnClass"
+              :class="holdHandoffBtnClass"
               :disabled="isDisabled"
               @click="holdClick"
             ><span>hold</span>
@@ -32,9 +32,9 @@
           <ToolTip :disabled="isDisabled" :size="sizeClass">
             <button
               class="takeoff"
-              :class="holdBtnClass"
+              :class="holdHandoffBtnClass"
               :disabled="isDisabled"
-              @click="holdClick"
+              @click="handoffClick"
             ><span>handoff</span>
             </button>
             <template v-slot:hover>handoff (H)</template>
@@ -249,11 +249,11 @@ export default {
       return classes;      
     },
 
-    holdBtnClass: function(){
+    holdHandoffBtnClass: function(){
       const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
       if (!planeSel) return '';
       let classes = getClassSize(this.screenSize);
-      if(this.planeSelected.isHolding) classes += ' is-holding';
+      if(this.planeSelected.isHolding || this.planeSelected.isHandoff) classes += ' is-holdhandoff';
       return classes;
     },
 
@@ -308,6 +308,17 @@ export default {
     takeoffClick: function () {
       if (!this.planeSelected.id) return;
       this.planeSelected.startTakeoff();
+    },
+
+    handoffClick: function(){
+      const waypoint = this.planeSelected.waypoint;
+      if (!waypoint) return;
+      const isHandoffToggled = !this.planeSelected.isHandoff;
+      this.planeSelected.setHandoff(isHandoffToggled, waypoint);
+
+      this.$nextTick(() => {
+        this.$refs.circleInputs.setFocus();
+      });
     },
 
     holdClick: function () {
@@ -436,6 +447,7 @@ export default {
 }
 // btn-info-panel END
 
+// btn-info-panel button
 .btn-info-panel button {
   &.takeoff {
   width: 80px;
@@ -453,7 +465,7 @@ export default {
     }
   }
 
-  &.is-holding {
+  &.is-holdhandoff {
     outline-style: solid;
     outline-color: limegreen;
     outline-width: 2px;
@@ -551,4 +563,5 @@ svg {
     stroke: black;
   }
 }
+// btn-info-panel button END
 </style>

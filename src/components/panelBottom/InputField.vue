@@ -4,6 +4,7 @@
   </label>
   <input
     type="text"
+    autocomplete="off"
     :id="id"
     :ref="id"
     @keydown.enter="$emit('inputKeyDown')"

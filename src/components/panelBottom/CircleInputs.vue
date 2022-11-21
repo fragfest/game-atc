@@ -132,9 +132,10 @@ export default {
 
   computed: {
     isDisabledHeading: function() {
-      const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
-      if (!planeSel) return true;
-      return this.planeSelected.isNonInteractive || this.planeSelected.isHolding;
+      const planeFound = this.planes.find(x => x.id === this.planeSelected.id);
+      if (!planeFound) return true;
+      const planeSel = this.planeSelected;
+      return planeSel.isNonInteractive || planeSel.isHolding || planeSel.isHandoff;
     },
 
     isDisabled: function() {
@@ -282,7 +283,7 @@ export default {
       }
 
       this.planeSelected.setSpeed(this.inputSpeed, false);
-      if(this.planeSelected.isHolding){
+      if(this.planeSelected.isHolding || this.planeSelected.isHandoff){
         this.focusAltitude = false;
         this.$nextTick(() => {
           this.focusAltitude = true;

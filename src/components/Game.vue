@@ -88,12 +88,15 @@ import ScorePanel from "./ScorePanel";
 import ControlPanel from "./ControlPanel";
 import FlightStrip from "./FlightStrip";
 
+import { DestinationType } from '../js/aircraft/airframe';
 import { getWaypointArrivalsAll } from '../js/airports/LHR';
 import { setup, setupEntities, setPlaneSelected } from "../js/game";
 import { ScreenSizes, getGameSize, nextWaypoint } from "../js/utils";
 import { KeyboardEvents, subscribe } from "../js/events/keyboard";
 
 const isSquare = obj => obj instanceof Square;
+const isDeparture = plane => plane.destinationType === DestinationType.Departure;
+const isArrival = plane => plane.destinationType === DestinationType.Arrival;
 
 let screenSize = ScreenSizes.Large;
 let width = getGameSize(ScreenSizes.Large).width;
@@ -277,7 +280,8 @@ export default {
     });
     subscribe(KeyboardEvents.KeyboardLetter_H_EV, () => {
       callMethodEV(getPlaneSelectedIndex(), plane => {
-        plane.setHolding(!plane.isHolding, plane.waypoint);
+        if(isArrival(plane)) plane.setHolding(!plane.isHolding, plane.waypoint);
+        if(isDeparture(plane)) plane.setHandoff(!plane.isHandoff, plane.waypoint);
         this.$refs.controlPanel.setFocus();
       })
     });
