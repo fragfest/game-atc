@@ -57,7 +57,7 @@
           <ControlPanel
             ref="controlPanel"
             :planeSelected="squareClicked"
-            :planes="planes"
+            :planes="planesSorted"
             :screenSize="screenSize"
           ></ControlPanel>
         </div>
@@ -66,11 +66,11 @@
 
     <div class="panel-right layer-seven" :style="stylePanelRight">
       <ul>
-        <li v-for="(plane, index) in planes" :key="index">
+        <li v-for="(plane, index) in planesSorted" :key="index">
           <FlightStrip
             :plane="plane"
             :planeSelected="squareClicked"
-            :planes="planes"
+            :planes="planesSorted"
             :screenSize="screenSize"
           ></FlightStrip>
         </li>
@@ -123,9 +123,20 @@ export default {
   },
 
   computed: {
-    planes: () => {
-      return entityManagerArr.value.filter(isSquare);
+    planesSorted: () => {
+      const planes = entityManagerArr.value.filter(isSquare);
+      const planesCopy = [...planes];
+      planesCopy.sort((a, b) => {
+        if(isDeparture(a) && isArrival(b)) return -1;
+        if(isArrival(a) && isDeparture(b)) return 1;
+        return 0;
+      });
+      return planesCopy;
     },
+
+    // planes: () => {
+    //   return entityManagerArr.value.filter(isSquare);
+    // },
 
     styleScope: () => ({
       width: width + 1 + "px",
@@ -236,36 +247,36 @@ export default {
     // });
 
     const callMethodEV = (index, methodFn) => {
-      if (this.planes.length === 0) return;
-      const planeSelected = this.planes[index];
+      if (this.planesSorted.length === 0) return;
+      const planeSelected = this.planesSorted[index];
       if (!planeSelected) return;
       if (planeSelected.isNonInteractive && !planeSelected.isTaxiing) return;
       methodFn(planeSelected);
     };
 
     const selectEV = (newIndex) => {
-      const planeSelected = this.planes[newIndex];
+      const planeSelected = this.planesSorted[newIndex];
       squareClicked.value = planeSelected;
       this.$refs.controlPanel.setFocus();
       setPlaneSelected(setupArg, planeSelected);
     };
     const arrowDownEV = (index) => {
-      if (this.planes.length === 0) return;
+      if (this.planesSorted.length === 0) return;
       let newIndex = index + 1;
-      if (newIndex >= this.planes.length) newIndex = 0;
+      if (newIndex >= this.planesSorted.length) newIndex = 0;
       selectEV(newIndex);
     };
     const arrowUpEV = (index) => {
-      if (this.planes.length === 0) return;
+      if (this.planesSorted.length === 0) return;
       let newIndex = index - 1;
-      if (newIndex < 0) newIndex = this.planes.length - 1;
+      if (newIndex < 0) newIndex = this.planesSorted.length - 1;
       selectEV(newIndex);
     };
 
     const getPlaneSelectedIndex = () => {
       const planeSelId = squareClicked.value.id;
       const isSelected = (plane) => plane.id === planeSelId;
-      return this.planes.findIndex(isSelected);
+      return this.planesSorted.findIndex(isSelected);
     };
     subscribe(KeyboardEvents.KeyboardLetter_W_EV, () => {
       callMethodEV(getPlaneSelectedIndex(), plane => {

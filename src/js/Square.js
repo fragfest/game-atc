@@ -294,7 +294,6 @@ export default class Square {
     const waypointObj = entityManagerArr.find(isTargetWaypoint);
     if (!waypointObj) return;
     if (entityFns.isCloseToWaypoint(waypointObj)(this)) {
-      console.log(this.title, waypointObj, 'handoff complete')
       this.setDestroyFlag(true);
       this.setHandoff(true, this.waypoint);
     }
@@ -434,6 +433,7 @@ export default class Square {
     // square leaving canvas
     const outsideCanvasWidth = (x, offset) => (x > (this.canvasWidth + offset)) || (x < (0 - offset));
     const outsideCanvasHeight = (y, offset) => (y > (this.canvasHeight + offset)) || (y < (0 - offset));
+    // TODO fix edge case where plane (i.e holding/handoff) becomes nonInteractive and turns back
     if (outsideCanvasWidth(this.x, 0) || outsideCanvasHeight(this.y, 0)) {
       this.setNonInteractive();
       _clearTrailPixelsAll(this);
