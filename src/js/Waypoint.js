@@ -53,35 +53,42 @@ export default class Waypoint {
     planes.forEach((plane) => {
       const deltaY = this.y - plane.y;
       const deltaX = this.x - plane.x;
-      let direction = null;
       let headingRad = Math.atan(deltaY / deltaX);
       if (deltaX < 0) headingRad += Math.PI;
       const headingDeg = convertToSmallDegrees(radToDegrees(headingRad));
 
-      // destination plane at waypoint
       if (plane.destinationType === DestinationType.Departure) {
-        if (isEntityGettingCloser(this)(plane)) {
-          plane.setDistPrev(distBetweenEntities(this)(plane));
-        }
-
-        if (isClose(plane) && !isEntityGettingCloser(this)(plane)) {
+        if (isClose(plane) && !isEntityGettingCloser(this, plane, plane.distPrevHolding)) {
           plane.setHeadingTarget(plane.headingTargetRad, false, false, Direction.None);
           plane.setHandoff(false);
           return;
         }
+        // plane holding at waypoint
+        plane.setDistPrevHolding(distBetweenEntities(this)(plane));
         plane.setHeadingTarget(headingRad, false, false, Direction.None);
         return;
       }
 
-      // arrival plane at waypoint
-      if (plane.destinationType !== DestinationType.Arrival) return;
-      if (plane.isAtWaypoint) direction = null;
-      if (!plane.isAtWaypoint && isClose(plane)) {
-        plane.setIsAtWaypoint(true);
-        if (180 <= headingDeg && headingDeg <= 360) direction = this.westSideTurnDirection;
-        if (0 < headingDeg && headingDeg < 180) direction = this.eastSideTurnDirection;
+      if (plane.destinationType === DestinationType.Arrival) {
+        if (!plane.isAtWaypoint && isEntityGettingCloser(this, plane, plane.distPrevHolding) && isClose(plane)) {
+          let direction = null;
+          plane.setIsAtWaypoint(true);
+          if (180 <= headingDeg && headingDeg <= 360) direction = this.westSideTurnDirection;
+          if (0 < headingDeg && headingDeg < 180) direction = this.eastSideTurnDirection;
+
+          plane.setDistPrevHolding(distBetweenEntities(this)(plane));
+          plane.setHeadingTarget(headingRad, false, true, direction);
+          return;
+        }
+        if (!plane.isAtWaypoint) {
+          plane.setDistPrevHolding(distBetweenEntities(this)(plane));
+          plane.setHeadingTarget(headingRad, false, true, null);
+          return;
+        }
+        // plane holding at waypoint
+        plane.setDistPrevHolding(distBetweenEntities(this)(plane));
+        plane.setHeadingTarget(headingRad, false, true, null);
       }
-      plane.setHeadingTarget(headingRad, false, true, direction);
     });
   }
 

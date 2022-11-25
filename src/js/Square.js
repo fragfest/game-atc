@@ -77,7 +77,8 @@ export default class Square {
     this.isHolding = false;
     this.isAtWaypoint = false;
     this.takeoff = false;
-    this.distPrev = Infinity;
+    this.distPrevLanding = Infinity;
+    this.distPrevHolding = Infinity;
     this.trailPixelMs = 0;
     this.trailPixelArr = [];
 
@@ -119,6 +120,7 @@ export default class Square {
 
   setWaypoint(waypoint) {
     if (!waypoint) return;
+    this.setIsAtWaypoint(false);
     this.setDirection(Direction.None);
     this.waypoint = waypoint;
   }
@@ -136,26 +138,31 @@ export default class Square {
     }
   }
 
-  setHandoff(isHandoff, waypoint) {
+  setHandoff(isHandoff) {
     this.isHandoff = !!isHandoff;
-    this.setWaypoint(waypoint);
   }
 
-  setHolding(isHolding, waypoint) {
-    this.isHolding = !!isHolding;
+  setHolding(isHolding) {
     if (!isHolding) {
       this.setIsAtWaypoint(false);
       this.setDirection(Direction.None);
+      this.setDistPrevHolding(Infinity);
     }
-    this.setWaypoint(waypoint);
+    this.isHolding = !!isHolding;
   }
 
   setOnGlidepath(arg) {
     this.onGlidePath = !!arg;
   }
 
-  setDistPrev(distPrevArg) {
-    this.distPrev = distPrevArg;
+  setDistPrevHolding(dist) {
+    if (!parseFloat(dist)) return;
+    this.distPrevHolding = parseFloat(dist);
+  }
+
+  setDistPrevLanding(dist) {
+    if (!parseFloat(dist)) return;
+    this.distPrevLanding = parseFloat(dist);
   }
 
   setIsTouchedDown(isTouchedDown) {
@@ -165,11 +172,11 @@ export default class Square {
   }
 
   setLanding(isLanding) {
-    this.landing = !!isLanding;
     if (!isLanding) {
       this.onGlidePath = false;
-      this.distPrev = Infinity;
+      this.setDistPrevLanding(Infinity);
     }
+    this.landing = !!isLanding;
   }
 
   /**
@@ -223,7 +230,6 @@ export default class Square {
   setHeadingTarget(headingRad, isLanding, isHolding, direction) {
     if (this.isNonInteractive) return;
 
-    this.setHolding(isHolding, this.waypoint);
     // cancel landing 
     if (this.landing && !isLanding) {
       const speed = (this.speedTarget < this.speedMin) ? this.speedMin : this.speed;
@@ -232,6 +238,7 @@ export default class Square {
       this.setAltitude(alt);
     }
 
+    this.setHolding(isHolding);
     this.setLanding(isLanding);
     this.setDirection(direction);
     this.headingTargetRad = convertToPosRad(convertToSmallRad(headingRad));
@@ -295,7 +302,7 @@ export default class Square {
     if (!waypointObj) return;
     if (entityFns.isCloseToWaypoint(waypointObj)(this)) {
       this.setDestroyFlag(true);
-      this.setHandoff(true, this.waypoint);
+      this.setHandoff(true);
     }
   }
 

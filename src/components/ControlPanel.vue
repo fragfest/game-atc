@@ -311,10 +311,9 @@ export default {
     },
 
     handoffClick: function(){
-      const waypoint = this.planeSelected.waypoint;
-      if (!waypoint) return;
+      if (!this.planeSelected.id) return;
       const isHandoffToggled = !this.planeSelected.isHandoff;
-      this.planeSelected.setHandoff(isHandoffToggled, waypoint);
+      this.planeSelected.setHandoff(isHandoffToggled);
 
       this.$nextTick(() => {
         this.$refs.circleInputs.setFocus();
@@ -322,10 +321,9 @@ export default {
     },
 
     holdClick: function () {
-      const waypoint = this.planeSelected.waypoint;
-      if (!waypoint) return;
+      if (!this.planeSelected.id) return;
       const isHoldingToggled = !this.planeSelected.isHolding;
-      this.planeSelected.setHolding(isHoldingToggled, waypoint);
+      this.planeSelected.setHolding(isHoldingToggled);
 
       this.$nextTick(() => {
         this.$refs.circleInputs.setFocus();
@@ -333,7 +331,7 @@ export default {
     },
 
     landClick: function () {
-      if (!this.planeSelected.setLanding) return;
+      if (!this.planeSelected.id) return;
       this.planeSelected.setLanding(true);
     },
   },

@@ -82,7 +82,7 @@ export default class Runway {
     entityManagerArr.forEach(entity => {
       if (!isSquare(entity)) return;
       const distObj = distToRunwayObj(this, entity);
-      const isGettingCloser = distObj.dist < entity.distPrev;
+      const isGettingCloser = distObj.dist < entity.distPrevLanding;
 
       if (entity.destroyFlag) return;
       if (entity.runway !== this.title) return;
@@ -93,7 +93,7 @@ export default class Runway {
       if (!isHeadingClose(this, entity) && !entity.onGlidePath) { return entity.setLanding(false); }
       if (!isCloseToGlidepath(this, entity) && !entity.onGlidePath) { return entity.setLanding(false); }
       if (isTooHigh(this, entity)) { return entity.setLanding(false); }
-      entity.setDistPrev(distObj.dist);
+      entity.setDistPrevLanding(distObj.dist);
       entity.setOnGlidepath(true);
 
       // console.log(entity.title + ' :: intercept glidepath ');
@@ -202,7 +202,7 @@ const isCloseToGlidepath = (self, entity) => {
   const dist = distToRunwayObj(self, entity).dist;
   const x = Math.abs(self.x - entity.x);
   const isWithinMaxDist = dist < maxDistFromRunway;
-  const isGettingCloser = dist < entity.distPrev;
+  const isGettingCloser = dist < entity.distPrevLanding;
   // if (isGettingCloser) {
   //   const outgoingHeading = self.runwayHeading + Math.PI;
   //   const oncourseX = dist * Math.cos(outgoingHeading);

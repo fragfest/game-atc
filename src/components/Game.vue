@@ -291,8 +291,8 @@ export default {
     });
     subscribe(KeyboardEvents.KeyboardLetter_H_EV, () => {
       callMethodEV(getPlaneSelectedIndex(), plane => {
-        if(isArrival(plane)) plane.setHolding(!plane.isHolding, plane.waypoint);
-        if(isDeparture(plane)) plane.setHandoff(!plane.isHandoff, plane.waypoint);
+        if(isArrival(plane)) plane.setHolding(!plane.isHolding);
+        if(isDeparture(plane)) plane.setHandoff(!plane.isHandoff);
         this.$refs.controlPanel.setFocus();
       })
     });

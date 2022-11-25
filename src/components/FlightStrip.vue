@@ -28,7 +28,7 @@
               </span>
             </button>
           </div>
-          <template v-slot:hover>edit waypoint (W)</template>
+          <template v-slot:hover>cycle waypoints (W)</template>
         </ToolTip>
 
         <div class="col">

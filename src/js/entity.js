@@ -19,12 +19,17 @@ export const distBetweenEntities = entityOne => entityTwo => {
   const y = entityOne.y - entityTwo.y;
   return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
 };
-export const isEntityGettingCloser = entityDestination => entity => {
-  if (!Object.hasOwn(entity, 'distPrev')) return false;
-  if (entityDestination.id === entity.id) return false;
 
+/**
+ * @param {Object} entityDestination 
+ * @param {Object} entity 
+ * @param {Number} distPrev 
+ * @returns {Boolean}
+ */
+export const isEntityGettingCloser = (entityDestination, entity, distPrev) => {
+  if (entityDestination.id === entity.id) return false;
   const dist = distBetweenEntities(entityDestination)(entity);
-  return dist < entity.distPrev;
+  return dist < distPrev;
 };
 
 export const isCloseToWaypoint = waypoint => entity => {
