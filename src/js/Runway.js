@@ -1,4 +1,4 @@
-import { inputHeadingToRad, radToDegrees, convertToSmallDegrees, ScreenSizes } from './utils';
+import { inputHeadingToRad, radToDegrees, convertToSmallDegrees, ScreenSizes, Direction } from './utils';
 import Square from './Square';
 import { MessageEvents, publish } from './events/messages';
 import { planeGoAroundPenalty } from './panelBottom/score';
@@ -70,7 +70,7 @@ export default class Runway {
   updateGoAround(entity) {
     const scoreRemoved = planeGoAroundPenalty();
     publish(MessageEvents.MessageAllEV, entity.title + ' landing go-around (' + scoreRemoved + ')');
-    entity.setHeadingTarget(this.runwayHeading, false);
+    entity.setHeadingTarget(this.runwayHeading, false, false, Direction.None);
     if (entity.speedTarget <= 220) entity.setSpeed(220, false, true);
     if (entity.altitudeTarget <= 2000) entity.setAltitude(2000, false);
   }
@@ -98,7 +98,7 @@ export default class Runway {
 
       // console.log(entity.title + ' :: intercept glidepath ');
       const interceptHeading = Math.atan(distObj.y / distObj.x) + Math.PI;
-      entity.setHeadingTarget(interceptHeading, true);
+      entity.setHeadingTarget(interceptHeading, true, false, Direction.None);
       updateSpeedAlt(this, entity);
     });
   }

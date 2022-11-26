@@ -70,7 +70,9 @@ export default class Waypoint {
       }
 
       if (plane.destinationType === DestinationType.Arrival) {
-        if (!plane.isAtWaypoint && isEntityGettingCloser(this, plane, plane.distPrevHolding) && isClose(plane)) {
+        if (!plane.isAtWaypoint &&
+          isEntityGettingCloser(this, plane, plane.distPrevHolding) &&
+          isClose(plane)) {
           let direction = null;
           plane.setIsAtWaypoint(true);
           if (180 <= headingDeg && headingDeg <= 360) direction = this.westSideTurnDirection;
@@ -82,7 +84,7 @@ export default class Waypoint {
         }
         if (!plane.isAtWaypoint) {
           plane.setDistPrevHolding(distBetweenEntities(this)(plane));
-          plane.setHeadingTarget(headingRad, false, true, null);
+          plane.setHeadingTarget(headingRad, false, true, Direction.None);
           return;
         }
         // plane holding at waypoint

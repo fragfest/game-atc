@@ -217,7 +217,7 @@ export default class Square {
   setHeadingRad(headingRadArg, isLanding) {
     const headingRad = convertToPosRad(convertToSmallRad(headingRadArg));
     this.headingRad = headingRad;
-    this.setHeadingTarget(headingRad, isLanding);
+    this.setHeadingTarget(headingRad, isLanding, false, Direction.None);
   }
 
   /**
@@ -255,7 +255,7 @@ export default class Square {
     const heading = parseInt(inputHeading);
     if (heading > 360 || heading <= 0) return;
 
-    this.setHeadingTarget(inputHeadingToRad(heading), false);
+    this.setHeadingTarget(inputHeadingToRad(heading), false, false, Direction.None);
   }
 
   setNonInteractive() {
