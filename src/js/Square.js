@@ -224,7 +224,7 @@ export default class Square {
    * @param {Number} headingRad heading in rad. Zero is East, positive angle is CW
    * @param {Boolean} isLanding set/cancel landing mode
    * @param {Boolean} isHolding set/cancel holding mode
-   * @param {Direction} direction heading turn direction
+   * @param {Direction | null} direction set heading turn direction. when null do not modify direction 
    * @returns 
    */
   setHeadingTarget(headingRad, isLanding, isHolding, direction) {
@@ -240,7 +240,7 @@ export default class Square {
 
     this.setHolding(isHolding);
     this.setLanding(isLanding);
-    this.setDirection(direction);
+    if (direction) this.setDirection(direction);
     this.headingTargetRad = convertToPosRad(convertToSmallRad(headingRad));
   }
 
@@ -404,11 +404,12 @@ export default class Square {
     const headingRadNewLarge = this.updateHeading(headingOld, headingTarget, headingChange, direction);
     const headingRadNew = convertToPosRad(convertToSmallRad(headingRadNewLarge));
 
-    if (this.takeoff) this.setSpeed(250, false, true);
+    // TODO move to Runway
+    if (this.takeoff) this.setSpeed(220, false, true);
     if (this.takeoff && (this.speed > this.speedTakeoff)) {
       this.isNonInteractive = false;
       this.takeoff = false;
-      this.setSpeed(250, false, false);
+      this.setSpeed(220, false, false);
       this.setAltitude(2000, false, false);
     }
 

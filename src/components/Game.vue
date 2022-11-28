@@ -65,8 +65,13 @@
     </div>
 
     <div class="panel-right layer-seven" :style="stylePanelRight">
+      <FlightStripDeparture
+        :planeSelected="squareClicked"
+        :planes="planesDeparture"
+        :screenSize="screenSize"
+      ></FlightStripDeparture>
       <ul>
-        <li v-for="(plane, index) in planesSorted" :key="index">
+        <li v-for="(plane, index) in planesArrival" :key="index">
           <FlightStrip
             :plane="plane"
             :planeSelected="squareClicked"
@@ -87,6 +92,7 @@ import HelpPanel from "./HelpPanel"
 import ScorePanel from "./ScorePanel";
 import ControlPanel from "./ControlPanel";
 import FlightStrip from "./FlightStrip";
+import FlightStripDeparture from "./FlightStripDeparture";
 
 import { DestinationType } from '../js/aircraft/airframe';
 import { getWaypointArrivalsAll } from '../js/airports/LHR';
@@ -107,7 +113,13 @@ const squareClicked = ref({});
 
 export default {
   name: "atc-game",
-  components: { FlightStrip, ControlPanel, ScorePanel, HelpPanel },
+  components: {
+    FlightStripDeparture,
+    FlightStrip,
+    ControlPanel,
+    ScorePanel,
+    HelpPanel
+  },  
   props: {},
 
   data() {
@@ -134,9 +146,15 @@ export default {
       return planesCopy;
     },
 
-    // planes: () => {
-    //   return entityManagerArr.value.filter(isSquare);
-    // },
+    planesDeparture: () => {
+      const planes = entityManagerArr.value.filter(isSquare);
+      return  planes.filter(isDeparture);
+    },
+
+    planesArrival: () => {
+      const planes = entityManagerArr.value.filter(isSquare);
+      return planes.filter(isArrival);
+    },
 
     styleScope: () => ({
       width: width + 1 + "px",

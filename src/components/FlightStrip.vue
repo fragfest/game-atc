@@ -2,6 +2,16 @@
   <div>
     <div class="strip" :class="stripClass">
       <div
+        v-if="emptyStrip"
+        class="strip-info"
+      >
+        <div class="taxi font-large">
+          <b>taxi queue empty</b>
+        </div>
+      </div>
+
+      <div
+        v-if="!emptyStrip"
         class="strip-info"
         @click="click(plane)"
         @mouseover="hover()"
@@ -47,6 +57,10 @@
           <div v-else-if="isTouchedDown" class="takeoff-landing">
             <div class="font-large"><b>Landing</b></div>
             <div>touchdown</div>
+          </div>
+          <div v-else-if="isTakeoff" class="takeoff-landing">
+            <div class="font-large"><b>Take off</b></div>
+            <div>accelerating</div>
           </div>
           <div v-else-if="isTaxiing" class="takeoff-landing">
             <div class="font-large"><b>Taxiing</b></div>
@@ -148,13 +162,20 @@ import Bowser from "bowser";
 
 import { getClassSize, nextWaypoint } from "../js/utils";
 import { getWaypointArrivalsAll } from '../js/airports/LHR';
-import Square from '../js/Square';
+import { DestinationType } from '../js/aircraft/airframe';
 import ToolTip from "./common/ToolTip";
+
+const getPlane = (plane, planes) => {
+  if(!plane.id) return false;
+  if(!planes) return false;
+  return  planes.find((x) => x.id === plane.id) || false;
+}
 
 export default {
   name: "FlightStrip",
   props: {
-    plane: { type: Square },
+    emptyStrip: { type: Boolean },
+    plane: { type: Object },
     planeSelected: { type: Object },
     planes: { type: Object },
     screenSize: { type: String },
@@ -174,86 +195,114 @@ export default {
   },
 
   computed: {
+    isTakeoff: function() {
+      const plane = getPlane(this.plane, this.planes);
+      if(!plane) return false;
+      return plane.takeoff;
+    },
+
     isTaxiing: function() {
-      if (!this.plane.id) return false;
-      const plane = this.planes.find((x) => x.id === this.plane.id);
-      return plane.isTaxiing;            
+      const plane = getPlane(this.plane, this.planes);
+      if(!plane) return false;
+      return plane.isTaxiing;
     },
 
     isArrival: function() {
-      if (!this.plane.id) return true;
-      const isArrival = this.plane.destinationType === "arrival";
-      return isArrival ? true : false;
+      const plane = getPlane(this.plane, this.planes);
+      if(!plane) return true;
+      return plane.destinationType === DestinationType.Arrival;
     },
 
     hasProximityAlert: function () {
-      if (!this.plane.id) return false;
-      const plane = this.planes.find((x) => x.id === this.plane.id);
+      const plane = getPlane(this.plane, this.planes);
+      if(!plane) return false;
       return plane.hasProximityAlert;
     },
+
     isLanding: function () {
-      if (!this.plane.id) return false;
-      const plane = this.planes.find((x) => x.id === this.plane.id);
+      const plane = getPlane(this.plane, this.planes);
+      if(!plane) return false;
       return plane.landing && !plane.isTouchedDown;
     },
+
     isTouchedDown: function () {
-      if (!this.plane.id) return false;
-      const plane = this.planes.find((x) => x.id === this.plane.id);
+      const plane = getPlane(this.plane, this.planes);
+      if(!plane) return false;
       return plane.isTouchedDown;
     },
 
     stripClass: function () {
-      const isSelected = this.plane.id === this.planeSelected.id;
-      const selected = isSelected ? "selected" : "";
-      const isHover = this.isHover;
-      const hover = isHover ? "hover" : "";
+      const plane = getPlane(this.plane, this.planes);
       const size = getClassSize(this.screenSize);
 
-      const classes = [].concat(hover, selected, size);
+      const isSelected = plane ? (plane.id === this.planeSelected.id) : false;
+      const selected = isSelected ? "selected" : "";
+      const hover = this.isHover ? "hover" : "";
+      const empty = plane ? "" : "empty";
+
+      const classes = [].concat(empty, hover, selected, size);
       return classes.join(" ");
     },
 
     outerLineSmall: function () {
-      const isSelected = this.plane.id === this.planeSelected.id;
+      const plane = getPlane(this.plane, this.planes);
+      if(!plane) return 0.2;
+      const isSelected = plane.id === this.planeSelected.id;
       return isSelected ? 0.4 : 0.2;
     },
+
     outerLineMed: function () {
-      const isSelected = this.plane.id === this.planeSelected.id;
+      const plane = getPlane(this.plane, this.planes);
+      if(!plane) return 0.4;
+      const isSelected = plane.id === this.planeSelected.id;
       return isSelected ? 0.8 : 0.4;
     },
 
     outerLineStroke: function () {
-      const type = this.plane.destinationType || "arrival";
-      const isSelected = this.plane.id === this.planeSelected.id;
+      const plane = getPlane(this.plane, this.planes);
+      if(!plane) return "white";
+      if(this.isTaxiing) return "white";
+
+      const type = plane.destinationType || DestinationType.Arrival;
+      const isSelected = plane.id === this.planeSelected.id;
       if (isSelected) return "limegreen";
-      if (type === "arrival") return "#c98301";
-      if (type === "departure") return "#24b3c9";
+      if (type === DestinationType.Arrival) return "#c98301";
+      if (type === DestinationType.Departure) return "#24b3c9";
       return "#c98301";
     },
 
     gradientStart: function () {
-      const type = this.plane.destinationType || "arrival";
-      if (type === "arrival") return "#674300";
-      if (type === "departure") return "#122534";
+      const plane = getPlane(this.plane, this.planes);
+      if(!plane) return "#122534";
+
+      const type = plane.destinationType || DestinationType.Arrival;
+      if (type === DestinationType.Arrival) return "#674300";
+      if (type === DestinationType.Departure) return "#122534";
       return "#674300";
     },
     gradientEnd: function () {
-      const type = this.plane.destinationType || "arrival";
-      if (type === "arrival") return "#c98301";
-      if (type === "departure") return "#2d6794";
+      const plane = getPlane(this.plane, this.planes);
+      if(!plane) return "#2d6794";
+
+      const type = plane.destinationType || DestinationType.Arrival;
+      if (type === DestinationType.Arrival) return "#c98301";
+      if (type === DestinationType.Departure) return "#2d6794";
       return "#c98301";
     },
   },
 
   methods: {
     waypointClick: function() {
-      const plane = this.planes.find((x) => x.id === this.plane.id);
+      const plane = getPlane(this.plane, this.planes);
+      if(!plane) return;
       const waypoint = nextWaypoint(getWaypointArrivalsAll(), plane);
       plane.setWaypoint(waypoint);
     },
 
     click: function (plane) {
-      plane.clickEventCB();
+      const planeFound = getPlane(plane, this.planes);
+      if(!planeFound) return;
+      planeFound.clickEventCB();
     },
 
     hover: function () {
@@ -316,19 +365,13 @@ export default {
   margin-left: 16px;
   cursor: pointer;
 
-  hr {
-    width: 100%;
-    margin-top: 1px;
+  &.empty {
+    cursor: default;
+    margin-top: 4px;
     margin-bottom: 4px;
-    border: none;
-    border-top: 1px solid lightgreen;
-  }
-
-  .select-border {
-    border: 1px solid lightgreen;
-    border-bottom: none;
-    border-radius: 6px;
-    padding: 2px 12px;
+    &.hover {
+      right: 0;
+    }
   }
 
   &.hover {
@@ -353,6 +396,11 @@ export default {
     color: white;
     .font-large {
       font-size: 14px;
+    }
+
+    .taxi {
+      padding: 12px;
+      font-family: Monospace;
     }
 
     .col {
