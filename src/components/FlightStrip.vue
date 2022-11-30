@@ -1,17 +1,14 @@
 <template>
   <div>
     <div class="strip" :class="stripClass">
-      <div
-        v-if="emptyStrip"
-        class="strip-info"
-      >
+      <div v-if="isQueueStrip" class="strip-info">
         <div class="taxi font-large">
           <b>taxi queue empty</b>
         </div>
       </div>
 
       <div
-        v-if="!emptyStrip"
+        v-if="!isQueueStrip && !isEmptyStrip"
         class="strip-info"
         @click="click(plane)"
         @mouseover="hover()"
@@ -70,31 +67,12 @@
         </div>
       </div>
 
-      <svg viewBox="0 0 100 20">
-        <defs>
-          <linearGradient :id="'gradient-' + plane.id">
-            <stop offset="0%" :stop-color="gradientStart" />
-            <stop offset="100%" :stop-color="gradientEnd" />
-          </linearGradient>
-        </defs>
+      <svg v-if="isEmptyStrip" viewBox="0 0 100 20">
         <path
-          d="M0,2.67 4.29,0"
-          fill="none"
-          :stroke="outerLineStroke"
-          :stroke-width="outerLineSmall"
+          :fill="gradientEnd"
+          d="M0.76,3 4.29,0.8 50.07,0.8 54.36,2.0 78.68,2.0 82.83,0.8 97.8,0.8 99.2,2.2 99.2,18.1 97.8,19.3 4.48,19.3 0.76,17.1 0.76,2"
         />
-        <path
-          d="M4.29,0 50.07,0"
-          fill="none"
-          :stroke="outerLineStroke"
-          :stroke-width="outerLineMed"
-        />
-        <path
-          d="M50.07,0 54.36,1.33 78.68,1.33 82.98,0"
-          fill="none"
-          :stroke="outerLineStroke"
-          :stroke-width="outerLineSmall"
-        />
+
         <path
           d="M82.98,0 98,0"
           fill="none"
@@ -120,22 +98,89 @@
           :stroke-width="outerLineSmall"
         />
         <path
+          d="M98.28,20 82,20"
+          fill="none"
+          :stroke="outerLineStroke"
+          :stroke-width="outerLineMed"
+        />
+      </svg>
+
+      <svg v-if="!isEmptyStrip" viewBox="0 0 100 20">
+        <defs>
+          <linearGradient :id="'gradient-' + plane.id">
+            <stop offset="0%" :stop-color="gradientStart" />
+            <stop offset="100%" :stop-color="gradientEnd" />
+          </linearGradient>
+        </defs>
+        <path
+          d="M0,2.67 4.29,0"
+          fill="none"
+          :stroke="outerLineStroke"
+          :stroke-width="outerLineSmall"
+          :stroke-dasharray="dashVal"
+        />
+        <path
+          d="M4.29,0 50.07,0"
+          fill="none"
+          :stroke="outerLineStroke"
+          :stroke-width="outerLineMed"
+          :stroke-dasharray="dashVal"
+        />
+        <path
+          d="M50.07,0 54.36,1.33 78.68,1.33 82.98,0"
+          fill="none"
+          :stroke="outerLineStroke"
+          :stroke-width="outerLineSmall"
+          :stroke-dasharray="dashVal"
+        />
+        <path
+          d="M82.98,0 98,0"
+          fill="none"
+          :stroke="outerLineStroke"
+          :stroke-width="outerLineMed"
+          :stroke-dasharray="dashVal"
+        />
+        <path
+          d="M98,0 100,2"
+          fill="none"
+          :stroke="outerLineStroke"
+          :stroke-width="outerLineSmall"
+          :stroke-dasharray="dashVal"
+        />
+        <path
+          d="M100,2 100,18.4"
+          fill="none"
+          :stroke="outerLineStroke"
+          :stroke-width="outerLineMed"
+          :stroke-dasharray="dashVal"
+        />
+        <path
+          d="M100,18.4 98.23,20"
+          fill="none"
+          :stroke="outerLineStroke"
+          :stroke-width="outerLineSmall"
+          :stroke-dasharray="dashVal"
+        />
+        <path
           d="M98.28,20 4.29,20"
           fill="none"
           :stroke="outerLineStroke"
           :stroke-width="outerLineSmall"
+          :stroke-dasharray="dashVal"
         />
         <path
           d="M0,17.33 4.29,20"
           fill="none"
           :stroke="outerLineStroke"
           :stroke-width="outerLineSmall"
+          :stroke-dasharray="dashVal"
         />
         <path
           d="M0,2.67 0,17.33"
           fill="none"
           :stroke="outerLineStroke"
           :stroke-width="outerLineMed"
+          :stroke-dasharray="dashVal"
         />
 
         <path v-if="isSafari"
@@ -174,11 +219,12 @@ const getPlane = (plane, planes) => {
 export default {
   name: "FlightStrip",
   props: {
-    emptyStrip: { type: Boolean },
     plane: { type: Object },
     planeSelected: { type: Object },
-    planes: { type: Object },
+    planes: { type: Array },
     screenSize: { type: String },
+    isQueueStrip: { type: Boolean, required: false },
+    isEmptyStrip: { type: Boolean, required: false },
   },
   components: { ToolTip },
 
@@ -231,6 +277,10 @@ export default {
       return plane.isTouchedDown;
     },
 
+    dashVal: function(){
+      return this.isQueueStrip ? "1" : "";
+    },
+
     stripClass: function () {
       const plane = getPlane(this.plane, this.planes);
       const size = getClassSize(this.screenSize);
@@ -238,9 +288,10 @@ export default {
       const isSelected = plane ? (plane.id === this.planeSelected.id) : false;
       const selected = isSelected ? "selected" : "";
       const hover = this.isHover ? "hover" : "";
-      const empty = plane ? "" : "empty";
+      const empty = this.isEmptyStrip ? "empty" : "";
+      const queue = this.isQueueStrip ? "empty" : "";
 
-      const classes = [].concat(empty, hover, selected, size);
+      const classes = [].concat(queue, empty, hover, selected, size);
       return classes.join(" ");
     },
 
@@ -260,7 +311,8 @@ export default {
 
     outerLineStroke: function () {
       const plane = getPlane(this.plane, this.planes);
-      if(!plane) return "white";
+      if(this.isEmptyStrip) return "#24b3c9";
+      if(!plane) return "white";      
       if(this.isTaxiing) return "white";
 
       const type = plane.destinationType || DestinationType.Arrival;
@@ -353,9 +405,9 @@ export default {
       padding-left: 12px;
     }
   }
-  // strip-info end
+  // strip-info END
 }
-// strip small end
+// strip small END
 
 // strip (large)
 .strip {
@@ -367,8 +419,6 @@ export default {
 
   &.empty {
     cursor: default;
-    margin-top: 4px;
-    margin-bottom: 4px;
     &.hover {
       right: 0;
     }
@@ -463,7 +513,7 @@ export default {
       color: white;
     }
   }
-  // strip-info end
+  // strip-info END
 }
-// strip (large) end
+// strip (large) END
 </style>

@@ -148,7 +148,7 @@ const createSquare = (argObj, entityManagerArr, chanceOfSquare, createEntityFn) 
     isSquare(otherObj) &&
     isNotTaxiing(otherObj);
 
-  if (Math.random() > 1 - chanceOfSquare) {
+  if (Math.random() < chanceOfSquare) {
     const newEntity = createEntityFn();
     if (!newEntity) return;
 

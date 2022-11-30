@@ -137,13 +137,12 @@ export default {
   computed: {
     planesSorted: () => {
       const planes = entityManagerArr.value.filter(isSquare);
-      const planesCopy = [...planes];
-      planesCopy.sort((a, b) => {
-        if(isDeparture(a) && isArrival(b)) return -1;
-        if(isArrival(a) && isDeparture(b)) return 1;
-        return 0;
-      });
-      return planesCopy;
+      const departures = planes.filter(isDeparture);
+      const notTaxiing = departures.filter(plane => !plane.isTaxiing).reverse();
+      const taxiing = departures.filter(plane => plane.isTaxiing);
+      const firstTaxi = taxiing[0] || [];
+      const arrivals = planes.filter(isArrival);
+      return [].concat(firstTaxi, notTaxiing, arrivals);
     },
 
     planesDeparture: () => {
@@ -162,7 +161,7 @@ export default {
     }),
 
     stylePanelRight: () => {
-      let minWidth = 376;
+      let minWidth = 410;
       // let maxHeight = 1035;
       if (screenSize === ScreenSizes.Small) {
         minWidth = 296;
