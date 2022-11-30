@@ -57,14 +57,18 @@ export default class Waypoint {
       if (deltaX < 0) headingRad += Math.PI;
       const headingDeg = convertToSmallDegrees(radToDegrees(headingRad));
 
+      // TODO combine or move setDistPrev* as it must be called in tandem with setHeadingTarget
+
       if (plane.destinationType === DestinationType.Departure) {
-        if (isClose(plane) && !isEntityGettingCloser(this, plane, plane.distPrevHolding)) {
-          plane.setHeadingTarget(plane.headingTargetRad, false, false, Direction.None);
+        if (isClose(plane) && !isEntityGettingCloser(this, plane, plane.distPrevHandoff)) {
           plane.setHandoff(false);
+          plane.setDistPrevHandoff(distBetweenEntities(this)(plane))
+          plane.setHeadingTarget(plane.headingRad, false, false, Direction.None);
           return;
         }
-        // plane holding at waypoint
-        plane.setDistPrevHolding(distBetweenEntities(this)(plane));
+
+        // plane heading towards waypoint
+        plane.setDistPrevHandoff(distBetweenEntities(this)(plane))
         plane.setHeadingTarget(headingRad, false, false, Direction.None);
         return;
       }
@@ -73,6 +77,7 @@ export default class Waypoint {
         if (!plane.isAtWaypoint &&
           isEntityGettingCloser(this, plane, plane.distPrevHolding) &&
           isClose(plane)) {
+
           let direction = null;
           plane.setIsAtWaypoint(true);
           if (180 <= headingDeg && headingDeg <= 360) direction = this.westSideTurnDirection;
@@ -83,6 +88,7 @@ export default class Waypoint {
           return;
         }
         if (!plane.isAtWaypoint) {
+          // plane heading towards waypoint
           plane.setDistPrevHolding(distBetweenEntities(this)(plane));
           plane.setHeadingTarget(headingRad, false, true, Direction.None);
           return;

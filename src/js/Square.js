@@ -77,10 +77,12 @@ export default class Square {
     this.isHolding = false;
     this.isAtWaypoint = false;
     this.takeoff = false;
-    this.distPrevLanding = Infinity;
-    this.distPrevHolding = Infinity;
     this.trailPixelMs = 0;
     this.trailPixelArr = [];
+    // state numbers
+    this.distPrevLanding = Infinity;
+    this.distPrevHolding = Infinity;
+    this.distPrevHandoff = Infinity;
 
     // flightstrip info
     this.hasProximityAlert = false;
@@ -139,6 +141,9 @@ export default class Square {
   }
 
   setHandoff(isHandoff) {
+    if (!isHandoff) {
+      this.setDistPrevHandoff(Infinity);
+    }
     this.isHandoff = !!isHandoff;
   }
 
@@ -153,6 +158,11 @@ export default class Square {
 
   setOnGlidepath(arg) {
     this.onGlidePath = !!arg;
+  }
+
+  setDistPrevHandoff(dist) {
+    if (!parseFloat(dist)) return;
+    this.distPrevHandoff = parseFloat(dist);
   }
 
   setDistPrevHolding(dist) {
