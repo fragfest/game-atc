@@ -1,4 +1,6 @@
 <template>
+<div class="flightstrip-departure">
+
   <!-- empty taxi queue placeholder -->
   <FlightStrip
     v-if="!planeTaxiing"
@@ -49,6 +51,8 @@
     </li>
   </ul>
   <hr />
+
+</div>
 </template>
 
 <script>
@@ -112,6 +116,7 @@ export default {
   .queue-length-box {
     display: flex;
     align-items: center;
+    cursor: default;
   }
 
   .queue-length.small {
@@ -130,7 +135,7 @@ export default {
     align-self: center;
     font-size: 18px;
     font-weight: 500; 
-    color: yellow;
+    color: white;
   }
 
   .queue {
@@ -143,16 +148,18 @@ export default {
     }
   }
 
-  hr {
-    border: none;
-    margin-top: 0px;
-    margin-bottom: 12px;
-  }
+  .flightstrip-departure {
+    hr {
+      border: none;
+      margin-top: 0px;
+      margin-bottom: 12px;
+    }
 
-  ul {
-    width: 20px;
-    list-style-type: none;
-    margin: 0;
-    padding: 0 0;
+    ul {
+      width: 20px;
+      list-style-type: none;
+      margin: 0;
+      padding: 0 0;
+    }
   }
 </style>

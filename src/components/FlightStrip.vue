@@ -1,204 +1,202 @@
 <template>
-  <div>
-    <div class="strip" :class="stripClass">
-      <div v-if="isQueueStrip" class="strip-info">
-        <div class="taxi font-large">
-          <b>taxi queue empty</b>
-        </div>
+  <div class="strip" :class="stripClass">
+    <div v-if="isQueueStrip" class="strip-info">
+      <div class="taxi font-large">
+        <b>taxi queue empty</b>
+      </div>
+    </div>
+
+    <div
+      v-if="!isQueueStrip && !isEmptyStrip"
+      class="strip-info"
+      @click="click(plane)"
+      @mouseover="hover()"
+      @mouseout="flatten()"
+    >
+      <!-- <div class="col">
+        <div>12:35</div>
+      </div> -->
+      <div class="col font-large title">
+        <b>{{ plane.title }}</b>
+      </div>
+      <div class="col font-large">
+        <b>{{ plane.runway }}</b>
       </div>
 
-      <div
-        v-if="!isQueueStrip && !isEmptyStrip"
-        class="strip-info"
+      <div v-if="!isArrival" class="col font-large">
+        <b>{{ plane.waypoint }}</b>
+      </div>
+      <ToolTip v-else>
+        <div class="col">
+          <button @click="waypointClick">
+            <span class="font-large">
+              <b>{{ plane.waypoint }}</b>
+            </span>
+          </button>
+        </div>
+        <template v-slot:hover>cycle waypoints (W)</template>
+      </ToolTip>
+
+      <div class="col">
+        {{ plane.airframe }} / {{ plane.wake }}
+      </div>
+
+      <div class="col fixed-width no-border">
+        <div v-if="hasProximityAlert" class="conflict">
+          <div class="font-large"><b>Traffic</b></div>
+          <div>TCAS conflict</div>
+        </div>
+        <div v-else-if="isLanding" class="takeoff-landing">
+          <div class="font-large"><b>Landing</b></div>
+          <div>ILS approach</div>
+        </div>
+        <div v-else-if="isTouchedDown" class="takeoff-landing">
+          <div class="font-large"><b>Landing</b></div>
+          <div>touchdown</div>
+        </div>
+        <div v-else-if="isTakeoff" class="takeoff-landing">
+          <div class="font-large"><b>Take off</b></div>
+          <div>accelerating</div>
+        </div>
+        <div v-else-if="isTaxiing" class="takeoff-landing">
+          <div class="font-large"><b>Taxiing</b></div>
+          <div>ready for take off</div>
+        </div>
+        <div v-else></div>
+      </div>
+    </div>
+
+    <svg v-if="isEmptyStrip" viewBox="0 0 100 20">
+      <path
+        :fill="gradientEnd"
+        d="M0.76,3 4.29,0.8 50.07,0.8 54.36,2.0 78.68,2.0 82.83,0.8 97.8,0.8 99.2,2.2 99.2,18.1 97.8,19.3 4.48,19.3 0.76,17.1 0.76,2"
+      />
+
+      <path
+        d="M82.98,0 98,0"
+        fill="none"
+        :stroke="outerLineStroke"
+        :stroke-width="outerLineMed"
+      />
+      <path
+        d="M98,0 100,2"
+        fill="none"
+        :stroke="outerLineStroke"
+        :stroke-width="outerLineSmall"
+      />
+      <path
+        d="M100,2 100,18.4"
+        fill="none"
+        :stroke="outerLineStroke"
+        :stroke-width="outerLineMed"
+      />
+      <path
+        d="M100,18.4 98.23,20"
+        fill="none"
+        :stroke="outerLineStroke"
+        :stroke-width="outerLineSmall"
+      />
+      <path
+        d="M98.28,20 82,20"
+        fill="none"
+        :stroke="outerLineStroke"
+        :stroke-width="outerLineMed"
+      />
+    </svg>
+
+    <svg v-if="!isEmptyStrip" viewBox="0 0 100 20">
+      <defs>
+        <linearGradient :id="'gradient-' + plane.id">
+          <stop offset="0%" :stop-color="gradientStart" />
+          <stop offset="100%" :stop-color="gradientEnd" />
+        </linearGradient>
+      </defs>
+      <path
+        d="M0,2.67 4.29,0"
+        fill="none"
+        :stroke="outerLineStroke"
+        :stroke-width="outerLineSmall"
+        :stroke-dasharray="dashVal"
+      />
+      <path
+        d="M4.29,0 50.07,0"
+        fill="none"
+        :stroke="outerLineStroke"
+        :stroke-width="outerLineMed"
+        :stroke-dasharray="dashVal"
+      />
+      <path
+        d="M50.07,0 54.36,1.33 78.68,1.33 82.98,0"
+        fill="none"
+        :stroke="outerLineStroke"
+        :stroke-width="outerLineSmall"
+        :stroke-dasharray="dashVal"
+      />
+      <path
+        d="M82.98,0 98,0"
+        fill="none"
+        :stroke="outerLineStroke"
+        :stroke-width="outerLineMed"
+        :stroke-dasharray="dashVal"
+      />
+      <path
+        d="M98,0 100,2"
+        fill="none"
+        :stroke="outerLineStroke"
+        :stroke-width="outerLineSmall"
+        :stroke-dasharray="dashVal"
+      />
+      <path
+        d="M100,2 100,18.4"
+        fill="none"
+        :stroke="outerLineStroke"
+        :stroke-width="outerLineMed"
+        :stroke-dasharray="dashVal"
+      />
+      <path
+        d="M100,18.4 98.23,20"
+        fill="none"
+        :stroke="outerLineStroke"
+        :stroke-width="outerLineSmall"
+        :stroke-dasharray="dashVal"
+      />
+      <path
+        d="M98.28,20 4.29,20"
+        fill="none"
+        :stroke="outerLineStroke"
+        :stroke-width="outerLineSmall"
+        :stroke-dasharray="dashVal"
+      />
+      <path
+        d="M0,17.33 4.29,20"
+        fill="none"
+        :stroke="outerLineStroke"
+        :stroke-width="outerLineSmall"
+        :stroke-dasharray="dashVal"
+      />
+      <path
+        d="M0,2.67 0,17.33"
+        fill="none"
+        :stroke="outerLineStroke"
+        :stroke-width="outerLineMed"
+        :stroke-dasharray="dashVal"
+      />
+
+      <path v-if="isSafari"
+        :fill="gradientStart"
+        d="M0.76,3 4.29,0.8 50.07,0.8 54.36,2.0 78.68,2.0 82.83,0.8 97.8,0.8 99.2,2.2 99.2,18.1 97.8,19.3 4.48,19.3 0.76,17.1 0.76,2"
         @click="click(plane)"
         @mouseover="hover()"
         @mouseout="flatten()"
-      >
-        <!-- <div class="col">
-          <div>12:35</div>
-        </div> -->
-        <div class="col font-large title">
-          <b>{{ plane.title }}</b>
-        </div>
-        <div class="col font-large">
-          <b>{{ plane.runway }}</b>
-        </div>
-
-        <div v-if="!isArrival" class="col font-large">
-          <b>{{ plane.waypoint }}</b>
-        </div>
-        <ToolTip v-else>
-          <div class="col">
-            <button @click="waypointClick">
-              <span class="font-large">
-                <b>{{ plane.waypoint }}</b>
-              </span>
-            </button>
-          </div>
-          <template v-slot:hover>cycle waypoints (W)</template>
-        </ToolTip>
-
-        <div class="col">
-          {{ plane.airframe }} / {{ plane.wake }}
-        </div>
-
-        <div class="col fixed-width no-border">
-          <div v-if="hasProximityAlert" class="conflict">
-            <div class="font-large"><b>Traffic</b></div>
-            <div>TCAS conflict</div>
-          </div>
-          <div v-else-if="isLanding" class="takeoff-landing">
-            <div class="font-large"><b>Landing</b></div>
-            <div>ILS approach</div>
-          </div>
-          <div v-else-if="isTouchedDown" class="takeoff-landing">
-            <div class="font-large"><b>Landing</b></div>
-            <div>touchdown</div>
-          </div>
-          <div v-else-if="isTakeoff" class="takeoff-landing">
-            <div class="font-large"><b>Take off</b></div>
-            <div>accelerating</div>
-          </div>
-          <div v-else-if="isTaxiing" class="takeoff-landing">
-            <div class="font-large"><b>Taxiing</b></div>
-            <div>ready for take off</div>
-          </div>
-          <div v-else></div>
-        </div>
-      </div>
-
-      <svg v-if="isEmptyStrip" viewBox="0 0 100 20">
-        <path
-          :fill="gradientEnd"
-          d="M0.76,3 4.29,0.8 50.07,0.8 54.36,2.0 78.68,2.0 82.83,0.8 97.8,0.8 99.2,2.2 99.2,18.1 97.8,19.3 4.48,19.3 0.76,17.1 0.76,2"
-        />
-
-        <path
-          d="M82.98,0 98,0"
-          fill="none"
-          :stroke="outerLineStroke"
-          :stroke-width="outerLineMed"
-        />
-        <path
-          d="M98,0 100,2"
-          fill="none"
-          :stroke="outerLineStroke"
-          :stroke-width="outerLineSmall"
-        />
-        <path
-          d="M100,2 100,18.4"
-          fill="none"
-          :stroke="outerLineStroke"
-          :stroke-width="outerLineMed"
-        />
-        <path
-          d="M100,18.4 98.23,20"
-          fill="none"
-          :stroke="outerLineStroke"
-          :stroke-width="outerLineSmall"
-        />
-        <path
-          d="M98.28,20 82,20"
-          fill="none"
-          :stroke="outerLineStroke"
-          :stroke-width="outerLineMed"
-        />
-      </svg>
-
-      <svg v-if="!isEmptyStrip" viewBox="0 0 100 20">
-        <defs>
-          <linearGradient :id="'gradient-' + plane.id">
-            <stop offset="0%" :stop-color="gradientStart" />
-            <stop offset="100%" :stop-color="gradientEnd" />
-          </linearGradient>
-        </defs>
-        <path
-          d="M0,2.67 4.29,0"
-          fill="none"
-          :stroke="outerLineStroke"
-          :stroke-width="outerLineSmall"
-          :stroke-dasharray="dashVal"
-        />
-        <path
-          d="M4.29,0 50.07,0"
-          fill="none"
-          :stroke="outerLineStroke"
-          :stroke-width="outerLineMed"
-          :stroke-dasharray="dashVal"
-        />
-        <path
-          d="M50.07,0 54.36,1.33 78.68,1.33 82.98,0"
-          fill="none"
-          :stroke="outerLineStroke"
-          :stroke-width="outerLineSmall"
-          :stroke-dasharray="dashVal"
-        />
-        <path
-          d="M82.98,0 98,0"
-          fill="none"
-          :stroke="outerLineStroke"
-          :stroke-width="outerLineMed"
-          :stroke-dasharray="dashVal"
-        />
-        <path
-          d="M98,0 100,2"
-          fill="none"
-          :stroke="outerLineStroke"
-          :stroke-width="outerLineSmall"
-          :stroke-dasharray="dashVal"
-        />
-        <path
-          d="M100,2 100,18.4"
-          fill="none"
-          :stroke="outerLineStroke"
-          :stroke-width="outerLineMed"
-          :stroke-dasharray="dashVal"
-        />
-        <path
-          d="M100,18.4 98.23,20"
-          fill="none"
-          :stroke="outerLineStroke"
-          :stroke-width="outerLineSmall"
-          :stroke-dasharray="dashVal"
-        />
-        <path
-          d="M98.28,20 4.29,20"
-          fill="none"
-          :stroke="outerLineStroke"
-          :stroke-width="outerLineSmall"
-          :stroke-dasharray="dashVal"
-        />
-        <path
-          d="M0,17.33 4.29,20"
-          fill="none"
-          :stroke="outerLineStroke"
-          :stroke-width="outerLineSmall"
-          :stroke-dasharray="dashVal"
-        />
-        <path
-          d="M0,2.67 0,17.33"
-          fill="none"
-          :stroke="outerLineStroke"
-          :stroke-width="outerLineMed"
-          :stroke-dasharray="dashVal"
-        />
-
-        <path v-if="isSafari"
-          :fill="gradientStart"
-          d="M0.76,3 4.29,0.8 50.07,0.8 54.36,2.0 78.68,2.0 82.83,0.8 97.8,0.8 99.2,2.2 99.2,18.1 97.8,19.3 4.48,19.3 0.76,17.1 0.76,2"
-          @click="click(plane)"
-          @mouseover="hover()"
-          @mouseout="flatten()"
-        />
-        <path v-else
-          :fill="'url(#gradient-' + plane.id + ')'"
-          d="M0.76,3 4.29,0.8 50.07,0.8 54.36,2.0 78.68,2.0 82.83,0.8 97.8,0.8 99.2,2.2 99.2,18.1 97.8,19.3 4.48,19.3 0.76,17.1 0.76,2"
-          @click="click(plane)"
-          @mouseover="hover()"
-          @mouseout="flatten()"
-        />
-      </svg>
-    </div>
+      />
+      <path v-else
+        :fill="'url(#gradient-' + plane.id + ')'"
+        d="M0.76,3 4.29,0.8 50.07,0.8 54.36,2.0 78.68,2.0 82.83,0.8 97.8,0.8 99.2,2.2 99.2,18.1 97.8,19.3 4.48,19.3 0.76,17.1 0.76,2"
+        @click="click(plane)"
+        @mouseover="hover()"
+        @mouseout="flatten()"
+      />
+    </svg>
   </div>
 </template>
 
@@ -368,7 +366,7 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 // strip small
 .strip.small {
   width: 280px;

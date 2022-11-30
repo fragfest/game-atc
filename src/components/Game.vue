@@ -328,7 +328,7 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .container {
   display: flex;
 }
@@ -436,12 +436,5 @@ export default {
 
 p {
   margin: 6px;
-}
-
-input {
-  border: solid 1px;
-  border-radius: 3px;
-  height: 20px;
-  width: 50px;
 }
 </style>

@@ -338,7 +338,7 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .control-panel {
   display: flex;
   justify-content: flex-end;
@@ -524,7 +524,7 @@ export default {
   position: relative;
 }
 
-svg {
+.circle-panel svg {
   .arrow {
     fill: white;
   }

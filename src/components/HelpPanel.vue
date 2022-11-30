@@ -51,7 +51,7 @@ export default {
 
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .tab-left {
   margin-left: 4px;
 }

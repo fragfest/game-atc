@@ -29,7 +29,7 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 main {
   .tooltip .hover {
     visibility: hidden;
