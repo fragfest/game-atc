@@ -1,4 +1,5 @@
 import {
+  ScreenSizes,
   Direction,
   inputHeadingToRad,
   convertToSmallRad,
@@ -7,7 +8,11 @@ import {
   leftPadZeros,
   altitudeDisplay,
 } from './utils';
-import * as entityFns from './entity';
+import {
+  getTooCloseDistance,
+  isCloseToEntity,
+  isCloseToWaypoint,
+} from './entity';
 import { MessageEvents, publish } from './events/messages';
 import {
   uniqueProximityPair,
@@ -29,12 +34,12 @@ export default class Square {
     this.canvasWidth = entityLayerObj.width;
     this.canvasHeight = entityLayerObj.height;
     this.textLayerObj = textLayerObj;
-    this.headingLayerObj = headingLayerObj;
+    this.headingLayerObj = headingLayerObj; // TODO remove?
     this.positionObj = positionObj;
 
     this.htmlDiv = htmlDiv;
     this.htmlSquareDiv = null;
-    this.htmlImgEl = null;
+    this.htmlImgEl = { src: null };
     this.width = 5;
     this.height = 5;
 
@@ -310,7 +315,7 @@ export default class Square {
 
     const waypointObj = entityManagerArr.find(isTargetWaypoint);
     if (!waypointObj) return;
-    if (entityFns.isCloseToWaypoint(waypointObj)(this)) {
+    if (isCloseToWaypoint(waypointObj)(this)) {
       this.setDestroyFlag(true);
       this.setHandoff(true);
     }
@@ -405,8 +410,6 @@ export default class Square {
   }
 
   update({ deltaTimeMs }) {
-    const squareOrigin = this.isSmall ? 10 : 13;
-
     const headingOld = this.headingRad;
     const headingTarget = this.headingTargetRad;
     const headingChange = this.turnRateRadPerMs * deltaTimeMs;
@@ -437,16 +440,14 @@ export default class Square {
     this.x += pixelsInX;
     this.y += pixelsInY;
     if (this.htmlSquareDiv) {
-      this.htmlSquareDiv.style.left = (this.x - squareOrigin) + 'px';
-      this.htmlSquareDiv.style.top = (this.y - squareOrigin) + 'px';
+      const squareSize = _htmlSquareSize(this.isSmall)
+      this.htmlSquareDiv.style.left = this.x - (squareSize / 2) + 'px';
+      this.htmlSquareDiv.style.top = this.y - (squareSize / 2) + 'px';
     }
     this.headingRad = headingRadNew;
     this.heading = convHdgRadToThreeDigits(headingRadNew);
     this.altitude = altitudeNew;
     this.speed = speedNew;
-
-    // this.ctx.fillStyle = 'red';
-    // this.ctx.fillRect(this.x - 2, this.y - 2, 4, 4);
 
     // square leaving canvas
     const outsideCanvasWidth = (x, offset) => (x > (this.canvasWidth + offset)) || (x < (0 - offset));
@@ -480,24 +481,20 @@ export default class Square {
       color = 'white';
       this.htmlImgEl.src = this.iconDefault
     }
-
     this.htmlImgEl.style.transform = 'rotate(' + this.heading + 'deg)';
+
     _draw(this, color);
 
     // create trail of pixels
-    const shiftX = this.isSmall ? 3 : 3
-    const shiftY = this.isSmall ? 0 : 2
     const intervalSecs = 3;
     if (this.takeoff) return;
     if (!timestamp) return;
     if (timestamp > (this.trailPixelMs + intervalSecs * 1000)) {
       this.trailPixelMs = timestamp;
-      const pixelsInX = Math.cos(this.headingRad);
-      const pixelsInY = Math.sin(this.headingRad);
-      const x = this.x - pixelsInX - shiftX;
-      const y = this.y - pixelsInY - shiftY;
-      this.ctx.fillStyle = 'white';
-      this.ctx.fillRect(x - 1, y - 1, 2, 2);
+      const x = this.x;
+      const y = this.y;
+      const pixel = { x, y };
+      _drawTrailPixel(this, pixel, 1);
       this.trailPixelArr.unshift({ x, y });
     }
   }
@@ -520,7 +517,7 @@ export default class Square {
 
   setProximity({ entityManagerArr, screenSize }) {
     const isPlane = plane => plane instanceof Square;
-    const isEntityCloseTo = entityFns.isCloseToEntity(screenSize)(this);
+    const isEntityCloseTo = isCloseToEntity(screenSize)(this);
     const isAirborne = plane => !plane.isTaxiing && !plane.takeoff && !plane.isTouchedDown;
     const isOnRunway = plane => !plane.isTaxiing && (plane.takeoff || plane.isTouchedDown);
     const isSameRunway = plane => plane.runway === this.runway;
@@ -555,6 +552,7 @@ export default class Square {
 ////////////////////////////////////////////////////////////
 
 const _trailMax = 12;
+
 const _clearTrailPixelsAll = (self) => {
   self.trailPixelArr.forEach((pixel) => _clearTrailPixel(self, pixel));
   self.trailPixelArr = [];
@@ -567,9 +565,10 @@ const _drawTrailPixel = (self, pixel, opacity) => {
   self.ctx.globalAlpha = 1;
 }
 
+const _htmlSquareSize = isSmall => isSmall ? 15 : 22;
+
 const _createHtmlEl = (self) => {
-  const squareSize = self.isSmall ? 15 : 22;
-  const squareOrigin = self.isSmall ? 10 : 13;
+  const squareSize = _htmlSquareSize(self.isSmall);
 
   self.htmlSquareDiv = document.createElement('div');
   self.htmlDiv.appendChild(self.htmlSquareDiv);
@@ -578,9 +577,8 @@ const _createHtmlEl = (self) => {
   self.htmlSquareDiv.addEventListener('mouseup', () => self.clickEventCB());
   self.htmlSquareDiv.addEventListener('mouseenter', () => self.htmlSquareDiv.style.cursor = 'pointer');
   self.htmlSquareDiv.addEventListener('mouseleave', () => self.htmlSquareDiv.style.cursor = 'none');
-  self.htmlSquareDiv.style.left = (self.x - squareOrigin) + 'px';
-  self.htmlSquareDiv.style.top = (self.y - squareOrigin) + 'px';
-  self.htmlSquareDiv.style.marginTop = 2.6 + 'px';
+  self.htmlSquareDiv.style.left = self.x - (squareSize / 2) + 'px';
+  self.htmlSquareDiv.style.top = self.y - (squareSize / 2) + 'px';
   self.htmlSquareDiv.style.width = squareSize + 'px';
   self.htmlSquareDiv.style.height = squareSize + 'px';
   // self.htmlSquareDiv.style.border = '1px solid yellow';
@@ -596,6 +594,17 @@ const _createHtmlEl = (self) => {
 }
 
 const _draw = (self, color) => {
+  // eslint-disable-next-line no-unused-vars
+  const proximityDist = self.isSmall ?
+    getTooCloseDistance(ScreenSizes.Small) : getTooCloseDistance(ScreenSizes.Large);
+  // self.textLayerObj.ctx.fillStyle = 'red';
+  // self.textLayerObj.ctx.fillRect(self.x - 2, self.y - 2, 4, 4);
+  // self.textLayerObj.ctx.strokeStyle = 'red';
+  // self.textLayerObj.ctx.beginPath();
+  // self.textLayerObj.ctx.arc(self.x, self.y, proximityDist / 2, 0, 2 * Math.PI);
+  // self.textLayerObj.ctx.closePath();
+  // self.textLayerObj.ctx.stroke();
+
   if (self.takeoff || self.isTouchedDown) return;
 
   const degreesDisplay = self.heading;

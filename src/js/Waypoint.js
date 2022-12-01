@@ -57,7 +57,7 @@ export default class Waypoint {
       if (deltaX < 0) headingRad += Math.PI;
       const headingDeg = convertToSmallDegrees(radToDegrees(headingRad));
 
-      // TODO combine or move setDistPrev* as it must be called in tandem with setHeadingTarget
+      // TODO combine or move setDistPrev* to Square update() as it must be called in tandem with setHeadingTarget
 
       if (plane.destinationType === DestinationType.Departure) {
         if (isClose(plane) && !isEntityGettingCloser(this, plane, plane.distPrevHandoff)) {

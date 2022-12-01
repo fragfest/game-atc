@@ -50,13 +50,18 @@ export const isCloseToWaypoint = waypoint => entity => {
   return false;
 };
 
+export const getTooCloseDistance = screenSize => {
+  if (screenSize === ScreenSizes.Large) return 51;
+  if (screenSize === ScreenSizes.Small) return 37;
+};
+
 export const isCloseToEntity = screenSize => entity => entityOther => {
   if (!hasEntityState(entity) || !hasEntityState(entityOther)) {
     console.error('entity is missing required state props');
     return false;
   }
   if (entityOther.id === entity.id) return false;
-  const distMax = (screenSize === ScreenSizes.Large) ? 51 : 37;
+  const distMax = getTooCloseDistance(screenSize);
   const distX = Math.abs(entity.x - entityOther.x);
   const distY = Math.abs(entity.y - entityOther.y);
   const isCloseHorizontal = (distX < distMax) && (distY < distMax);
