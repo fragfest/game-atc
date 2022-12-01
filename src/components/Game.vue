@@ -44,13 +44,9 @@
 
       <div class="row-bottom layer-seven">
         <div class="row-bottom-left">
-          <HelpPanel
-            :screenSize="screenSize"
-          ></HelpPanel>
+          <HelpPanel :screenSize="screenSize"></HelpPanel>
           <div class="col">
-            <ScorePanel
-              :screenSize="screenSize"
-            ></ScorePanel>
+            <ScorePanel :screenSize="screenSize"></ScorePanel>
           </div>
         </div>
         <div class="row-bottom-right">
@@ -88,21 +84,22 @@
 import { ref } from "vue";
 
 import Square from "../js/Square";
-import HelpPanel from "./HelpPanel"
+import HelpPanel from "./HelpPanel";
 import ScorePanel from "./ScorePanel";
 import ControlPanel from "./ControlPanel";
 import FlightStrip from "./FlightStrip";
 import FlightStripDeparture from "./FlightStripDeparture";
 
-import { DestinationType } from '../js/aircraft/airframe';
-import { getWaypointArrivalsAll } from '../js/airports/LHR';
+import { DestinationType } from "../js/aircraft/airframe";
+import { getWaypointArrivalsAll } from "../js/airports/LHR";
 import { setup, setupEntities, setPlaneSelected } from "../js/game";
 import { ScreenSizes, getGameSize, nextWaypoint } from "../js/utils";
 import { KeyboardEvents, subscribe } from "../js/events/keyboard";
 
-const isSquare = obj => obj instanceof Square;
-const isDeparture = plane => plane.destinationType === DestinationType.Departure;
-const isArrival = plane => plane.destinationType === DestinationType.Arrival;
+const isSquare = (obj) => obj instanceof Square;
+const isDeparture = (plane) =>
+  plane.destinationType === DestinationType.Departure;
+const isArrival = (plane) => plane.destinationType === DestinationType.Arrival;
 
 let screenSize = ScreenSizes.Large;
 let width = getGameSize(ScreenSizes.Large).width;
@@ -118,8 +115,8 @@ export default {
     FlightStrip,
     ControlPanel,
     ScorePanel,
-    HelpPanel
-  },  
+    HelpPanel,
+  },
   props: {},
 
   data() {
@@ -138,8 +135,10 @@ export default {
     planesSorted: () => {
       const planes = entityManagerArr.value.filter(isSquare);
       const departures = planes.filter(isDeparture);
-      const notTaxiing = departures.filter(plane => !plane.isTaxiing).reverse();
-      const taxiing = departures.filter(plane => plane.isTaxiing);
+      const notTaxiing = departures
+        .filter((plane) => !plane.isTaxiing)
+        .reverse();
+      const taxiing = departures.filter((plane) => plane.isTaxiing);
       const firstTaxi = taxiing[0] || [];
       const arrivals = planes.filter(isArrival);
       return [].concat(firstTaxi, notTaxiing, arrivals);
@@ -147,7 +146,7 @@ export default {
 
     planesDeparture: () => {
       const planes = entityManagerArr.value.filter(isSquare);
-      return  planes.filter(isDeparture);
+      return planes.filter(isDeparture);
     },
 
     planesArrival: () => {
@@ -169,7 +168,7 @@ export default {
       }
       return {
         "min-width": minWidth + "px",
-        "width": "100%",
+        width: "100%",
         "min-height": "99vh",
         // "max-height": maxHeight + "px",
       };
@@ -296,34 +295,33 @@ export default {
       return this.planesSorted.findIndex(isSelected);
     };
     subscribe(KeyboardEvents.KeyboardLetter_W_EV, () => {
-      callMethodEV(getPlaneSelectedIndex(), plane => {
+      callMethodEV(getPlaneSelectedIndex(), (plane) => {
         const waypoint = nextWaypoint(getWaypointArrivalsAll(), plane);
         plane.setWaypoint(waypoint);
       });
     });
     subscribe(KeyboardEvents.KeyboardLetter_T_EV, () => {
-      callMethodEV(getPlaneSelectedIndex(), plane => {
+      callMethodEV(getPlaneSelectedIndex(), (plane) => {
         plane.startTakeoff();
-      })
+      });
     });
     subscribe(KeyboardEvents.KeyboardLetter_H_EV, () => {
-      callMethodEV(getPlaneSelectedIndex(), plane => {
-        if(isArrival(plane)) plane.setHolding(!plane.isHolding);
-        if(isDeparture(plane)) plane.setHandoff(!plane.isHandoff);
+      callMethodEV(getPlaneSelectedIndex(), (plane) => {
+        if (isArrival(plane)) plane.setHolding(!plane.isHolding);
+        if (isDeparture(plane)) plane.setHandoff(!plane.isHandoff);
         this.$refs.controlPanel.setFocus();
-      })
+      });
     });
     subscribe(KeyboardEvents.KeyboardLetter_L_EV, () => {
-      callMethodEV(getPlaneSelectedIndex(), plane => plane.setLanding(true))
+      callMethodEV(getPlaneSelectedIndex(), (plane) => plane.setLanding(true));
     });
     subscribe(KeyboardEvents.KeyboardArrowDownEV, () => {
-      arrowDownEV(getPlaneSelectedIndex())
+      arrowDownEV(getPlaneSelectedIndex());
     });
     subscribe(KeyboardEvents.KeyboardArrowUpEV, () => {
-      arrowUpEV(getPlaneSelectedIndex())
+      arrowUpEV(getPlaneSelectedIndex());
     });
     // EVENTS END ///////////////////////////////////////////////////////////////////
-
   },
 };
 </script>

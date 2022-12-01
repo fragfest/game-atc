@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { ScoreEvents, subscribe } from '../js/panelBottom/score';
+import { ScoreEvents, subscribe } from "../js/panelBottom/score";
 import { getClassSize } from "../js/utils";
 
 export default {
@@ -27,9 +27,9 @@ export default {
   mounted() {
     subscribe(ScoreEvents.ScoreEV, (score) => {
       let scoreTotal = score.scoreTotal;
-      if(scoreTotal >= 99999) scoreTotal = 99999;
-      if(scoreTotal <= -9999) scoreTotal = -9999;
-      this.scoreTotal = scoreTotal.toLocaleString('en-CA');
+      if (scoreTotal >= 99999) scoreTotal = 99999;
+      if (scoreTotal <= -9999) scoreTotal = -9999;
+      this.scoreTotal = scoreTotal.toLocaleString("en-CA");
     });
   },
 
@@ -39,7 +39,6 @@ export default {
     },
   },
 };
-
 </script>
 
 <style lang="scss">
