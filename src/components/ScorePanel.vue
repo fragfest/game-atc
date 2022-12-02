@@ -1,9 +1,43 @@
 <template>
   <div class="score-panel">
     <div class="score-info">
-      <div class="score-row" :class="sizeClass">
-        <span class="label">score</span>
+      <!-- <div class="score-row" :class="sizeClass">
+        <span class="font-size">score</span>
         <span>{{ scoreTotal }}</span>
+      </div> -->
+      <div class="score-row" :class="sizeClass">
+        <span class="margin-top font-large badge blue">departures</span>
+        <span class="font-large">0/10</span>
+      </div>
+      <div class="score-row" :class="sizeClass">
+        <span class="margin-top font-large badge yellow">landings</span>
+        <span class="font-large">0/10</span>
+      </div>
+      <div class="score-row" :class="sizeClass">
+        <span class="margin-top badge conflict">
+          failed <small>handoff & landings</small>
+        </span>
+        <span class="font-large">0/3</span>
+      </div>
+      <div class="score-row" :class="sizeClass">
+        <span class="margin-top badge conflict">
+          conflict <small>seconds</small>
+        </span>
+        <span class="font-large">0/30</span>
+      </div>
+
+      <hr />
+      <div class="score-row" :class="sizeClass">
+        <span class="badge">
+          <b>hot runway</b> <small>keep runway busy</small>
+        </span>
+        <span>100</span>
+      </div>
+      <div class="score-row" :class="sizeClass">
+        <span class="margin-top badge">
+          <b>tin pusher</b> <small>reduce delays</small>
+        </span>
+        <span>100</span>
       </div>
     </div>
   </div>
@@ -46,39 +80,69 @@ export default {
   display: flex;
   justify-content: flex-end;
   width: 100%;
-  max-height: 100px;
   margin-top: 10px;
   margin-bottom: 10px;
   margin-right: 6px;
+  cursor: default;
 }
 
 .score-info {
   display: flex;
   flex-direction: column;
-  width: 100px;
+  width: 300px;
   background-color: #2c5c816f;
   border: 1px solid lightgreen;
   border-radius: 8px;
   box-shadow: 3px 3px rgb(0, 84, 84);
-  padding: 4px 10px;
+  padding: 8px 14px;
   color: white;
 }
 
+.score-info hr {
+  width: 100%;
+  margin: 12px 0px;
+}
+
+// score-row
 .score-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-size: 16px;
-  .label {
+
+  .font-large {
     font-size: 18px;
-    font-weight: 800;
+  }
+  .margin-top {
+    margin-top: 4px;
+  }
+
+  .badge {
+    padding: 8px;
+    margin-right: 20px;
+    border-radius: 8px;
+    font-family: Monospace;
+    background-color: darkslategrey;
+  }
+  .conflict {
+    font-family: Monospace;
+    font-weight: 600;
+    background-color: #9f0404;
+  }
+  .yellow {
+    background-color: #674300;
+  }
+  .blue {
+    background-color: #122534;
   }
 }
 
+// score-row small
 .score-row.small {
   font-size: 14px;
-  .label {
+  .font-large {
     font-size: 16px;
   }
 }
+// score-row END
 </style>

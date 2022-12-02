@@ -1,8 +1,8 @@
 <template>
   <div class="control-panel">
-    <div class="message-panel" :class="sizeClass">
+    <!-- <div class="message-panel" :class="sizeClass">
       <textarea readonly v-model="messagesDisplay"></textarea>
-    </div>
+    </div> -->
 
     <div class="btn-info-panel" :class="sizeClass">
       <div class="btn-container">
@@ -13,7 +13,8 @@
               :class="landBtnClass"
               :disabled="isDisabled"
               @click="landClick"
-            ><span>land</span>
+            >
+              <span>land</span>
             </button>
             <template v-slot:hover>cleared ILS approach (L)</template>
           </ToolTip>
@@ -23,7 +24,8 @@
               :class="holdHandoffBtnClass"
               :disabled="isDisabled"
               @click="holdClick"
-            ><span>hold</span>
+            >
+              <span>hold</span>
             </button>
             <template v-slot:hover>hold at waypoint (H)</template>
           </ToolTip>
@@ -35,17 +37,16 @@
               :class="holdHandoffBtnClass"
               :disabled="isDisabled"
               @click="handoffClick"
-            ><span>handoff</span>
+            >
+              <span>handoff</span>
             </button>
             <template v-slot:hover>handoff (H)</template>
           </ToolTip>
         </div>
         <div v-show="isTaxiing" class="btn">
           <ToolTip :size="sizeClass">
-            <button
-              class="takeoff"
-              @click="takeoffClick"
-            ><span>take off</span>
+            <button class="takeoff" @click="takeoffClick">
+              <span>take off</span>
             </button>
             <template v-slot:hover>take off (T)</template>
           </ToolTip>
@@ -165,7 +166,7 @@ export default {
   data() {
     return {
       messages: [],
-    }
+    };
   },
 
   mounted() {
@@ -188,27 +189,27 @@ export default {
 
     subscribe(MessageEvents.MessageProximityEV, (msgObj) => {
       const isProximityMsg = (msg) => {
-        if(typeof msg === 'string') return false;
-        if(!msg.id) return false;
-        if(msg.id === msgObj.id) return true;
+        if (typeof msg === "string") return false;
+        if (!msg.id) return false;
+        if (msg.id === msgObj.id) return true;
         return false;
       };
       const objFound = this.messages.find(isProximityMsg);
       const objFoundIndex = this.messages.findIndex(isProximityMsg);
 
-      if(objFound){
+      if (objFound) {
         const scoreDecrease = objFound.scoreDecrease + msgObj.scoreDecrease;
         const objNew = {
           id: objFound.id,
-          msg: msgObj.msg + ' (' + scoreDecrease + ')',
-          scoreDecrease,          
+          msg: msgObj.msg + " (" + scoreDecrease + ")",
+          scoreDecrease,
         };
         this.messages.splice(objFoundIndex, 1, objNew);
       }
-      if(!objFound){
+      if (!objFound) {
         this.messages.unshift({
           id: msgObj.id,
-          msg: msgObj.msg + ' (' + msgObj.scoreDecrease + ')',
+          msg: msgObj.msg + " (" + msgObj.scoreDecrease + ")",
           scoreDecrease: msgObj.scoreDecrease,
         });
       }
@@ -218,42 +219,43 @@ export default {
   },
 
   computed: {
-    messagesDisplay: function () {
-      const arr = this.messages.map(obj => obj.msg);
-      return arr.join("\n");
-    },
+    // messagesDisplay: function () {
+    //   const arr = this.messages.map((obj) => obj.msg);
+    //   return arr.join("\n");
+    // },
 
-    isDeparture: function() {
-      const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
+    isDeparture: function () {
+      const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
       if (!planeSel) return false;
       return this.planeSelected.destinationType === DestinationType.Departure;
     },
 
-    isArrival: function() {
-      const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
+    isArrival: function () {
+      const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
       if (!planeSel) return false;
       return this.planeSelected.destinationType === DestinationType.Arrival;
     },
 
-    isTaxiing: function() {
-      const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
+    isTaxiing: function () {
+      const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
       if (!planeSel) return false;
       return this.planeSelected.isTaxiing;
     },
 
-    landBtnClass: function(){
-      const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
-      if (!planeSel) return '';
+    landBtnClass: function () {
+      const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
+      if (!planeSel) return "";
       let classes = getClassSize(this.screenSize);
-      if(this.planeSelected.landing) classes += ' is-landing';
-      return classes;      
+      if (this.planeSelected.landing) classes += " is-landing";
+      return classes;
     },
 
-    holdHandoffBtnClass: function(){
-      const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
-      if (!planeSel) return '';
+    holdHandoffBtnClass: function () {
+      const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
+      if (!planeSel) return "";
       let classes = getClassSize(this.screenSize);
-      if(this.planeSelected.isHolding || this.planeSelected.isHandoff) classes += ' is-holdhandoff';
+      if (this.planeSelected.isHolding || this.planeSelected.isHandoff)
+        classes += " is-holdhandoff";
       return classes;
     },
 
@@ -262,26 +264,26 @@ export default {
     },
 
     isDisabled: function () {
-      const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
+      const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
       if (!planeSel) return true;
       return this.planeSelected.isNonInteractive;
     },
 
     heading: function () {
-      const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
+      const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
       if (!planeSel) return "";
       setCompass(planeSel.headingRad);
       return planeSel.heading;
     },
 
     altitude: function () {
-      const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
+      const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
       if (!planeSel) return "";
       return altitudeDisplay(planeSel.altitude);
     },
 
     speed: function () {
-      const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
+      const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
       if (!planeSel) return "";
       return Math.round(planeSel.speed);
     },
@@ -295,12 +297,12 @@ export default {
   },
 
   methods: {
-    setFocus: function() {
-      const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
+    setFocus: function () {
+      const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
       if (!planeSel) return;
 
       this.$nextTick(() => {
-        if(planeSel.isHolding) this.$refs.circleInputs.setFocus();
+        if (planeSel.isHolding) this.$refs.circleInputs.setFocus();
         else this.$refs.circleInputs.setFocus();
       });
     },
@@ -310,7 +312,7 @@ export default {
       this.planeSelected.startTakeoff();
     },
 
-    handoffClick: function(){
+    handoffClick: function () {
       if (!this.planeSelected.id) return;
       const isHandoffToggled = !this.planeSelected.isHandoff;
       this.planeSelected.setHandoff(isHandoffToggled);
@@ -346,43 +348,43 @@ export default {
 }
 
 // message-panel
-.message-panel {
-  width: 280px;
-  max-height: 330px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  margin-right: 20px;
+// .message-panel {
+//   width: 280px;
+//   max-height: 330px;
+//   margin-top: 10px;
+//   margin-bottom: 10px;
+//   margin-right: 20px;
 
-  background-color: #2c5c816f;
-  border: 1px solid lightgreen;
-  border-radius: 8px;
-  box-shadow: 3px 3px rgb(0, 84, 84);
+//   background-color: #2c5c816f;
+//   border: 1px solid lightgreen;
+//   border-radius: 8px;
+//   box-shadow: 3px 3px rgb(0, 84, 84);
 
-  textarea {
-    height: 93.5%;
-    width: 92%;
-    padding: 4px 10px;
+//   textarea {
+//     height: 93.5%;
+//     width: 92%;
+//     padding: 4px 10px;
 
-    border: none;
-    background: transparent;
-    resize: none;
-    overflow: hidden;
-    color: white;
-    font-size: 14px;
+//     border: none;
+//     background: transparent;
+//     resize: none;
+//     overflow: hidden;
+//     color: white;
+//     font-size: 14px;
 
-    &:focus-visible {
-      outline: none;
-    }
-  }
-}
+//     &:focus-visible {
+//       outline: none;
+//     }
+//   }
+// }
 
-.message-panel.small {
-  width: 220px;
-  max-height: 270px;
-  textarea {
-    font-size: 11px;
-  }
-}
+// .message-panel.small {
+//   width: 220px;
+//   max-height: 270px;
+//   textarea {
+//     font-size: 11px;
+//   }
+// }
 // message-panel END
 
 // btn-info-panel
@@ -448,8 +450,8 @@ export default {
 // btn-info-panel button
 .btn-info-panel button {
   &.takeoff {
-  width: 80px;
-  font-weight: 600;
+    width: 80px;
+    font-weight: 600;
   }
   &.hold {
     font-weight: 400;

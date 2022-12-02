@@ -37,9 +37,7 @@
         <template v-slot:hover>cycle waypoints (W)</template>
       </ToolTip>
 
-      <div class="col">
-        {{ plane.airframe }} / {{ plane.wake }}
-      </div>
+      <div class="col">{{ plane.airframe }} / {{ plane.wake }}</div>
 
       <div class="col fixed-width no-border">
         <div v-if="hasProximityAlert" class="conflict">
@@ -182,14 +180,16 @@
         :stroke-dasharray="dashVal"
       />
 
-      <path v-if="isSafari"
+      <path
+        v-if="isSafari"
         :fill="gradientStart"
         d="M0.76,3 4.29,0.8 50.07,0.8 54.36,2.0 78.68,2.0 82.83,0.8 97.8,0.8 99.2,2.2 99.2,18.1 97.8,19.3 4.48,19.3 0.76,17.1 0.76,2"
         @click="click(plane)"
         @mouseover="hover()"
         @mouseout="flatten()"
       />
-      <path v-else
+      <path
+        v-else
         :fill="'url(#gradient-' + plane.id + ')'"
         d="M0.76,3 4.29,0.8 50.07,0.8 54.36,2.0 78.68,2.0 82.83,0.8 97.8,0.8 99.2,2.2 99.2,18.1 97.8,19.3 4.48,19.3 0.76,17.1 0.76,2"
         @click="click(plane)"
@@ -204,15 +204,15 @@
 import Bowser from "bowser";
 
 import { getClassSize, nextWaypoint } from "../js/utils";
-import { getWaypointArrivalsAll } from '../js/airports/LHR';
-import { DestinationType } from '../js/aircraft/airframe';
+import { getWaypointArrivalsAll } from "../js/airports/LHR";
+import { DestinationType } from "../js/aircraft/airframe";
 import ToolTip from "./common/ToolTip";
 
 const getPlane = (plane, planes) => {
-  if(!plane.id) return false;
-  if(!planes) return false;
-  return  planes.find((x) => x.id === plane.id) || false;
-}
+  if (!plane.id) return false;
+  if (!planes) return false;
+  return planes.find((x) => x.id === plane.id) || false;
+};
 
 export default {
   name: "FlightStrip",
@@ -234,48 +234,50 @@ export default {
   },
 
   mounted() {
-    const browser = Bowser.getParser(window.navigator.userAgent).getBrowserName();
-    this.isSafari = browser === 'Safari';
+    const browser = Bowser.getParser(
+      window.navigator.userAgent
+    ).getBrowserName();
+    this.isSafari = browser === "Safari";
   },
 
   computed: {
-    isTakeoff: function() {
+    isTakeoff: function () {
       const plane = getPlane(this.plane, this.planes);
-      if(!plane) return false;
+      if (!plane) return false;
       return plane.takeoff;
     },
 
-    isTaxiing: function() {
+    isTaxiing: function () {
       const plane = getPlane(this.plane, this.planes);
-      if(!plane) return false;
+      if (!plane) return false;
       return plane.isTaxiing;
     },
 
-    isArrival: function() {
+    isArrival: function () {
       const plane = getPlane(this.plane, this.planes);
-      if(!plane) return true;
+      if (!plane) return true;
       return plane.destinationType === DestinationType.Arrival;
     },
 
     hasProximityAlert: function () {
       const plane = getPlane(this.plane, this.planes);
-      if(!plane) return false;
+      if (!plane) return false;
       return plane.hasProximityAlert;
     },
 
     isLanding: function () {
       const plane = getPlane(this.plane, this.planes);
-      if(!plane) return false;
+      if (!plane) return false;
       return plane.landing && !plane.isTouchedDown;
     },
 
     isTouchedDown: function () {
       const plane = getPlane(this.plane, this.planes);
-      if(!plane) return false;
+      if (!plane) return false;
       return plane.isTouchedDown;
     },
 
-    dashVal: function(){
+    dashVal: function () {
       return this.isQueueStrip ? "1" : "";
     },
 
@@ -283,7 +285,7 @@ export default {
       const plane = getPlane(this.plane, this.planes);
       const size = getClassSize(this.screenSize);
 
-      const isSelected = plane ? (plane.id === this.planeSelected.id) : false;
+      const isSelected = plane ? plane.id === this.planeSelected.id : false;
       const selected = isSelected ? "selected" : "";
       const hover = this.isHover ? "hover" : "";
       const empty = this.isEmptyStrip ? "empty" : "";
@@ -295,23 +297,23 @@ export default {
 
     outerLineSmall: function () {
       const plane = getPlane(this.plane, this.planes);
-      if(!plane) return 0.2;
+      if (!plane) return 0.2;
       const isSelected = plane.id === this.planeSelected.id;
       return isSelected ? 0.4 : 0.2;
     },
 
     outerLineMed: function () {
       const plane = getPlane(this.plane, this.planes);
-      if(!plane) return 0.4;
+      if (!plane) return 0.4;
       const isSelected = plane.id === this.planeSelected.id;
       return isSelected ? 0.8 : 0.4;
     },
 
     outerLineStroke: function () {
       const plane = getPlane(this.plane, this.planes);
-      if(this.isEmptyStrip) return "#24b3c9";
-      if(!plane) return "white";      
-      if(this.isTaxiing) return "white";
+      if (this.isEmptyStrip) return "#24b3c9";
+      if (!plane) return "white";
+      if (this.isTaxiing) return "white";
 
       const type = plane.destinationType || DestinationType.Arrival;
       const isSelected = plane.id === this.planeSelected.id;
@@ -323,16 +325,17 @@ export default {
 
     gradientStart: function () {
       const plane = getPlane(this.plane, this.planes);
-      if(!plane) return "#122534";
+      if (!plane) return "#122534";
 
       const type = plane.destinationType || DestinationType.Arrival;
       if (type === DestinationType.Arrival) return "#674300";
       if (type === DestinationType.Departure) return "#122534";
       return "#674300";
     },
+
     gradientEnd: function () {
       const plane = getPlane(this.plane, this.planes);
-      if(!plane) return "#2d6794";
+      if (!plane) return "#2d6794";
 
       const type = plane.destinationType || DestinationType.Arrival;
       if (type === DestinationType.Arrival) return "#c98301";
@@ -342,16 +345,16 @@ export default {
   },
 
   methods: {
-    waypointClick: function() {
+    waypointClick: function () {
       const plane = getPlane(this.plane, this.planes);
-      if(!plane) return;
+      if (!plane) return;
       const waypoint = nextWaypoint(getWaypointArrivalsAll(), plane);
       plane.setWaypoint(waypoint);
     },
 
     click: function (plane) {
       const planeFound = getPlane(plane, this.planes);
-      if(!planeFound) return;
+      if (!planeFound) return;
       planeFound.clickEventCB();
     },
 
