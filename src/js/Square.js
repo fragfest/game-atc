@@ -440,9 +440,10 @@ export default class Square {
     this.x += pixelsInX;
     this.y += pixelsInY;
     if (this.htmlSquareDiv) {
-      const squareSize = _htmlSquareSize(this.isSmall)
+      const squareSize = _htmlSquareSize(this.isSmall).side;
+      const squareTop = _htmlSquareSize(this.isSmall).top;
       this.htmlSquareDiv.style.left = this.x - (squareSize / 2) + 'px';
-      this.htmlSquareDiv.style.top = this.y - (squareSize / 2) + 'px';
+      this.htmlSquareDiv.style.top = this.y + squareTop - (squareSize / 2) + 'px';
     }
     this.headingRad = headingRadNew;
     this.heading = convHdgRadToThreeDigits(headingRadNew);
@@ -565,10 +566,14 @@ const _drawTrailPixel = (self, pixel, opacity) => {
   self.ctx.globalAlpha = 1;
 }
 
-const _htmlSquareSize = isSmall => isSmall ? 15 : 22;
+const _htmlSquareSize = isSmall => ({
+  side: isSmall ? 15 : 22,
+  top: isSmall ? 0 : 2,
+})
 
 const _createHtmlEl = (self) => {
-  const squareSize = _htmlSquareSize(self.isSmall);
+  const squareSize = _htmlSquareSize(self.isSmall).side;
+  const squareTop = _htmlSquareSize(self.isSmall).top;
 
   self.htmlSquareDiv = document.createElement('div');
   self.htmlDiv.appendChild(self.htmlSquareDiv);
@@ -578,7 +583,7 @@ const _createHtmlEl = (self) => {
   self.htmlSquareDiv.addEventListener('mouseenter', () => self.htmlSquareDiv.style.cursor = 'pointer');
   self.htmlSquareDiv.addEventListener('mouseleave', () => self.htmlSquareDiv.style.cursor = 'none');
   self.htmlSquareDiv.style.left = self.x - (squareSize / 2) + 'px';
-  self.htmlSquareDiv.style.top = self.y - (squareSize / 2) + 'px';
+  self.htmlSquareDiv.style.top = self.y + squareTop - (squareSize / 2) + 'px';
   self.htmlSquareDiv.style.width = squareSize + 'px';
   self.htmlSquareDiv.style.height = squareSize + 'px';
   // self.htmlSquareDiv.style.border = '1px solid yellow';
