@@ -92,9 +92,9 @@ import FlightStripDeparture from "./FlightStripDeparture";
 
 import { DestinationType } from "../js/aircraft/airframe";
 import { getWaypointArrivalsAll } from "../js/airports/LHR";
-import { setup, setupEntities, setPlaneSelected } from "../js/game";
-import { ScreenSizes, getGameSize, nextWaypoint } from "../js/utils";
-import { KeyboardEvents, subscribe } from "../js/events/keyboard";
+import { setup, setupEntities, setPlaneSelected } from "../js/game/game";
+import { setup as setupEvents } from "../js/game/gameEvents";
+import { ScreenSizes, getGameSize } from "../js/utils";
 
 const isSquare = (obj) => obj instanceof Square;
 const isDeparture = (plane) =>
@@ -254,74 +254,22 @@ export default {
     };
 
     setupEntities(setupArg);
+    setupEvents(
+      this,
+      getWaypointArrivalsAll(),
+      squareClicked,
+      () => {
+        this.$refs.controlPanel.setFocus();
+      },
+      () => {
+        setPlaneSelected(setupArg, squareClicked.value);
+      }
+    );
     setup(setupArg);
 
-    // EVENTS //////////////////////////////////////////////////////////////////////
-
     // window.addEventListener("resize", () => {
-    //   // setup(setupArg);
+    //   setup(setupArg);
     // });
-
-    const callMethodEV = (index, methodFn) => {
-      if (this.planesSorted.length === 0) return;
-      const planeSelected = this.planesSorted[index];
-      if (!planeSelected) return;
-      if (planeSelected.isNonInteractive && !planeSelected.isTaxiing) return;
-      methodFn(planeSelected);
-    };
-
-    const selectEV = (newIndex) => {
-      const planeSelected = this.planesSorted[newIndex];
-      squareClicked.value = planeSelected;
-      this.$refs.controlPanel.setFocus();
-      setPlaneSelected(setupArg, planeSelected);
-    };
-    const arrowDownEV = (index) => {
-      if (this.planesSorted.length === 0) return;
-      let newIndex = index + 1;
-      if (newIndex >= this.planesSorted.length) newIndex = 0;
-      selectEV(newIndex);
-    };
-    const arrowUpEV = (index) => {
-      if (this.planesSorted.length === 0) return;
-      let newIndex = index - 1;
-      if (newIndex < 0) newIndex = this.planesSorted.length - 1;
-      selectEV(newIndex);
-    };
-
-    const getPlaneSelectedIndex = () => {
-      const planeSelId = squareClicked.value.id;
-      const isSelected = (plane) => plane.id === planeSelId;
-      return this.planesSorted.findIndex(isSelected);
-    };
-    subscribe(KeyboardEvents.KeyboardLetter_W_EV, () => {
-      callMethodEV(getPlaneSelectedIndex(), (plane) => {
-        const waypoint = nextWaypoint(getWaypointArrivalsAll(), plane);
-        plane.setWaypoint(waypoint);
-      });
-    });
-    subscribe(KeyboardEvents.KeyboardLetter_T_EV, () => {
-      callMethodEV(getPlaneSelectedIndex(), (plane) => {
-        plane.startTakeoff();
-      });
-    });
-    subscribe(KeyboardEvents.KeyboardLetter_H_EV, () => {
-      callMethodEV(getPlaneSelectedIndex(), (plane) => {
-        if (isArrival(plane)) plane.setHolding(!plane.isHolding);
-        if (isDeparture(plane)) plane.setHandoff(!plane.isHandoff);
-        this.$refs.controlPanel.setFocus();
-      });
-    });
-    subscribe(KeyboardEvents.KeyboardLetter_L_EV, () => {
-      callMethodEV(getPlaneSelectedIndex(), (plane) => plane.setLanding(true));
-    });
-    subscribe(KeyboardEvents.KeyboardArrowDownEV, () => {
-      arrowDownEV(getPlaneSelectedIndex());
-    });
-    subscribe(KeyboardEvents.KeyboardArrowUpEV, () => {
-      arrowUpEV(getPlaneSelectedIndex());
-    });
-    // EVENTS END ///////////////////////////////////////////////////////////////////
   },
 };
 </script>

@@ -47,7 +47,7 @@ export const setup = () => {
   });
 };
 
-export const subscribe = (keyboardEV, cb) => {
+export const subscribeKeyboard = (keyboardEV, cb) => {
   if (!KeyboardEvents[keyboardEV]) throw new Error('unknown keyboard event: ' + keyboardEV);
   document.addEventListener(keyboardEV, cb);
 };

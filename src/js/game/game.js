@@ -1,19 +1,20 @@
-import Waypoint from './Waypoint';
-import Square from './Square';
-import Runway from './Runway';
-import { isCloseToEntity, hasEntityFuncs } from './entity';
+import Waypoint from '../Waypoint';
+import Square from '../Square';
+import Runway from '../Runway';
+import { isCloseToEntity, hasEntityFuncs } from '../entity';
 import {
   getRunway,
   Runways,
   getWaypoint,
   getWaypointDestinationsAll,
   getWaypointArrivalsAll,
-} from './airports/LHR';
-import { getGameSize, setupGameLoadAndExit } from "./utils";
-import { create } from './Plane';
-import { setup as setupKeyboard } from './events/keyboard';
-import { resetProximity, setup as setupScore } from './panelBottom/score';
-import { draw as drawScale } from './canvas/scale';
+} from '../airports/LHR';
+import { getGameSize, setupGameLoadAndExit } from "../utils";
+import { create } from '../Plane';
+import { setup as setupKeyboard } from '../events/keyboard';
+import { resetProximity, setup as setupScore } from './score';
+import { setup as setupVictory } from './victory';
+import { draw as drawScale } from '../canvas/scale';
 
 const isSquare = obj => obj instanceof Square;
 const isNotTaxiing = obj => !obj.isTaxiing;
@@ -88,6 +89,7 @@ export const setup = (argObj) => {
   setupGameLoadAndExit();
   setupKeyboard();
   setupScore();
+  setupVictory();
   drawInertElements(argObj.imgLayerObj, canvasObj);
 
   window.requestAnimationFrame(gameTick);

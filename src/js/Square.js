@@ -13,14 +13,14 @@ import {
   isCloseToEntity,
   isCloseToWaypoint,
 } from './entity';
-import { MessageEvents, publish } from './events/messages';
+import { MessageEvents, publishMessage as publish } from './events/messages';
 import {
   uniqueProximityPair,
   planeProximityPenalty,
   planeLandSuccess,
   planeLeaveFail,
   planeHandoffSuccess,
-} from './panelBottom/score';
+} from './game/score';
 import { DestinationType } from './aircraft/airframe';
 
 ////////////////////////////////////////////////////////////
@@ -290,18 +290,18 @@ export default class Square {
     _clearTrailPixelsAll(this);
     if (this.htmlSquareDiv) this.htmlSquareDiv.remove();
     if (this.isFlyingOutOfArea) {
-      const scoreRemoved = planeLeaveFail();
-      publish(MessageEvents.MessageAllEV, this.title + ' failed handoff (' + scoreRemoved + ')');
+      planeLeaveFail();
+      publish(MessageEvents.MessageAllEV, this.title + ' handoff failed');
       return;
     }
     if (this.isHandoff) {
-      const scoreAdded = planeHandoffSuccess();
-      publish(MessageEvents.MessageAllEV, this.title + ' handoff complete (+' + scoreAdded + ')');
+      planeHandoffSuccess();
+      publish(MessageEvents.MessageAllEV, this.title + ' departure handoff complete');
       return;
     }
     if (this.isTouchedDown) {
-      const scoreAdded = planeLandSuccess();
-      publish(MessageEvents.MessageAllEV, this.title + ' landing complete (+' + scoreAdded + ')');
+      planeLandSuccess();
+      publish(MessageEvents.MessageAllEV, this.title + ' landing complete');
       return;
     }
   }

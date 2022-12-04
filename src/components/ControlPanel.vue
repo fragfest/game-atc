@@ -139,7 +139,10 @@ import {
   altitudeDisplay,
   getClassSize,
 } from "../js/utils";
-import { MessageEvents, subscribe } from "../js/events/messages";
+import {
+  MessageEvents,
+  subscribeMessage as subscribe,
+} from "../js/events/messages";
 import { DestinationType } from "../js/aircraft/airframe";
 
 import ToolTip from "./common/ToolTip";

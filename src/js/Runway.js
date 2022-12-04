@@ -1,7 +1,7 @@
 import { inputHeadingToRad, radToDegrees, convertToSmallDegrees, ScreenSizes, Direction } from './utils';
 import Square from './Square';
-import { MessageEvents, publish } from './events/messages';
-import { planeGoAroundPenalty } from './panelBottom/score';
+import { MessageEvents, publishMessage as publish } from './events/messages';
+import { planeGoAroundPenalty } from './game/score';
 
 ////////////////////////////////////////////////////////////
 // class Runway

@@ -8,7 +8,7 @@ export const MessageEvents = Object.freeze({
  * @param {MessageEvents} messageEV 
  * @param {string|ProximityObj} msg 
  */
-export const publish = (messageEV, msg) => {
+export const publishMessage = (messageEV, msg) => {
   if (!MessageEvents[messageEV]) throw new Error('unknown message event: ' + messageEV);
 
   if (messageEV === MessageEvents.MessageAllEV) {
@@ -20,7 +20,7 @@ export const publish = (messageEV, msg) => {
   }
 };
 
-export const subscribe = (messageEV, cb) => {
+export const subscribeMessage = (messageEV, cb) => {
   if (!MessageEvents[messageEV]) throw new Error('unknown message event: ' + messageEV);
 
   document.addEventListener(messageEV, (ev) => {
