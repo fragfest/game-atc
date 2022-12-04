@@ -7,26 +7,27 @@
       </div> -->
       <div class="score-row" :class="sizeClass">
         <span class="margin-top font-large badge blue">departures</span>
-        <span class="font-large">0/10</span>
+        <span>{{ score.departures }}/{{ ScoreGoals.Departures }}</span>
       </div>
       <div class="score-row" :class="sizeClass">
-        <span class="margin-top font-large badge yellow">landings</span>
-        <span class="font-large">0/10</span>
+        <span class="margin-top font-large badge yellow">arrivals</span>
+        <span>{{ score.arrivals }}/{{ ScoreGoals.Arrivals }}</span>
       </div>
       <div class="score-row" :class="sizeClass">
         <span class="margin-top badge conflict">
           failed <small>handoff & landings</small>
         </span>
-        <span class="font-large">0/3</span>
+        <span>{{ score.failed }}/{{ ScoreGoals.Failed }}</span>
       </div>
       <div class="score-row" :class="sizeClass">
         <span class="margin-top badge conflict">
           conflict <small>seconds</small>
         </span>
-        <span class="font-large">0/30</span>
+        <span>0/30</span>
       </div>
 
       <hr />
+      <h3>Bonus</h3>
       <div class="score-row" :class="sizeClass">
         <span class="badge">
           <b>hot runway</b> <small>keep runway busy</small>
@@ -44,7 +45,7 @@
 </template>
 
 <script>
-import { ScoreEvents, subscribe } from "../js/panelBottom/score";
+import { ScoreEvents, ScoreGoals, subscribeScore } from "../js/game/score";
 import { getClassSize } from "../js/utils";
 
 export default {
@@ -55,15 +56,18 @@ export default {
   data() {
     return {
       scoreTotal: 0,
+      score: {
+        departures: 0,
+        arrivals: 0,
+        failed: 0,
+      },
+      ScoreGoals,
     };
   },
 
   mounted() {
-    subscribe(ScoreEvents.ScoreEV, (score) => {
-      let scoreTotal = score.scoreTotal;
-      if (scoreTotal >= 99999) scoreTotal = 99999;
-      if (scoreTotal <= -9999) scoreTotal = -9999;
-      this.scoreTotal = scoreTotal.toLocaleString("en-CA");
+    subscribeScore(ScoreEvents.ScoreEV, (score) => {
+      this.score = score;
     });
   },
 
@@ -101,6 +105,12 @@ export default {
 .score-info hr {
   width: 100%;
   margin: 12px 0px;
+}
+
+.score-info h3 {
+  color: white;
+  margin-top: 0px;
+  margin-bottom: 6px;
 }
 
 // score-row
