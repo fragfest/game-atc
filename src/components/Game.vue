@@ -84,9 +84,9 @@
 import { ref } from "vue";
 
 import Square from "../js/Square";
-import HelpPanel from "./HelpPanel";
-import ScorePanel from "./ScorePanel";
-import ControlPanel from "./ControlPanel";
+import HelpPanel from "./panelBottom/HelpPanel";
+import ScorePanel from "./panelBottom/ScorePanel";
+import ControlPanel from "./panelBottom/ControlPanel";
 import FlightStrip from "./FlightStrip";
 import FlightStripDeparture from "./FlightStripDeparture";
 
@@ -258,12 +258,8 @@ export default {
       this,
       getWaypointArrivalsAll(),
       squareClicked,
-      () => {
-        this.$refs.controlPanel.setFocus();
-      },
-      () => {
-        setPlaneSelected(setupArg, squareClicked.value);
-      }
+      () => this.$refs.controlPanel.setFocus(),
+      () => setPlaneSelected(setupArg, squareClicked.value)
     );
     setup(setupArg);
 

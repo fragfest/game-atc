@@ -45,8 +45,8 @@
 </template>
 
 <script>
-import { ScoreEvents, ScoreGoals, subscribeScore } from "../js/game/score";
-import { getClassSize } from "../js/utils";
+import { ScoreEvents, ScoreGoals, subscribeScore } from "../../js/game/score";
+import { getClassSize } from "../../js/utils";
 
 export default {
   name: "ScorePanel",

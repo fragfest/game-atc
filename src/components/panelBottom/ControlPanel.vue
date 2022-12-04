@@ -138,15 +138,15 @@ import {
   leftPadZeros,
   altitudeDisplay,
   getClassSize,
-} from "../js/utils";
+} from "../../js/utils";
 import {
   MessageEvents,
   subscribeMessage as subscribe,
-} from "../js/events/messages";
-import { DestinationType } from "../js/aircraft/airframe";
+} from "../../js/events/messages";
+import { DestinationType } from "../../js/aircraft/airframe";
 
-import ToolTip from "./common/ToolTip";
-import CircleInputs from "./panelBottom/CircleInputs";
+import ToolTip from "../common/ToolTip";
+import CircleInputs from "./CircleInputs";
 
 const setCompass = (headingRad) => {
   const headingDegree = convertToSmallDegrees(radToDegrees(headingRad));

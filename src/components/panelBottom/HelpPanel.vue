@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import { getClassSize } from "../js/utils";
+import { getClassSize } from "../../js/utils";
 
 export default {
   name: "HelpPanel",
