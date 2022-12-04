@@ -1,16 +1,12 @@
 <template>
-  <Game />
+  <router-view></router-view>
 </template>
 
 <script>
-import Game from './components/Game.vue'
-
 export default {
-  name: 'App',
-  components: {
-    Game
-  }
-}
+  name: "App",
+  components: {},
+};
 </script>
 
 <style>
