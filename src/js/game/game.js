@@ -19,10 +19,14 @@ import { draw as drawScale } from '../canvas/scale';
 const isSquare = obj => obj instanceof Square;
 const isNotTaxiing = obj => !obj.isTaxiing;
 
-// SETUP ////////////////////////////////////////////////////////////////
 let gameLoopRunning = false;
+export const setGameLoopState = (isRunning) => {
+  gameLoopRunning = !!isRunning;
+}
 
+// SETUP ////////////////////////////////////////////////////////////////
 export const setup = (argObj) => {
+  const router = argObj.router;
   const entityManagerArr = argObj.entityManagerArr;
   const screenSize = argObj.screenSize;
   const canvasObj = {
@@ -38,7 +42,6 @@ export const setup = (argObj) => {
   };
 
   let firstPlane = true;
-
   const createPlane = (deltaTimeMs) => {
     const lowCount = 8;
     const highCount = 16;
@@ -58,8 +61,10 @@ export const setup = (argObj) => {
   const updateIntervalMs = 500;
   let timestampPrev = -500;
 
-  const gameTick = timestamp => {
+  const gameTick = (timestamp) => {
     const deltaTime = timestamp - timestampPrev;
+    if (!gameLoopRunning) return;
+
     if (deltaTime > updateIntervalMs) {
       timestampPrev = timestamp;
       // cleanup
@@ -89,11 +94,11 @@ export const setup = (argObj) => {
   setupGameLoadAndExit();
   setupKeyboard();
   setupScore();
-  setupVictory();
+  setupVictory(router);
   drawInertElements(argObj.imgLayerObj, canvasObj);
 
   window.requestAnimationFrame(gameTick);
-};
+}
 // SETUP END ////////////////////////////////////////////////////////////
 
 export const setupEntities = (argObj) => {
@@ -120,7 +125,7 @@ export const setupEntities = (argObj) => {
         getWaypoint(waypoint, argObj.screenSize))
     );
   });
-};
+}
 
 export const setPlaneSelected = (argObj, square) => {
   const screenSize = argObj.screenSize;
@@ -134,7 +139,7 @@ export const setPlaneSelected = (argObj, square) => {
   square.setSelected(true);
   entityManagerArr.forEach(callFn('setProximity', { entityManagerArr, screenSize }));
   entityManagerArr.forEach(callFn('draw'));
-};
+}
 
 //////////////////////////////////////////////////////////////////////////////
 // PRIVATE

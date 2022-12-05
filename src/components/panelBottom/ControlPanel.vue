@@ -509,6 +509,7 @@ export default {
   }
 }
 
+// small
 .btn-info-panel.small button {
   &.takeoff {
     width: 65px;
@@ -519,10 +520,12 @@ export default {
   height: 30px;
   font-size: 12px;
 }
+// btn-info-panel button END
 
 .circle-panel {
   width: 220px;
   position: relative;
+  cursor: default;
 }
 .circle-panel.small {
   width: 180px;
@@ -566,5 +569,4 @@ export default {
     stroke: black;
   }
 }
-// btn-info-panel button END
 </style>

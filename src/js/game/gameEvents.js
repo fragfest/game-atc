@@ -1,4 +1,5 @@
 import { KeyboardEvents, subscribeKeyboard as subscribe } from '../events/keyboard';
+import { ScoreEvents, subscribeScore } from './score';
 import { DestinationType } from "../aircraft/airframe";
 import { nextWaypoint } from "../utils";
 
@@ -11,16 +12,21 @@ const isArrival = (plane) => plane.destinationType === DestinationType.Arrival;
  * @param {VueRef} planeSelVueRef vue ref to plane selected object
  * @param {Function} controlPanelFocusFn function to focus input field in controlPanel
  * @param {Function} selectPlaneFn function to set the selected plane
+ * @param {Function} gamePopupFn function to set the gaem over pop-up
  */
-export const setup = (self, arrivalWaypoints, planeSelVueRef, controlPanelFocusFn, selectPlaneFn) => {
-
-  const callMethodEV = (index, methodFn) => {
-    if (self.planesSorted.length === 0) return;
-    const planeSelected = self.planesSorted[index];
-    if (!planeSelected) return;
-    if (planeSelected.isNonInteractive && !planeSelected.isTaxiing) return;
-    methodFn(planeSelected);
-  };
+export const setup = (
+  self,
+  arrivalWaypoints,
+  planeSelVueRef,
+  controlPanelFocusFn,
+  selectPlaneFn,
+  gamePopupFn,
+) => {
+  subscribeScore(ScoreEvents.ScoreEV, (score) => {
+    if (score.failed >= 1) {
+      gamePopupFn();
+    }
+  });
 
   const selectEV = (newIndex) => {
     const planeSelected = self.planesSorted[newIndex];
@@ -41,6 +47,13 @@ export const setup = (self, arrivalWaypoints, planeSelVueRef, controlPanelFocusF
     selectEV(newIndex);
   };
 
+  const callMethodEV = (index, methodFn) => {
+    if (self.planesSorted.length === 0) return;
+    const planeSelected = self.planesSorted[index];
+    if (!planeSelected) return;
+    if (planeSelected.isNonInteractive && !planeSelected.isTaxiing) return;
+    methodFn(planeSelected);
+  };
   const getPlaneSelectedIndex = () => {
     const planeSelId = planeSelVueRef.value.id;
     const isSelected = (plane) => plane.id === planeSelId;

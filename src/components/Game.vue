@@ -1,81 +1,84 @@
 <template>
   <div class="container">
-    <div class="row-left">
-      <div class="scope" :style="styleScope">
-        <div class="entity-div layer-six" :style="styleEntityDiv" />
-        <!-- <canvas
-          ref="layerFive"
-          class="canvas layer-five"
-          :width="width"
-          :height="height"
-        ></canvas> -->
-        <canvas
-          ref="layerFour"
-          class="canvas layer-four"
-          :width="width"
-          :height="height"
-        ></canvas>
-        <canvas
-          ref="layerThree"
-          class="canvas layer-three"
-          :width="width"
-          :height="height"
-        ></canvas>
-        <canvas
-          ref="layerTwo"
-          class="canvas layer-two"
-          :width="width"
-          :height="height"
-        ></canvas>
-        <canvas
-          ref="layerOne"
-          class="canvas layer-one"
-          :width="width"
-          :height="height"
-        ></canvas>
-        <canvas
-          ref="background"
-          class="canvas background layer-zero"
-          :width="width"
-          :height="height"
-        ></canvas>
-        <img src="/img/london.png" :height="height" />
-      </div>
+    <VictoryPage v-if="hasPopup" />
+    <div class="game">
+      <div class="row-left">
+        <div class="scope" :style="styleScope">
+          <div class="entity-div layer-six" :style="styleEntityDiv" />
+          <!-- <canvas
+            ref="layerFive"
+            class="canvas layer-five"
+            :width="width"
+            :height="height"
+          ></canvas> -->
+          <canvas
+            ref="layerFour"
+            class="canvas layer-four"
+            :width="width"
+            :height="height"
+          ></canvas>
+          <canvas
+            ref="layerThree"
+            class="canvas layer-three"
+            :width="width"
+            :height="height"
+          ></canvas>
+          <canvas
+            ref="layerTwo"
+            class="canvas layer-two"
+            :width="width"
+            :height="height"
+          ></canvas>
+          <canvas
+            ref="layerOne"
+            class="canvas layer-one"
+            :width="width"
+            :height="height"
+          ></canvas>
+          <canvas
+            ref="background"
+            class="canvas background layer-zero"
+            :width="width"
+            :height="height"
+          ></canvas>
+          <img src="/img/london.png" :height="height" />
+        </div>
 
-      <div class="row-bottom layer-seven">
-        <div class="row-bottom-left">
-          <HelpPanel :screenSize="screenSize"></HelpPanel>
-          <div class="col">
-            <ScorePanel :screenSize="screenSize"></ScorePanel>
+        <div class="row-bottom layer-seven">
+          <div class="row-bottom-left">
+            <HelpPanel :screenSize="screenSize"></HelpPanel>
+            <div class="col">
+              <ScorePanel :screenSize="screenSize"></ScorePanel>
+            </div>
+          </div>
+          <div class="row-bottom-right">
+            <ControlPanel
+              ref="controlPanel"
+              :planeSelected="squareClicked"
+              :planes="planesSorted"
+              :screenSize="screenSize"
+            ></ControlPanel>
           </div>
         </div>
-        <div class="row-bottom-right">
-          <ControlPanel
-            ref="controlPanel"
-            :planeSelected="squareClicked"
-            :planes="planesSorted"
-            :screenSize="screenSize"
-          ></ControlPanel>
-        </div>
       </div>
-    </div>
 
-    <div class="panel-right layer-seven" :style="stylePanelRight">
-      <FlightStripDeparture
-        :planeSelected="squareClicked"
-        :planes="planesDeparture"
-        :screenSize="screenSize"
-      ></FlightStripDeparture>
-      <ul>
-        <li v-for="(plane, index) in planesArrival" :key="index">
-          <FlightStrip
-            :plane="plane"
-            :planeSelected="squareClicked"
-            :planes="planesSorted"
-            :screenSize="screenSize"
-          ></FlightStrip>
-        </li>
-      </ul>
+      <div class="panel-right layer-seven" :style="stylePanelRight">
+        <FlightStripDeparture
+          :planeSelected="squareClicked"
+          :planes="planesDeparture"
+          :screenSize="screenSize"
+        ></FlightStripDeparture>
+        <ul>
+          <li v-for="(plane, index) in planesArrival" :key="index">
+            <FlightStrip
+              :plane="plane"
+              :planeSelected="squareClicked"
+              :planes="planesSorted"
+              :screenSize="screenSize"
+            ></FlightStrip>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -89,6 +92,7 @@ import ScorePanel from "./panelBottom/ScorePanel";
 import ControlPanel from "./panelBottom/ControlPanel";
 import FlightStrip from "./FlightStrip";
 import FlightStripDeparture from "./FlightStripDeparture";
+import VictoryPage from "./VictoryPage.vue";
 
 import { DestinationType } from "../js/aircraft/airframe";
 import { getWaypointArrivalsAll } from "../js/airports/LHR";
@@ -116,6 +120,7 @@ export default {
     ControlPanel,
     ScorePanel,
     HelpPanel,
+    VictoryPage,
   },
   props: {},
 
@@ -128,6 +133,7 @@ export default {
       width,
       height,
       squareClicked,
+      hasPopup: false,
     };
   },
 
@@ -230,6 +236,7 @@ export default {
     };
 
     const setupArg = {
+      router: this.$router,
       screenSize,
       backgroundObj,
       imgLayerObj: { ctx: layerOneCtx },
@@ -253,14 +260,15 @@ export default {
       },
     };
 
-    setupEntities(setupArg);
     setupEvents(
       this,
       getWaypointArrivalsAll(),
       squareClicked,
       () => this.$refs.controlPanel.setFocus(),
-      () => setPlaneSelected(setupArg, squareClicked.value)
+      () => setPlaneSelected(setupArg, squareClicked.value),
+      () => (this.hasPopup = true)
     );
+    setupEntities(setupArg);
     setup(setupArg);
 
     // window.addEventListener("resize", () => {
@@ -272,6 +280,9 @@ export default {
 
 <style lang="scss">
 .container {
+  position: relative;
+}
+.game {
   display: flex;
 }
 
