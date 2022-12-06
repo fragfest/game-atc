@@ -3,11 +3,10 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 import App from './App';
 import Game from "./components/Game.vue";
-import VictoryPage from "./components/VictoryPage";
 
 const routes = [
   { path: '/', component: Game },
-  { path: '/victory', component: VictoryPage },
+  // { path: '/victory', component: GameOVerPage },
 ];
 const router = createRouter({ routes, history: createWebHistory() });
 const app = createApp(App);

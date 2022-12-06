@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <VictoryPage v-if="hasPopup" />
+    <GameOverPopup v-if="true" />
     <div class="game">
       <div class="row-left">
         <div class="scope" :style="styleScope">
@@ -92,7 +92,7 @@ import ScorePanel from "./panelBottom/ScorePanel";
 import ControlPanel from "./panelBottom/ControlPanel";
 import FlightStrip from "./FlightStrip";
 import FlightStripDeparture from "./FlightStripDeparture";
-import VictoryPage from "./VictoryPage.vue";
+import GameOverPopup from "./GameOverPopup.vue";
 
 import { DestinationType } from "../js/aircraft/airframe";
 import { getWaypointArrivalsAll } from "../js/airports/LHR";
@@ -120,7 +120,7 @@ export default {
     ControlPanel,
     ScorePanel,
     HelpPanel,
-    VictoryPage,
+    GameOverPopup,
   },
   props: {},
 
