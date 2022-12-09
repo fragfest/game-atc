@@ -11,19 +11,18 @@
       </h1>
 
       <div class="content">
-        <div class="item item-header">
-          Lorem ipsum dolor sit amet consectetur
+        <div
+          class="item"
+          :class="result.class"
+          v-for="(result, index) in results"
+          :key="index"
+        >
+          {{ result.val }}
         </div>
-        <div class="item item-goal-0">row 2</div>
-        <div class="item item-score-0">
-          Lorem ipsum dolor sit amet consectetur
-        </div>
-        <div class="item item-goal-1">row three 3</div>
-        <div class="item item-score-1">row 3 score</div>
       </div>
 
       <div class="btn">
-        <router-link to="/">
+        <router-link :to="{ name: 'homeLanding' }">
           <h1>OK</h1>
         </router-link>
       </div>
@@ -36,6 +35,20 @@ export default {
   data() {
     return {
       isSuccess: true,
+      results: [
+        { val: "departures", class: "" },
+        { val: "pass", class: "score green" },
+        { val: "arrivals", class: "" },
+        { val: "failed", class: "score red" },
+        { val: "failed handoffs & landings", class: "" },
+        { val: "1 / 3", class: "score green" },
+        { val: "conflict (seconds)", class: "" },
+        { val: "10 / 30", class: "score green" },
+        { val: "BONUS hot runway", class: "" },
+        { val: "100", class: "score gold" },
+        { val: "BONUS tin pusher", class: "" },
+        { val: "0", class: "score gold" },
+      ],
     };
   },
 };
@@ -53,6 +66,16 @@ export default {
   height: 100%;
   z-index: 8;
   background-color: #00000080;
+
+  .green {
+    color: limegreen;
+  }
+  .red {
+    color: orangered;
+  }
+  .gold {
+    color: gold;
+  }
 }
 
 .popup .modal {
@@ -69,7 +92,7 @@ export default {
 
   border-radius: 22px;
   border: solid 3px teal;
-  box-shadow: 12px 12px #000000a0;
+  box-shadow: 4px 8px #000000a0;
   background-image: url("/public/img/teal-bckgnd.jpg");
 
   color: white;
@@ -78,31 +101,36 @@ export default {
 
 .popup .modal .title {
   align-self: center;
-  margin: 4%;
-  .green {
-    color: lightgreen;
-  }
-  .red {
-    color: indianred;
-  }
+  text-align: center;
 }
 
 .popup .modal .content {
   display: grid;
-  grid-template-columns: 2fr 1fr;
-  grid-auto-rows: minmax(40px, auto);
+  grid-template-columns: 3fr 1fr;
+  grid-auto-rows: minmax(20px, auto);
   row-gap: 8px;
-  column-gap: 25%;
+  column-gap: 15%;
 
-  padding: 3% 15%;
-  font-size: 20px;
+  padding: 3% 25%;
+  font-size: 22px;
+  background-color: darkslategrey;
+  border-radius: 6px;
   cursor: default;
+}
+
+.popup .item {
+  // background-color: lightgrey;
+  // border-bottom: solid 1px lightslategrey;
+  padding: 8px 0px;
+  &.score {
+    text-align: right;
+    align-self: flex-end;
+  }
 }
 
 .popup .modal .btn {
   align-self: center;
   text-align: center;
-  padding-bottom: 1px;
   width: 120px;
 
   background-color: darkslategrey;
@@ -112,14 +140,9 @@ export default {
     color: lightgreen;
     text-decoration: none;
   }
-}
-
-.item-header {
-  justify-self: center;
-  grid-column: span 2;
-}
-
-.item {
-  background-color: darkslategrey;
+  a h1 {
+    margin: 0;
+    padding: 16px 0px;
+  }
 }
 </style>

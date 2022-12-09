@@ -90,10 +90,10 @@ export default {
 </script>
 
 <style lang="scss">
-.tab-left {
+.help-panel .tab-left {
   margin-left: 4px;
 }
-.green {
+.help-panel .green {
   color: lightgreen;
 }
 

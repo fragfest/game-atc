@@ -26,7 +26,6 @@ export const setGameLoopState = (isRunning) => {
 
 // SETUP ////////////////////////////////////////////////////////////////
 export const setup = (argObj) => {
-  const router = argObj.router;
   const entityManagerArr = argObj.entityManagerArr;
   const screenSize = argObj.screenSize;
   const canvasObj = {
@@ -94,7 +93,7 @@ export const setup = (argObj) => {
   setupGameLoadAndExit();
   setupKeyboard();
   setupScore();
-  setupVictory(router);
+  setupVictory();
   drawInertElements(argObj.imgLayerObj, canvasObj);
 
   window.requestAnimationFrame(gameTick);
