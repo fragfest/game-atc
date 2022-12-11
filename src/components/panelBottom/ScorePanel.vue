@@ -7,17 +7,17 @@
       </div> -->
       <div class="score-row" :class="sizeClass">
         <span class="margin-top font-large badge blue">departures</span>
-        <span>{{ score.departures }}/{{ ScoreGoals.Departures }}</span>
+        <span>{{ score.departures }}/{{ Goals.Departures }}</span>
       </div>
       <div class="score-row" :class="sizeClass">
         <span class="margin-top font-large badge yellow">arrivals</span>
-        <span>{{ score.arrivals }}/{{ ScoreGoals.Arrivals }}</span>
+        <span>{{ score.arrivals }}/{{ Goals.Arrivals }}</span>
       </div>
       <div class="score-row" :class="sizeClass">
         <span class="margin-top badge conflict">
           failed <small>handoff & landings</small>
         </span>
-        <span>{{ score.failed }}/{{ ScoreGoals.Failed }}</span>
+        <span>{{ score.failed }}/{{ Goals.Failed }}</span>
       </div>
       <div class="score-row" :class="sizeClass">
         <span class="margin-top badge conflict">
@@ -45,7 +45,8 @@
 </template>
 
 <script>
-import { ScoreEvents, ScoreGoals, subscribeScore } from "../../js/game/score";
+import { ScoreEvents, subscribeScore } from "../../js/game/score";
+import { Goals } from "../../js/game/victory";
 import { getClassSize } from "../../js/utils";
 
 export default {
@@ -61,7 +62,7 @@ export default {
         arrivals: 0,
         failed: 0,
       },
-      ScoreGoals,
+      Goals,
     };
   },
 

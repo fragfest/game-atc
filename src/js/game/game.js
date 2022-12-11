@@ -86,7 +86,6 @@ export const setup = (argObj) => {
     window.requestAnimationFrame(gameTick);
   }
 
-  // SETUP
   if (gameLoopRunning) return;
   gameLoopRunning = true;
 

@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <GameOverPopup v-if="true" />
+    <GameOverPopup v-if="hasPopup" />
     <div class="game">
       <div class="row-left">
         <div class="scope" :style="styleScope">

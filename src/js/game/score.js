@@ -3,18 +3,6 @@ export const ScoreEvents = Object.freeze({
   ScoreEV: 'ScoreEV',
 });
 
-/**
- * @typedef {object} ScoreGoals
- * @property {number} Departures
- * @property {number} Arrivals
- * @property {number} Failed
- */
-export const ScoreGoals = Object.freeze({
-  Departures: 10,
-  Arrivals: 8,
-  Failed: 3,
-});
-
 // TODO load or start new game
 let isSetup = false;
 export const setup = () => {

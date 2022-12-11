@@ -21,8 +21,13 @@
         </div>
       </div>
 
-      <div class="btn">
-        <router-link :to="{ name: 'homeLanding' }">
+      <div
+        class="btn"
+        tabindex="1"
+        ref="okBtn"
+        @keyup.enter.space="btnKeyEvent"
+      >
+        <router-link tabindex="-1" :to="btnRouteObj">
           <h1>OK</h1>
         </router-link>
       </div>
@@ -35,21 +40,32 @@ export default {
   data() {
     return {
       isSuccess: true,
+      btnRouteObj: { name: "homeLanding" },
       results: [
         { val: "departures", class: "" },
         { val: "pass", class: "score green" },
         { val: "arrivals", class: "" },
         { val: "failed", class: "score red" },
         { val: "failed handoffs & landings", class: "" },
-        { val: "1 / 3", class: "score green" },
+        { val: "1/3", class: "score green" },
         { val: "conflict (seconds)", class: "" },
-        { val: "10 / 30", class: "score green" },
+        { val: "10/30", class: "score green" },
         { val: "BONUS hot runway", class: "" },
         { val: "100", class: "score gold" },
         { val: "BONUS tin pusher", class: "" },
         { val: "0", class: "score gold" },
       ],
     };
+  },
+
+  mounted() {
+    this.$refs.okBtn.focus();
+  },
+
+  methods: {
+    btnKeyEvent: function () {
+      this.$router.push(this.btnRouteObj);
+    },
   },
 };
 </script>
@@ -83,6 +99,7 @@ export default {
   flex-direction: column;
   justify-content: space-around;
 
+  min-width: 400px;
   width: 50%;
   height: 50%;
   margin-top: 10%;
@@ -91,7 +108,7 @@ export default {
   margin-right: auto;
 
   border-radius: 22px;
-  border: solid 3px teal;
+  border: solid 3px darkslategrey;
   box-shadow: 4px 8px #000000a0;
   background-image: url("/public/img/teal-bckgnd.jpg");
 
@@ -114,7 +131,6 @@ export default {
   padding: 3% 25%;
   font-size: 22px;
   background-color: darkslategrey;
-  border-radius: 6px;
   cursor: default;
 }
 
@@ -143,6 +159,18 @@ export default {
   a h1 {
     margin: 0;
     padding: 16px 0px;
+  }
+
+  :hover {
+    background-color: #123838;
+    border-radius: 6px;
+  }
+  &:focus-visible {
+    background-color: #123838;
+    border: solid 1px transparent;
+    outline-style: solid;
+    outline-color: limegreen;
+    outline-width: 1px;
   }
 }
 </style>

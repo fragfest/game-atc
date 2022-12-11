@@ -1,7 +1,8 @@
 import { KeyboardEvents, subscribeKeyboard as subscribe } from '../events/keyboard';
-import { ScoreEvents, subscribeScore } from './score';
+import { VictoryEvents, subscribeVictory } from './victory';
 import { DestinationType } from "../aircraft/airframe";
 import { nextWaypoint } from "../utils";
+import { setGameLoopState } from './game';
 
 const isDeparture = (plane) => plane.destinationType === DestinationType.Departure;
 const isArrival = (plane) => plane.destinationType === DestinationType.Arrival;
@@ -12,7 +13,7 @@ const isArrival = (plane) => plane.destinationType === DestinationType.Arrival;
  * @param {VueRef} planeSelVueRef vue ref to plane selected object
  * @param {Function} controlPanelFocusFn function to focus input field in controlPanel
  * @param {Function} selectPlaneFn function to set the selected plane
- * @param {Function} gamePopupFn function to set the gaem over pop-up
+ * @param {Function} gamePopupFn function to set the game over pop-up
  */
 export const setup = (
   self,
@@ -22,11 +23,12 @@ export const setup = (
   selectPlaneFn,
   gamePopupFn,
 ) => {
-  subscribeScore(ScoreEvents.ScoreEV, (score) => {
-    if (score.failed >= 1) {
-      gamePopupFn();
-    }
-  });
+  const gameOver = () => {
+    setGameLoopState(false);
+    gamePopupFn();
+  }
+  subscribeVictory(VictoryEvents.Success, () => gameOver());
+  subscribeVictory(VictoryEvents.Failed, () => gameOver());
 
   const selectEV = (newIndex) => {
     const planeSelected = self.planesSorted[newIndex];
