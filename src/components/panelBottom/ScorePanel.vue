@@ -32,13 +32,13 @@
         <span class="badge">
           <b>hot runway</b> <small>keep runway busy</small>
         </span>
-        <span>100</span>
+        <span>0</span>
       </div>
       <div class="score-row" :class="sizeClass">
         <span class="margin-top badge">
           <b>tin pusher</b> <small>reduce delays</small>
         </span>
-        <span>100</span>
+        <span>0</span>
       </div>
     </div>
   </div>

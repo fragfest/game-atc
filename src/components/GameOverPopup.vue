@@ -11,14 +11,18 @@
       </h1>
 
       <div class="content">
-        <div
-          class="item"
-          :class="result.class"
-          v-for="(result, index) in results"
-          :key="index"
-        >
-          {{ result.val }}
-        </div>
+        <div class="item">departures</div>
+        <div class="item score" :class="departuresClass">{{ departures }}</div>
+        <div class="item">arrivals</div>
+        <div class="item score" :class="arrivalsClass">{{ arrivals }}</div>
+        <div class="item">failed handoffs & landings</div>
+        <div class="item score" :class="failedClass">{{ failed }}</div>
+        <div class="item">conflict (seconds)</div>
+        <div class="item score" :class="conflictClass">{{ conflict }}</div>
+        <div class="item">BONUS hot runway</div>
+        <div class="item score" :class="hotRunwayClass">{{ hotRunway }}</div>
+        <div class="item">BONUS tin pusher</div>
+        <div class="item score" :class="tinPusherClass">{{ tinPusher }}</div>
       </div>
 
       <div
@@ -36,30 +40,53 @@
 </template>
 
 <script>
+import { getScore } from "../js/game/score";
+import {
+  isDeparturesSuccess,
+  isArrivalsSuccess,
+  isFailedCondition,
+  isVictory,
+  Goals,
+} from "../js/game/victory";
+
 export default {
   data() {
     return {
-      isSuccess: true,
+      isSuccess: false,
       btnRouteObj: { name: "homeLanding" },
-      results: [
-        { val: "departures", class: "" },
-        { val: "pass", class: "score green" },
-        { val: "arrivals", class: "" },
-        { val: "failed", class: "score red" },
-        { val: "failed handoffs & landings", class: "" },
-        { val: "1/3", class: "score green" },
-        { val: "conflict (seconds)", class: "" },
-        { val: "10/30", class: "score green" },
-        { val: "BONUS hot runway", class: "" },
-        { val: "100", class: "score gold" },
-        { val: "BONUS tin pusher", class: "" },
-        { val: "0", class: "score gold" },
-      ],
+
+      departures: "0/" + Goals.Departures,
+      departuresClass: "red",
+      arrivals: "0/" + Goals.Arrivals,
+      arrivalsClass: "red",
+      failed: "0/" + Goals.Failed,
+      failedClass: "green",
+      conflict: "0/30",
+      conflictClass: "green",
+      hotRunway: "0",
+      hotRunwayClass: "gold",
+      tinPusher: "0",
+      tinPusherClass: "gold",
     };
   },
 
   mounted() {
     this.$refs.okBtn.focus();
+    const score = getScore();
+
+    if (isVictory(score)) this.isSuccess = true;
+    if (isDeparturesSuccess(score.departures)) {
+      this.departures = "" + score.departures + "/" + Goals.Departures;
+      this.departuresClass = "green";
+    }
+    if (isArrivalsSuccess(score.arrivals)) {
+      this.arrivals = "" + score.arrivals + "/" + Goals.Arrivals;
+      this.arrivalsClass = "green";
+    }
+    if (isFailedCondition(score.failed)) {
+      this.failed = "" + score.failed + "/" + Goals.Failed;
+      this.failedClass = "red";
+    }
   },
 
   methods: {
@@ -109,11 +136,12 @@ export default {
 
   border-radius: 22px;
   border: solid 3px darkslategrey;
-  box-shadow: 4px 8px #000000a0;
+  box-shadow: 4px 8px 16px #000000a0;
   background-image: url("/public/img/teal-bckgnd.jpg");
 
   color: white;
   font-family: monospace;
+  cursor: default;
 }
 
 .popup .modal .title {
@@ -131,12 +159,10 @@ export default {
   padding: 3% 25%;
   font-size: 22px;
   background-color: darkslategrey;
-  cursor: default;
 }
 
 .popup .item {
   // background-color: lightgrey;
-  // border-bottom: solid 1px lightslategrey;
   padding: 8px 0px;
   &.score {
     text-align: right;

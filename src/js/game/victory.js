@@ -1,5 +1,9 @@
 import { ScoreEvents, subscribeScore } from './score';
 
+/**
+ * @typedef {import('./score.js').Score} Score
+ */
+
 // NOTE: key & values must match
 export const VictoryEvents = Object.freeze({
   Success: 'Success',
@@ -23,25 +27,26 @@ export const subscribeVictory = (victoryEvent, cb) => {
  */
 export const Goals = Object.freeze({
   Departures: 1,
-  Arrivals: 0,
+  Arrivals: 1,
   Failed: 1,
-  // Departures: 10,
-  // Arrivals: 8,
-  // Failed: 3,
 });
+
+export const isDeparturesSuccess = (departuresCount) => departuresCount >= Goals.Departures;
+export const isArrivalsSuccess = (arrivalsCount) => arrivalsCount >= Goals.Arrivals;
+export const isFailedCondition = (failedCount) => failedCount >= Goals.Failed;
+/**
+ * @param {Score} score 
+ * @returns {Boolean}
+ */
+export const isVictory = score => isDeparturesSuccess(score.departures) &&
+  isArrivalsSuccess(score.arrivals);
 
 export const setup = () => {
   subscribeScore(ScoreEvents.ScoreEV, (score) => {
-    if (score.failed >= Goals.Failed) {
-      console.log('failed')
+    if (isFailedCondition(score.failed)) {
       return publishFailed();
     }
-
-    if (
-      score.departures >= Goals.Departures &&
-      score.arrivals >= Goals.Arrivals
-    ) {
-      console.log('victory')
+    if (isVictory(score)) {
       return publishSuccess();
     }
   });
