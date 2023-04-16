@@ -109,8 +109,8 @@ let screenSize = ScreenSizes.Large;
 let width = getGameSize(ScreenSizes.Large).width;
 let height = getGameSize(ScreenSizes.Large).height;
 
-const entityManagerArr = ref([]);
-const squareClicked = ref({});
+let entityManagerArr = ref([]);
+let squareClicked = ref({});
 
 export default {
   name: "atc-game",
@@ -201,6 +201,9 @@ export default {
     }
     console.log("screen size", "large");
     screenSize = ScreenSizes.Large;
+
+    entityManagerArr = ref([]);
+    squareClicked = ref({});
   },
 
   mounted() {

@@ -2,11 +2,14 @@
   <div class="container">
     <section>
       <div class="content">
-        <h1 class="title">Future ATC Simulator</h1>
-        <p>Level 1</p>
-        <div class="buttons">
+        <h1 class="title">ATC Future Simulator</h1>
+        <h3>
+          Traffic Sim Level &nbsp;&nbsp;
+          <span class="lightgreen">{{ levelNext }}</span>
+        </h3>
+        <div class="section-buttons">
           <div class="button-start">
-            <button><h2>Start</h2></button>
+            <button @click="onStartClick"><h2>Start</h2></button>
           </div>
         </div>
       </div>
@@ -15,7 +18,21 @@
 </template>
 
 <script>
-export default {};
+import { getScore } from "../js/game/score";
+
+export default {
+  data() {
+    return {
+      levelNext: getScore().level + 1,
+    };
+  },
+
+  methods: {
+    onStartClick: function () {
+      this.$router.push({ name: "game" });
+    },
+  },
+};
 </script>
 
 <style lang="scss">
@@ -25,17 +42,8 @@ export default {};
   height: 99vh;
 }
 
-.content h1 {
-  font-size: 48px;
-  color: limegreen;
-  border-bottom: 1px dashed white;
-  margin: 0;
-}
-
-.content h2 {
-  font-size: 32px;
-  color: rgb(28, 28, 28);
-  margin: 0;
+.lightgreen {
+  color: lightgreen;
 }
 
 section {
@@ -58,7 +66,24 @@ section .content {
   width: 100%;
 }
 
-.buttons {
+section .content h1 {
+  font-size: 48px;
+  color: limegreen;
+  border-bottom: 1px dashed white;
+  margin: 0;
+}
+
+section .content h2 {
+  font-size: 32px;
+  color: rgb(28, 28, 28);
+  margin: 0;
+}
+
+section .content h3 {
+  color: limegreen;
+}
+
+.section-buttons {
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -76,12 +101,16 @@ section .content {
   font-size: 24px;
 
   border-radius: 8px;
-  // box-shadow: 4px 8px 16px #000000a0;
+  box-shadow: 4px 8px 16px #000000a0;
   background-color: lightgreen;
+  border: none;
 }
 
 .button-start button:hover {
   cursor: pointer;
+  margin-left: 4px;
+  margin-top: 4px;
+  box-shadow: 0px 4px 16px #000000a0;
   background-color: rgb(119, 201, 119);
 }
 </style>
