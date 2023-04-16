@@ -23,6 +23,10 @@
         <div class="item score" :class="hotRunwayClass">{{ hotRunway }}</div>
         <div class="item">BONUS tin pusher</div>
         <div class="item score" :class="tinPusherClass">{{ tinPusher }}</div>
+        <div class="item margin-top">SCORE</div>
+        <div class="item score score-total margin-top" :class="totalClass">
+          {{ total }}
+        </div>
       </div>
 
       <div
@@ -67,6 +71,8 @@ export default {
       hotRunwayClass: "gold",
       tinPusher: "0",
       tinPusherClass: "gold",
+      total: "0",
+      totalClass: "gold",
     };
   },
 
@@ -107,7 +113,7 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 8;
+  z-index: 10;
   background-color: #00000080;
 
   .green {
@@ -144,6 +150,23 @@ export default {
   cursor: default;
 }
 
+.popup .modal .item {
+  background-color: black;
+  padding: 8px 0px;
+  &.score {
+    text-align: right;
+    align-self: flex-end;
+  }
+  &.score-total {
+    width: 60%;
+    margin-left: 40%;
+    border-top: solid 1px white;
+  }
+  &.margin-top {
+    margin-top: 8px;
+  }
+}
+
 .popup .modal .title {
   align-self: center;
   text-align: center;
@@ -159,15 +182,6 @@ export default {
   padding: 3% 25%;
   font-size: 22px;
   background-color: darkslategrey;
-}
-
-.popup .item {
-  // background-color: lightgrey;
-  padding: 8px 0px;
-  &.score {
-    text-align: right;
-    align-self: flex-end;
-  }
 }
 
 .popup .modal .btn {

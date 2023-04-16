@@ -1,10 +1,6 @@
 <template>
   <div class="score-panel">
     <div class="score-info">
-      <!-- <div class="score-row" :class="sizeClass">
-        <span class="font-size">score</span>
-        <span>{{ scoreTotal }}</span>
-      </div> -->
       <div class="score-row" :class="sizeClass">
         <span class="margin-top font-large badge blue">departures</span>
         <span>{{ score.departures }}/{{ Goals.Departures }}</span>

@@ -1,13 +1,14 @@
+import { setGoal } from "./victory";
+
 // NOTE: key & values must match
 export const ScoreEvents = Object.freeze({
   ScoreEV: 'ScoreEV',
 })
 
-// TODO load or start new game
-let isSetup = false;
 export const setup = () => {
-  if (isSetup) return;
-  isSetup = true;
+  Score.level = _levelComplete;
+  const nextLevel = _levelComplete + 1;
+  setGoal(nextLevel);
 }
 
 /**
@@ -73,15 +74,18 @@ export const getScore = () => ({ ...Score });
 
 // PRIVATE //////////////////////////////////////////////////
 let _scoreTotal = 0;
+let _levelComplete = 0;
 let proximityPairs = {};
 
 /**
  * @typedef {object} Score
+ * @property {number} level current level
  * @property {number} departures
  * @property {number} arrivals
  * @property {number} failed
  */
 let Score = {
+  level: 0,
   departures: 0,
   arrivals: 0,
   failed: 0,

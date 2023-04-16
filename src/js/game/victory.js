@@ -19,15 +19,25 @@ export const subscribeVictory = (victoryEvent, cb) => {
   document.addEventListener(victoryEvent, () => cb());
 };
 
+export const setGoal = (levelNum) => {
+  if (levelNum <= 1) Goals = { ...GoalsLevel1 };
+};
+
 /**
  * @typedef {object} Goals
  * @property {number} Departures
  * @property {number} Arrivals
  * @property {number} Failed
  */
-export const Goals = Object.freeze({
+export let Goals = {
   Departures: 1,
   Arrivals: 1,
+  Failed: 1,
+};
+
+export const GoalsLevel1 = Object.freeze({
+  Departures: 1,
+  Arrivals: 10,
   Failed: 1,
 });
 
@@ -39,7 +49,8 @@ export const isFailedCondition = (failedCount) => failedCount >= Goals.Failed;
  * @returns {Boolean}
  */
 export const isVictory = score => isDeparturesSuccess(score.departures) &&
-  isArrivalsSuccess(score.arrivals);
+  isArrivalsSuccess(score.arrivals) &&
+  !isFailedCondition(score.failed);
 
 export const setup = () => {
   subscribeScore(ScoreEvents.ScoreEV, (score) => {
