@@ -18,6 +18,8 @@
 </template>
 
 <script>
+import { setup as setupVictory } from "../js/game/victory";
+import { setup as setupScore } from "../js/game/score";
 import { getScore } from "../js/game/score";
 
 export default {
@@ -25,6 +27,11 @@ export default {
     return {
       levelNext: getScore().level + 1,
     };
+  },
+
+  mounted() {
+    setupScore();
+    setupVictory();
   },
 
   methods: {
@@ -46,6 +53,7 @@ export default {
   color: lightgreen;
 }
 
+// section
 section {
   display: flex;
 
@@ -89,6 +97,7 @@ section .content h3 {
   flex-direction: column;
   justify-content: center;
 }
+// END section
 
 .button-start {
   display: flex;
@@ -103,14 +112,17 @@ section .content h3 {
   border-radius: 8px;
   box-shadow: 4px 8px 16px #000000a0;
   background-color: lightgreen;
-  border: none;
+  border: 1px solid white;
 }
 
 .button-start button:hover {
   cursor: pointer;
-  margin-left: 4px;
-  margin-top: 4px;
   box-shadow: 0px 4px 16px #000000a0;
   background-color: rgb(119, 201, 119);
+}
+
+.button-start button:active {
+  margin-left: 4px;
+  margin-top: 4px;
 }
 </style>

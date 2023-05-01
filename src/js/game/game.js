@@ -12,8 +12,8 @@ import {
 import { getGameSize, setupGameLoadAndExit } from "../utils";
 import { create } from '../Plane';
 import { setup as setupKeyboard } from '../events/keyboard';
-import { resetProximity, setup as setupScore } from './score';
-import { setup as setupVictory } from './victory';
+import { resetProximity } from './score';
+
 import { draw as drawScale } from '../canvas/scale';
 
 const isSquare = obj => obj instanceof Square;
@@ -91,8 +91,6 @@ export const setup = (argObj) => {
 
   setupGameLoadAndExit();
   setupKeyboard();
-  setupScore();
-  setupVictory();
   drawInertElements(argObj.imgLayerObj, canvasObj);
 
   window.requestAnimationFrame(gameTick);

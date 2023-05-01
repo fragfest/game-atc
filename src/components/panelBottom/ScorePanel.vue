@@ -3,17 +3,17 @@
     <div class="score-info">
       <div class="score-row" :class="sizeClass">
         <span class="margin-top font-large badge blue">departures</span>
-        <span>{{ score.departures }}/{{ Goals.Departures }}</span>
+        <span>{{ score.departures }}/{{ goals.Departures }}</span>
       </div>
       <div class="score-row" :class="sizeClass">
         <span class="margin-top font-large badge yellow">arrivals</span>
-        <span>{{ score.arrivals }}/{{ Goals.Arrivals }}</span>
+        <span>{{ score.arrivals }}/{{ goals.Arrivals }}</span>
       </div>
       <div class="score-row" :class="sizeClass">
         <span class="margin-top badge conflict">
           failed <small>handoff & landings</small>
         </span>
-        <span>{{ score.failed }}/{{ Goals.Failed }}</span>
+        <span>{{ score.failed }}/{{ goals.Failed }}</span>
       </div>
       <div class="score-row" :class="sizeClass">
         <span class="margin-top badge conflict">
@@ -42,8 +42,8 @@
 
 <script>
 import { ScoreEvents, subscribeScore } from "../../js/game/score";
-import { Goals } from "../../js/game/victory";
 import { getClassSize } from "../../js/utils";
+import { getGoals } from "../../js/game/victory";
 
 export default {
   name: "ScorePanel",
@@ -58,7 +58,7 @@ export default {
         arrivals: 0,
         failed: 0,
       },
-      Goals,
+      goals: {},
     };
   },
 
@@ -66,6 +66,7 @@ export default {
     subscribeScore(ScoreEvents.ScoreEV, (score) => {
       this.score = score;
     });
+    this.goals = getGoals();
   },
 
   computed: {

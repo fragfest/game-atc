@@ -20,24 +20,19 @@ export const subscribeVictory = (victoryEvent, cb) => {
 };
 
 export const setGoal = (levelNum) => {
-  if (levelNum <= 1) Goals = { ...GoalsLevel1 };
+  let goals = {};
+  if (levelNum <= 1) goals = { ...GoalsLevel1 };
+  localStorage.setItem('goals', JSON.stringify(goals));
 };
 
-/**
- * @typedef {object} Goals
- * @property {number} Departures
- * @property {number} Arrivals
- * @property {number} Failed
- */
-export let Goals = {
-  Departures: 1,
-  Arrivals: 1,
-  Failed: 1,
-};
+export const getGoals = () => {
+  const goals = JSON.parse(localStorage.getItem('goals'));
+  return goals;
+}
 
 export const GoalsLevel1 = Object.freeze({
-  Departures: 1,
   Arrivals: 10,
+  Departures: 1,
   Failed: 1,
 });
 
@@ -64,6 +59,19 @@ export const setup = () => {
 }
 
 // PRIVATE //////////////////////////////////////////////////
+
+/**
+ * @typedef {object} Goals
+ * @property {number} Departures
+ * @property {number} Arrivals
+ * @property {number} Failed
+ */
+let Goals = {
+  Arrivals: 1,
+  Departures: 1,
+  Failed: 1,
+};
+
 
 const publishSuccess = () => {
   document.dispatchEvent(new CustomEvent(VictoryEvents.Success));

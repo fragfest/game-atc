@@ -201,9 +201,6 @@ export default {
     }
     console.log("screen size", "large");
     screenSize = ScreenSizes.Large;
-
-    entityManagerArr = ref([]);
-    squareClicked = ref({});
   },
 
   mounted() {

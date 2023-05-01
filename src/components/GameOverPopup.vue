@@ -50,7 +50,7 @@ import {
   isArrivalsSuccess,
   isFailedCondition,
   isVictory,
-  Goals,
+  getGoals,
 } from "../js/game/victory";
 
 export default {
@@ -59,11 +59,11 @@ export default {
       isSuccess: false,
       btnRouteObj: { name: "homeLanding" },
 
-      departures: "0/" + Goals.Departures,
+      departures: "0/" + getGoals().Departures,
       departuresClass: "red",
-      arrivals: "0/" + Goals.Arrivals,
+      arrivals: "0/" + getGoals().Arrivals,
       arrivalsClass: "red",
-      failed: "0/" + Goals.Failed,
+      failed: "0/" + getGoals().Failed,
       failedClass: "green",
       conflict: "0/30",
       conflictClass: "green",
@@ -82,15 +82,15 @@ export default {
 
     if (isVictory(score)) this.isSuccess = true;
     if (isDeparturesSuccess(score.departures)) {
-      this.departures = "" + score.departures + "/" + Goals.Departures;
+      this.departures = "" + score.departures + "/" + getGoals().Departures;
       this.departuresClass = "green";
     }
     if (isArrivalsSuccess(score.arrivals)) {
-      this.arrivals = "" + score.arrivals + "/" + Goals.Arrivals;
+      this.arrivals = "" + score.arrivals + "/" + getGoals().Arrivals;
       this.arrivalsClass = "green";
     }
     if (isFailedCondition(score.failed)) {
-      this.failed = "" + score.failed + "/" + Goals.Failed;
+      this.failed = "" + score.failed + "/" + getGoals().Failed;
       this.failedClass = "red";
     }
   },
@@ -151,11 +151,11 @@ export default {
 }
 
 .popup .modal .item {
-  background-color: black;
+  // background-color: black;
   padding: 8px 0px;
   &.score {
     text-align: right;
-    align-self: flex-end;
+    align-self: flex-start;
   }
   &.score-total {
     width: 60%;
