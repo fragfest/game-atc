@@ -240,6 +240,9 @@ export default {
       height: this.height,
     };
 
+    entityManagerArr.value = [];
+    squareClicked.value = {};
+
     const setupArg = {
       router: this.$router,
       screenSize,
@@ -271,11 +274,13 @@ export default {
       squareClicked,
       () => this.$refs.controlPanel.setFocus(),
       () => setPlaneSelected(setupArg, squareClicked.value),
-      () => (this.hasPopup = true)
+      () => {
+        this.hasPopup = true;
+      }
     );
     setupEntities(setupArg);
-    setupGame(setupArg);
     setupVictory();
+    setupGame(setupArg);
 
     // window.addEventListener("resize", () => {
     //   setup(setupArg);

@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { getScore } from "../js/game/score";
+import { getScore, resetScore } from "../js/game/score";
 import {
   isDeparturesSuccess,
   isArrivalsSuccess,
@@ -88,6 +88,8 @@ export default {
       this.failed = "" + score.failed + "/" + getGoals().Failed;
       this.failedClass = "red";
     }
+
+    resetScore();
   },
 
   methods: {

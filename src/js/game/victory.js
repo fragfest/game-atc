@@ -10,6 +10,17 @@ export const VictoryEvents = Object.freeze({
   Failed: 'Failed',
 });
 
+export const setup = () => {
+  subscribeScore(ScoreEvents.ScoreEV, (score) => {
+    if (isFailedCondition(score.failed)) {
+      return publishFailed();
+    }
+    if (isVictory(score)) {
+      return publishSuccess();
+    }
+  });
+}
+
 /**
  * @param {VictoryEvents} victoryEvent
  * @param {scoreCB} cb
@@ -46,17 +57,6 @@ export const isFailedCondition = (failedCount) => failedCount >= getGoals().Fail
 export const isVictory = score => isDeparturesSuccess(score.departures) &&
   isArrivalsSuccess(score.arrivals) &&
   !isFailedCondition(score.failed);
-
-export const setup = () => {
-  subscribeScore(ScoreEvents.ScoreEV, (score) => {
-    if (isFailedCondition(score.failed)) {
-      return publishFailed();
-    }
-    if (isVictory(score)) {
-      return publishSuccess();
-    }
-  });
-}
 
 // PRIVATE //////////////////////////////////////////////////
 

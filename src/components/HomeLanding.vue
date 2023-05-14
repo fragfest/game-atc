@@ -2,9 +2,9 @@
   <div class="container">
     <section>
       <div class="content">
-        <h1 class="title">ATC Future Simulator</h1>
+        <h1 class="title">ATC - Future Flight Ops</h1>
         <h3>
-          Traffic Sim Level &nbsp;&nbsp;
+          Traffic Level &nbsp;&nbsp;
           <span class="lightgreen">{{ levelNext }}</span>
         </h3>
         <div class="section-buttons">
@@ -20,16 +20,18 @@
 <script>
 import { setup as setupScore } from "../js/game/score";
 import { getScore } from "../js/game/score";
+import { setGameLoopState } from "../js/game/game";
 
 export default {
   data() {
     return {
-      levelNext: getScore().level + 1,
+      levelNext: getScore().levelComplete + 1,
     };
   },
 
   mounted() {
     setupScore();
+    setGameLoopState(false);
   },
 
   methods: {
@@ -115,12 +117,12 @@ section .content h3 {
 
 .button-start button:hover {
   cursor: pointer;
-  box-shadow: 0px 4px 16px #000000a0;
   background-color: rgb(119, 201, 119);
 }
 
 .button-start button:active {
   margin-left: 4px;
   margin-top: 4px;
+  box-shadow: none;
 }
 </style>

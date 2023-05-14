@@ -6,11 +6,20 @@ export const ScoreEvents = Object.freeze({
 })
 
 export const setup = () => {
+  resetScore();
   const score = getScore();
   const nextLevel = score.levelComplete + 1;
   score.level = nextLevel;
   setScore(score);
   setGoal(nextLevel);
+}
+
+export const resetScore = () => {
+  const score = getScore();
+  score.departures = 0;
+  score.arrivals = 0;
+  score.failed = 0;
+  setScore(score);
 }
 
 /**
