@@ -40,7 +40,7 @@ export default class Runway {
     img.src = '/img/runway.png';
 
     this.ctx.fillStyle = 'greenyellow';
-    this.ctx.font = "bold 9px Arial"
+    this.ctx.font = this.isSmall ? '10px Arial' : '12px Arial';
     this.ctx.fillText(this.title, this.x + this.titleX, this.y + this.titleY);
 
     // draw runway heading dashes

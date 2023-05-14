@@ -132,8 +132,9 @@ export default {
   flex-direction: column;
   justify-content: space-around;
 
-  min-width: 400px;
+  min-width: 800px;
   width: 50%;
+  min-height: 600px;
   height: 50%;
   margin-top: 10%;
   margin-bottom: auto;

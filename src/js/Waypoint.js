@@ -9,6 +9,7 @@ import {
   Direction,
   convertToSmallDegrees,
   radToDegrees,
+  ScreenSizes,
 } from './utils';
 import { DestinationType } from './aircraft/airframe';
 
@@ -16,7 +17,7 @@ import { DestinationType } from './aircraft/airframe';
 // class Waypoint
 ////////////////////////////////////////////////////////////
 export default class Waypoint {
-  constructor(title, entityLayerObj, textLayerObj, waypointObj) {
+  constructor(title, entityLayerObj, textLayerObj, screenSize, waypointObj) {
     this.class = 'waypoint';
     this.id = Math.random();
     this.title = title.trim();
@@ -33,6 +34,7 @@ export default class Waypoint {
 
     this.ctx = entityLayerObj.ctx
     this.textLayerObj = textLayerObj;
+    this.isSmall = (screenSize === ScreenSizes.Small) ? true : false;
     this.x = waypointObj.x - 2;
     this.y = waypointObj.y - 2;
     this.width = 4;
@@ -104,8 +106,8 @@ export default class Waypoint {
     this.ctx.fillStyle = (this.type === WaypointType.Arrival) ? 'orange' : 'deepskyblue';
     this.ctx.globalAlpha = 1;
     this.ctx.fillRect(this.x - (this.width / 2), this.y - (this.height / 2), this.width, this.height);
-    this.textLayerObj.ctx.fillStyle = (this.type === WaypointType.Arrival) ? 'orange' : 'deepskyblue';
-    this.textLayerObj.ctx.font = "9px Arial"
+    this.textLayerObj.ctx.fillStyle = (this.type === WaypointType.Arrival) ? '#facf7f' : '#8ce2ff';
+    this.textLayerObj.ctx.font =  this.isSmall ? '10px Arial' : '12px Arial';
     this.textLayerObj.ctx.fillText(this.title, this.x + 2, this.y - 4);
   }
 }

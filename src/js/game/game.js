@@ -111,13 +111,13 @@ export const setupEntities = (argObj) => {
 
   getWaypointArrivalsAll().forEach(waypoint => {
     entityAdd(
-      new Waypoint(waypoint, argObj.backgroundObj, argObj.headingLayerObj,
+      new Waypoint(waypoint, argObj.backgroundObj, argObj.headingLayerObj, argObj.screenSize, 
         getWaypoint(waypoint, argObj.screenSize))
     );
   });
   getWaypointDestinationsAll().forEach(waypoint => {
     entityAdd(
-      new Waypoint(waypoint, argObj.backgroundObj, argObj.headingLayerObj,
+      new Waypoint(waypoint, argObj.backgroundObj, argObj.headingLayerObj, argObj.screenSize, 
         getWaypoint(waypoint, argObj.screenSize))
     );
   });

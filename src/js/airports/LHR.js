@@ -64,19 +64,27 @@ const runways = (runway, screenSize) => {
   let yOffset = 0;
   let length = 0;
   let runwayWidth = 0;
-
+  let titleY = 0;
+  let titlePosition27L = { x: 0, y: 0 };
+  let titlePosition27R = { x: 0, y: 0 };
+  
   switch (screenSize) {
     case ScreenSizes.Large:
       xOffset = -140;
       yOffset = 26;
       length = 60;
       runwayWidth = 4;
+      titlePosition27R = { x: 0, y: -8 };
+      titlePosition27L = { x: 0, y: 16 };
       break;
     case ScreenSizes.Small:
       xOffset = -105;
       yOffset = 18;
       length = 40;
       runwayWidth = 1.6;
+      titleY - 11;
+      titlePosition27R = { x: 0, y: -5 };
+      titlePosition27L = { x: 0, y: 11 };
       break;
   }
 
@@ -88,7 +96,7 @@ const runways = (runway, screenSize) => {
         heading: 270,
         length,
         width: runwayWidth,
-        titlePosition: { x: 0, y: -5 },
+        titlePosition: titlePosition27R,
       };
     case '27L':
       return {
@@ -97,7 +105,7 @@ const runways = (runway, screenSize) => {
         heading: 270,
         length,
         width: runwayWidth,
-        titlePosition: { x: 0, y: 11 },
+        titlePosition: titlePosition27L,
       };
   }
 };

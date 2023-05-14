@@ -27,18 +27,18 @@ export const setGoal = (levelNum) => {
 
 export const getGoals = () => {
   const goals = JSON.parse(localStorage.getItem('goals'));
-  return goals;
+  return goals || {...Goals};
 }
 
 export const GoalsLevel1 = Object.freeze({
-  Arrivals: 10,
-  Departures: 1,
+  Arrivals: 50,
+  Departures: 30,
   Failed: 1,
 });
 
-export const isDeparturesSuccess = (departuresCount) => departuresCount >= Goals.Departures;
-export const isArrivalsSuccess = (arrivalsCount) => arrivalsCount >= Goals.Arrivals;
-export const isFailedCondition = (failedCount) => failedCount >= Goals.Failed;
+export const isDeparturesSuccess = (departuresCount) => departuresCount >= getGoals().Departures;
+export const isArrivalsSuccess = (arrivalsCount) => arrivalsCount >= getGoals().Arrivals;
+export const isFailedCondition = (failedCount) => failedCount >= getGoals().Failed;
 /**
  * @param {Score} score 
  * @returns {Boolean}
@@ -67,9 +67,9 @@ export const setup = () => {
  * @property {number} Failed
  */
 let Goals = {
-  Arrivals: 1,
-  Departures: 1,
-  Failed: 1,
+  Arrivals: 0,
+  Departures: 0,
+  Failed: 0,
 };
 
 

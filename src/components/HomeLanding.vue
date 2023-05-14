@@ -18,7 +18,6 @@
 </template>
 
 <script>
-import { setup as setupVictory } from "../js/game/victory";
 import { setup as setupScore } from "../js/game/score";
 import { getScore } from "../js/game/score";
 
@@ -31,7 +30,6 @@ export default {
 
   mounted() {
     setupScore();
-    setupVictory();
   },
 
   methods: {

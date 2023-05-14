@@ -99,6 +99,7 @@ import { getWaypointArrivalsAll } from "../js/airports/LHR";
 import { setup, setupEntities, setPlaneSelected } from "../js/game/game";
 import { setup as setupEvents } from "../js/game/gameEvents";
 import { ScreenSizes, getGameSize } from "../js/utils";
+import { setup as setupVictory } from "../js/game/victory";
 
 const isSquare = (obj) => obj instanceof Square;
 const isDeparture = (plane) =>
@@ -270,6 +271,7 @@ export default {
     );
     setupEntities(setupArg);
     setup(setupArg);
+    setupVictory();
 
     // window.addEventListener("resize", () => {
     //   setup(setupArg);
