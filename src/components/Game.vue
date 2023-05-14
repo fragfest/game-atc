@@ -96,7 +96,11 @@ import GameOverPopup from "./GameOverPopup.vue";
 
 import { DestinationType } from "../js/aircraft/airframe";
 import { getWaypointArrivalsAll } from "../js/airports/LHR";
-import { setup, setupEntities, setPlaneSelected } from "../js/game/game";
+import {
+  setup as setupGame,
+  setupEntities,
+  setPlaneSelected,
+} from "../js/game/game";
 import { setup as setupEvents } from "../js/game/gameEvents";
 import { ScreenSizes, getGameSize } from "../js/utils";
 import { setup as setupVictory } from "../js/game/victory";
@@ -270,7 +274,7 @@ export default {
       () => (this.hasPopup = true)
     );
     setupEntities(setupArg);
-    setup(setupArg);
+    setupGame(setupArg);
     setupVictory();
 
     // window.addEventListener("resize", () => {

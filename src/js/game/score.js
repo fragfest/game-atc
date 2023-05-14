@@ -6,8 +6,10 @@ export const ScoreEvents = Object.freeze({
 })
 
 export const setup = () => {
-  Score.level = _levelComplete;
-  const nextLevel = _levelComplete + 1;
+  const score = getScore();
+  const nextLevel = score.levelComplete + 1;
+  score.level = nextLevel;
+  setScore(score);
   setGoal(nextLevel);
 }
 
@@ -28,8 +30,10 @@ export const subscribeScore = (scoreEvent, cb) => {
 }
 
 export const planeGoAroundPenalty = () => {
-  Score.failed += 1;
-  publishScore({ ...Score });
+  const score = getScore();
+  score.failed += 1;
+  setScore(score);
+  publishScore(score);
 }
 
 export const resetProximity = () => {
@@ -53,38 +57,52 @@ export const planeProximityPenalty = (planeOne, planeTwo) => {
 }
 
 export const planeHandoffSuccess = () => {
-  Score.departures += 1;
-  publishScore({ ...Score });
+  const score = getScore();
+  score.departures += 1;
+  setScore(score);
+  publishScore(score);
 }
 
 export const planeLandSuccess = () => {
-  Score.arrivals += 1;
-  publishScore({ ...Score });
+  const score = getScore();
+  score.arrivals += 1;
+  setScore(score);
+  publishScore(score);
 }
 
 export const planeLeaveFail = () => {
-  Score.failed += 1;
-  publishScore({ ...Score });
+  const score = getScore();
+  score.failed += 1;
+  setScore(score);
+  publishScore(score);
 }
 
 /**
  * @returns {Score}
  */
-export const getScore = () => ({ ...Score });
+export const getScore = () => {
+  const score = JSON.parse(localStorage.getItem('score'));
+  return score || {...Score};
+}
 
 // PRIVATE //////////////////////////////////////////////////
 let _scoreTotal = 0;
-let _levelComplete = 0;
 let proximityPairs = {};
+
+const setScore = score => {
+  localStorage.setItem('score', JSON.stringify(score));
+}
 
 /**
  * @typedef {object} Score
- * @property {number} level current level
+ * @property {number} levelComplete
+ * @property {number} level
  * @property {number} departures
  * @property {number} arrivals
  * @property {number} failed
  */
 let Score = {
+  levelComplete: 0,
   level: 0,
   departures: 0,
   arrivals: 0,

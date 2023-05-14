@@ -29,12 +29,7 @@
         </div>
       </div>
 
-      <div
-        class="btn"
-        tabindex="1"
-        ref="okBtn"
-        @keyup.enter.space="btnKeyEvent"
-      >
+      <div class="btn" tabindex="1" ref="okBtn" @keyup.space="btnKeyEvent">
         <router-link tabindex="-1" :to="btnRouteObj">
           <h1>OK</h1>
         </router-link>
