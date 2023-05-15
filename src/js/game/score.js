@@ -19,6 +19,7 @@ export const resetScore = () => {
   score.departures = 0;
   score.arrivals = 0;
   score.failed = 0;
+  score.conflict = 0;
   setScore(score);
 }
 
@@ -45,24 +46,43 @@ export const planeGoAroundPenalty = () => {
   publishScore(score);
 }
 
-export const resetProximity = () => {
-  proximityPairs = {};
+export const resetProximity = (plane) => {
+  proximityPairs[plane.id] = null;
 }
-export const uniqueProximityPair = (planeOne, planeTwo) => {
-  const oppositePairFound = proximityPairs[planeTwo.id] === planeOne.id;
+
+export const uniqueProximityPair = (planeOne, planeTwo, timestampMs) => {
+  const proximityPairPlaneTwo = proximityPairs[planeTwo.id] || {};
+  const oppositePairFound = proximityPairPlaneTwo.id === planeOne.id;
   if (oppositePairFound) return false;
 
-  proximityPairs[planeOne.id] = planeTwo.id;
+  const proximityPairPlaneOne = proximityPairs[planeOne.id];
+  if(proximityPairPlaneOne) return true;
+
+  proximityPairs[planeOne.id] = { id: planeTwo.id, startTimestampMs: timestampMs };
   return true;
 }
-export const planeProximityPenalty = (planeOne, planeTwo) => {
+
+export const planeProximityPenalty = (planeOne, planeTwo, timestampMs) => {
   const bothPlanesInConflict = planeOne.hasProximityAlert && planeTwo.hasProximityAlert;
   if (!bothPlanesInConflict) return null;
 
-  _scoreTotal -= 1;
-  const score = { ...Score, scoreTotal: _scoreTotal };
+  const proximityPairPlaneOne = proximityPairs[planeOne.id];
+  if(!proximityPairPlaneOne) return null;
+
+  const startTimeSec = proximityPairPlaneOne.startTimestampMs / 1000;
+  const currentTimeSec = timestampMs / 1000;
+  if(!startTimeSec || !currentTimeSec) return null;
+  
+  proximityPairPlaneOne.startTimestampMs = timestampMs;
+  const timeDiffSec = currentTimeSec - startTimeSec;
+  
+  const score = getScore();
+  const conflictNew = score.conflict + timeDiffSec;
+  score.conflict = Number(conflictNew.toFixed(3));
+  setScore(score);
   publishScore(score);
-  return -1;
+
+  return (-1 * timeDiffSec).toFixed(3) + 's';
 }
 
 export const planeHandoffSuccess = () => {
@@ -95,7 +115,6 @@ export const getScore = () => {
 }
 
 // PRIVATE //////////////////////////////////////////////////
-let _scoreTotal = 0;
 let proximityPairs = {};
 
 const setScore = score => {
@@ -109,6 +128,7 @@ const setScore = score => {
  * @property {number} departures
  * @property {number} arrivals
  * @property {number} failed
+ * @property {number} conflict
  */
 let Score = {
   levelComplete: 0,
@@ -116,6 +136,7 @@ let Score = {
   departures: 0,
   arrivals: 0,
   failed: 0,
+  conflict: 0,
 };
 
 /**

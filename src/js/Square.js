@@ -15,6 +15,7 @@ import {
 } from './entity';
 import { MessageEvents, publishMessage as publish } from './events/messages';
 import {
+  resetProximity,
   uniqueProximityPair,
   planeProximityPenalty,
   planeLandSuccess,
@@ -516,7 +517,7 @@ export default class Square {
     this.isSelected = !!isSelected;
   }
 
-  setProximity({ entityManagerArr, screenSize }) {
+  setProximity({ entityManagerArr, screenSize, timestamp }) {
     const isPlane = plane => plane instanceof Square;
     const isEntityCloseTo = isCloseToEntity(screenSize)(this);
     const isAirborne = plane => !plane.isTaxiing && !plane.takeoff && !plane.isTouchedDown;
@@ -527,16 +528,19 @@ export default class Square {
     const isCloseRunway = plane => isOnRunway(plane) && isOnRunway(this) && isSameRunway(plane);
     const isPlaneClose = plane => isPlane(plane) && isEntityCloseTo(plane) && (isCloseAirborne(plane) || isCloseRunway(plane));
 
+    const timestampMs = timestamp;
+
     const planeClose = entityManagerArr.find(isPlaneClose);
     if (!planeClose) {
       this.hasProximityAlert = false;
+      resetProximity(this);
       return;
     }
 
     this.hasProximityAlert = true;
-    const pairFound = uniqueProximityPair(this, planeClose);
+    const pairFound = uniqueProximityPair(this, planeClose, timestampMs);
     if (pairFound) {
-      const scoreDecrease = planeProximityPenalty(this, planeClose);
+      const scoreDecrease = planeProximityPenalty(this, planeClose, timestampMs);
       if (scoreDecrease === null) return;
 
       const msg = this.title + ' & ' + planeClose.title + ' conflict';

@@ -36,7 +36,7 @@ export default {
 
   methods: {
     onStartClick: function () {
-      this.$router.push({ name: "game" });
+      window.location.href = "/game";
     },
   },
 };

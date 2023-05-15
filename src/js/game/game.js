@@ -12,7 +12,6 @@ import {
 import { getGameSize, setupGameLoadAndExit } from "../utils";
 import { create } from '../Plane';
 import { setup as setupKeyboard } from '../events/keyboard';
-import { resetProximity } from './score';
 
 import { draw as drawScale } from '../canvas/scale';
 
@@ -75,10 +74,8 @@ export const setup = (argObj) => {
       entityManagerArr.forEach(callFn('hide'));
       entityManagerArr.forEach(callFn('update', { deltaTimeMs: updateIntervalMs, entityManagerArr }));
       entityManagerArr.forEach(callFn('updateHandoff', { entityManagerArr }));
-      entityManagerArr.forEach(callFn('setProximity', { entityManagerArr, screenSize }));
+      entityManagerArr.forEach(callFn('setProximity', { entityManagerArr, screenSize, timestamp }));
       entityManagerArr.forEach(callFn('draw', timestamp));
-      // cleanup
-      resetProximity();
       // callbacks
       argObj.gameUpdateCB();
     }

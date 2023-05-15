@@ -12,7 +12,7 @@ export const VictoryEvents = Object.freeze({
 
 export const setup = () => {
   subscribeScore(ScoreEvents.ScoreEV, (score) => {
-    if (isFailedCondition(score.failed)) {
+    if (isDefeat(score)) {
       return publishFailed();
     }
     if (isVictory(score)) {
@@ -42,21 +42,32 @@ export const getGoals = () => {
 }
 
 export const GoalsLevel1 = Object.freeze({
-  Arrivals: 50,
-  Departures: 30,
-  Failed: 1,
+  Arrivals: 32,
+  Departures: 16,
+  Failed: 3,
+  Conflict: 30,
 });
 
 export const isDeparturesSuccess = (departuresCount) => departuresCount >= getGoals().Departures;
 export const isArrivalsSuccess = (arrivalsCount) => arrivalsCount >= getGoals().Arrivals;
 export const isFailedCondition = (failedCount) => failedCount >= getGoals().Failed;
+export const isConflictCondition = (conflictCount) => conflictCount >= getGoals().Conflict;
+
 /**
- * @param {Score} score 
+ * @param {Score} score
  * @returns {Boolean}
  */
 export const isVictory = score => isDeparturesSuccess(score.departures) &&
   isArrivalsSuccess(score.arrivals) &&
-  !isFailedCondition(score.failed);
+  !isFailedCondition(score.failed) &&
+  !isConflictCondition(score.conflict);
+
+/**
+ * @param {Score} score
+ * @returns {Boolean}
+ */
+export const isDefeat = score => isFailedCondition(score.failed) ||
+  isConflictCondition(score.conflict);
 
 // PRIVATE //////////////////////////////////////////////////
 
@@ -65,11 +76,13 @@ export const isVictory = score => isDeparturesSuccess(score.departures) &&
  * @property {number} Departures
  * @property {number} Arrivals
  * @property {number} Failed
+ * @property {number} Conflict
  */
 let Goals = {
   Arrivals: 0,
   Departures: 0,
   Failed: 0,
+  Conflict: 0,
 };
 
 

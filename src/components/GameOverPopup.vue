@@ -44,6 +44,7 @@ import {
   isDeparturesSuccess,
   isArrivalsSuccess,
   isFailedCondition,
+  isConflictCondition,
   isVictory,
   getGoals,
 } from "../js/game/victory";
@@ -60,7 +61,7 @@ export default {
       arrivalsClass: "red",
       failed: "0/" + getGoals().Failed,
       failedClass: "green",
-      conflict: "0/30",
+      conflict: "0/" + getGoals().Conflict,
       conflictClass: "green",
       hotRunway: "0",
       hotRunwayClass: "gold",
@@ -76,18 +77,16 @@ export default {
     const score = getScore();
 
     if (isVictory(score)) this.isSuccess = true;
-    if (isDeparturesSuccess(score.departures)) {
-      this.departures = "" + score.departures + "/" + getGoals().Departures;
-      this.departuresClass = "green";
-    }
-    if (isArrivalsSuccess(score.arrivals)) {
-      this.arrivals = "" + score.arrivals + "/" + getGoals().Arrivals;
-      this.arrivalsClass = "green";
-    }
-    if (isFailedCondition(score.failed)) {
-      this.failed = "" + score.failed + "/" + getGoals().Failed;
-      this.failedClass = "red";
-    }
+
+    if (isDeparturesSuccess(score.departures)) this.departuresClass = "green";
+    if (isArrivalsSuccess(score.arrivals)) this.arrivalsClass = "green";
+    if (isFailedCondition(score.failed)) this.failedClass = "red";
+    if (isConflictCondition(score.conflict)) this.conflictClass = "red";
+
+    this.departures = "" + score.departures + "/" + getGoals().Departures;
+    this.arrivals = "" + score.arrivals + "/" + getGoals().Arrivals;
+    this.failed = "" + score.failed + "/" + getGoals().Failed;
+    this.conflict = "" + Math.floor(score.conflict) + "/" + getGoals().Conflict;
 
     resetScore();
   },
