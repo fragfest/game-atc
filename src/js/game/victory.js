@@ -30,9 +30,8 @@ export const subscribeVictory = (victoryEvent, cb) => {
   document.addEventListener(victoryEvent, () => cb());
 };
 
-export const setGoal = (levelNum) => {
-  let goals = {};
-  if (levelNum <= 1) goals = { ...GoalsLevel1 };
+export const setGoal = levelNum => {
+  const goals = GoalsLevels[levelNum] || {...Goals};
   localStorage.setItem('goals', JSON.stringify(goals));
 };
 
@@ -40,13 +39,6 @@ export const getGoals = () => {
   const goals = JSON.parse(localStorage.getItem('goals'));
   return goals || {...Goals};
 }
-
-export const GoalsLevel1 = Object.freeze({
-  Arrivals: 32,
-  Departures: 16,
-  Failed: 3,
-  Conflict: 30,
-});
 
 export const isDeparturesSuccess = (departuresCount) => departuresCount >= getGoals().Departures;
 export const isArrivalsSuccess = (arrivalsCount) => arrivalsCount >= getGoals().Arrivals;
@@ -71,6 +63,21 @@ export const isDefeat = score => isFailedCondition(score.failed) ||
 
 // PRIVATE //////////////////////////////////////////////////
 
+const GoalsLevels = {
+  1: {
+    Arrivals: 32,
+    Departures: 16,
+    Failed: 3,
+    Conflict: 30,
+  },
+  2: {
+    Arrivals: 32,
+    Departures: 16,
+    Failed: 2,
+    Conflict: 15,
+  },
+};
+
 /**
  * @typedef {object} Goals
  * @property {number} Departures
@@ -78,13 +85,12 @@ export const isDefeat = score => isFailedCondition(score.failed) ||
  * @property {number} Failed
  * @property {number} Conflict
  */
-let Goals = {
+const Goals = {
   Arrivals: 0,
   Departures: 0,
   Failed: 0,
   Conflict: 0,
 };
-
 
 const publishSuccess = () => {
   document.dispatchEvent(new CustomEvent(VictoryEvents.Success));

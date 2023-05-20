@@ -5,6 +5,8 @@ export const ScoreEvents = Object.freeze({
   ScoreEV: 'ScoreEV',
 })
 
+export const getBaseScore = () => 100;
+
 export const setup = () => {
   resetScore();
   const score = getScore();
@@ -23,20 +25,11 @@ export const resetScore = () => {
   setScore(score);
 }
 
-/**
- * @callback scoreCB
- * @param {Score}
- */
-
-/**
- * @param {ScoreEvents} scoreEvent
- * @param {scoreCB} cb
- */
-export const subscribeScore = (scoreEvent, cb) => {
-  if (!ScoreEvents[scoreEvent]) throw new Error('unknown score event: ' + scoreEvent);
-  document.addEventListener(scoreEvent, (ev) => {
-    cb(ev.detail.score);
-  });
+export const levelComplete = () => {
+  const score = getScore();
+  score.levelComplete = score.level;
+  score.level += 1;
+  setScore(score);
 }
 
 export const planeGoAroundPenalty = () => {
@@ -112,6 +105,22 @@ export const planeLeaveFail = () => {
 export const getScore = () => {
   const score = JSON.parse(localStorage.getItem('score'));
   return score || {...Score};
+}
+
+/**
+ * @callback scoreCB
+ * @param {Score}
+ */
+
+/**
+ * @param {ScoreEvents} scoreEvent
+ * @param {scoreCB} cb
+ */
+export const subscribeScore = (scoreEvent, cb) => {
+  if (!ScoreEvents[scoreEvent]) throw new Error('unknown score event: ' + scoreEvent);
+  document.addEventListener(scoreEvent, (ev) => {
+    cb(ev.detail.score);
+  });
 }
 
 // PRIVATE //////////////////////////////////////////////////
