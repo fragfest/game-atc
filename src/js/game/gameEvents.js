@@ -1,4 +1,3 @@
-import { levelComplete } from "./score";
 import { VictoryEvents, subscribeVictory } from './victory';
 import { KeyboardEvents, subscribeKeyboard as subscribe } from '../events/keyboard';
 import { DestinationType } from "../aircraft/airframe";
@@ -28,10 +27,7 @@ export const setup = (
     setGameLoopState(false);
     gamePopupFn();
   }
-  subscribeVictory(VictoryEvents.Success, () => {
-    levelComplete();
-    gameOver();
-  });
+  subscribeVictory(VictoryEvents.Success, () => gameOver());
   subscribeVictory(VictoryEvents.Failed, () => gameOver());
 
   const selectEV = (newIndex) => {

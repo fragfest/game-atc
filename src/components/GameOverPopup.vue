@@ -44,7 +44,12 @@
 </template>
 
 <script>
-import { getScore, resetScore, getBaseScore } from "../js/game/score";
+import {
+  getScore,
+  getBaseScore,
+  resetScore,
+  levelComplete,
+} from "../js/game/score";
 import {
   isDeparturesSuccess,
   isArrivalsSuccess,
@@ -90,6 +95,7 @@ export default {
     if (isFailedCondition(score.failed)) this.failedClass = "red";
     if (isConflictCondition(score.conflict)) this.conflictClass = "red";
 
+    const baseScorePass = getBaseScore();
     const failedScoreMax = getGoals().Failed;
     const failedScore =
       (failedScoreMax - score.failed) * (baseScorePass / failedScoreMax);
@@ -104,7 +110,6 @@ export default {
     this.failed = "" + score.failed + "/" + getGoals().Failed;
     this.conflict = "" + Math.floor(score.conflict) + "/" + getGoals().Conflict;
 
-    const baseScorePass = getBaseScore();
     this.departureScore = isVictory(score) ? baseScorePass : 0;
     this.arrivalScore = isVictory(score) ? baseScorePass : 0;
     this.failedScore = isVictory(score) ? Math.round(failedScore) : 0;
@@ -116,6 +121,7 @@ export default {
       this.conflictScore;
 
     resetScore();
+    levelComplete();
   },
 
   methods: {
