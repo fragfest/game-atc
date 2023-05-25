@@ -1,24 +1,41 @@
 <template>
-  <div class="container">
+  <div class="home">
     <section>
       <div class="content">
         <h1 class="title">ATC - Future Flight Ops</h1>
         <h3>
-          Traffic Level &nbsp;&nbsp;
-          <span class="lightgreen">{{ levelNext }}</span>
+          Level &nbsp;&nbsp;
+          <span class="font-mono white">{{ levelNext }}</span>
         </h3>
-        <div class="section-buttons">
+
+        <div class="grid-score-buttons">
+          <div class="button-restart">
+            <button @click="onRetryClick"><h2>Retry</h2></button>
+          </div>
           <div class="button-start">
             <button @click="onStartClick"><h2>Start</h2></button>
           </div>
+          <div></div>
+
+          <!-- next grid row -->
+          <div class="score-history">
+            <h3>Score History</h3>
+            <div class="row">
+              <p class="lightgreen">Level 1</p>
+              <p class="gold">123</p>
+            </div>
+          </div>
+          <div></div>
+          <div></div>
         </div>
+        <!-- END grid-score-buttons -->
       </div>
     </section>
   </div>
 </template>
 
 <script>
-import { setup as setupScore } from "../js/game/score";
+import { setup as setupScore, levelRetry } from "../js/game/score";
 import { getScore } from "../js/game/score";
 import { setGameLoopState } from "../js/game/game";
 
@@ -38,26 +55,41 @@ export default {
     onStartClick: function () {
       window.location.href = "/game";
     },
+
+    onRetryClick: function () {
+      levelRetry();
+      window.location.href = "/game";
+    },
   },
 };
 </script>
 
 <style lang="scss">
-.container {
+.home {
   display: flex;
   flex-direction: column;
   height: 99vh;
+}
+
+.white {
+  color: white;
 }
 
 .lightgreen {
   color: lightgreen;
 }
 
-// section
-section {
+.gold {
+  color: gold;
+}
+
+.font-mono {
+  font-family: monospace;
+}
+
+.home section {
   display: flex;
 
-  height: 40%;
   padding: 20px 40px;
   margin: 8% 2%;
   border: 1px solid limegreen;
@@ -68,46 +100,94 @@ section {
   background-image: url("/public/img/teal-bckgnd.jpg");
 }
 
-section .content {
+.home section .content {
   display: flex;
   flex-direction: column;
   width: 100%;
 }
 
-section .content h1 {
+.home section .content h1 {
   font-size: 48px;
   color: limegreen;
   border-bottom: 1px dashed white;
   margin: 0;
 }
 
-section .content h2 {
+.home section .content h2 {
   font-size: 32px;
   color: rgb(28, 28, 28);
   margin: 0;
 }
 
-section .content h3 {
+.home section .content h3 {
   color: limegreen;
 }
 
-.section-buttons {
-  height: 100%;
+.grid-score-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-auto-rows: minmax(100px, auto);
+  row-gap: 8px;
+  column-gap: 10%;
+}
+
+.grid-score-buttons .score-history {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-}
-// END section
+  min-width: 200px;
+  max-width: 400px;
+  max-height: 240px;
 
-.button-start {
+  background-color: #2c5c816f;
+  border: 1px solid lightgreen;
+  border-radius: 8px;
+  padding: 18px;
+}
+
+.grid-score-buttons .score-history h3 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  border-bottom: 1px solid white;
+}
+
+.grid-score-buttons .score-history .row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.grid-score-buttons .button-restart button {
+  width: 120px;
+  height: 40px;
+
+  border-radius: 4px;
+  box-shadow: 2px 4px 8px #000000a0;
+  background-color: lightgreen;
+  border: 1px solid white;
+}
+
+.grid-score-buttons .button-restart button h2 {
+  font-size: 24px;
+}
+
+.grid-score-buttons .button-restart button:hover {
+  cursor: pointer;
+  background-color: rgb(119, 201, 119);
+}
+
+.grid-score-buttons .button-restart button:active {
+  margin-left: 2px;
+  margin-top: 2px;
+  box-shadow: none;
+}
+
+.grid-score-buttons .button-start {
   display: flex;
   justify-content: center;
 }
 
-.button-start button {
+.grid-score-buttons .button-start button {
   width: 240px;
   height: 80px;
-  font-size: 24px;
 
   border-radius: 8px;
   box-shadow: 4px 8px 16px #000000a0;
@@ -115,12 +195,12 @@ section .content h3 {
   border: 1px solid white;
 }
 
-.button-start button:hover {
+.grid-score-buttons .button-start button:hover {
   cursor: pointer;
   background-color: rgb(119, 201, 119);
 }
 
-.button-start button:active {
+.grid-score-buttons .button-start button:active {
   margin-left: 4px;
   margin-top: 4px;
   box-shadow: none;

@@ -120,8 +120,8 @@ export default {
       this.failedScore +
       this.conflictScore;
 
+    if (isVictory(score)) levelComplete();
     resetScore();
-    levelComplete();
   },
 
   methods: {
@@ -161,10 +161,11 @@ export default {
   flex-direction: column;
   justify-content: space-around;
 
-  min-width: 800px;
   width: 46%;
-  min-height: 600px;
-  height: 56%;
+  height: 680px;
+  min-width: 800px;
+  max-width: 1200px;
+
   margin-top: 10%;
   margin-bottom: auto;
   margin-left: auto;

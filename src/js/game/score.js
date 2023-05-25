@@ -32,6 +32,17 @@ export const levelComplete = () => {
   setScore(score);
 }
 
+// TODO after success retry not working
+export const levelRetry = () => {
+  const score = getScore();
+  score.level = score.levelComplete;
+  score.levelComplete = score.levelComplete - 1;
+
+  if(score.level <= 0) score.level = 1;
+  if(score.levelComplete <= 0) score.levelComplete = 0;
+  setScore(score);
+}
+
 export const planeGoAroundPenalty = () => {
   const score = getScore();
   score.failed += 1;
