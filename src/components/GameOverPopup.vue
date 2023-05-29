@@ -120,7 +120,7 @@ export default {
       this.failedScore +
       this.conflictScore;
 
-    if (isVictory(score)) levelComplete();
+    if (isVictory(score)) levelComplete(this.total);
     resetScore();
   },
 

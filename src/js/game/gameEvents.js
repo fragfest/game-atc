@@ -27,6 +27,7 @@ export const setup = (
     setGameLoopState(false);
     gamePopupFn();
   }
+
   subscribeVictory(VictoryEvents.Success, () => gameOver());
   subscribeVictory(VictoryEvents.Failed, () => gameOver());
 
@@ -36,12 +37,14 @@ export const setup = (
     controlPanelFocusFn()
     selectPlaneFn();
   };
+
   const arrowDownEV = (index) => {
     if (self.planesSorted.length === 0) return;
     let newIndex = index + 1;
     if (newIndex >= self.planesSorted.length) newIndex = 0;
     selectEV(newIndex);
   };
+
   const arrowUpEV = (index) => {
     if (self.planesSorted.length === 0) return;
     let newIndex = index - 1;
@@ -56,22 +59,26 @@ export const setup = (
     if (planeSelected.isNonInteractive && !planeSelected.isTaxiing) return;
     methodFn(planeSelected);
   };
+
   const getPlaneSelectedIndex = () => {
     const planeSelId = planeSelVueRef.value.id;
     const isSelected = (plane) => plane.id === planeSelId;
     return self.planesSorted.findIndex(isSelected);
   };
+
   subscribe(KeyboardEvents.KeyboardLetter_W_EV, () => {
     callMethodEV(getPlaneSelectedIndex(), (plane) => {
       const waypoint = nextWaypoint(arrivalWaypoints, plane);
       plane.setWaypoint(waypoint);
     });
   });
+
   subscribe(KeyboardEvents.KeyboardLetter_T_EV, () => {
     callMethodEV(getPlaneSelectedIndex(), (plane) => {
       plane.startTakeoff();
     });
   });
+
   subscribe(KeyboardEvents.KeyboardLetter_H_EV, () => {
     callMethodEV(getPlaneSelectedIndex(), (plane) => {
       if (isArrival(plane)) plane.setHolding(!plane.isHolding);
@@ -79,12 +86,15 @@ export const setup = (
       controlPanelFocusFn();
     });
   });
+
   subscribe(KeyboardEvents.KeyboardLetter_L_EV, () => {
     callMethodEV(getPlaneSelectedIndex(), (plane) => plane.setLanding(true));
   });
+
   subscribe(KeyboardEvents.KeyboardArrowDownEV, () => {
     arrowDownEV(getPlaneSelectedIndex());
   });
+  
   subscribe(KeyboardEvents.KeyboardArrowUpEV, () => {
     arrowUpEV(getPlaneSelectedIndex());
   });

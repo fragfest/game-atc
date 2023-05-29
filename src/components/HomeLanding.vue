@@ -3,26 +3,36 @@
     <section>
       <div class="content">
         <h1 class="title">ATC - Future Flight Ops</h1>
-        <h3>
-          Level &nbsp;&nbsp;
-          <span class="font-mono white">{{ levelNext }}</span>
-        </h3>
 
         <div class="grid-score-buttons">
           <div class="button-restart">
-            <button @click="onRetryClick"><h2>Retry</h2></button>
+            <h3 v-if="levelComplete">
+              level completed &nbsp;&nbsp;
+              <span class="font-mono white">{{ levelComplete }}</span>
+            </h3>
+            <button v-if="levelComplete" @click="onRetryClick">
+              <h2>Retry</h2>
+            </button>
           </div>
           <div class="button-start">
+            <h3>
+              LEVEL &nbsp;&nbsp;
+              <span class="font-mono white">{{ levelNext }}</span>
+            </h3>
             <button @click="onStartClick"><h2>Start</h2></button>
           </div>
           <div></div>
 
           <!-- next grid row -->
-          <div class="score-history">
+          <div v-if="levelComplete" class="score-history">
             <h3>Score History</h3>
-            <div class="row">
-              <p class="lightgreen">Level 1</p>
-              <p class="gold">123</p>
+            <div
+              v-for="(scoreHist, index) in scoreHistoryArr"
+              :key="index"
+              class="row"
+            >
+              <p class="lightgreen">Level {{ scoreHist.level }}</p>
+              <p class="gold">{{ scoreHist.score }}</p>
             </div>
           </div>
           <div></div>
@@ -35,14 +45,20 @@
 </template>
 
 <script>
-import { setup as setupScore, levelRetry } from "../js/game/score";
+import {
+  setup as setupScore,
+  levelRetry,
+  getScoreHistory,
+} from "../js/game/score";
 import { getScore } from "../js/game/score";
 import { setGameLoopState } from "../js/game/game";
 
 export default {
   data() {
     return {
+      levelComplete: getScore().levelComplete,
       levelNext: getScore().levelComplete + 1,
+      scoreHistoryArr: getScoreHistory(),
     };
   },
 
@@ -89,6 +105,7 @@ export default {
 
 .home section {
   display: flex;
+  min-width: 800px;
 
   padding: 20px 40px;
   margin: 8% 2%;
@@ -120,7 +137,7 @@ export default {
 }
 
 .home section .content h3 {
-  color: limegreen;
+  color: lightgreen;
 }
 
 .grid-score-buttons {
@@ -155,6 +172,13 @@ export default {
   justify-content: space-between;
 }
 
+.grid-score-buttons .button-restart {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 440px;
+}
+
 .grid-score-buttons .button-restart button {
   width: 120px;
   height: 40px;
@@ -182,7 +206,13 @@ export default {
 
 .grid-score-buttons .button-start {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  height: 182px;
+}
+
+.grid-score-buttons .button-start h3 {
+  margin-bottom: 14px;
 }
 
 .grid-score-buttons .button-start button {

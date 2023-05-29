@@ -25,22 +25,26 @@ export const resetScore = () => {
   setScore(score);
 }
 
-export const levelComplete = () => {
+export const levelComplete = (scoreTotal) => {
   const score = getScore();
   score.levelComplete = score.level;
+  setScoreHistory(score.levelComplete, scoreTotal);
+
   score.level += 1;
   setScore(score);
 }
 
-// TODO after success retry not working
 export const levelRetry = () => {
   const score = getScore();
+  const levelRetry = score.levelComplete;
   score.level = score.levelComplete;
   score.levelComplete = score.levelComplete - 1;
-
   if(score.level <= 0) score.level = 1;
   if(score.levelComplete <= 0) score.levelComplete = 0;
+
   setScore(score);
+  setGoal(score.level);
+  removeScoreHistoryItem(levelRetry);
 }
 
 export const planeGoAroundPenalty = () => {
@@ -111,6 +115,14 @@ export const planeLeaveFail = () => {
 }
 
 /**
+ * @returns {Array.<ScoreHistory>}
+ */
+export const getScoreHistory = () => {
+  const scoreHistory = JSON.parse(localStorage.getItem('score-history'));
+  return scoreHistory || [];
+}
+
+/**
  * @returns {Score}
  */
 export const getScore = () => {
@@ -137,9 +149,40 @@ export const subscribeScore = (scoreEvent, cb) => {
 // PRIVATE //////////////////////////////////////////////////
 let proximityPairs = {};
 
+/**
+ * @param {number} level 
+ */
+const removeScoreHistoryItem = level => {
+  const scoreHistArr = getScoreHistory();
+  const indexRemove = scoreHistArr.findIndex(x => x.level === level);
+  if(indexRemove === -1) return;
+
+  scoreHistArr.splice(indexRemove, 1);
+  localStorage.setItem('score-history', JSON.stringify(scoreHistArr));
+}
+
+/**
+ * @param {number} level 
+ * @param {number} score 
+ */
+const setScoreHistory = (level, score) => {
+  const scoreHistArr = getScoreHistory();
+  scoreHistArr.push({ level, score });
+  localStorage.setItem('score-history', JSON.stringify(scoreHistArr));
+}
+
+/**
+ * @param {Score} score 
+ */
 const setScore = score => {
   localStorage.setItem('score', JSON.stringify(score));
 }
+
+/**
+ * @typedef {object} ScoreHistory
+ * @property {number} level
+ * @property {number} score
+ */ 
 
 /**
  * @typedef {object} Score
@@ -150,14 +193,14 @@ const setScore = score => {
  * @property {number} failed
  * @property {number} conflict
  */
-let Score = {
+const Score = {
   levelComplete: 0,
   level: 0,
   departures: 0,
   arrivals: 0,
   failed: 0,
   conflict: 0,
-};
+}
 
 /**
  * @param {Score} score
