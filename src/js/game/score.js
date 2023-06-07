@@ -165,6 +165,8 @@ const removeScoreHistoryItem = level => {
  * @param {number} score 
  */
 const setScoreHistory = (level, score) => {
+  removeScoreHistoryItem(level);
+
   const scoreHistArr = getScoreHistory();
   scoreHistArr.push({ level, score });
   localStorage.setItem('score-history', JSON.stringify(scoreHistArr));
