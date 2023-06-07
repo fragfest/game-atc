@@ -5,14 +5,11 @@
         <h1 class="title">ATC - Future Flight Ops</h1>
 
         <div class="grid-score-buttons">
-          <div class="button-restart">
+          <div>
             <h3 v-if="levelComplete">
               level completed &nbsp;&nbsp;
               <span class="font-mono white">{{ levelComplete }}</span>
             </h3>
-            <button v-if="levelComplete" @click="onRetryClick">
-              <h2>Retry</h2>
-            </button>
           </div>
           <div class="button-start">
             <h3>
@@ -33,6 +30,11 @@
             >
               <p class="lightgreen">Level {{ scoreHist.level }}</p>
               <p class="gold">{{ scoreHist.score }}</p>
+              <div class="button-restart">
+                <button @click="onRetryClick(scoreHist.level)">
+                  <h2>Retry</h2>
+                </button>
+              </div>
             </div>
           </div>
           <div></div>
@@ -72,8 +74,8 @@ export default {
       window.location.href = "/game";
     },
 
-    onRetryClick: function () {
-      levelRetry();
+    onRetryClick: function (level) {
+      levelRetry(level);
       window.location.href = "/game";
     },
   },
@@ -176,12 +178,12 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 440px;
+  width: 120px;
 }
 
 .grid-score-buttons .button-restart button {
-  width: 120px;
-  height: 40px;
+  width: 100px;
+  height: 32px;
 
   border-radius: 4px;
   box-shadow: 2px 4px 8px #000000a0;
@@ -190,7 +192,7 @@ export default {
 }
 
 .grid-score-buttons .button-restart button h2 {
-  font-size: 24px;
+  font-size: 20px;
 }
 
 .grid-score-buttons .button-restart button:hover {

@@ -65,8 +65,8 @@ export const isDefeat = score => isFailedCondition(score.failed) ||
 
 const GoalsLevels = {
   1: {
-    Arrivals: 32,
-    Departures: 16,
+    Arrivals: 16,
+    Departures: 8,
     Failed: 3,
     Conflict: 30,
   },
