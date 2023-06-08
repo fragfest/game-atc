@@ -21,6 +21,8 @@ export const setup = () => {
   });
 }
 
+export const getFinalLevel = () => FinalLevel;
+
 /**
  * @param {VictoryEvents} victoryEvent
  * @param {scoreCB} cb
@@ -62,6 +64,8 @@ export const isDefeat = score => isFailedCondition(score.failed) ||
   isConflictCondition(score.conflict);
 
 // PRIVATE //////////////////////////////////////////////////
+
+const FinalLevel = 2;
 
 const GoalsLevels = {
   1: {

@@ -6,17 +6,23 @@
 
         <div class="grid-score-buttons">
           <div>
-            <h3 v-if="levelComplete">
-              level completed &nbsp;&nbsp;
-              <span class="font-mono white">{{ levelComplete }}</span>
+            <h3 v-if="isGameComplete">All levels completed</h3>
+            <h3 v-else-if="levelComplete">
+              Levels complete &nbsp;&nbsp;
+              <span class="font-mono white"
+                >{{ levelComplete }} / {{ finalLevel }}</span
+              >
             </h3>
           </div>
+
           <div class="button-start">
-            <h3>
+            <h3 v-if="!isGameComplete">
               LEVEL &nbsp;&nbsp;
               <span class="font-mono white">{{ levelNext }}</span>
             </h3>
-            <button @click="onStartClick"><h2>Start</h2></button>
+            <button v-if="!isGameComplete" @click="onStartClick">
+              <h2>Start</h2>
+            </button>
           </div>
           <div></div>
 
@@ -47,6 +53,7 @@
 </template>
 
 <script>
+import { getFinalLevel } from "../js/game/victory";
 import {
   setup as setupScore,
   levelRetry,
@@ -61,12 +68,15 @@ export default {
       levelComplete: getScore().levelComplete,
       levelNext: getScore().levelComplete + 1,
       scoreHistoryArr: getScoreHistory(),
+      finalLevel: getFinalLevel(),
+      isGameComplete: false,
     };
   },
 
   mounted() {
     setupScore();
     setGameLoopState(false);
+    if (this.finalLevel === this.levelComplete) this.isGameComplete = true;
   },
 
   methods: {
