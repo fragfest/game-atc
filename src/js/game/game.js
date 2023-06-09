@@ -1,5 +1,4 @@
 import Waypoint from '../Waypoint';
-import Square from '../Square';
 import Runway from '../Runway';
 import { isCloseToEntity, hasEntityFuncs } from '../entity';
 import {
@@ -10,13 +9,10 @@ import {
   getWaypointArrivalsAll,
 } from '../airports/LHR';
 import { getGameSize, setupGameLoadAndExit } from "../utils";
-import { create } from '../Plane';
 import { setup as setupKeyboard } from '../events/keyboard';
-
 import { draw as drawScale } from '../canvas/scale';
-
-const isSquare = obj => obj instanceof Square;
-const isNotTaxiing = obj => !obj.isTaxiing;
+import { isSquare } from '../types';
+import { create, spawnRndPlane } from '../Plane';
 
 let gameLoopRunning = false;
 export const setGameLoopState = (isRunning) => {
@@ -39,22 +35,7 @@ export const setup = (argObj) => {
     clickCB: argObj.squareClickEventCB,
   };
 
-  let firstPlane = true;
-  const createPlane = (deltaTimeMs) => {
-    const lowCount = 8;
-    const highCount = 16;
-    let chanceOfPlanePerSec = 0.03;
-
-    const count = entityManagerArr.filter(isSquare).length;
-    if (count < lowCount) chanceOfPlanePerSec = 0.1;
-    if (count > highCount) chanceOfPlanePerSec = 0.005;
-    let chanceOfPlane = chanceOfPlanePerSec * deltaTimeMs / 1000;
-    if (firstPlane) {
-      firstPlane = false;
-      chanceOfPlane = 1;
-    }
-    createSquare(argObj, entityManagerArr, chanceOfPlane, () => create(canvasObj).square);
-  }
+  const createPlane = spawnRndPlane(canvasObj, entityManagerArr, createSquare(screenSize, entityManagerArr))
 
   const updateIntervalMs = 500;
   let timestampPrev = -500;
@@ -89,6 +70,7 @@ export const setup = (argObj) => {
   setupGameLoadAndExit();
   setupKeyboard();
   drawInertElements(argObj.imgLayerObj, canvasObj);
+  createSquare(screenSize, entityManagerArr)(() => create(canvasObj).square, 1);
 
   window.requestAnimationFrame(gameTick);
 }
@@ -141,10 +123,12 @@ const drawInertElements = (layerObj, canvasObj) => {
   drawScale(layerObj, canvasObj.screenSize, canvasObj.width, canvasObj.height);
 }
 
-const createSquare = (argObj, entityManagerArr, chanceOfSquare, createEntityFn) => {
+const isNotTaxiing = obj => !obj.isTaxiing;
+
+const createSquare = (screenSize, entityManagerArr) => (createEntityFn, chanceOfSquare) => {
   const addObj = entityManagerAdd(entityManagerArr);
   const isCloseToPlane = newObj => otherObj =>
-    isCloseToEntity(argObj.screenSize)(newObj)(otherObj) &&
+    isCloseToEntity(screenSize)(newObj)(otherObj) &&
     isSquare(otherObj) &&
     isNotTaxiing(otherObj);
 

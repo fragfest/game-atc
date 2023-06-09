@@ -257,10 +257,10 @@ export default {
 }
 
 .grid-score-buttons .button-start button {
-  margin-top: 7px;
-  margin-left: 4px;
-  width: 394px;
-  height: 70px;
+  margin-top: 9px;
+  margin-left: 6px;
+  width: 390px;
+  height: 66px;
 
   border-radius: 12px;
   background-color: transparent;

@@ -73,12 +73,14 @@ const GoalsLevels = {
     Departures: 8,
     Failed: 3,
     Conflict: 30,
+    SpawnRate: 1,
   },
   2: {
     Arrivals: 32,
     Departures: 16,
     Failed: 2,
     Conflict: 15,
+    SpawnRate: 2,
   },
 };
 
@@ -88,12 +90,14 @@ const GoalsLevels = {
  * @property {number} Arrivals
  * @property {number} Failed
  * @property {number} Conflict
+ * @property {number} SpawnRate
  */
 const Goals = {
   Arrivals: 0,
   Departures: 0,
   Failed: 0,
   Conflict: 0,
+  SpawnRate: 0,
 };
 
 const publishSuccess = () => {

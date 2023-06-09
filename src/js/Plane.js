@@ -1,8 +1,10 @@
 import Square from './Square';
+import { isSquare } from './types';
 import { leftPadZeros, convHdgDegToThreeDigits, convHdgRadToThreeDigits } from './utils';
 import { getFlightArrival, getFlightDeparture } from './flights/LHR';
 import { DestinationType, getPerformance } from './aircraft/airframe';
 import { Waypoints, getWaypointDepartureRnd, getRunwayRnd } from './airports/LHR';
+import { getGoals } from './game/victory';
 
 export const create = ({
   entityManagerArr, screenSize, width, height,
@@ -73,6 +75,23 @@ export const create = ({
 
   return { square };
 };
+
+export const spawnRndPlane = (canvasObj, entityManagerArr, createSquareWithEntityChance) => (deltaTimeMs) => {
+  const goals = getGoals();
+  const spawnRate = goals.SpawnRate || 1;
+
+  const lowCount = 8;
+  const highCount = 16;
+  let chanceOfPlanePerSec = 0.03;
+
+  const count = entityManagerArr.filter(isSquare).length;
+  if (count < lowCount) chanceOfPlanePerSec = 0.1;
+  if (count > highCount) chanceOfPlanePerSec = 0.005;
+  const chanceOfPlaneBase = chanceOfPlanePerSec * deltaTimeMs / 1000;
+  const chanceOfPlane = chanceOfPlaneBase * spawnRate;
+
+  createSquareWithEntityChance(() => create(canvasObj).square, chanceOfPlane);
+}
 
 ////////////// PRIVATE ////////////////////////////////////////////////
 const isArrivalIfRndAbove = 0.5;

@@ -244,7 +244,6 @@ export default {
     squareClicked.value = {};
 
     const setupArg = {
-      router: this.$router,
       screenSize,
       backgroundObj,
       imgLayerObj: { ctx: layerOneCtx },
