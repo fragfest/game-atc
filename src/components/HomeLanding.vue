@@ -6,39 +6,46 @@
 
         <div class="grid-score-buttons">
           <div>
-            <h3 v-if="isGameComplete">All levels completed</h3>
+            <h3 v-if="isGameComplete">all levels completed</h3>
             <h3 v-else-if="levelComplete">
-              Levels complete &nbsp;&nbsp;
+              levels complete &nbsp;&nbsp;
               <span class="font-mono white"
                 >{{ levelComplete }} / {{ finalLevel }}</span
               >
+            </h3>
+            <h3>
+              difficulty &nbsp;&nbsp;
+              <span class="white">easy</span>
             </h3>
           </div>
 
           <div class="button-start">
             <h3 v-if="!isGameComplete">
-              LEVEL &nbsp;&nbsp;
+              level &nbsp;&nbsp;
               <span class="font-mono white">{{ levelNext }}</span>
             </h3>
-            <button v-if="!isGameComplete" @click="onStartClick">
-              <h2>Start</h2>
-            </button>
+
+            <CyberBox width="400">
+              <button v-if="!isGameComplete" @click="onStartClick">
+                <h2>start</h2>
+              </button>
+            </CyberBox>
           </div>
           <div></div>
 
           <!-- next grid row -->
           <div v-if="levelComplete" class="score-history">
-            <h3>Score History</h3>
+            <h3>score history</h3>
             <div
               v-for="(scoreHist, index) in scoreHistoryArr"
               :key="index"
               class="row"
             >
-              <p class="lightgreen">Level {{ scoreHist.level }}</p>
+              <p class="lightgreen">level {{ scoreHist.level }}</p>
               <p class="gold">{{ scoreHist.score }}</p>
               <div class="button-restart">
                 <button @click="onRetryClick(scoreHist.level)">
-                  <h2>Retry</h2>
+                  <h2>retry</h2>
                 </button>
               </div>
             </div>
@@ -62,7 +69,13 @@ import {
 import { getScore } from "../js/game/score";
 import { setGameLoopState } from "../js/game/game";
 
+import CyberBox from "./common/CyberBox";
+
 export default {
+  components: {
+    CyberBox,
+  },
+
   data() {
     return {
       levelComplete: getScore().levelComplete,
@@ -97,6 +110,9 @@ export default {
   display: flex;
   flex-direction: column;
   height: 99vh;
+
+  background-image: url("/public/img/sky.jpg");
+  background-size: cover;
 }
 
 .white {
@@ -121,8 +137,7 @@ export default {
 
   padding: 20px 40px;
   margin: 8% 2%;
-  border: 1px solid limegreen;
-  border-radius: 4px;
+  border-radius: 12px;
 
   font-size: 24px;
   color: lightgreen;
@@ -137,9 +152,13 @@ export default {
 
 .home section .content h1 {
   font-size: 48px;
-  color: limegreen;
   border-bottom: 1px dashed white;
   margin: 0;
+
+  background: linear-gradient(to bottom, white 0%, limegreen 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .home section .content h2 {
@@ -168,7 +187,7 @@ export default {
   max-height: 240px;
 
   background-color: #2c5c816f;
-  border: 1px solid lightgreen;
+  border: 1px solid #24b3c9;
   border-radius: 8px;
   padding: 18px;
 }
@@ -196,7 +215,7 @@ export default {
   height: 32px;
 
   border-radius: 4px;
-  box-shadow: 2px 4px 8px #000000a0;
+  box-shadow: 2px 1px 4px #000000a0;
   background-color: lightgreen;
   border: 1px solid white;
 }
@@ -212,7 +231,6 @@ export default {
 
 .grid-score-buttons .button-restart button:active {
   margin-left: 2px;
-  margin-top: 2px;
   box-shadow: none;
 }
 
@@ -227,24 +245,37 @@ export default {
   margin-bottom: 14px;
 }
 
-.grid-score-buttons .button-start button {
-  width: 240px;
-  height: 80px;
+.grid-score-buttons .button-start button h2 {
+  font-size: 34px;
+  font-family: monospace;
+  margin-bottom: 2px;
 
-  border-radius: 8px;
-  box-shadow: 4px 8px 16px #000000a0;
-  background-color: lightgreen;
-  border: 1px solid white;
+  background: linear-gradient(to bottom, white 20%, limegreen 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.grid-score-buttons .button-start button {
+  margin-top: 7px;
+  margin-left: 4px;
+  width: 394px;
+  height: 70px;
+
+  border-radius: 12px;
+  background-color: transparent;
+  border: none;
 }
 
 .grid-score-buttons .button-start button:hover {
   cursor: pointer;
-  background-color: rgb(119, 201, 119);
+  background-color: #00000040;
 }
 
 .grid-score-buttons .button-start button:active {
-  margin-left: 4px;
-  margin-top: 4px;
-  box-shadow: none;
+  border: 4px inset darkgray;
+  h2 {
+    font-size: 33px;
+  }
 }
 </style>

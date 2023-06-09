@@ -217,7 +217,7 @@ const getPlane = (plane, planes) => {
 export default {
   name: "FlightStrip",
   props: {
-    plane: { type: Object },
+    plane: { type: Object, default: () => ({}) },
     planeSelected: { type: Object },
     planes: { type: Array },
     screenSize: { type: String },
