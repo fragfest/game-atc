@@ -25,8 +25,8 @@
               <span class="font-mono white">{{ levelNext }}</span>
             </h3>
 
-            <CyberBox width="400">
-              <button v-if="!isGameComplete" @click="onStartClick">
+            <CyberBox v-if="!isGameComplete" width="400">
+              <button @click="onStartClick">
                 <h2>start</h2>
               </button>
             </CyberBox>
@@ -250,7 +250,7 @@ export default {
   font-family: monospace;
   margin-bottom: 2px;
 
-  background: linear-gradient(to bottom, white 20%, limegreen 100%);
+  background: linear-gradient(to bottom, white 00%, limegreen 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;

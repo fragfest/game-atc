@@ -78,6 +78,7 @@ export const create = ({
 
 export const spawnRndPlane = (canvasObj, entityManagerArr, createSquareWithEntityChance) => (deltaTimeMs) => {
   const goals = getGoals();
+  const spawnRateModifier = 0.7;
   const spawnRate = goals.SpawnRate || 1;
 
   const lowCount = 8;
@@ -88,13 +89,13 @@ export const spawnRndPlane = (canvasObj, entityManagerArr, createSquareWithEntit
   if (count < lowCount) chanceOfPlanePerSec = 0.1;
   if (count > highCount) chanceOfPlanePerSec = 0.005;
   const chanceOfPlaneBase = chanceOfPlanePerSec * deltaTimeMs / 1000;
-  const chanceOfPlane = chanceOfPlaneBase * spawnRate;
+  const chanceOfPlane = chanceOfPlaneBase * (spawnRate * spawnRateModifier);
 
   createSquareWithEntityChance(() => create(canvasObj).square, chanceOfPlane);
 }
 
 ////////////// PRIVATE ////////////////////////////////////////////////
-const isArrivalIfRndAbove = 0.5;
+const isArrivalIfRndAbove = 0.6;
 
 let spawned = [];
 

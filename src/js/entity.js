@@ -61,6 +61,7 @@ export const isCloseToEntity = screenSize => entity => entityOther => {
     return false;
   }
   if (entityOther.id === entity.id) return false;
+  
   const distMax = getTooCloseDistance(screenSize);
   const distX = Math.abs(entity.x - entityOther.x);
   const distY = Math.abs(entity.y - entityOther.y);

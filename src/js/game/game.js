@@ -1,6 +1,6 @@
 import Waypoint from '../Waypoint';
 import Runway from '../Runway';
-import { isCloseToEntity, hasEntityFuncs } from '../entity';
+import { getTooCloseDistance, distBetweenEntities, hasEntityFuncs } from '../entity';
 import {
   getRunway,
   Runways,
@@ -70,6 +70,7 @@ export const setup = (argObj) => {
   setupGameLoadAndExit();
   setupKeyboard();
   drawInertElements(argObj.imgLayerObj, canvasObj);
+  
   createSquare(screenSize, entityManagerArr)(() => create(canvasObj).square, 1);
 
   window.requestAnimationFrame(gameTick);
@@ -124,11 +125,14 @@ const drawInertElements = (layerObj, canvasObj) => {
 }
 
 const isNotTaxiing = obj => !obj.isTaxiing;
+const isWithinDist = (distMax, obj1, obj2) => distBetweenEntities(obj1)(obj2) < distMax;
 
 const createSquare = (screenSize, entityManagerArr) => (createEntityFn, chanceOfSquare) => {
-  const addObj = entityManagerAdd(entityManagerArr);
+  const addPlaneToGame = entityManagerAdd(entityManagerArr);
+  const minSpawnDist = getTooCloseDistance(screenSize) * 1.5;
+
   const isCloseToPlane = newObj => otherObj =>
-    isCloseToEntity(screenSize)(newObj)(otherObj) &&
+    isWithinDist(minSpawnDist, newObj, otherObj) &&
     isSquare(otherObj) &&
     isNotTaxiing(otherObj);
 
@@ -141,7 +145,7 @@ const createSquare = (screenSize, entityManagerArr) => (createEntityFn, chanceOf
       newEntity.destroy();
       return;
     }
-    addObj(newEntity);
+    addPlaneToGame(newEntity);
   }
 }
 

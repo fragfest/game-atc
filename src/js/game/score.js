@@ -1,4 +1,4 @@
-import { setGoal } from "./victory";
+import { setGoal, getFinalLevel } from "./victory";
 
 // NOTE: key & values must match
 export const ScoreEvents = Object.freeze({
@@ -11,7 +11,7 @@ export const setup = () => {
   resetScore();
   const score = getScore();
   const nextLevel = score.levelComplete + 1;
-  score.level = nextLevel;
+  score.level = (nextLevel <= getFinalLevel()) ? nextLevel : getFinalLevel();
   setScore(score);
   setGoal(nextLevel);
 }
@@ -30,7 +30,8 @@ export const levelComplete = (scoreTotal) => {
   score.levelComplete = score.level;
   setScoreHistory(score.levelComplete, scoreTotal);
 
-  score.level += 1;
+  const nextLevel = score.level + 1;
+  score.level = (nextLevel <= getFinalLevel()) ? nextLevel : getFinalLevel();
   setScore(score);
 }
 

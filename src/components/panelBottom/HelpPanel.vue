@@ -18,11 +18,11 @@
         <b>set heading (hdg)</b><span> enter 3 digits 0-360, hit enter</span>
       </div>
       <div class="row tab-left">
-        <b>set altitude (alt)</b
-        ><span>
+        <b>set altitude (alt)</b>
+        <span>
           enter 3 digits 010-400, hit enter. Sets altitude in 100s of feet, 010
-          = 1000ft</span
-        >
+          = 1000ft
+        </span>
       </div>
       <div class="row tab-left">
         <b>set speed (spd)</b><span> enter 3 digits 180-450, hit enter</span>
@@ -31,28 +31,27 @@
         <b>take off</b><span> click button. Shortcut 'T' key</span>
       </div>
       <div class="row tab-left">
-        <b>handoff</b
-        ><span> click button after take off. Shortcut 'H' key</span>
+        <b>handoff</b>
+        <span> click button after take off. Shortcut 'H' key</span>
       </div>
       <div class="row tab-left">
-        <b>land</b
-        ><span> click button when plane in position. Shortcut 'L' key</span>
+        <b>land</b>
+        <span> click button when plane in position. Shortcut 'L' key</span>
       </div>
       <div class="row tab-left">
-        <b>hold</b
-        ><span> click button to hold at waypoint. Shortcut 'H' key</span>
+        <b>hold</b>
+        <span> click button to hold at waypoint. Shortcut 'H' key</span>
       </div>
       <div class="row tab-left">
-        <b>cycle waypoints</b
-        ><span> click waypoint on flight strip. Shortcut 'W' key</span>
+        <b>cycle waypoints</b>
+        <span> click waypoint on flight strip. Shortcut 'W' key</span>
       </div>
       <div class="row green"><b>Rules</b></div>
       <div class="row tab-left">
-        <b>traffic (TCAS)</b
-        ><span>
-          spacing between planes is 3 miles laterally or 1,000ft
-          vertically</span
-        >
+        <b>traffic (TCAS)</b>
+        <span>
+          spacing between planes is 3 miles laterally or 1,000ft vertically
+        </span>
       </div>
     </div>
   </div>
