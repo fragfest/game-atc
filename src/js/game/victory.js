@@ -65,22 +65,29 @@ export const isDefeat = score => isFailedCondition(score.failed) ||
 
 // PRIVATE //////////////////////////////////////////////////
 
-const FinalLevel = 2;
+const FinalLevel = 3;
 
 const GoalsLevels = {
   1: {
     Arrivals: 16,
     Departures: 8,
     Failed: 3,
-    Conflict: 30,
+    Conflict: 60,
     SpawnRate: 1,
   },
   2: {
     Arrivals: 32,
     Departures: 16,
     Failed: 2,
-    Conflict: 15,
+    Conflict: 30,
     SpawnRate: 2,
+  },
+  3: {
+    Arrivals: 32,
+    Departures: 16,
+    Failed: 1,
+    Conflict: 15,
+    SpawnRate: 3,
   },
 };
 

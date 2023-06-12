@@ -46,7 +46,7 @@
 
         <div class="row-bottom layer-seven">
           <div class="row-bottom-left">
-            <HelpPanel :screenSize="screenSize"></HelpPanel>
+            <DetailsPanel :screenSize="screenSize"></DetailsPanel>
             <div class="col">
               <ScorePanel :screenSize="screenSize"></ScorePanel>
             </div>
@@ -87,7 +87,7 @@
 import { ref } from "vue";
 
 import Square from "../js/Square";
-import HelpPanel from "./panelBottom/HelpPanel";
+import DetailsPanel from "./panelBottom/DetailsPanel";
 import ScorePanel from "./panelBottom/ScorePanel";
 import ControlPanel from "./panelBottom/ControlPanel";
 import FlightStrip from "./FlightStrip";
@@ -124,7 +124,7 @@ export default {
     FlightStrip,
     ControlPanel,
     ScorePanel,
-    HelpPanel,
+    DetailsPanel,
     GameOverPopup,
   },
   props: {},
@@ -353,7 +353,6 @@ export default {
 
 .row-bottom-right {
   display: flex;
-  width: 100%;
   padding: 8px;
   max-height: 780px;
 }

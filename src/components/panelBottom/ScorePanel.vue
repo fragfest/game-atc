@@ -96,7 +96,6 @@ export default {
   background-color: #2c5c816f;
   border: 1px solid lightgreen;
   border-radius: 8px;
-  box-shadow: 3px 3px rgb(0, 84, 84);
   padding: 8px 14px;
   color: white;
 }

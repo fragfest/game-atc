@@ -78,8 +78,6 @@ export default {
     };
   },
 
-  mounted() {},
-
   computed: {
     sizeClass: function () {
       return getClassSize(this.screenSize);
@@ -99,8 +97,6 @@ export default {
 // help-panel small
 .help-panel.small {
   .help-info {
-    height: 100%;
-    width: 240px;
     .row {
       font-size: 11px;
     }
@@ -112,21 +108,20 @@ export default {
 .help-panel {
   display: flex;
   width: 100%;
-  margin: 10px 16px;
 
   .help-info {
     display: flex;
     flex-direction: column;
     overflow-y: auto;
     height: 100%;
-    width: 400px;
-
-    border: 1px solid darkgrey;
-    border-radius: 8px;
     padding: 4px 10px;
 
+    border: 1px solid darkgrey;
+    border-top: none;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+
     background-color: #2c5c816f;
-    box-shadow: 3px 3px rgb(0, 84, 84);
     color: white;
 
     .row {
