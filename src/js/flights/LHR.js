@@ -1,20 +1,30 @@
 import { Airframes, DestinationType } from '../aircraft/airframe';
+import { leftPadZeros } from '../../js/utils';
 
 export const getFlightArrival = (spawned) => {
   const flightsUnspawned = flightsArrival.filter(isNotSpawned(spawned));
   const total = flightsUnspawned.length;
   if (total === 0) return null;
-  return flightsUnspawned[getRndIndex(total)];
+
+  const flightObj = flightsUnspawned[getRndIndex(total)];
+  flightObj.flight = setRndFlightTitle(flightObj);
+  return flightObj;
 };
 
 export const getFlightDeparture = (spawned) => {
   const flightsUnspawned = flightsDeparture.filter(isNotSpawned(spawned));
   const total = flightsUnspawned.length;
   if (total === 0) return null;
-  return flightsUnspawned[getRndIndex(total)];
+  
+  const flightObj = flightsUnspawned[getRndIndex(total)];
+  flightObj.flight = setRndFlightTitle(flightObj);
+  return flightObj;
 };
 
 ////////////// PRIVATE //////////////////////////////////////
+const setRndFlightTitle = obj => {
+  return obj.airlineCode + leftPadZeros(Math.floor((Math.random() * 1000)));
+};
 const getRndIndex = total => Math.floor(Math.random() * total);
 const isNotSpawned = spawnedArr => obj => !spawnedArr.find(x => x.flight === obj.flight)
 

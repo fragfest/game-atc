@@ -38,13 +38,11 @@ export const levelComplete = (scoreTotal) => {
 export const levelRetry = (level) => {
   const score = getScore();
   score.level = level;
-  score.levelComplete = level - 1;
   if(score.level <= 0) score.level = 1;
   if(score.levelComplete <= 0) score.levelComplete = 0;
 
   setScore(score);
   setGoal(score.level);
-  removeScoreHistoryItem(score.levelComplete);
 }
 
 export const planeGoAroundPenalty = () => {

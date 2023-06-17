@@ -9,7 +9,13 @@
       </div>
       <div class="empty"></div>
     </div>
-    <InfoPanel v-if="tabIndex === 0" :screenSize="screenSize"></InfoPanel>
+    <InfoPanel
+      v-if="tabIndex === 0"
+      :screenSize="screenSize"
+      :planeSelected="planeSelected"
+      :planes="planes"
+    >
+    </InfoPanel>
     <HelpPanel v-if="tabIndex === 1" :screenSize="screenSize"></HelpPanel>
   </div>
 </template>
@@ -28,6 +34,8 @@ export default {
 
   props: {
     screenSize: { type: String },
+    planeSelected: { type: Object },
+    planes: { type: Object },
   },
 
   data() {
@@ -86,7 +94,7 @@ export default {
   }
 
   .tab:hover {
-    background-color: #2c5c816f;
+    background-color: #2c5c81;
   }
 
   .tab.first {
@@ -99,7 +107,7 @@ export default {
   }
 
   .tab.selected {
-    background-color: #2c5c816f;
+    background-color: #2c5c81;
     border-bottom: none;
   }
 

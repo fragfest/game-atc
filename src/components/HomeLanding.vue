@@ -80,7 +80,7 @@ export default {
     return {
       levelComplete: getScore().levelComplete,
       levelNext: getScore().levelComplete + 1,
-      scoreHistoryArr: getScoreHistory(),
+      scoreHistoryArr: getScoreHistory().sort((a, b) => a.level - b.level),
       finalLevel: getFinalLevel(),
       isGameComplete: false,
     };
@@ -270,6 +270,11 @@ export default {
 .grid-score-buttons .button-start button:hover {
   cursor: pointer;
   background-color: #00000040;
+}
+
+.grid-score-buttons .button-start button:focus-visible {
+  border: 1px solid darkgrey;
+  outline: none;
 }
 
 .grid-score-buttons .button-start button:active {

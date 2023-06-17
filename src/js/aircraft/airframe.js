@@ -1,5 +1,9 @@
 import { ScreenSizes } from "../utils";
 
+export const getAirframe = airframe => {
+  return detailsByAirframe[airframe] || detailsByAirframe['A320'];
+}
+
 export const getPerformance = (airframe, screenSize) => {
   const performanceLarge = performanceByAirframe[airframe] || performanceByAirframe['A320'];
   if (screenSize === ScreenSizes.Small) {
@@ -54,3 +58,11 @@ const performanceByAirframe = {
   B77W: { ...basePerformance, type: 'B77W', wake: WakeRating.H },
   A388: { ...basePerformance, type: 'A388', wake: WakeRating.J },
 };
+
+const detailsByAirframe = {
+  A320: { make: 'Airbus', airframe: 'A320' },
+  A333: { make: 'Airbus', airframe: 'A330-300' },
+  B763: { make: 'Boeing', airframe: '767-300' },
+  B77W: { make: 'Boeing', airframe: '777-300ER' },
+  A388: { make: 'Airbus', airframe: 'A380-800' },
+}

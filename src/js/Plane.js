@@ -1,6 +1,6 @@
 import Square from './Square';
 import { isSquare } from './types';
-import { leftPadZeros, convHdgDegToThreeDigits, convHdgRadToThreeDigits } from './utils';
+import { convHdgDegToThreeDigits, convHdgRadToThreeDigits } from './utils';
 import { getFlightArrival, getFlightDeparture } from './flights/LHR';
 import { DestinationType, getPerformance } from './aircraft/airframe';
 import { Waypoints, getWaypointDepartureRnd, getRunwayRnd } from './airports/LHR';
@@ -17,6 +17,7 @@ export const create = ({
   if (Math.random() > isArrivalIfRndAbove) destinationType = DestinationType.Arrival;
 
   let square;
+  
   if (destinationType === DestinationType.Arrival) {
     // sections numbered from WNW going clockwise: 1 - 8
     const sectionsCount = 8;
@@ -25,18 +26,10 @@ export const create = ({
     const altitude = setAlt();
     const speed = setSpd();
 
-    let newFlight;
-    newFlight = getFlightArrival(spawned);
-    if (!newFlight) {
-      spawned = [];
-      newFlight = getFlightArrival(spawned);
-    }
-    spawned.push(newFlight);
-    const airframeObj = getPerformance(newFlight.airframe, screenSize);
+    const flight = createFlight(getFlightArrival);
+    const airframeObj = getPerformance(flight.airframe, screenSize);
 
-    square = new Square(
-      setRndFlightTitle(newFlight),
-      canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl,
+    square = new Square(flight, canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl,
       // { x: width / 1.69, y: height / 1.88, heading: '270', altitude: 1200, speed: 180 }, // landing debug
       { x: newPlane.x, y: newPlane.y, heading: newPlane.heading, altitude, speed },
       { destinationType, airframeObj, waypoint: newPlane.waypoint, runway: runway.title }
@@ -54,18 +47,10 @@ export const create = ({
     const altitude = 0;
     const speed = 0;
 
-    let newFlight;
-    newFlight = getFlightDeparture(spawned);
-    if (!newFlight) {
-      spawned = [];
-      newFlight = getFlightDeparture(spawned);
-    }
-    spawned.push(newFlight);
-    const airframeObj = getPerformance(newFlight.airframe, screenSize);
+    const flight = createFlight(getFlightDeparture);
+    const airframeObj = getPerformance(flight.airframe, screenSize);
 
-    square = new Square(
-      setRndFlightTitle(newFlight),
-      canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl,
+    square = new Square(flight, canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl,
       // { x: width / 2 + 200, y: 40, heading: '270', altitude: 6500, speed: 200 },
       { x: newPlane.x, y: newPlane.y, heading: newPlane.heading, altitude, speed },
       { destinationType, airframeObj, waypoint: newPlane.waypoint, runway: runway.title }
@@ -76,7 +61,7 @@ export const create = ({
   return { square };
 };
 
-export const spawnRndPlane = (canvasObj, entityManagerArr, createSquareWithEntityChance) => (deltaTimeMs) => {
+export const spawnRndPlane = (canvasObj, entityManagerArr, createSquareEntityFnArgChanceArg) => (deltaTimeMs) => {
   const goals = getGoals();
   const spawnRateModifier = 0.7;
   const spawnRate = goals.SpawnRate || 1;
@@ -91,18 +76,25 @@ export const spawnRndPlane = (canvasObj, entityManagerArr, createSquareWithEntit
   const chanceOfPlaneBase = chanceOfPlanePerSec * deltaTimeMs / 1000;
   const chanceOfPlane = chanceOfPlaneBase * (spawnRate * spawnRateModifier);
 
-  createSquareWithEntityChance(() => create(canvasObj).square, chanceOfPlane);
+  createSquareEntityFnArgChanceArg(() => create(canvasObj).square, chanceOfPlane);
 }
 
 ////////////// PRIVATE ////////////////////////////////////////////////
-const isArrivalIfRndAbove = 0.6;
+const isArrivalIfRndAbove = 0.55;
 
 let spawned = [];
 
+const createFlight = (getFlightFn) => {
+  let newFlight = getFlightFn(spawned);
+  if (!newFlight) {
+    spawned = [];
+    newFlight = getFlightFn(spawned);
+  }
+  spawned.push(newFlight);
+  return newFlight;
+}
+
 const rand = (min, max) => min + Math.random() * (max - min);
-const setRndFlightTitle = obj => {
-  return obj.airlineCode + leftPadZeros(Math.floor((Math.random() * 1000)));
-};
 const setAlt = () => Math.floor(rand(7000, 10000) / 100) * 100;
 const setSpd = () => Math.floor(rand(230, 250) / 5) * 5;
 

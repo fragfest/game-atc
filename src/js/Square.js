@@ -28,9 +28,8 @@ import { DestinationType } from './aircraft/airframe';
 // class Square
 ////////////////////////////////////////////////////////////
 export default class Square {
-  constructor(title, entityLayerObj, textLayerObj, headingLayerObj, htmlDiv, positionObj, planeObj) {
+  constructor(flightObj, entityLayerObj, textLayerObj, headingLayerObj, htmlDiv, positionObj, planeObj) {
     this.id = Math.random();
-    this.title = title.trim().substring(0, 6);
     this.ctx = entityLayerObj.ctx;
     this.canvasWidth = entityLayerObj.width;
     this.canvasHeight = entityLayerObj.height;
@@ -89,6 +88,12 @@ export default class Square {
     this.distPrevLanding = Infinity;
     this.distPrevHolding = Infinity;
     this.distPrevHandoff = Infinity;
+
+    // flight info
+    this.title = flightObj.flight.trim().substring(0, 6);
+    this.city = flightObj.city;
+    this.airport = flightObj.airport;
+    this.airline = flightObj.airline;
 
     // flightstrip info
     this.hasProximityAlert = false;

@@ -86,7 +86,7 @@ export default {
     },
 
     taxiQueueLength: function () {
-      const length = this.taxiQueue.length;
+      const length = this.taxiQueue.length + 1;
       if (length < 4) return null;
       if (length > 99) return 99;
       return length;

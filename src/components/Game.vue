@@ -46,7 +46,11 @@
 
         <div class="row-bottom layer-seven">
           <div class="row-bottom-left">
-            <DetailsPanel :screenSize="screenSize"></DetailsPanel>
+            <DetailsPanel
+              :screenSize="screenSize"
+              :planeSelected="squareClicked"
+              :planes="planesSorted"
+            ></DetailsPanel>
             <div class="col">
               <ScorePanel :screenSize="screenSize"></ScorePanel>
             </div>
