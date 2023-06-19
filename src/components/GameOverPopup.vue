@@ -23,12 +23,12 @@
         <div class="item">conflict (seconds)</div>
         <div class="item score" :class="conflictClass">{{ conflict }}</div>
         <div class="item score gold">{{ conflictScore }}</div>
-        <div class="item">BONUS hot runway</div>
+        <!-- <div class="item">BONUS hot runway</div>
         <div class="item"></div>
-        <div class="item score gold">{{ hotRunway }}</div>
-        <div class="item">BONUS tin pusher</div>
+        <div class="item score gold">{{ hotRunway }}</div> -->
+        <!-- <div class="item">BONUS tin pusher</div>
         <div class="item"></div>
-        <div class="item score gold">{{ tinPusher }}</div>
+        <div class="item score gold">{{ tinPusher }}</div> -->
         <div class="item margin-top border-top">SCORE</div>
         <div class="item margin-top"></div>
         <div class="item score margin-top border-top gold">{{ total }}</div>

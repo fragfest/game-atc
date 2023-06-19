@@ -22,7 +22,7 @@
         <span>{{ Math.floor(score.conflict) }}/{{ goals.Conflict }}</span>
       </div>
 
-      <hr />
+      <!-- <hr />
       <h3>Bonus</h3>
       <div class="score-row" :class="sizeClass">
         <span class="badge">
@@ -35,7 +35,7 @@
           <b>tin pusher</b> <small>reduce delays</small>
         </span>
         <span>0</span>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
