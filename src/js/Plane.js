@@ -89,10 +89,12 @@ export const spawnRndPlane = (canvasObj, entityManagerArr, createSquare_entityFn
   let noMoreArrivals = false;
   if(departureCount >= departureGoalRemaining) {
     chanceOfDeparture = 0;
+    chanceOfPlanePerSec = 0.5
     noMoreDepartures = true;
   }
   if(arrivalCount >= arrivalGoalRemaining) {
     chanceOfDeparture = 1;
+    chanceOfPlanePerSec = 0.5
     noMoreArrivals = true;
   }
   

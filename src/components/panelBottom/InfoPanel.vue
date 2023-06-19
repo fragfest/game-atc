@@ -1,25 +1,41 @@
 <template>
-  <div v-if="!plane" class="info-panel"></div>
-  <div v-if="plane" class="info-panel">
-    <h1>{{ plane.title }}</h1>
-    <h2>{{ airframeDetails.make }} {{ airframeDetails.airframe }}</h2>
-    <p>{{ plane.city }}, {{ plane.airport }}</p>
-    <p>{{ plane.airline }}</p>
-    <div class="img-profile">
-      <img src="/img/plane-icon/A380/profile.png" width="500" />
+  <div v-if="!plane" class="info-panel" :class="sizeClass"></div>
+  <div v-if="plane" class="info-panel" :class="sizeClass">
+    <div class="header">
+      <img :src="airframe.iconDefault" />
+      <h1 class="green">{{ plane.title }}</h1>
+      <h2 class="green">
+        {{ airframeDetails.make }} {{ airframeDetails.airframe }}
+      </h2>
     </div>
-    <div class="airframe-container">
-      <img :src="airframe.iconDefault" width="80" />
-      <div class="airframe">
-        <p></p>
-      </div>
+    <div class="plane-info">
+      <p>
+        <b>
+          <span class="green">{{ cityType }}</span>
+        </b>
+        {{ plane.city }}
+        <small>({{ plane.airport }})</small>
+      </p>
+      <p>
+        <b>
+          <span class="green">Airline</span>
+        </b>
+        {{ plane.airline }}
+      </p>
+    </div>
+    <div class="img-profile">
+      <img src="/img/plane-icon/A380/profile.png" />
     </div>
   </div>
 </template>
 
 <script>
 import { getClassSize } from "../../js/utils";
-import { getAirframe, getPerformance } from "../../js/aircraft/airframe";
+import {
+  DestinationType,
+  getAirframe,
+  getPerformance,
+} from "../../js/aircraft/airframe";
 
 export default {
   name: "InfoPanel",
@@ -44,10 +60,22 @@ export default {
       return planeSel;
     },
 
+    cityType: function () {
+      const plane = this.plane;
+      if (!plane) return "";
+      if (plane.destinationType === DestinationType.Departure) {
+        return "Destination";
+      }
+      if (plane.destinationType === DestinationType.Arrival) {
+        return "Arriving";
+      }
+      return "";
+    },
+
     airframeDetails: function () {
       const plane = this.plane;
       if (!plane) return {};
-      return getAirframe(this.plane.airframe);
+      return getAirframe(plane.airframe);
     },
 
     airframe: function () {
@@ -60,6 +88,21 @@ export default {
 </script>
 
 <style lang="scss">
+.info-panel.small {
+  min-height: 300px;
+
+  h1 {
+    font-size: 18px;
+  }
+  h2 {
+    font-size: 12px;
+  }
+  p {
+    margin-bottom: 0;
+    font-size: 11px;
+  }
+}
+
 .info-panel {
   min-height: 400px;
   padding: 4px 10px;
@@ -74,39 +117,50 @@ export default {
 .info-panel {
   h1,
   h2 {
-    // position: absolute;
-    margin-left: 20px;
-
+    margin: 0 0;
     font-size: 24px;
-    background: linear-gradient(to bottom, white 0%, limegreen 60%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
   }
-
   h2 {
     font-size: 18px;
   }
 }
 
 .info-panel p {
+  margin-top: 0;
+  margin-bottom: 4px;
   color: white;
+}
+
+.info-panel .green {
+  color: lightgreen;
 }
 
 .info-panel .img-profile {
-  display: flex;
-  justify-content: center;
+  margin-top: 3%;
+  img {
+    max-width: 100%;
+  }
 }
 
-.info-panel .airframe-container {
+.info-panel .header {
   display: flex;
-  margin-top: 30px;
+  padding: 12px 0;
+  border-bottom: 1px solid lightgreen;
+
+  h1,
+  h2 {
+    align-self: center;
+    margin-left: 6%;
+  }
+  img {
+    max-width: 16%;
+  }
 }
 
-.info-panel .airframe-container .airframe {
-  margin-left: 22px;
-
-  color: white;
-  font-size: 18px;
+.info-panel .plane-info {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  padding: 12px 0;
 }
 </style>

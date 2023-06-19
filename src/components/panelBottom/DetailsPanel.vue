@@ -84,7 +84,7 @@ export default {
     width: 40px;
     height: 24px;
     padding: 4px 16px;
-    border: limegreen solid 1px;
+    border: lightgreen solid 1px;
     border-right: none;
 
     color: white;
@@ -102,7 +102,7 @@ export default {
   }
 
   .tab.last {
-    border-right: limegreen solid 1px;
+    border-right: lightgreen solid 1px;
     border-top-right-radius: 8px;
   }
 
@@ -113,7 +113,7 @@ export default {
 
   .empty {
     width: 100%;
-    border-bottom: limegreen solid 1px;
+    border-bottom: lightgreen solid 1px;
   }
 }
 </style>

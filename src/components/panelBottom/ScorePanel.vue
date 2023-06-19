@@ -94,7 +94,7 @@ export default {
   flex-direction: column;
   width: 300px;
   background-color: #2c5c816f;
-  border: 1px solid lightgreen;
+  border: 1px solid darkgrey;
   border-radius: 8px;
   padding: 8px 14px;
   color: white;

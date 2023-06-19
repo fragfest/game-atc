@@ -48,7 +48,17 @@
       </div>
       <div class="row green"><b>Rules</b></div>
       <div class="row tab-left">
-        <b>traffic (TCAS)</b>
+        <b>failed (handoff)</b>
+        <span> aircraft must exit at correct waypoint at 6000ft or above </span>
+      </div>
+      <div class="row tab-left">
+        <b>failed (landings)</b>
+        <span>
+          aircraft too far off-course or high to land when reaching runway
+        </span>
+      </div>
+      <div class="row tab-left">
+        <b>conflict (TCAS)</b>
         <span>
           spacing between planes is 3 miles laterally or 1,000ft vertically
         </span>
@@ -68,13 +78,13 @@ export default {
   data() {
     return {
       departureContent:
-        "Departing aircraft have blue flight strips. After the takeoff button guides the plane off the ground " +
-        "the plane needs to be guided to the handoff waypoint shown on the flight strip. " +
-        "The handoff button steers the plane to its waypoint, the plane must be at or above 6000ft in order to complete the hand off.",
+        "Departing aircraft have blue flight strips. The take off button gets planes off the ground. " +
+        "A plane needs directions to its handoff waypoint shown on its flight strip. " +
+        "The handoff button steers a plane to its waypoint. A plane must be directed to 6000ft or above to complete the handoff. ",
       arrivalContent:
-        "Arriving aircraft have orange flight strips. Planes can be optionally directed to hold at the editable waypoint set on its flight strip. " +
-        "The land button will guide a plane onto the runway. The land button is available when the plane is steered towards the runway, shown on the flight strip, " +
-        "and at a low enough altitude. At 5000ft or lower depending on distance to the runway. ",
+        "Arriving aircraft have orange flight strips. The hold button can be used to direct planes to circle a waypoint. A waypoint can be edited on the flight strip. " +
+        "The land button will guide a plane onto the runway. The land button is available when the plane is: 1) steered towards the runway shown on its flight strip; " +
+        "2) at an altitude of 5000ft or below; 3) close enough to the runway. ",
     };
   },
 
