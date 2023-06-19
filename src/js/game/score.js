@@ -10,7 +10,7 @@ export const getBaseScore = () => 100;
 export const setup = () => {
   resetScore();
   const score = getScore();
-  const nextLevel = score.levelComplete + 1;
+  const nextLevel = getHighestLevelCompleted() + 1;
   score.level = (nextLevel <= getFinalLevel()) ? nextLevel : getFinalLevel();
   setScore(score);
   setGoal(nextLevel);
@@ -27,8 +27,7 @@ export const resetScore = () => {
 
 export const levelComplete = (scoreTotal) => {
   const score = getScore();
-  score.levelComplete = score.level;
-  setScoreHistory(score.levelComplete, scoreTotal);
+  setScoreHistory(score.level, scoreTotal);
 
   const nextLevel = score.level + 1;
   score.level = (nextLevel <= getFinalLevel()) ? nextLevel : getFinalLevel();
@@ -39,10 +38,15 @@ export const levelRetry = (level) => {
   const score = getScore();
   score.level = level;
   if(score.level <= 0) score.level = 1;
-  if(score.levelComplete <= 0) score.levelComplete = 0;
 
   setScore(score);
   setGoal(score.level);
+}
+
+export const getHighestLevelCompleted = () => {
+  const sorted = getScoreHistory().sort((a, b) => b.level - a.level);
+  if(!sorted.length) return 0;
+  return sorted[0].level;
 }
 
 export const planeGoAroundPenalty = () => {
@@ -186,7 +190,6 @@ const setScore = score => {
 
 /**
  * @typedef {object} Score
- * @property {number} levelComplete
  * @property {number} level
  * @property {number} departures
  * @property {number} arrivals
@@ -194,7 +197,6 @@ const setScore = score => {
  * @property {number} conflict
  */
 const Score = {
-  levelComplete: 0,
   level: 0,
   departures: 0,
   arrivals: 0,

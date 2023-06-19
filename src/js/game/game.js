@@ -71,7 +71,7 @@ export const setup = (argObj) => {
   setupKeyboard();
   drawInertElements(argObj.imgLayerObj, canvasObj);
   
-  createSquare(screenSize, entityManagerArr)(() => create(canvasObj).square, 1);
+  createSquare(screenSize, entityManagerArr)(() => create(canvasObj, 0.5).square, 1);
 
   window.requestAnimationFrame(gameTick);
 }

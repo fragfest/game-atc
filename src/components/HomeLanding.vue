@@ -66,7 +66,7 @@ import {
   levelRetry,
   getScoreHistory,
 } from "../js/game/score";
-import { getScore } from "../js/game/score";
+import { getHighestLevelCompleted } from "../js/game/score";
 import { setGameLoopState } from "../js/game/game";
 
 import CyberBox from "./common/CyberBox";
@@ -78,8 +78,8 @@ export default {
 
   data() {
     return {
-      levelComplete: getScore().levelComplete,
-      levelNext: getScore().levelComplete + 1,
+      levelComplete: getHighestLevelCompleted(),
+      levelNext: getHighestLevelCompleted() + 1,
       scoreHistoryArr: getScoreHistory().sort((a, b) => a.level - b.level),
       finalLevel: getFinalLevel(),
       isGameComplete: false,
@@ -109,7 +109,7 @@ export default {
 .home {
   display: flex;
   flex-direction: column;
-  height: 99vh;
+  height: 99.7vh;
 
   background-image: url("/public/img/sky.jpg");
   background-size: cover;
@@ -189,7 +189,7 @@ export default {
   background-color: #2c5c816f;
   border: 1px solid #24b3c9;
   border-radius: 8px;
-  padding: 18px;
+  padding: 6px 18px;
 }
 
 .grid-score-buttons .score-history h3 {
