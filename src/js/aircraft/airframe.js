@@ -60,7 +60,7 @@ const performanceByAirframe = {
 };
 
 const detailsByAirframe = {
-  A320: { make: 'Airbus', airframe: 'A320' },
+  A320: { make: 'Airbus', airframe: 'A320-200' },
   A333: { make: 'Airbus', airframe: 'A330-300' },
   B763: { make: 'Boeing', airframe: '767-300' },
   B77W: { make: 'Boeing', airframe: '777-300ER' },

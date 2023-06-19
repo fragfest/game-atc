@@ -471,22 +471,30 @@ export default class Square {
   }
 
   draw(timestamp) {
+    const setIfImgElSrcDiff = (str) => {
+      const src = this.htmlImgEl.src;
+      const srcPathOnly = '/' + src.split('/').slice(3).join('/');
+      if(srcPathOnly !== str) {
+        this.htmlImgEl.src = str;
+      }
+    }
+
     this.hide();
     if (this.isTaxiing) return;
 
     let color = 'white';
     if (this.hasProximityAlert) {
       color = 'orangered';
-      this.htmlImgEl.src = this.iconConflict;
+      setIfImgElSrcDiff(this.iconConflict);
     } else if (this.isSelected) {
       color = 'greenyellow';
-      this.htmlImgEl.src = this.iconSelected;
+      setIfImgElSrcDiff(this.iconSelected);
     } else if (this.landing) {
       color = 'yellow';
-      this.htmlImgEl.src = this.iconLanding;
+      setIfImgElSrcDiff(this.iconLanding);
     } else {
       color = 'white';
-      this.htmlImgEl.src = this.iconDefault
+      setIfImgElSrcDiff(this.iconDefault);
     }
     this.htmlImgEl.style.transform = 'rotate(' + this.heading + 'deg)';
 
