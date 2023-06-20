@@ -63,10 +63,10 @@ export default class Square {
     this.speedLanding = planeObj.airframeObj.speedLanding;
     this.speedMax = planeObj.airframeObj.speedMax;
     this.speedTakeoff = planeObj.airframeObj.speedTakeoff;
-    this.iconDefault = planeObj.airframeObj.iconDefault;
-    this.iconSelected = planeObj.airframeObj.iconSelected;
-    this.iconConflict = planeObj.airframeObj.iconConflict;
-    this.iconLanding = planeObj.airframeObj.iconLanding;
+    this.iconDefault = planeObj.airframeObj.images.iconDefault;
+    this.iconSelected = planeObj.airframeObj.images.iconSelected;
+    this.iconConflict = planeObj.airframeObj.images.iconConflict;
+    this.iconLanding = planeObj.airframeObj.images.iconLanding;
     this.isSmall = planeObj.airframeObj.isSmall;
 
     // states

@@ -2,9 +2,9 @@
   <div v-if="!plane" class="info-panel" :class="sizeClass"></div>
   <div v-if="plane" class="info-panel" :class="sizeClass">
     <div class="header">
-      <img :src="airframe.iconDefault" />
+      <img :src="airframe.images.iconDefault" />
       <h1 class="green">{{ plane.title }}</h1>
-      <h2 class="green">
+      <h2 class="white">
         {{ airframeDetails.make }} {{ airframeDetails.airframe }}
       </h2>
     </div>
@@ -24,7 +24,7 @@
       </p>
     </div>
     <div class="img-profile">
-      <img src="/img/planes/A388/profile.png" />
+      <img :src="airframe.images.profile" />
     </div>
   </div>
 </template>
@@ -131,12 +131,16 @@ export default {
   color: white;
 }
 
+.info-panel .white {
+  color: white;
+}
+
 .info-panel .green {
   color: lightgreen;
 }
 
 .info-panel .img-profile {
-  margin-top: 3%;
+  margin-top: 20px;
   img {
     max-width: 100%;
   }

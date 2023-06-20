@@ -30,6 +30,16 @@ export const WakeRating = Object.freeze({
 });
 
 ////////////// PRIVATE //////////////////////////////////////
+const pathPlanes = '/img/planes';
+
+const imagesObj = type => ({
+  iconDefault: pathPlanes + '/' + type + '/white.png',
+  iconSelected: pathPlanes + '/' + type + '/green.png',
+  iconConflict: pathPlanes + '/' + type + '/red.png',
+  iconLanding: pathPlanes + '/' + type + '/yellow.png',
+  profile: pathPlanes + '/' + type + '/profile.png',
+})
+
 const basePerformance = {
   isSmall: false,
   speedTakeoff: 155,
@@ -41,10 +51,13 @@ const basePerformance = {
   altitudeRatePerMs: 0.04,
   turnRateRadPerMs: 0.00005,
   wake: WakeRating.M,
-  iconDefault: '/img/planes/A388/A388-white.png',
-  iconSelected: '/img/planes/A388/A388-green.png',
-  iconConflict: '/img/planes/A388/A388-red.png',
-  iconLanding: '/img/planes/A388/A388-yellow.png',
+  images: {
+    iconDefault: pathPlanes + '/A388/white.png',
+    iconSelected: pathPlanes + '/A388/green.png',
+    iconConflict: pathPlanes + '/A388/red.png',
+    iconLanding: pathPlanes + '/A388/yellow.png',
+    profile: pathPlanes + '/A388/profile.png',
+  }
 };
 const basePerformanceSmall = {
   isSmall: true,
@@ -52,11 +65,11 @@ const basePerformanceSmall = {
 };
 
 const performanceByAirframe = {
-  A320: { ...basePerformance, type: 'A320', wake: WakeRating.M },
-  A333: { ...basePerformance, type: 'A333', wake: WakeRating.H },
-  B763: { ...basePerformance, type: 'B763', wake: WakeRating.H },
-  B77W: { ...basePerformance, type: 'B77W', wake: WakeRating.H },
-  A388: { ...basePerformance, type: 'A388', wake: WakeRating.J },
+  A320: { ...basePerformance, type: 'A320', wake: WakeRating.M, images: imagesObj('A320') },
+  A333: { ...basePerformance, type: 'A333', wake: WakeRating.H, images: imagesObj('A333') },
+  B763: { ...basePerformance, type: 'B763', wake: WakeRating.H, images: imagesObj('B763') },
+  B77W: { ...basePerformance, type: 'B77W', wake: WakeRating.H, images: imagesObj('B77W') },
+  A388: { ...basePerformance, type: 'A388', wake: WakeRating.J, images: imagesObj('A388') },
 };
 
 const detailsByAirframe = {
