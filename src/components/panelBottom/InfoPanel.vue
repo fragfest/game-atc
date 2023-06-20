@@ -24,7 +24,7 @@
       </p>
     </div>
     <div class="img-profile">
-      <img src="/img/plane-icon/A380/profile.png" />
+      <img src="/img/planes/A388/profile.png" />
     </div>
   </div>
 </template>

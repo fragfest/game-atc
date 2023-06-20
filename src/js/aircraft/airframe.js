@@ -41,10 +41,10 @@ const basePerformance = {
   altitudeRatePerMs: 0.04,
   turnRateRadPerMs: 0.00005,
   wake: WakeRating.M,
-  iconDefault: '/img/plane-icon/A380-white.png',
-  iconSelected: '/img/plane-icon/A380-green.png',
-  iconConflict: '/img/plane-icon/A380-red.png',
-  iconLanding: '/img/plane-icon/A380-yellow.png',
+  iconDefault: '/img/planes/A388/A388-white.png',
+  iconSelected: '/img/planes/A388/A388-green.png',
+  iconConflict: '/img/planes/A388/A388-red.png',
+  iconLanding: '/img/planes/A388/A388-yellow.png',
 };
 const basePerformanceSmall = {
   isSmall: true,
