@@ -182,7 +182,7 @@ export default {
 .grid-score-buttons .score-history {
   display: flex;
   flex-direction: column;
-  min-width: 200px;
+  min-width: 280px;
   max-width: 400px;
   max-height: 240px;
 

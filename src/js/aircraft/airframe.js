@@ -32,14 +32,6 @@ export const WakeRating = Object.freeze({
 ////////////// PRIVATE //////////////////////////////////////
 const pathPlanes = '/img/planes';
 
-const imagesObj = type => ({
-  iconDefault: pathPlanes + '/' + type + '/white.png',
-  iconSelected: pathPlanes + '/' + type + '/green.png',
-  iconConflict: pathPlanes + '/' + type + '/red.png',
-  iconLanding: pathPlanes + '/' + type + '/yellow.png',
-  profile: pathPlanes + '/' + type + '/profile.png',
-})
-
 const basePerformance = {
   isSmall: false,
   speedTakeoff: 155,
@@ -52,6 +44,7 @@ const basePerformance = {
   turnRateRadPerMs: 0.00005,
   wake: WakeRating.M,
   images: {
+    iconSize: { top: -2, side: 30 },
     iconDefault: pathPlanes + '/A388/white.png',
     iconSelected: pathPlanes + '/A388/green.png',
     iconConflict: pathPlanes + '/A388/red.png',
@@ -59,10 +52,28 @@ const basePerformance = {
     profile: pathPlanes + '/A388/profile.png',
   }
 };
+
 const basePerformanceSmall = {
   isSmall: true,
   speedRatePerMs: 0.009,
 };
+
+const IconSizes = Object.freeze({
+  A320: { top: 0, side: 22 },
+  A333: { top: 2, side: 26 },
+  B763: { top: -2, side: 24 },
+  B77W: { top: 2, side: 26 },
+  A388: { top: -2, side: 30 },
+});
+
+const imagesObj = type => ({
+  iconSize: IconSizes[type],
+  iconDefault: pathPlanes + '/' + type + '/white.png',
+  iconSelected: pathPlanes + '/' + type + '/green.png',
+  iconConflict: pathPlanes + '/' + type + '/red.png',
+  iconLanding: pathPlanes + '/' + type + '/yellow.png',
+  profile: pathPlanes + '/' + type + '/profile.png',
+})
 
 const performanceByAirframe = {
   A320: { ...basePerformance, type: 'A320', wake: WakeRating.M, images: imagesObj('A320') },

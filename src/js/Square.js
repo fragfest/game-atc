@@ -37,12 +37,6 @@ export default class Square {
     this.headingLayerObj = headingLayerObj; // TODO remove?
     this.positionObj = positionObj;
 
-    this.htmlDiv = htmlDiv;
-    this.htmlSquareDiv = null;
-    this.htmlImgEl = { src: null };
-    this.width = 5;
-    this.height = 5;
-
     this.direction = Direction.None;
     this.x = positionObj.x;
     this.y = positionObj.y;
@@ -67,6 +61,14 @@ export default class Square {
     this.iconSelected = planeObj.airframeObj.images.iconSelected;
     this.iconConflict = planeObj.airframeObj.images.iconConflict;
     this.iconLanding = planeObj.airframeObj.images.iconLanding;
+
+    // html div
+    this.htmlDiv = htmlDiv;
+    this.htmlSquareDiv = null;
+    this.htmlImgEl = { src: null };
+    this.width = 5;
+    this.height = 5;
+    this.iconSize = planeObj.airframeObj.images.iconSize;
     this.isSmall = planeObj.airframeObj.isSmall;
 
     // states
@@ -446,10 +448,10 @@ export default class Square {
     this.x += pixelsInX;
     this.y += pixelsInY;
     if (this.htmlSquareDiv) {
-      const squareSize = _htmlSquareSize(this.isSmall).side;
-      const squareTop = _htmlSquareSize(this.isSmall).top;
+      const squareSize = _htmlSquareSize(this.isSmall, this.iconSize).side;
+      const squareTop = _htmlSquareSize(this.isSmall, this.iconSize).top;
       this.htmlSquareDiv.style.left = this.x - (squareSize / 2) + 'px';
-      this.htmlSquareDiv.style.top = this.y + squareTop - (squareSize / 2) + 'px';
+      this.htmlSquareDiv.style.top = this.y - squareTop - (squareSize / 2) + 'px';
     }
     this.headingRad = headingRadNew;
     this.heading = convHdgRadToThreeDigits(headingRadNew);
@@ -583,14 +585,16 @@ const _drawTrailPixel = (self, pixel, opacity) => {
   self.ctx.globalAlpha = 1;
 }
 
-const _htmlSquareSize = isSmall => ({
-  side: isSmall ? 15 : 22,
-  top: isSmall ? 0 : 2,
-})
+const _htmlSquareSize = (isSmall, iconSize) => {
+  return {
+    side: isSmall ? (0.68 * iconSize.side) : iconSize.side,
+    top: isSmall ? 0 : iconSize.top,
+  }
+}
 
 const _createHtmlEl = (self) => {
-  const squareSize = _htmlSquareSize(self.isSmall).side;
-  const squareTop = _htmlSquareSize(self.isSmall).top;
+  const squareSize = _htmlSquareSize(self.isSmall, self.iconSize).side;
+  const squareTop = _htmlSquareSize(self.isSmall, self.iconSize).top;
 
   self.htmlSquareDiv = document.createElement('div');
   self.htmlDiv.appendChild(self.htmlSquareDiv);
@@ -600,9 +604,10 @@ const _createHtmlEl = (self) => {
   self.htmlSquareDiv.addEventListener('mouseenter', () => self.htmlSquareDiv.style.cursor = 'pointer');
   self.htmlSquareDiv.addEventListener('mouseleave', () => self.htmlSquareDiv.style.cursor = 'none');
   self.htmlSquareDiv.style.left = self.x - (squareSize / 2) + 'px';
-  self.htmlSquareDiv.style.top = self.y + squareTop - (squareSize / 2) + 'px';
+  self.htmlSquareDiv.style.top = self.y - squareTop - (squareSize / 2) + 'px';
   self.htmlSquareDiv.style.width = squareSize + 'px';
   self.htmlSquareDiv.style.height = squareSize + 'px';
+
   // self.htmlSquareDiv.style.border = '1px solid yellow';
 
   self.htmlImgEl = new Image();
@@ -612,6 +617,8 @@ const _createHtmlEl = (self) => {
   self.htmlImgEl.src = self.iconDefault;
   self.htmlImgEl.width = squareSize;
   self.htmlImgEl.draggable = false;
+
+  // self.htmlImgEl.hidden = true;
   // self.htmlImgEl.style.border = '1px solid orange';
 }
 
