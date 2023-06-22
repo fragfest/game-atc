@@ -1,3 +1,4 @@
+import { isSquare } from './types';
 import {
   ScreenSizes,
   Direction,
@@ -57,11 +58,8 @@ export default class Square {
     this.speedLanding = planeObj.airframeObj.speedLanding;
     this.speedMax = planeObj.airframeObj.speedMax;
     this.speedTakeoff = planeObj.airframeObj.speedTakeoff;
-    this.iconDefault = planeObj.airframeObj.images.iconDefault;
-    this.iconSelected = planeObj.airframeObj.images.iconSelected;
-    this.iconConflict = planeObj.airframeObj.images.iconConflict;
-    this.iconLanding = planeObj.airframeObj.images.iconLanding;
-
+    this.isSmall = planeObj.airframeObj.isSmall;
+    
     // html div
     this.htmlDiv = htmlDiv;
     this.htmlSquareDiv = null;
@@ -69,7 +67,10 @@ export default class Square {
     this.width = 5;
     this.height = 5;
     this.iconSize = planeObj.airframeObj.images.iconSize;
-    this.isSmall = planeObj.airframeObj.isSmall;
+    this.iconDefault = planeObj.airframeObj.images.iconDefault;
+    this.iconSelected = planeObj.airframeObj.images.iconSelected;
+    this.iconConflict = planeObj.airframeObj.images.iconConflict;
+    this.iconLanding = planeObj.airframeObj.images.iconLanding;
 
     // states
     this.isSelected = false;
@@ -84,6 +85,8 @@ export default class Square {
     this.isHolding = false;
     this.isAtWaypoint = false;
     this.takeoff = false;
+    // state visual
+    this.isShowCircle = false;
     this.trailPixelMs = 0;
     this.trailPixelArr = [];
     // state numbers
@@ -123,6 +126,10 @@ export default class Square {
   }
 
   clickEventCB() { throw new Error('clickEventCB not attached'); }
+
+  setShowCircle(isShowCircle) {
+    this.isShowCircle = !!isShowCircle;
+  }
 
   setDirection(direction) {
     if (!direction) return;
@@ -425,7 +432,6 @@ export default class Square {
     const headingRadNewLarge = this.updateHeading(headingOld, headingTarget, headingChange, direction);
     const headingRadNew = convertToPosRad(convertToSmallRad(headingRadNewLarge));
 
-    // TODO move to Runway
     if (this.takeoff) this.setSpeed(220, false, true);
     if (this.takeoff && (this.speed > this.speedTakeoff)) {
       this.isNonInteractive = false;
@@ -473,7 +479,7 @@ export default class Square {
   }
 
   draw(timestamp) {
-    const setIfImgElSrcDiff = (str) => {
+    const setIfImgSrcDiff = (str) => {
       const src = this.htmlImgEl.src;
       const srcPathOnly = '/' + src.split('/').slice(3).join('/');
       if(srcPathOnly !== str) {
@@ -487,16 +493,16 @@ export default class Square {
     let color = 'white';
     if (this.hasProximityAlert) {
       color = 'orangered';
-      setIfImgElSrcDiff(this.iconConflict);
+      setIfImgSrcDiff(this.iconConflict);
     } else if (this.isSelected) {
       color = 'greenyellow';
-      setIfImgElSrcDiff(this.iconSelected);
+      setIfImgSrcDiff(this.iconSelected);
     } else if (this.landing) {
       color = 'yellow';
-      setIfImgElSrcDiff(this.iconLanding);
+      setIfImgSrcDiff(this.iconLanding);
     } else {
       color = 'white';
-      setIfImgElSrcDiff(this.iconDefault);
+      setIfImgSrcDiff(this.iconDefault);
     }
     this.htmlImgEl.style.transform = 'rotate(' + this.heading + 'deg)';
 
@@ -532,8 +538,7 @@ export default class Square {
     this.isSelected = !!isSelected;
   }
 
-  setProximity({ entityManagerArr, screenSize, timestamp }) {
-    const isPlane = plane => plane instanceof Square;
+  setProximity({ entityManagerArr, screenSize, showCircles, timestamp }) {
     const isEntityCloseTo = isCloseToEntity(screenSize)(this);
     const isAirborne = plane => !plane.isTaxiing && !plane.takeoff && !plane.isTouchedDown;
     const isOnRunway = plane => !plane.isTaxiing && (plane.takeoff || plane.isTouchedDown);
@@ -541,9 +546,10 @@ export default class Square {
 
     const isCloseAirborne = plane => isAirborne(plane) && isAirborne(this);
     const isCloseRunway = plane => isOnRunway(plane) && isOnRunway(this) && isSameRunway(plane);
-    const isPlaneClose = plane => isPlane(plane) && isEntityCloseTo(plane) && (isCloseAirborne(plane) || isCloseRunway(plane));
+    const isPlaneClose = plane => isSquare(plane) && isEntityCloseTo(plane) && (isCloseAirborne(plane) || isCloseRunway(plane));
 
     const timestampMs = timestamp;
+    this.setShowCircle(!!showCircles);
 
     const planeClose = entityManagerArr.find(isPlaneClose);
     if (!planeClose) {
@@ -585,12 +591,10 @@ const _drawTrailPixel = (self, pixel, opacity) => {
   self.ctx.globalAlpha = 1;
 }
 
-const _htmlSquareSize = (isSmall, iconSize) => {
-  return {
-    side: isSmall ? (0.68 * iconSize.side) : iconSize.side,
-    top: isSmall ? 0 : iconSize.top,
-  }
-}
+const _htmlSquareSize = (isSmall, iconSize) => ({
+  side: isSmall ? (0.68 * iconSize.side) : iconSize.side,
+  top: isSmall ? 0 : iconSize.top,
+})
 
 const _createHtmlEl = (self) => {
   const squareSize = _htmlSquareSize(self.isSmall, self.iconSize).side;
@@ -622,17 +626,19 @@ const _createHtmlEl = (self) => {
   // self.htmlImgEl.style.border = '1px solid orange';
 }
 
+
 const _draw = (self, color) => {
-  // eslint-disable-next-line no-unused-vars
-  const proximityDist = self.isSmall ?
-    getTooCloseDistance(ScreenSizes.Small) : getTooCloseDistance(ScreenSizes.Large);
   // self.textLayerObj.ctx.fillStyle = 'red';
   // self.textLayerObj.ctx.fillRect(self.x - 2, self.y - 2, 4, 4);
-  // self.textLayerObj.ctx.strokeStyle = 'red';
-  // self.textLayerObj.ctx.beginPath();
-  // self.textLayerObj.ctx.arc(self.x, self.y, proximityDist / 2, 0, 2 * Math.PI);
-  // self.textLayerObj.ctx.closePath();
-  // self.textLayerObj.ctx.stroke();
+  
+  const proximityDist = self.isSmall ? getTooCloseDistance(ScreenSizes.Small) : getTooCloseDistance(ScreenSizes.Large);
+  if(self.isShowCircle) {
+    self.textLayerObj.ctx.strokeStyle = 'white';
+    self.textLayerObj.ctx.beginPath();
+    self.textLayerObj.ctx.arc(self.x, self.y, proximityDist / 2, 0, 2 * Math.PI);
+    self.textLayerObj.ctx.closePath();
+    self.textLayerObj.ctx.stroke();
+  }
 
   if (self.takeoff || self.isTouchedDown) return;
 

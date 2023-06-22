@@ -11,6 +11,25 @@
     <div class="plane-info">
       <p>
         <b>
+          <span class="green">Min. cruising speed</span>
+        </b>
+        {{ plane.speedMin }} kts
+      </p>
+      <p>
+        <b>
+          <span class="green">Min. approach speed</span>
+        </b>
+        {{ plane.speedLanding }} kts
+      </p>
+      <p>
+        <b>
+          <span class="green">Min. take off speed</span>
+        </b>
+        {{ plane.speedTakeoff }} kts
+      </p>
+      <hr />
+      <p>
+        <b>
           <span class="green">{{ cityType }}</span>
         </b>
         {{ plane.city }}
@@ -140,7 +159,7 @@ export default {
 }
 
 .info-panel .img-profile {
-  margin-top: 20px;
+  margin-top: 120px;
   img {
     max-width: 100%;
   }
@@ -166,5 +185,11 @@ export default {
   flex-direction: column;
   position: absolute;
   padding: 12px 0;
+}
+
+.info-panel .plane-info hr {
+  width: 100%;
+  color: lightgreen;
+  margin: 12px 0px;
 }
 </style>

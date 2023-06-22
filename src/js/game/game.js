@@ -19,6 +19,11 @@ export const setGameLoopState = (isRunning) => {
   gameLoopRunning = !!isRunning;
 }
 
+let showCircles = false;
+export const setShowCircles = (isShowCircles) => {
+  showCircles = !!isShowCircles;
+}
+
 // SETUP ////////////////////////////////////////////////////////////////
 export const setup = (argObj) => {
   const entityManagerArr = argObj.entityManagerArr;
@@ -55,7 +60,7 @@ export const setup = (argObj) => {
       entityManagerArr.forEach(callFn('hide'));
       entityManagerArr.forEach(callFn('update', { deltaTimeMs: updateIntervalMs, entityManagerArr }));
       entityManagerArr.forEach(callFn('updateHandoff', { entityManagerArr }));
-      entityManagerArr.forEach(callFn('setProximity', { entityManagerArr, screenSize, timestamp }));
+      entityManagerArr.forEach(callFn('setProximity', { entityManagerArr, screenSize, showCircles, timestamp }));
       entityManagerArr.forEach(callFn('draw', timestamp));
       // callbacks
       argObj.gameUpdateCB();
@@ -113,7 +118,7 @@ export const setPlaneSelected = (argObj, square) => {
   argObj.headingLayerObj.ctx.clearRect(0, 0, width, height);
   entityManagerArr.forEach(callFn('setSelected', false));
   square.setSelected(true);
-  entityManagerArr.forEach(callFn('setProximity', { entityManagerArr, screenSize }));
+  entityManagerArr.forEach(callFn('setProximity', { entityManagerArr, screenSize, showCircles }));
   entityManagerArr.forEach(callFn('draw'));
 }
 

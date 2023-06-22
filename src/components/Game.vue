@@ -52,6 +52,10 @@
               :planes="planesSorted"
             ></DetailsPanel>
             <div class="col">
+              <ButtonPanel
+                :screenSize="screenSize"
+                @showCirclesEv="showCirclesEv"
+              ></ButtonPanel>
               <ScorePanel :screenSize="screenSize"></ScorePanel>
             </div>
           </div>
@@ -90,7 +94,7 @@
 <script>
 import { ref } from "vue";
 
-import Square from "../js/Square";
+import ButtonPanel from "./panelBottom/ButtonPanel";
 import DetailsPanel from "./panelBottom/DetailsPanel";
 import ScorePanel from "./panelBottom/ScorePanel";
 import ControlPanel from "./panelBottom/ControlPanel";
@@ -98,12 +102,14 @@ import FlightStrip from "./FlightStrip";
 import FlightStripDeparture from "./FlightStripDeparture";
 import GameOverPopup from "./GameOverPopup.vue";
 
+import Square from "../js/Square";
 import { DestinationType } from "../js/aircraft/airframe";
 import { getWaypointArrivalsAll } from "../js/airports/LHR";
 import {
   setup as setupGame,
   setupEntities,
   setPlaneSelected,
+  setShowCircles,
 } from "../js/game/game";
 import { setup as setupEvents } from "../js/game/gameEvents";
 import { ScreenSizes, getGameSize } from "../js/utils";
@@ -130,6 +136,7 @@ export default {
     ScorePanel,
     DetailsPanel,
     GameOverPopup,
+    ButtonPanel,
   },
   props: {},
 
@@ -210,6 +217,12 @@ export default {
     }
     console.log("screen size", "large");
     screenSize = ScreenSizes.Large;
+  },
+
+  methods: {
+    showCirclesEv: function (isShowCircle) {
+      setShowCircles(isShowCircle);
+    },
   },
 
   mounted() {

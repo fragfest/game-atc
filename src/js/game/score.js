@@ -13,7 +13,7 @@ export const setup = () => {
   const nextLevel = getHighestLevelCompleted() + 1;
   score.level = (nextLevel <= getFinalLevel()) ? nextLevel : getFinalLevel();
   setScore(score);
-  setGoal(nextLevel);
+  setGoal(score.level);
 }
 
 export const resetScore = () => {
