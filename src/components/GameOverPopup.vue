@@ -20,6 +20,9 @@
         <div class="item">failed handoffs & landings</div>
         <div class="item score" :class="failedClass">{{ failed }}</div>
         <div class="item score gold">{{ failedScore }}</div>
+        <div class="item">delays (taxiing slots)</div>
+        <div class="item score" :class="taxiQueueClass">{{ taxiQueue }}</div>
+        <div class="item score gold">{{ taxiQueueScore }}</div>
         <div class="item">conflict (seconds)</div>
         <div class="item score" :class="conflictClass">{{ conflict }}</div>
         <div class="item score gold">{{ conflictScore }}</div>
@@ -54,6 +57,7 @@ import {
   isDeparturesSuccess,
   isArrivalsSuccess,
   isFailedCondition,
+  isExceededTaxiingCondition,
   isConflictCondition,
   isVictory,
   getGoals,
@@ -75,6 +79,9 @@ export default {
       failed: "0/" + getGoals().Failed,
       failedScore: 0,
       failedClass: "green",
+      taxiQueue: "0/" + getGoals().TaxiQueue,
+      taxiQueueScore: 0,
+      taxiQueueClass: "green",
       conflict: "0/" + getGoals().Conflict,
       conflictScore: 0,
       conflictClass: "green",
@@ -94,6 +101,9 @@ export default {
     if (isArrivalsSuccess(score.arrivals)) this.arrivalsClass = "green";
     if (isFailedCondition(score.failed)) this.failedClass = "red";
     if (isConflictCondition(score.conflict)) this.conflictClass = "red";
+    if (isConflictCondition(score.conflict)) this.conflictClass = "red";
+    if (isExceededTaxiingCondition(score.taxiQueue))
+      this.taxiQueueClass = "red";
 
     const baseScorePass = getBaseScore();
     const failedScoreMax = getGoals().Failed;
@@ -108,16 +118,19 @@ export default {
     this.departures = "" + score.departures + "/" + getGoals().Departures;
     this.arrivals = "" + score.arrivals + "/" + getGoals().Arrivals;
     this.failed = "" + score.failed + "/" + getGoals().Failed;
+    this.taxiQueue = "" + score.taxiQueue + "/" + getGoals().TaxiQueue;
     this.conflict = "" + Math.floor(score.conflict) + "/" + getGoals().Conflict;
 
     this.departureScore = isVictory(score) ? baseScorePass : 0;
     this.arrivalScore = isVictory(score) ? baseScorePass : 0;
     this.failedScore = isVictory(score) ? Math.round(failedScore) : 0;
+    this.taxiQueueScore = isVictory(score) ? baseScorePass : 0;
     this.conflictScore = isVictory(score) ? Math.round(conflictScore) : 0;
     this.total =
       this.departureScore +
       this.arrivalScore +
       this.failedScore +
+      this.taxiQueueScore +
       this.conflictScore;
 
     if (isVictory(score)) levelComplete(this.total);

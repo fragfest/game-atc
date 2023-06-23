@@ -58,6 +58,10 @@
         </span>
       </div>
       <div class="row tab-left">
+        <b>exceeded (taxiing slots)</b>
+        <span> too many taxiing aircraft waiting to depart </span>
+      </div>
+      <div class="row tab-left">
         <b>conflict (TCAS)</b>
         <span>
           spacing between planes is 3 miles laterally or 1,000ft vertically

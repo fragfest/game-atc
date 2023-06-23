@@ -12,7 +12,9 @@ import { getGameSize, setupGameLoadAndExit } from "../utils";
 import { setup as setupKeyboard } from '../events/keyboard';
 import { draw as drawScale } from '../canvas/scale';
 import { isSquare } from '../types';
+import { DestinationType } from "../aircraft/airframe";
 import { create, spawnRndPlane } from '../Plane';
+import { setTaxiQueue } from "./score";
 
 let gameLoopRunning = false;
 export const setGameLoopState = (isRunning) => {
@@ -62,6 +64,8 @@ export const setup = (argObj) => {
       entityManagerArr.forEach(callFn('updateHandoff', { entityManagerArr }));
       entityManagerArr.forEach(callFn('setProximity', { entityManagerArr, screenSize, showCircles, timestamp }));
       entityManagerArr.forEach(callFn('draw', timestamp));
+      // goals
+      setTaxiQueue(getTaxiLength(entityManagerArr));
       // callbacks
       argObj.gameUpdateCB();
     }
@@ -131,6 +135,13 @@ const drawInertElements = (layerObj, canvasObj) => {
 
 const isNotTaxiing = obj => !obj.isTaxiing;
 const isWithinDist = (distMax, obj1, obj2) => distBetweenEntities(obj1)(obj2) < distMax;
+const isDeparture = plane => plane.destinationType === DestinationType.Departure;
+
+const getTaxiLength = entityManagerArr => {
+  const planes = entityManagerArr.filter(isSquare);
+  const departures = planes.filter(isDeparture);
+  return departures.filter((plane) => plane.isTaxiing).length;
+}
 
 const createSquare = (screenSize, entityManagerArr) => (createEntityFn, chanceOfSquare) => {
   const addPlaneToGame = entityManagerAdd(entityManagerArr);
@@ -150,6 +161,7 @@ const createSquare = (screenSize, entityManagerArr) => (createEntityFn, chanceOf
       newEntity.destroy();
       return;
     }
+
     addPlaneToGame(newEntity);
   }
 }

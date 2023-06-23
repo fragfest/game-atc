@@ -45,6 +45,7 @@ export const getGoals = () => {
 export const isDeparturesSuccess = (departuresCount) => departuresCount >= getGoals().Departures;
 export const isArrivalsSuccess = (arrivalsCount) => arrivalsCount >= getGoals().Arrivals;
 export const isFailedCondition = (failedCount) => failedCount >= getGoals().Failed;
+export const isExceededTaxiingCondition = (taxiQueueCount) => taxiQueueCount >= getGoals().TaxiQueue;
 export const isConflictCondition = (conflictCount) => conflictCount >= getGoals().Conflict;
 
 /**
@@ -54,6 +55,7 @@ export const isConflictCondition = (conflictCount) => conflictCount >= getGoals(
 export const isVictory = score => isDeparturesSuccess(score.departures) &&
   isArrivalsSuccess(score.arrivals) &&
   !isFailedCondition(score.failed) &&
+  !isExceededTaxiingCondition(score.taxiQueue) &&
   !isConflictCondition(score.conflict);
 
 /**
@@ -61,7 +63,8 @@ export const isVictory = score => isDeparturesSuccess(score.departures) &&
  * @returns {Boolean}
  */
 export const isDefeat = score => isFailedCondition(score.failed) ||
-  isConflictCondition(score.conflict);
+  isConflictCondition(score.conflict) ||
+  isExceededTaxiingCondition(score.taxiQueue);
 
 // PRIVATE //////////////////////////////////////////////////
 
@@ -72,6 +75,7 @@ const GoalsLevels = {
     Arrivals: 16,
     Departures: 8,
     Failed: 3,
+    TaxiQueue: 8,
     Conflict: 60,
     SpawnRate: 1,
   },
@@ -79,6 +83,7 @@ const GoalsLevels = {
     Arrivals: 32,
     Departures: 16,
     Failed: 2,
+    TaxiQueue: 8,
     Conflict: 30,
     SpawnRate: 2,
   },
@@ -86,6 +91,7 @@ const GoalsLevels = {
     Arrivals: 32,
     Departures: 16,
     Failed: 1,
+    TaxiQueue: 6,
     Conflict: 15,
     SpawnRate: 3,
   },
@@ -96,6 +102,7 @@ const GoalsLevels = {
  * @property {number} Departures
  * @property {number} Arrivals
  * @property {number} Failed
+ * @property {number} TaxiQueue
  * @property {number} Conflict
  * @property {number} SpawnRate
  */
@@ -103,6 +110,7 @@ const Goals = {
   Arrivals: 0,
   Departures: 0,
   Failed: 0,
+  TaxiQueue: 0,
   Conflict: 0,
   SpawnRate: 0,
 };

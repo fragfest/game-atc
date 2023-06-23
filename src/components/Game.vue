@@ -102,7 +102,6 @@ import FlightStrip from "./FlightStrip";
 import FlightStripDeparture from "./FlightStripDeparture";
 import GameOverPopup from "./GameOverPopup.vue";
 
-import Square from "../js/Square";
 import { DestinationType } from "../js/aircraft/airframe";
 import { getWaypointArrivalsAll } from "../js/airports/LHR";
 import {
@@ -111,11 +110,11 @@ import {
   setPlaneSelected,
   setShowCircles,
 } from "../js/game/game";
-import { setup as setupEvents } from "../js/game/gameEvents";
+import { isSquare } from "../js/types";
 import { ScreenSizes, getGameSize } from "../js/utils";
+import { setup as setupEvents } from "../js/game/gameEvents";
 import { setup as setupVictory } from "../js/game/victory";
 
-const isSquare = (obj) => obj instanceof Square;
 const isDeparture = (plane) =>
   plane.destinationType === DestinationType.Departure;
 const isArrival = (plane) => plane.destinationType === DestinationType.Arrival;
