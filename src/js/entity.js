@@ -39,10 +39,7 @@ export const isCloseToWaypoint = waypoint => entity => {
   }
   if (waypoint.id === entity.id) return false;
 
-  const distX = Math.abs(waypoint.x - entity.x);
-  const distY = Math.abs(waypoint.y - entity.y);
-  const isCloseHorizontal = distX < 10 && distY < 10;
-
+  const isCloseHorizontal = distBetweenEntities(waypoint)(entity) < 10;
   const distVert = entity.altitude - waypoint.altitude;
   const isAboveWaypoint = distVert >= 0;
 
@@ -63,9 +60,7 @@ export const isCloseToEntity = screenSize => entity => entityOther => {
   if (entityOther.id === entity.id) return false;
   
   const distMax = getTooCloseDistance(screenSize);
-  const distX = Math.abs(entity.x - entityOther.x);
-  const distY = Math.abs(entity.y - entityOther.y);
-  const isCloseHorizontal = (distX < distMax) && (distY < distMax);
+  const isCloseHorizontal = distBetweenEntities(entity)(entityOther) < distMax;
 
   const distVert = Math.abs(entity.altitude - entityOther.altitude);
   const isCloseVertical = distVert < 1000;
