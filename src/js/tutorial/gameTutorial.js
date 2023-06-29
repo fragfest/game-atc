@@ -29,23 +29,24 @@ export const setup = (state) => (argObj) => {
   const addToGame = entityManagerAdd(entityManagerArr);
 
   addToGame(createPlaneArrival(canvasObj));
+  state.dialogBox = { top: 0.4, left: 0.4, width: 0.30, html: `Welcome Trainee, <br> Shit's gunna get real` };
 
   let timestampPrev = -500;
-  const gameTickFullGame = gameTick(
+  const gameTickTutorial = gameTick(
     state,
     screenSize,
     entityManagerArr,
     timestampPrev,
-    () => {},
+    () => { },
     textLayerClearFn(argObj.textLayerObj, { width, height }),
     headingLayerClearFn(argObj.headingLayerObj, { width, height }),
-    argObj.gameUpdateCB
+    () => argObj.gameUpdateCB()
   );
 
   if (state.gameLoopRunning) return;
   state.gameLoopRunning = true;
   
-  window.requestAnimationFrame(gameTickFullGame);
+  window.requestAnimationFrame(gameTickTutorial);
 }
 
 // PRIVATE /////////////////////////////////////////////////////////////////////////////

@@ -19,6 +19,7 @@ import { setTaxiQueue } from "./score";
  * @typedef {object} State
  * @property {Boolean} gameLoopRunning
  * @property {Boolean} showCircles
+ * @property {object} dialogBox
  */
 
 /**
@@ -44,7 +45,7 @@ export const setup = (state) => (argObj) => {
     spawnPlaneFullGame_timestampArg,
     textLayerClearFn(argObj.textLayerObj, { width, height }),
     headingLayerClearFn(argObj.headingLayerObj, { width, height }),
-    argObj.gameUpdateCB
+    () => argObj.gameUpdateCB()
   );
 
   if (state.gameLoopRunning) return;

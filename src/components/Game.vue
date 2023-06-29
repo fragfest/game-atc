@@ -41,6 +41,18 @@
             :width="width"
             :height="height"
           ></canvas>
+
+          <div
+            v-if="tutorialBoxHtml"
+            class="tutorial layer-eight"
+            :class="screenSize"
+            :style="styleTutorial"
+          >
+            <CyberBox :width="tutorialWidth" type="dialog">
+              <p v-html="tutorialBoxHtml"></p>
+            </CyberBox>
+          </div>
+
           <img src="/img/london.png" :height="height" />
         </div>
 
@@ -92,8 +104,13 @@
 </template>
 
 <script>
+/**
+ * @typedef {import('../js/game/game.js').State} State
+ */
+
 import { ref } from "vue";
 
+import CyberBox from "./common/CyberBox";
 import ButtonPanel from "./panelBottom/ButtonPanel";
 import DetailsPanel from "./panelBottom/DetailsPanel";
 import ScorePanel from "./panelBottom/ScorePanel";
@@ -129,12 +146,16 @@ let height = getGameSize(ScreenSizes.Large).height;
 
 let entityManagerArr = ref([]);
 let squareClicked = ref({});
+let tutorialBoxTop = ref(0.4);
+let tutorialBoxLeft = ref(0.4);
+let tutorialBoxWidth = ref(0.4);
 
 let setShowCircles_isShowCirclesArg = null;
 
 export default {
   name: "atc-game",
   components: {
+    CyberBox,
     FlightStripDeparture,
     FlightStrip,
     ControlPanel,
@@ -155,6 +176,8 @@ export default {
       height,
       squareClicked,
       hasPopup: false,
+
+      tutorialBoxHtml: "",
     };
   },
 
@@ -181,6 +204,16 @@ export default {
       return planes.filter(isArrival);
     },
 
+    tutorialWidth: () => {
+      const boxWidth = width * tutorialBoxWidth.value;
+      return boxWidth.toString();
+    },
+
+    styleTutorial: () => ({
+      top: height * tutorialBoxTop.value + "px",
+      left: width * tutorialBoxLeft.value + "px",
+    }),
+
     styleScope: () => ({
       width: width + 1 + "px",
       height: height + 3 + "px",
@@ -200,6 +233,7 @@ export default {
         // "max-height": maxHeight + "px",
       };
     },
+
     styleEntityDiv: () => ({
       width: width - 2 + "px",
       height: height - 1 + "px",
@@ -281,17 +315,26 @@ export default {
       headingLayerObj: layerFourObj,
       entityDiv: layerSixDiv,
       entityManagerArr: entityManagerArr.value,
+
       squareClickEventCB: (squareObj) => {
         squareClicked.value = squareObj;
         this.$refs.controlPanel.setFocus();
         setPlaneSelected(gameState)(setupArg, squareObj);
       },
+
       gameUpdateCB: () => {
         const planeSelId = squareClicked.value.id;
         const isFound = (plane) => plane.id === planeSelId;
         const planeSelFound = entityManagerArr.value.find(isFound);
         if (!planeSelFound) {
           squareClicked.value = {};
+        }
+
+        if (gameState.dialogBox) {
+          tutorialBoxTop.value = gameState.dialogBox.top;
+          tutorialBoxLeft.value = gameState.dialogBox.left;
+          tutorialBoxWidth.value = gameState.dialogBox.width;
+          this.tutorialBoxHtml = gameState.dialogBox.html;
         }
       },
     };
@@ -336,6 +379,7 @@ export default {
 .container {
   position: relative;
 }
+
 .game {
   display: flex;
 }
@@ -401,6 +445,9 @@ export default {
   max-height: 780px;
 }
 
+.layer-eight {
+  z-index: 8;
+}
 .layer-seven {
   z-index: 7;
 }
@@ -433,6 +480,23 @@ export default {
 
 .entity-div {
   position: absolute;
+}
+
+.tutorial.small {
+  font-size: 11px;
+  p {
+    padding: 4px 8px;
+    line-height: 1.2;
+  }
+}
+.tutorial {
+  position: absolute;
+  color: white;
+  font-size: 14px;
+  p {
+    padding: 8px 12px;
+    line-height: 1.3;
+  }
 }
 
 .canvas {

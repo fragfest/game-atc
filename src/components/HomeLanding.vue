@@ -28,7 +28,7 @@
               <span class="font-mono white">{{ levelNext }}</span>
             </h3>
 
-            <CyberBox v-if="!isGameComplete" width="400">
+            <CyberBox v-if="!isGameComplete" width="400" type="button">
               <button @click="onStartClick">
                 <h2>start</h2>
               </button>
