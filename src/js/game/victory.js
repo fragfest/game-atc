@@ -71,6 +71,14 @@ export const isDefeat = score => isFailedCondition(score.failed) ||
 const FinalLevel = 3;
 
 const GoalsLevels = {
+  0: {
+    Arrivals: 1,
+    Departures: 1,
+    Failed: 2,
+    TaxiQueue: 4,
+    Conflict: 999,
+    SpawnRate: 1,
+  },
   1: {
     Arrivals: 16,
     Departures: 8,

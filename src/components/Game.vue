@@ -109,11 +109,15 @@ import {
   setupEntities,
   setPlaneSelected,
   setShowCircles,
+  drawInertElements,
 } from "../js/game/game";
+import { setup as setupTutorial } from "../js/tutorial/gameTutorial";
 import { isSquare } from "../js/types";
-import { ScreenSizes, getGameSize } from "../js/utils";
+import { ScreenSizes, getGameSize, setupGameLoadAndExit } from "../js/utils";
+import { setup as setupKeyboard } from "../js/events/keyboard";
 import { setup as setupEvents } from "../js/game/gameEvents";
 import { setup as setupVictory } from "../js/game/victory";
+import { resetScore, getScore } from "../js/game/score";
 
 const isDeparture = (plane) =>
   plane.destinationType === DestinationType.Departure;
@@ -125,6 +129,8 @@ let height = getGameSize(ScreenSizes.Large).height;
 
 let entityManagerArr = ref([]);
 let squareClicked = ref({});
+
+let setShowCircles_isShowCirclesArg = null;
 
 export default {
   name: "atc-game",
@@ -220,7 +226,7 @@ export default {
 
   methods: {
     showCirclesEv: function (isShowCircle) {
-      setShowCircles(isShowCircle);
+      setShowCircles_isShowCirclesArg(isShowCircle);
     },
   },
 
@@ -232,7 +238,9 @@ export default {
     const layerFour = this.$refs.layerFour;
     // const layerFive = this.$refs.layerFive;
     const backgroundCtx = background.getContext("2d");
+
     const layerOneCtx = layerOne.getContext("2d");
+    const imgLayerObj = { ctx: layerOneCtx };
     const layerTwoCtx = layerTwo.getContext("2d");
     const layerThreeCtx = layerThree.getContext("2d");
     const layerFourCtx = layerFour.getContext("2d");
@@ -258,11 +266,16 @@ export default {
 
     entityManagerArr.value = [];
     squareClicked.value = {};
+    const width = getGameSize(screenSize).width;
+    const height = getGameSize(screenSize).height;
+
+    const gameState = {};
+    setShowCircles_isShowCirclesArg = setShowCircles(gameState);
 
     const setupArg = {
       screenSize,
       backgroundObj,
-      imgLayerObj: { ctx: layerOneCtx },
+      imgLayerObj,
       entityLayerObj: layerTwoObj,
       textLayerObj: layerThreeObj,
       headingLayerObj: layerFourObj,
@@ -271,7 +284,7 @@ export default {
       squareClickEventCB: (squareObj) => {
         squareClicked.value = squareObj;
         this.$refs.controlPanel.setFocus();
-        setPlaneSelected(setupArg, squareObj);
+        setPlaneSelected(gameState)(setupArg, squareObj);
       },
       gameUpdateCB: () => {
         const planeSelId = squareClicked.value.id;
@@ -283,19 +296,34 @@ export default {
       },
     };
 
+    setupGameLoadAndExit();
+    setupKeyboard();
+    drawInertElements(imgLayerObj, { screenSize, width, height });
+
     setupEvents(
       this,
       getWaypointArrivalsAll(),
       squareClicked,
       () => this.$refs.controlPanel.setFocus(),
-      () => setPlaneSelected(setupArg, squareClicked.value),
+      () => setPlaneSelected(gameState)(setupArg, squareClicked.value),
       () => {
         this.hasPopup = true;
-      }
+      },
+      gameState
     );
+
+    resetScore();
+    const isTutorial = !getScore().level;
+
+    if (isTutorial) {
+      setupEntities(setupArg);
+      setupTutorial(gameState)(setupArg);
+      return;
+    }
+
     setupEntities(setupArg);
     setupVictory();
-    setupGame(setupArg);
+    setupGame(gameState)(setupArg);
 
     // window.addEventListener("resize", () => {
     //   setup(setupArg);

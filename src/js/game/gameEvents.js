@@ -8,12 +8,17 @@ const isDeparture = (plane) => plane.destinationType === DestinationType.Departu
 const isArrival = (plane) => plane.destinationType === DestinationType.Arrival;
 
 /**
+ * @typedef {import('./game.js').State} State
+ */
+
+/**
  * @param {VueThis} self is needed to keep a reference to computed: self.planesSorted
  * @param {Array} arrivalWaypoints list of waypoint name strings
  * @param {VueRef} planeSelVueRef vue ref to plane selected object
  * @param {Function} controlPanelFocusFn function to focus input field in controlPanel
  * @param {Function} selectPlaneFn function to set the selected plane
  * @param {Function} gamePopupFn function to set the game over pop-up
+ * @param {State} state game state
  */
 export const setup = (
   self,
@@ -22,9 +27,10 @@ export const setup = (
   controlPanelFocusFn,
   selectPlaneFn,
   gamePopupFn,
+  state,
 ) => {
   const gameOver = () => {
-    setGameLoopState(false);
+    setGameLoopState(state)(false);
     gamePopupFn();
   }
 

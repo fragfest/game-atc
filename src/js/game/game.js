@@ -8,111 +8,106 @@ import {
   getWaypointDestinationsAll,
   getWaypointArrivalsAll,
 } from '../airports/LHR';
-import { getGameSize, setupGameLoadAndExit } from "../utils";
-import { setup as setupKeyboard } from '../events/keyboard';
+import { getGameSize } from "../utils";
 import { draw as drawScale } from '../canvas/scale';
 import { isSquare } from '../types';
 import { DestinationType } from "../aircraft/airframe";
 import { create, spawnRndPlane } from '../Plane';
 import { setTaxiQueue } from "./score";
 
-let gameLoopRunning = false;
-export const setGameLoopState = (isRunning) => {
-  gameLoopRunning = !!isRunning;
-}
+/**
+ * @typedef {object} State
+ * @property {Boolean} gameLoopRunning
+ * @property {Boolean} showCircles
+ */
 
-let showCircles = false;
-export const setShowCircles = (isShowCircles) => {
-  showCircles = !!isShowCircles;
-}
-
-// SETUP ////////////////////////////////////////////////////////////////
-export const setup = (argObj) => {
+/**
+ * @param {State} state 
+ * @param {object} argObj 
+ */
+export const setup = (state) => (argObj) => {
   const entityManagerArr = argObj.entityManagerArr;
   const screenSize = argObj.screenSize;
-  const canvasObj = {
-    entityManagerArr,
-    screenSize: argObj.screenSize,
-    width: getGameSize(argObj.screenSize).width,
-    height: getGameSize(argObj.screenSize).height,
-    canvasObjEntity: argObj.entityLayerObj,
-    canvasObjText: argObj.textLayerObj,
-    canvasObjHeading: argObj.headingLayerObj,
-    canvasEntityEl: argObj.entityDiv,
-    clickCB: argObj.squareClickEventCB,
-  };
+  const width = getGameSize(argObj.screenSize).width;
+  const height = getGameSize(argObj.screenSize).height;
+  const canvasObj = getCanvasObj(argObj);
 
-  const createPlane = spawnRndPlane(canvasObj, entityManagerArr, createSquare(screenSize, entityManagerArr))
-
-  const updateIntervalMs = 500;
-  let timestampPrev = -500;
-
-  const gameTick = (timestamp) => {
-    const deltaTime = timestamp - timestampPrev;
-    if (!gameLoopRunning) return;
-
-    if (deltaTime > updateIntervalMs) {
-      timestampPrev = timestamp;
-      // cleanup
-      entityManagerArr.forEach(callFn('updateDestroy', { entityManagerArr }));
-      argObj.textLayerObj.ctx.clearRect(0, 0, canvasObj.width, canvasObj.height);
-      argObj.headingLayerObj.ctx.clearRect(0, 0, canvasObj.width, canvasObj.height);
-      // update
-      createPlane(updateIntervalMs);
-      entityManagerArr.forEach(callFn('hide'));
-      entityManagerArr.forEach(callFn('update', { deltaTimeMs: updateIntervalMs, entityManagerArr }));
-      entityManagerArr.forEach(callFn('updateHandoff', { entityManagerArr }));
-      entityManagerArr.forEach(callFn('setProximity', { entityManagerArr, screenSize, showCircles, timestamp }));
-      entityManagerArr.forEach(callFn('draw', timestamp));
-      // goals
-      setTaxiQueue(getTaxiLength(entityManagerArr));
-      // callbacks
-      argObj.gameUpdateCB();
-    }
-
-    window.requestAnimationFrame(gameTick);
-  }
-
-  if (gameLoopRunning) return;
-  gameLoopRunning = true;
-
-  setupGameLoadAndExit();
-  setupKeyboard();
-  drawInertElements(argObj.imgLayerObj, canvasObj);
+  const spawnFirstPlane = () => createSquare(screenSize, entityManagerArr)(() => create(canvasObj, 0.5).square, 1);
+  const spawnPlaneFullGame_timestampArg = spawnRndPlane(canvasObj, entityManagerArr, createSquare(screenSize, entityManagerArr));
   
-  createSquare(screenSize, entityManagerArr)(() => create(canvasObj, 0.5).square, 1);
+  let timestampPrev = -500;
+  const gameTickFullGame = gameTick(
+    state,
+    screenSize,
+    entityManagerArr,
+    timestampPrev,
+    spawnPlaneFullGame_timestampArg,
+    textLayerClearFn(argObj.textLayerObj, { width, height }),
+    headingLayerClearFn(argObj.headingLayerObj, { width, height }),
+    argObj.gameUpdateCB
+  );
 
-  window.requestAnimationFrame(gameTick);
+  if (state.gameLoopRunning) return;
+  state.gameLoopRunning = true;
+  
+  spawnFirstPlane();
+  window.requestAnimationFrame(gameTickFullGame);
 }
-// SETUP END ////////////////////////////////////////////////////////////
+
+export const textLayerClearFn = (textLayerObj, { width, height }) => () => textLayerObj.ctx.clearRect(0, 0, width, height);
+export const headingLayerClearFn = (headingLayerObj, { width, height }) => () => headingLayerObj.ctx.clearRect(0, 0, width, height);
 
 export const setupEntities = (argObj) => {
   const entityAdd = entityManagerAdd(argObj.entityManagerArr);
-
+  
   const runway27R = new Runway(
-    Runways.TwoSevenRight, argObj.imgLayerObj, argObj.screenSize,
-    getRunway(Runways.TwoSevenRight, argObj.screenSize));
+    Runways.TwoSevenRight, argObj.imgLayerObj, argObj.screenSize, getRunway(Runways.TwoSevenRight, argObj.screenSize));
   const runway27L = new Runway(
-    Runways.TwoSevenLeft, argObj.imgLayerObj, argObj.screenSize,
-    getRunway(Runways.TwoSevenLeft, argObj.screenSize));
+    Runways.TwoSevenLeft, argObj.imgLayerObj, argObj.screenSize, getRunway(Runways.TwoSevenLeft, argObj.screenSize));
+
   entityAdd(runway27R);
   entityAdd(runway27L);
-
+      
   getWaypointArrivalsAll().forEach(waypoint => {
     entityAdd(
       new Waypoint(waypoint, argObj.backgroundObj, argObj.headingLayerObj, argObj.screenSize, 
         getWaypoint(waypoint, argObj.screenSize))
-    );
+        );
   });
+    
   getWaypointDestinationsAll().forEach(waypoint => {
     entityAdd(
       new Waypoint(waypoint, argObj.backgroundObj, argObj.headingLayerObj, argObj.screenSize, 
         getWaypoint(waypoint, argObj.screenSize))
-    );
+        );
   });
 }
 
-export const setPlaneSelected = (argObj, square) => {
+export const getCanvasObj = (argObj) => ({
+  entityManagerArr: argObj.entityManagerArr,
+  screenSize: argObj.screenSize,
+  width: getGameSize(argObj.screenSize).width,
+  height: getGameSize(argObj.screenSize).height,
+  canvasObjEntity: argObj.entityLayerObj,
+  canvasObjText: argObj.textLayerObj,
+  canvasObjHeading: argObj.headingLayerObj,
+  canvasEntityEl: argObj.entityDiv,
+  clickCB: argObj.squareClickEventCB,
+});
+
+export const drawInertElements = (layerObj, { screenSize, width, height }) => drawScale(layerObj, screenSize, width, height);
+
+export const setGameLoopState = (state) => (isRunning) => {
+  state.gameLoopRunning = !!isRunning;
+}
+
+export const setShowCircles = (state) => (isShowCircles) => {
+  state.showCircles = !!isShowCircles;
+}
+
+export const setPlaneSelected = (state) => (argObj, square) => {
+  const showCircles = state.showCircles;
+
   const screenSize = argObj.screenSize;
   const width = getGameSize(argObj.screenSize).width;
   const height = getGameSize(argObj.screenSize).height;
@@ -126,12 +121,49 @@ export const setPlaneSelected = (argObj, square) => {
   entityManagerArr.forEach(callFn('draw'));
 }
 
+export const entityManagerAdd = entityManagerArr => obj => {
+  if (hasEntityFuncs(obj)) entityManagerArr.push(obj);
+  else throw new Error('non-entity not added \n' + JSON.stringify(obj));
+}
+
+export const gameTick = (
+  state, screenSize, entityManagerArr, timestampPrev, spawnPlaneFn_timestampArg, textLayerClearFn, headingLayerClearFn, gameUpdateFn
+  ) => (timestamp) => {
+    let gameLoopRunning = state.gameLoopRunning;
+    let showCircles = state.showCircles;
+
+    const updateIntervalMs = 500;
+    const deltaTime = timestamp - timestampPrev;
+
+    if (!gameLoopRunning) return;
+
+    if (deltaTime > updateIntervalMs) {
+      timestampPrev = timestamp;
+      // cleanup
+      entityManagerArr.forEach(callFn('updateDestroy', { entityManagerArr }));
+      textLayerClearFn();
+      headingLayerClearFn();
+      // update
+      spawnPlaneFn_timestampArg(updateIntervalMs);
+      entityManagerArr.forEach(callFn('hide'));
+      entityManagerArr.forEach(callFn('update', { deltaTimeMs: updateIntervalMs, entityManagerArr }));
+      entityManagerArr.forEach(callFn('updateHandoff', { entityManagerArr }));
+      entityManagerArr.forEach(callFn('setProximity', { entityManagerArr, screenSize, showCircles, timestamp }));
+      entityManagerArr.forEach(callFn('draw', timestamp));
+      // goals
+      setTaxiQueue(getTaxiLength(entityManagerArr));
+      // callbacks
+      gameUpdateFn();
+    }
+
+    window.requestAnimationFrame(gameTick(
+      state, screenSize, entityManagerArr, timestampPrev, spawnPlaneFn_timestampArg, textLayerClearFn, headingLayerClearFn, gameUpdateFn
+    ));
+  }
+
 //////////////////////////////////////////////////////////////////////////////
 // PRIVATE
 //////////////////////////////////////////////////////////////////////////////
-const drawInertElements = (layerObj, canvasObj) => {
-  drawScale(layerObj, canvasObj.screenSize, canvasObj.width, canvasObj.height);
-}
 
 const isNotTaxiing = obj => !obj.isTaxiing;
 const isWithinDist = (distMax, obj1, obj2) => distBetweenEntities(obj1)(obj2) < distMax;
@@ -164,11 +196,6 @@ const createSquare = (screenSize, entityManagerArr) => (createEntityFn, chanceOf
 
     addPlaneToGame(newEntity);
   }
-}
-
-const entityManagerAdd = entityManagerArr => obj => {
-  if (hasEntityFuncs(obj)) entityManagerArr.push(obj);
-  else throw new Error('non-entity not added \n' + JSON.stringify(obj));
 }
 
 const callFn = (fnStr, argsObj) => entity => {

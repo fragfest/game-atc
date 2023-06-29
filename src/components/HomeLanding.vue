@@ -20,7 +20,10 @@
           </div>
 
           <div class="button-start">
-            <h3 v-if="!isGameComplete">
+            <h3 v-if="!levelComplete">
+              <span class="font-mono white">training</span>
+            </h3>
+            <h3 v-else-if="!isGameComplete">
               level &nbsp;&nbsp;
               <span class="font-mono white">{{ levelNext }}</span>
             </h3>
@@ -67,7 +70,6 @@ import {
   getScoreHistory,
 } from "../js/game/score";
 import { getHighestLevelCompleted } from "../js/game/score";
-import { setGameLoopState } from "../js/game/game";
 
 import CyberBox from "./common/CyberBox";
 
@@ -88,7 +90,6 @@ export default {
 
   mounted() {
     setupScore();
-    setGameLoopState(false);
     if (this.finalLevel === this.levelComplete) this.isGameComplete = true;
   },
 

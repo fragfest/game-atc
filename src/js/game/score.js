@@ -10,7 +10,9 @@ export const getBaseScore = () => 100;
 export const setup = () => {
   resetScore();
   const score = getScore();
-  const nextLevel = getHighestLevelCompleted() + 1;
+  const highestLevel = getHighestLevelCompleted();
+  const nextLevel = highestLevel ? (highestLevel + 1) : 0;
+
   score.level = (nextLevel <= getFinalLevel()) ? nextLevel : getFinalLevel();
   setScore(score);
   setGoal(score.level);
