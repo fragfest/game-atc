@@ -105,3 +105,65 @@ export const setup = (
     arrowUpEV(getPlaneSelectedIndex());
   });
 }
+
+/**
+ * @param {VueRef} planeSelVueRef 
+ * @param {Array} entityManagerArr 
+ * @param {Object} tutorialBox contains vue ref properties
+ * @param {State} state game state 
+ */
+export const gameUpdateCB = (planeSelVueRef, entityManagerArr, tutorialBox, state) => {
+  const planeSelId = planeSelVueRef.value.id;
+  const isFound = (plane) => plane.id === planeSelId;
+  const planeSelFound = entityManagerArr.value.find(isFound);
+  if (!planeSelFound) {
+    planeSelVueRef.value = {};
+  }
+
+  const { tutorialBoxTop, tutorialBoxLeft, tutorialBoxWidth, tutorialBoxHtmlQueue } = tutorialBox;
+  if (state.dialogBox) {
+    tutorialBoxTop.value = state.dialogBox.top;
+    tutorialBoxLeft.value = state.dialogBox.left;
+    tutorialBoxWidth.value = state.dialogBox.width;
+
+    if (state.dialogBox.html.length) {
+      fillHtmlQueue(state.dialogBox.html, tutorialBoxHtmlQueue);
+      state.dialogBox.html = "";
+    }
+  }
+}
+
+/**
+ * @param {VueThis} self 
+ * @param {String} outputProp 
+ * @param {Array.<String>} inputQueue 
+ */
+export const attachHtmlQueue = (self, outputProp, inputQueue) => {
+  setInterval(() => {
+    const letter = inputQueue.shift();
+    if (!letter) return;
+    if (letter === '<clear>') {
+      self[outputProp] = '';
+      return;
+    }
+    self[outputProp] += letter;
+  }, 30);
+}
+
+/**
+ * @param {String} inputHtmlStr 
+ * @param {Array.<String>} outputQueue 
+ */
+export const fillHtmlQueue= (inputHtmlStr, outputQueue) => {
+  let tag = "";
+  inputHtmlStr.split("").forEach((letter) => {
+    if (tag && letter === ">") {
+      letter = tag + letter;
+      tag = "";
+    } else if (tag || letter === "<") {
+      tag += letter;
+      return;
+    }
+    outputQueue.push(letter);
+  });
+}

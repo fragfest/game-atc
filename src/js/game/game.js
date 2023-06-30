@@ -36,12 +36,11 @@ export const setup = (state) => (argObj) => {
   const spawnFirstPlane = () => createSquare(screenSize, entityManagerArr)(() => create(canvasObj, 0.5).square, 1);
   const spawnPlaneFullGame_timestampArg = spawnRndPlane(canvasObj, entityManagerArr, createSquare(screenSize, entityManagerArr));
   
-  let timestampPrev = -500;
   const gameTickFullGame = gameTick(
     state,
     screenSize,
     entityManagerArr,
-    timestampPrev,
+    -500,
     spawnPlaneFullGame_timestampArg,
     textLayerClearFn(argObj.textLayerObj, { width, height }),
     headingLayerClearFn(argObj.headingLayerObj, { width, height }),

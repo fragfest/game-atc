@@ -1,5 +1,6 @@
 import { getGameSize } from "../utils";
 import {
+  setGameLoopState,
   entityManagerAdd,
   gameTick,
   getCanvasObj,
@@ -7,7 +8,7 @@ import {
   headingLayerClearFn
 } from "../game/game";
 import Square from "../Square";
-import { getFlightArrival, getFlightDeparture } from '../flights/LHR';
+import { getFlightArrival } from '../flights/LHR';
 import { Waypoints, Runways } from '../airports/LHR';
 import { DestinationType, getPerformance } from '../aircraft/airframe';
 
@@ -17,7 +18,7 @@ import { DestinationType, getPerformance } from '../aircraft/airframe';
 
 /**
  * @param {State} state 
- * @param {object} argObj 
+ * @param {Object} argObj 
  */
 export const setup = (state) => (argObj) => {
   const entityManagerArr = argObj.entityManagerArr;
@@ -26,25 +27,21 @@ export const setup = (state) => (argObj) => {
   const height = getGameSize(argObj.screenSize).height;
   const canvasObj = getCanvasObj(argObj);
 
-  const addToGame = entityManagerAdd(entityManagerArr);
+  const startTime = Date.now();
 
-  addToGame(createPlaneArrival(canvasObj));
-  state.dialogBox = { top: 0.4, left: 0.4, width: 0.30, html: `Welcome Trainee, <br> Shit's gunna get real` };
-
-  let timestampPrev = -500;
   const gameTickTutorial = gameTick(
     state,
     screenSize,
     entityManagerArr,
-    timestampPrev,
-    () => { },
+    0,
+    tutorial(state, entityManagerArr, canvasObj, startTime),
     textLayerClearFn(argObj.textLayerObj, { width, height }),
     headingLayerClearFn(argObj.headingLayerObj, { width, height }),
     () => argObj.gameUpdateCB()
   );
 
   if (state.gameLoopRunning) return;
-  state.gameLoopRunning = true;
+  setGameLoopState(state)(true);
   
   window.requestAnimationFrame(gameTickTutorial);
 }
@@ -53,25 +50,45 @@ export const setup = (state) => (argObj) => {
 
 const createPlaneArrival = ({
   screenSize, width, height, canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl, clickCB
-}, isDeparture) => {
+}) => {
 
   let flight = getFlightArrival([]);
   let destinationType = DestinationType.Arrival;
-
-  if(isDeparture) {
-    flight = getFlightDeparture([]);
-    destinationType = DestinationType.Departure;
-  }
 
   const airframeObj = getPerformance(flight.airframe, screenSize);
   const waypoint = Waypoints.LAM;
   const runway = Runways.TwoSevenLeft;
 
   const square = new Square(flight, canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl,
-    { x: width / 1.69, y: height / 1.88, heading: '270', altitude: 1200, speed: 180 },
+    { x: width / 1.05, y: height / 2.5, heading: '240', altitude: 7000, speed: 220 },
     { destinationType, airframeObj, waypoint, runway }
   );
   square.clickEventCB = () => clickCB(square);
 
   return square;
+}
+
+// TUTORIAL STAGES
+let scenarioIntro = null;
+let scenarioOne = null;
+
+const tutorial = (state, entityManagerArr, canvasObj, startTime) => () => {
+  const addToGame = entityManagerAdd(entityManagerArr);
+  // const setGameLoop = setGameLoopState(state);
+  
+  const now = Date.now();
+  const elapsedTime = now - startTime;
+  
+  if (!scenarioIntro && elapsedTime > 500) {
+    scenarioIntro = true;
+    const introHtml = `Welcome <b>Trainee</b>, <br><br> Before directing real traffic we need you to qualify on the Future Flight Ops system.<br>` +
+    ` Complete all the training scenarios so we feel safe letting you lose on the paying public. <br><br> Good Luck!`;
+    state.dialogBox = { top: 0.1, left: 0.1, width: 0.49, html: introHtml };
+  }
+  
+  if (!scenarioOne && elapsedTime > 18000) {
+    scenarioOne = true;
+    addToGame(createPlaneArrival(canvasObj));
+    state.dialogBox = { top: 0.1, left: 0.4, width: 0.25, html: '<clear>' };
+  }
 }

@@ -122,7 +122,7 @@ import GameOverPopup from "./GameOverPopup.vue";
 import { DestinationType } from "../js/aircraft/airframe";
 import { getWaypointArrivalsAll } from "../js/airports/LHR";
 import {
-  setup as setupGame,
+  setup as setupFullGame,
   setupEntities,
   setPlaneSelected,
   setShowCircles,
@@ -132,7 +132,11 @@ import { setup as setupTutorial } from "../js/tutorial/gameTutorial";
 import { isSquare } from "../js/types";
 import { ScreenSizes, getGameSize, setupGameLoadAndExit } from "../js/utils";
 import { setup as setupKeyboard } from "../js/events/keyboard";
-import { setup as setupEvents } from "../js/game/gameEvents";
+import {
+  setup as setupEvents,
+  attachHtmlQueue,
+  gameUpdateCB,
+} from "../js/game/gameEvents";
 import { setup as setupVictory } from "../js/game/victory";
 import { resetScore, getScore } from "../js/game/score";
 
@@ -300,10 +304,18 @@ export default {
 
     entityManagerArr.value = [];
     squareClicked.value = {};
-    const width = getGameSize(screenSize).width;
-    const height = getGameSize(screenSize).height;
 
     const gameState = {};
+    const width = getGameSize(screenSize).width;
+    const height = getGameSize(screenSize).height;
+    const tutorialBoxHtmlQueue = [];
+    const tutorialBox = {
+      tutorialBoxTop,
+      tutorialBoxLeft,
+      tutorialBoxWidth,
+      tutorialBoxHtmlQueue,
+    };
+
     setShowCircles_isShowCirclesArg = setShowCircles(gameState);
 
     const setupArg = {
@@ -323,26 +335,12 @@ export default {
       },
 
       gameUpdateCB: () => {
-        const planeSelId = squareClicked.value.id;
-        const isFound = (plane) => plane.id === planeSelId;
-        const planeSelFound = entityManagerArr.value.find(isFound);
-        if (!planeSelFound) {
-          squareClicked.value = {};
-        }
-
-        if (gameState.dialogBox) {
-          tutorialBoxTop.value = gameState.dialogBox.top;
-          tutorialBoxLeft.value = gameState.dialogBox.left;
-          tutorialBoxWidth.value = gameState.dialogBox.width;
-          this.tutorialBoxHtml = gameState.dialogBox.html;
-        }
+        gameUpdateCB(squareClicked, entityManagerArr, tutorialBox, gameState);
       },
     };
 
     setupGameLoadAndExit();
     setupKeyboard();
-    drawInertElements(imgLayerObj, { screenSize, width, height });
-
     setupEvents(
       this,
       getWaypointArrivalsAll(),
@@ -354,19 +352,20 @@ export default {
       },
       gameState
     );
+    drawInertElements(imgLayerObj, { screenSize, width, height });
+    setupEntities(setupArg);
 
     resetScore();
     const isTutorial = !getScore().level;
 
     if (isTutorial) {
-      setupEntities(setupArg);
+      attachHtmlQueue(this, "tutorialBoxHtml", tutorialBoxHtmlQueue);
       setupTutorial(gameState)(setupArg);
       return;
     }
 
-    setupEntities(setupArg);
     setupVictory();
-    setupGame(gameState)(setupArg);
+    setupFullGame(gameState)(setupArg);
 
     // window.addEventListener("resize", () => {
     //   setup(setupArg);
@@ -485,8 +484,8 @@ export default {
 .tutorial.small {
   font-size: 11px;
   p {
-    padding: 4px 8px;
-    line-height: 1.2;
+    padding: 6px 16px;
+    line-height: 1.1;
   }
 }
 .tutorial {
@@ -494,8 +493,8 @@ export default {
   color: white;
   font-size: 14px;
   p {
-    padding: 8px 12px;
-    line-height: 1.3;
+    padding: 10px 24px;
+    line-height: 1.2;
   }
 }
 
