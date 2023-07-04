@@ -120,6 +120,7 @@ export const gameUpdateCB = (planeSelVueRef, entityManagerArr, tutorialBox, stat
     planeSelVueRef.value = {};
   }
 
+  // TODO move to tutorialUpdateCB()
   const { tutorialBoxTop, tutorialBoxLeft, tutorialBoxWidth, tutorialBoxHtmlQueue } = tutorialBox;
   if (state.dialogBox) {
     tutorialBoxTop.value = state.dialogBox.top;
@@ -131,6 +132,15 @@ export const gameUpdateCB = (planeSelVueRef, entityManagerArr, tutorialBox, stat
       state.dialogBox.html = "";
     }
   }
+}
+
+/**
+ * @param {VueThis} self 
+ * @param {String} focusCircleTypeProp 
+ * @param {State} state game state
+ */
+export const tutorialUpdateCB = (self, focusCircleTypeProp, state) => {
+  self[focusCircleTypeProp] = state.focusCircleType || "";
 }
 
 /**
@@ -156,11 +166,11 @@ export const attachHtmlQueue = (self, outputProp, inputQueue) => {
  */
 export const fillHtmlQueue= (inputHtmlStr, outputQueue) => {
   let tag = "";
-  inputHtmlStr.split("").forEach((letter) => {
-    if (tag && letter === ">") {
+  inputHtmlStr.split('').forEach((letter) => {
+    if (tag && (letter === '>' || letter === ';')) {
       letter = tag + letter;
       tag = "";
-    } else if (tag || letter === "<") {
+    } else if (tag || letter === "<" || letter === '&') {
       tag += letter;
       return;
     }

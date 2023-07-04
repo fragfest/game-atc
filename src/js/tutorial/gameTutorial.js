@@ -1,3 +1,4 @@
+import { FocusCircleType } from "../types";
 import { getGameSize } from "../utils";
 import {
   setGameLoopState,
@@ -74,21 +75,33 @@ let scenarioOne = null;
 
 const tutorial = (state, entityManagerArr, canvasObj, startTime) => () => {
   const addToGame = entityManagerAdd(entityManagerArr);
-  // const setGameLoop = setGameLoopState(state);
   
   const now = Date.now();
   const elapsedTime = now - startTime;
   
   if (!scenarioIntro && elapsedTime > 500) {
     scenarioIntro = true;
-    const introHtml = `Welcome <b>Trainee</b>, <br><br> Before directing real traffic we need you to qualify on the Future Flight Ops system.<br>` +
+    const html = `Welcome <b>Trainee</b>, <br><br> Before directing real traffic we need you to qualify on the Future Flight Ops system.<br>` +
     ` Complete all the training scenarios so we feel safe letting you lose on the paying public. <br><br> Good Luck!`;
-    state.dialogBox = { top: 0.1, left: 0.1, width: 0.49, html: introHtml };
+    state.dialogBox = { top: 0.1, left: 0.1, width: 0.50, html };
   }
   
   if (!scenarioOne && elapsedTime > 18000) {
-    scenarioOne = true;
-    addToGame(createPlaneArrival(canvasObj));
+    scenarioOne = true;    
     state.dialogBox = { top: 0.1, left: 0.4, width: 0.25, html: '<clear>' };
+
+    setTimeout(() => {
+      const html = `<b>Arrival - Land Aircraft</b><br>` +
+      `Descend aircraft for an assisted (ILS) approach. Steer aircraft to runway and authorize the approach <br>` +
+      ` - select plane<br>` +
+      ` - lower to approach altitude of 6000ft or below<br>` +
+      ` - turn towards runway<br>` +
+      ` - when in range, click land`;
+
+      addToGame(createPlaneArrival(canvasObj));
+      state.dialogBox = { top: 0.1, left: 0.3, width: 0.54, html };
+      state.focusCircleType = FocusCircleType.ControlPanel;
+
+    }, 500);
   }
 }

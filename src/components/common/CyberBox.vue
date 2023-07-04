@@ -4,7 +4,7 @@
       <slot></slot>
     </div>
 
-    <svg viewBox="0 0 100.2 20.1">
+    <svg viewBox="0 0 100.0 20.1">
       <defs>
         <linearGradient :id="'gradient-' + id">
           <stop offset="0%" :stop-color="gradientStart" />

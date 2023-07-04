@@ -19,7 +19,8 @@ import { setTaxiQueue } from "./score";
  * @typedef {object} State
  * @property {Boolean} gameLoopRunning
  * @property {Boolean} showCircles
- * @property {object} dialogBox
+ * @property {Object} dialogBox
+ * @property {String} focusCircleType
  */
 
 /**

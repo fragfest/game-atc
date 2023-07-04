@@ -42,6 +42,14 @@
             :height="height"
           ></canvas>
 
+          <FocusCircle
+            v-if="focusCircleType"
+            class="layer-eight"
+            :size="screenSize"
+            :type="focusCircleType"
+          ></FocusCircle>
+
+          <!-- TUTORIAL -->
           <div
             v-if="tutorialBoxHtml"
             class="tutorial layer-eight"
@@ -52,8 +60,9 @@
               <p v-html="tutorialBoxHtml"></p>
             </CyberBox>
           </div>
+          <!-- TUTORIAL -->
 
-          <img src="/img/london.png" :height="height" />
+          <img src="/img/london.png" :height="height" class="layer-eight" />
         </div>
 
         <div class="row-bottom layer-seven">
@@ -110,6 +119,7 @@
 
 import { ref } from "vue";
 
+import FocusCircle from "./common/FocusCircle";
 import CyberBox from "./common/CyberBox";
 import ButtonPanel from "./panelBottom/ButtonPanel";
 import DetailsPanel from "./panelBottom/DetailsPanel";
@@ -136,6 +146,7 @@ import {
   setup as setupEvents,
   attachHtmlQueue,
   gameUpdateCB,
+  tutorialUpdateCB,
 } from "../js/game/gameEvents";
 import { setup as setupVictory } from "../js/game/victory";
 import { resetScore, getScore } from "../js/game/score";
@@ -159,6 +170,7 @@ let setShowCircles_isShowCirclesArg = null;
 export default {
   name: "atc-game",
   components: {
+    FocusCircle,
     CyberBox,
     FlightStripDeparture,
     FlightStrip,
@@ -180,8 +192,9 @@ export default {
       height,
       squareClicked,
       hasPopup: false,
-
+      // tutorial
       tutorialBoxHtml: "",
+      focusCircleType: "",
     };
   },
 
@@ -336,6 +349,7 @@ export default {
 
       gameUpdateCB: () => {
         gameUpdateCB(squareClicked, entityManagerArr, tutorialBox, gameState);
+        tutorialUpdateCB(this, "focusCircleType", gameState);
       },
     };
 
