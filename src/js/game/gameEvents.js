@@ -3,6 +3,7 @@ import { KeyboardEvents, subscribeKeyboard as subscribe } from '../events/keyboa
 import { DestinationType } from "../aircraft/airframe";
 import { nextWaypoint } from "../utils";
 import { setGameLoopState } from './game';
+import { planeSelectedFn } from '../tutorial/gameTutorial';
 
 const isDeparture = (plane) => plane.destinationType === DestinationType.Departure;
 const isArrival = (plane) => plane.destinationType === DestinationType.Arrival;
@@ -109,18 +110,33 @@ export const setup = (
 /**
  * @param {VueRef} planeSelVueRef 
  * @param {Array} entityManagerArr 
- * @param {Object} tutorialBox contains vue ref properties
- * @param {State} state game state 
  */
-export const gameUpdateCB = (planeSelVueRef, entityManagerArr, tutorialBox, state) => {
+export const gameUpdateCB = (planeSelVueRef, entityManagerArr) => {
   const planeSelId = planeSelVueRef.value.id;
   const isFound = (plane) => plane.id === planeSelId;
   const planeSelFound = entityManagerArr.value.find(isFound);
   if (!planeSelFound) {
     planeSelVueRef.value = {};
   }
+}
 
-  // TODO move to tutorialUpdateCB()
+/**
+ * @param {Object} tutorialEventArg 
+ * @param {State} state game state
+ */
+export const setupTutorialEvents = (tutorialEventArg, state) => {
+  tutorialEventArg.setPlaneTutorial = () => planeSelectedFn(state);
+}
+
+/**
+ * @param {VueThis} self 
+ * @param {String} focusCircleTypeProp 
+ * @param {Object} tutorialBox contains vue ref properties
+ * @param {State} state game state
+ */
+export const tutorialUpdateCB = (self, focusCircleTypeProp, tutorialBox, state) => {
+  self[focusCircleTypeProp] = state.focusCircleType || "";
+
   const { tutorialBoxTop, tutorialBoxLeft, tutorialBoxWidth, tutorialBoxHtmlQueue } = tutorialBox;
   if (state.dialogBox) {
     tutorialBoxTop.value = state.dialogBox.top;
@@ -132,15 +148,6 @@ export const gameUpdateCB = (planeSelVueRef, entityManagerArr, tutorialBox, stat
       state.dialogBox.html = "";
     }
   }
-}
-
-/**
- * @param {VueThis} self 
- * @param {String} focusCircleTypeProp 
- * @param {State} state game state
- */
-export const tutorialUpdateCB = (self, focusCircleTypeProp, state) => {
-  self[focusCircleTypeProp] = state.focusCircleType || "";
 }
 
 /**

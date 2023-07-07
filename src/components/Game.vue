@@ -147,6 +147,7 @@ import {
   attachHtmlQueue,
   gameUpdateCB,
   tutorialUpdateCB,
+  setupTutorialEvents,
 } from "../js/game/gameEvents";
 import { setup as setupVictory } from "../js/game/victory";
 import { resetScore, getScore } from "../js/game/score";
@@ -328,6 +329,9 @@ export default {
       tutorialBoxWidth,
       tutorialBoxHtmlQueue,
     };
+    const tutorialEventArg = {
+      setPlaneTutorial: () => {},
+    };
 
     setShowCircles_isShowCirclesArg = setShowCircles(gameState);
 
@@ -345,11 +349,12 @@ export default {
         squareClicked.value = squareObj;
         this.$refs.controlPanel.setFocus();
         setPlaneSelected(gameState)(setupArg, squareObj);
+        tutorialEventArg.setPlaneTutorial();
       },
 
       gameUpdateCB: () => {
-        gameUpdateCB(squareClicked, entityManagerArr, tutorialBox, gameState);
-        tutorialUpdateCB(this, "focusCircleType", gameState);
+        gameUpdateCB(squareClicked, entityManagerArr);
+        tutorialUpdateCB(this, "focusCircleType", tutorialBox, gameState);
       },
     };
 
@@ -360,7 +365,10 @@ export default {
       getWaypointArrivalsAll(),
       squareClicked,
       () => this.$refs.controlPanel.setFocus(),
-      () => setPlaneSelected(gameState)(setupArg, squareClicked.value),
+      () => {
+        setPlaneSelected(gameState)(setupArg, squareClicked.value);
+        tutorialEventArg.setPlaneTutorial();
+      },
       () => {
         this.hasPopup = true;
       },
@@ -374,6 +382,7 @@ export default {
 
     if (isTutorial) {
       attachHtmlQueue(this, "tutorialBoxHtml", tutorialBoxHtmlQueue);
+      setupTutorialEvents(tutorialEventArg, gameState);
       setupTutorial(gameState)(setupArg);
       return;
     }
@@ -509,6 +518,9 @@ export default {
   p {
     padding: 10px 24px;
     line-height: 1.2;
+  }
+  p:hover {
+    cursor: default;
   }
 }
 

@@ -21,7 +21,7 @@ export default {
         },
 
         circle: {
-          border: "8px solid lightgreen",
+          border: "8px solid white",
           "border-radius": "50%",
         },
 
@@ -34,7 +34,7 @@ export default {
           },
 
           circle: {
-            border: "4px solid lightgreen",
+            border: "4px solid white",
             "border-radius": "50%",
           },
         },
@@ -78,6 +78,7 @@ export default {
 <style lang="scss" scoped>
 .focus-circle {
   position: absolute;
+  pointer-events: none;
 }
 
 .circle {

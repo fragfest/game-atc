@@ -6,7 +6,7 @@ import {
   gameTick,
   getCanvasObj,
   textLayerClearFn,
-  headingLayerClearFn
+  headingLayerClearFn,
 } from "../game/game";
 import Square from "../Square";
 import { getFlightArrival } from '../flights/LHR';
@@ -41,11 +41,17 @@ export const setup = (state) => (argObj) => {
     () => argObj.gameUpdateCB()
   );
 
+  
   if (state.gameLoopRunning) return;
   setGameLoopState(state)(true);
   
   window.requestAnimationFrame(gameTickTutorial);
 }
+
+export const planeSelectedFn = (state) => {
+  setGameLoopState(state)(true);
+  isPlaneSelected = true;
+};
 
 // PRIVATE /////////////////////////////////////////////////////////////////////////////
 
@@ -69,9 +75,14 @@ const createPlaneArrival = ({
   return square;
 }
 
+// STATES
+let isPlaneSelected = false;
+
 // TUTORIAL STAGES
-let scenarioIntro = null;
-let scenarioOne = null;
+let scenarioIntro = false;
+let scenarioOne = false;
+let scenarioTwo = false;
+let scenarioTwoUserEvent0 = false;
 
 const tutorial = (state, entityManagerArr, canvasObj, startTime) => () => {
   const addToGame = entityManagerAdd(entityManagerArr);
@@ -79,14 +90,15 @@ const tutorial = (state, entityManagerArr, canvasObj, startTime) => () => {
   const now = Date.now();
   const elapsedTime = now - startTime;
   
-  if (!scenarioIntro && elapsedTime > 500) {
-    scenarioIntro = true;
-    const html = `Welcome <b>Trainee</b>, <br><br> Before directing real traffic we need you to qualify on the Future Flight Ops system.<br>` +
-    ` Complete all the training scenarios so we feel safe letting you lose on the paying public. <br><br> Good Luck!`;
-    state.dialogBox = { top: 0.1, left: 0.1, width: 0.50, html };
-  }
+  // if (!scenarioIntro && elapsedTime > 500) {
+  //   scenarioIntro = true;
+  //   const html = `Welcome <b>Trainee</b>, <br><br> Before directing real traffic we need you to qualify on the Future Flight Ops system.<br>` +
+  //   ` Complete all the training scenarios so we feel safe letting you lose on the paying public. <br><br> Good Luck!`;
+  //   state.dialogBox = { top: 0.1, left: 0.1, width: 0.50, html };
+  // }
   
-  if (!scenarioOne && elapsedTime > 18000) {
+  // if (!scenarioOne && elapsedTime > 18000) {
+  if (!scenarioOne && elapsedTime > 3000) {
     scenarioOne = true;    
     state.dialogBox = { top: 0.1, left: 0.4, width: 0.25, html: '<clear>' };
 
@@ -100,8 +112,20 @@ const tutorial = (state, entityManagerArr, canvasObj, startTime) => () => {
 
       addToGame(createPlaneArrival(canvasObj));
       state.dialogBox = { top: 0.1, left: 0.3, width: 0.54, html };
-      state.focusCircleType = FocusCircleType.ControlPanel;
-
     }, 500);
+    
   }
+  
+  if (!scenarioTwo && elapsedTime > 10000) {
+    scenarioTwo = true;
+    state.focusCircleType = FocusCircleType.ControlPanel;
+    setGameLoopState(state)(false);
+    isPlaneSelected = false;
+  }
+  
+  if(!scenarioTwoUserEvent0 && isPlaneSelected && elapsedTime > 10000) {
+    scenarioTwoUserEvent0 = true;
+    isPlaneSelected = false;
+  }
+
 }

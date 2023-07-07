@@ -136,9 +136,7 @@ export const gameTick = (
     const updateIntervalMs = 500;
     const deltaTime = timestamp - timestampPrev;
 
-    if (!gameLoopRunning) return;
-
-    if (deltaTime > updateIntervalMs) {
+    if (gameLoopRunning && (deltaTime > updateIntervalMs)) {
       timestampPrev = timestamp;
       // cleanup
       entityManagerArr.forEach(callFn('updateDestroy', { entityManagerArr }));
