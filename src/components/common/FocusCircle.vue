@@ -39,6 +39,34 @@ export default {
           },
         },
       },
+
+      FlightStrip: {
+        focusCircle: {
+          top: "82px",
+          left: "1346px",
+          width: "362px",
+          height: "78px",
+        },
+
+        circle: {
+          border: "4px solid white",
+          "border-radius": "12px",
+        },
+
+        small: {
+          focusCircle: {
+            top: "70px",
+            left: "1020px",
+            width: "279px",
+            height: "60px",
+          },
+
+          circle: {
+            border: "3px solid white",
+            "border-radius": "8px",
+          },
+        },
+      },
     };
   },
 
@@ -49,6 +77,10 @@ export default {
         return Object.values(FocusCircleType).includes(value);
       },
     },
+    top: { type: Number },
+    left: { type: Number },
+    width: { type: Number },
+    height: { type: Number },
   },
 
   computed: {
@@ -61,7 +93,13 @@ export default {
 
       let positionObj = this[this.type];
       if (this.sizeClass === "small") positionObj = positionObj.small;
-      return positionObj.focusCircle;
+      const focusCircle = positionObj.focusCircle;
+
+      if (this.top) focusCircle.top = this.top + "px";
+      if (this.left) focusCircle.left = this.left + "px";
+      if (this.width) focusCircle.width = this.width + "px";
+      if (this.height) focusCircle.height = this.height + "px";
+      return focusCircle;
     },
 
     styleCircle: function () {
@@ -84,7 +122,7 @@ export default {
 .circle {
   width: 100%;
   height: 100%;
-  animation: grow 1.8s infinite linear;
+  animation: grow 1.4s infinite linear;
 }
 
 @keyframes grow {

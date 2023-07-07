@@ -41,7 +41,6 @@ export const setup = (state) => (argObj) => {
     () => argObj.gameUpdateCB()
   );
 
-  
   if (state.gameLoopRunning) return;
   setGameLoopState(state)(true);
   
@@ -116,16 +115,16 @@ const tutorial = (state, entityManagerArr, canvasObj, startTime) => () => {
     
   }
   
-  if (!scenarioTwo && elapsedTime > 10000) {
+  if (!scenarioTwo && elapsedTime > 12000) {
     scenarioTwo = true;
-    state.focusCircleType = FocusCircleType.ControlPanel;
+    state.focusCircleType = FocusCircleType.FlightStrip;
     setGameLoopState(state)(false);
     isPlaneSelected = false;
   }
   
-  if(!scenarioTwoUserEvent0 && isPlaneSelected && elapsedTime > 10000) {
+  if(!scenarioTwoUserEvent0 && isPlaneSelected) {
     scenarioTwoUserEvent0 = true;
     isPlaneSelected = false;
+    state.focusCircleType = null;
   }
-
 }

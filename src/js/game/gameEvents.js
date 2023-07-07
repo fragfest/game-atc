@@ -132,10 +132,18 @@ export const setupTutorialEvents = (tutorialEventArg, state) => {
  * @param {VueThis} self 
  * @param {String} focusCircleTypeProp 
  * @param {Object} tutorialBox contains vue ref properties
+ * @param {Object} focusCircle
  * @param {State} state game state
  */
-export const tutorialUpdateCB = (self, focusCircleTypeProp, tutorialBox, state) => {
+export const tutorialUpdateCB = (self, focusCircleTypeProp, tutorialBox, focusCircle, state) => {
   self[focusCircleTypeProp] = state.focusCircleType || "";
+
+  if (state.focusCircle) {
+    focusCircle.top = state.focusCircle.top;
+    focusCircle.left = state.focusCircle.left;
+    focusCircle.width = state.focusCircle.width;
+    focusCircle.height = state.focusCircle.height;
+  }
 
   const { tutorialBoxTop, tutorialBoxLeft, tutorialBoxWidth, tutorialBoxHtmlQueue } = tutorialBox;
   if (state.dialogBox) {

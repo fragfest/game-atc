@@ -21,6 +21,7 @@ import { setTaxiQueue } from "./score";
  * @property {Boolean} showCircles
  * @property {Object} dialogBox
  * @property {String} focusCircleType
+ * @property {Object} focusCircle
  */
 
 /**

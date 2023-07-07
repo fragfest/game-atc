@@ -42,14 +42,18 @@
             :height="height"
           ></canvas>
 
+          <!-- TUTORIAL -->
           <FocusCircle
             v-if="focusCircleType"
             class="layer-eight"
             :size="screenSize"
             :type="focusCircleType"
+            :top="focusCircle.top"
+            :left="focusCircle.left"
+            :width="focusCircle.width"
+            :height="focusCircle.height"
           ></FocusCircle>
 
-          <!-- TUTORIAL -->
           <div
             v-if="tutorialBoxHtml"
             class="tutorial layer-eight"
@@ -162,6 +166,7 @@ let height = getGameSize(ScreenSizes.Large).height;
 
 let entityManagerArr = ref([]);
 let squareClicked = ref({});
+
 let tutorialBoxTop = ref(0.4);
 let tutorialBoxLeft = ref(0.4);
 let tutorialBoxWidth = ref(0.4);
@@ -196,6 +201,7 @@ export default {
       // tutorial
       tutorialBoxHtml: "",
       focusCircleType: "",
+      focusCircle: {},
     };
   },
 
@@ -354,7 +360,13 @@ export default {
 
       gameUpdateCB: () => {
         gameUpdateCB(squareClicked, entityManagerArr);
-        tutorialUpdateCB(this, "focusCircleType", tutorialBox, gameState);
+        tutorialUpdateCB(
+          this,
+          "focusCircleType",
+          tutorialBox,
+          this.focusCircle,
+          gameState
+        );
       },
     };
 
