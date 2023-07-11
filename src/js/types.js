@@ -3,6 +3,7 @@ import Square from './Square';
 export const FocusCircleType = Object.freeze({
   ControlPanel: 'ControlPanel',
   FlightStrip: 'FlightStrip',
+  Circle: 'Circle',
 })
 
 export const HoldingPosition = Object.freeze({

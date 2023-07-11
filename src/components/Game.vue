@@ -90,6 +90,7 @@
               :planeSelected="squareClicked"
               :planes="planesSorted"
               :screenSize="screenSize"
+              @updatedAltitudeEv="updatedAltitudeEv"
             ></ControlPanel>
           </div>
         </div>
@@ -171,6 +172,7 @@ let tutorialBoxTop = ref(0.4);
 let tutorialBoxLeft = ref(0.4);
 let tutorialBoxWidth = ref(0.4);
 
+let updatedAltitudeTutorial_altArg = null;
 let setShowCircles_isShowCirclesArg = null;
 
 export default {
@@ -283,6 +285,10 @@ export default {
   },
 
   methods: {
+    updatedAltitudeEv: function (altVal) {
+      updatedAltitudeTutorial_altArg(altVal);
+    },
+
     showCirclesEv: function (isShowCircle) {
       setShowCircles_isShowCirclesArg(isShowCircle);
     },
@@ -337,8 +343,11 @@ export default {
     };
     const tutorialEventArg = {
       setPlaneTutorial: () => {},
+      updatedAltitudeTutorial: () => {},
     };
 
+    updatedAltitudeTutorial_altArg = (alt) =>
+      tutorialEventArg.updatedAltitudeTutorial(alt);
     setShowCircles_isShowCirclesArg = setShowCircles(gameState);
 
     const setupArg = {

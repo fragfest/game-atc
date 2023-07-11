@@ -3,7 +3,7 @@ import { KeyboardEvents, subscribeKeyboard as subscribe } from '../events/keyboa
 import { DestinationType } from "../aircraft/airframe";
 import { nextWaypoint } from "../utils";
 import { setGameLoopState } from './game';
-import { planeSelectedFn } from '../tutorial/gameTutorial';
+import { planeSelectedFn, altitudeUpdatedFn } from '../tutorial/gameTutorial';
 
 const isDeparture = (plane) => plane.destinationType === DestinationType.Departure;
 const isArrival = (plane) => plane.destinationType === DestinationType.Arrival;
@@ -126,6 +126,7 @@ export const gameUpdateCB = (planeSelVueRef, entityManagerArr) => {
  */
 export const setupTutorialEvents = (tutorialEventArg, state) => {
   tutorialEventArg.setPlaneTutorial = () => planeSelectedFn(state);
+  tutorialEventArg.updatedAltitudeTutorial = (alt) => altitudeUpdatedFn(state)(alt);
 }
 
 /**

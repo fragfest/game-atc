@@ -82,6 +82,7 @@
         :sizeClass="sizeClass"
         :planes="planes"
         :planeSelected="planeSelected"
+        @updatedAltitudeEv="updatedAltitudeEv"
       />
 
       <svg viewBox="-250 -250 500 500" id="svg">
@@ -157,6 +158,9 @@ const setCompass = (headingRad) => {
 
 export default {
   name: "ControlPanel",
+
+  components: { ToolTip, CircleInputs },
+
   props: {
     // NOTE: planes is needed to trigger a responsive update of component.
     // Then changes to planeSelected will be picked up.
@@ -164,7 +168,8 @@ export default {
     planes: { type: Object },
     screenSize: { type: String },
   },
-  components: { ToolTip, CircleInputs },
+
+  emits: ["updatedAltitudeEv"],
 
   data() {
     return {
@@ -300,6 +305,10 @@ export default {
   },
 
   methods: {
+    updatedAltitudeEv: function (alt) {
+      this.$emit("updatedAltitudeEv", alt);
+    },
+
     setFocus: function () {
       const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
       if (!planeSel) return;

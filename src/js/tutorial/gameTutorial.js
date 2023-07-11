@@ -52,6 +52,11 @@ export const planeSelectedFn = (state) => {
   isPlaneSelected = true;
 };
 
+export const altitudeUpdatedFn = (state) => (altVal) => {
+  setGameLoopState(state)(true);
+  altitudeValue = altVal;
+};
+
 // PRIVATE /////////////////////////////////////////////////////////////////////////////
 
 const createPlaneArrival = ({
@@ -74,14 +79,16 @@ const createPlaneArrival = ({
   return square;
 }
 
-// STATES
+// EXTERNALLY SET VARS
 let isPlaneSelected = false;
+let altitudeValue = null;
 
 // TUTORIAL STAGES
 let scenarioIntro = false;
 let scenarioOne = false;
 let scenarioTwo = false;
 let scenarioTwoUserEvent0 = false;
+let scenarioTwoUserEvent1 = false;
 
 const tutorial = (state, entityManagerArr, canvasObj, startTime) => () => {
   const addToGame = entityManagerAdd(entityManagerArr);
@@ -97,34 +104,53 @@ const tutorial = (state, entityManagerArr, canvasObj, startTime) => () => {
   // }
   
   // if (!scenarioOne && elapsedTime > 18000) {
-  if (!scenarioOne && elapsedTime > 3000) {
-    scenarioOne = true;    
-    state.dialogBox = { top: 0.1, left: 0.4, width: 0.25, html: '<clear>' };
+  //   scenarioOne = true;    
+  //   state.dialogBox = { top: 0.1, left: 0.4, width: 0.25, html: '<clear>' };
 
-    setTimeout(() => {
-      const html = `<b>Arrival - Land Aircraft</b><br>` +
-      `Descend aircraft for an assisted (ILS) approach. Steer aircraft to runway and authorize the approach <br>` +
-      ` - select plane<br>` +
-      ` - lower to approach altitude of 6000ft or below<br>` +
-      ` - turn towards runway<br>` +
-      ` - when in range, click land`;
+  //   setTimeout(() => {
+  //     const html = `<b>Arrival - Land Aircraft</b><br>` +
+  //     `Descend aircraft for an assisted (ILS) approach. Steer aircraft to runway and authorize the approach <br>` +
+  //     ` - select plane<br>` +
+  //     ` - lower to approach altitude of 6000ft or below<br>` +
+  //     ` - turn towards runway<br>` +
+  //     ` - when in range, click land`;
 
-      addToGame(createPlaneArrival(canvasObj));
-      state.dialogBox = { top: 0.1, left: 0.3, width: 0.54, html };
-    }, 500);
-    
-  }
+  //     addToGame(createPlaneArrival(canvasObj));
+  //     state.dialogBox = { top: 0.1, left: 0.3, width: 0.54, html };
+  //   }, 500);    
+  // }
   
-  if (!scenarioTwo && elapsedTime > 12000) {
+  // if (!scenarioTwo && !isPlaneSelected && elapsedTime > 12000) {
+  if (!scenarioTwo && !isPlaneSelected && elapsedTime > 1200) {
     scenarioTwo = true;
     state.focusCircleType = FocusCircleType.FlightStrip;
+    addToGame(createPlaneArrival(canvasObj));
     setGameLoopState(state)(false);
-    isPlaneSelected = false;
   }
   
-  if(!scenarioTwoUserEvent0 && isPlaneSelected) {
+  if(!scenarioTwoUserEvent0 && scenarioTwo && isPlaneSelected) {
     scenarioTwoUserEvent0 = true;
-    isPlaneSelected = false;
     state.focusCircleType = null;
+
+    setTimeout(() => {
+      state.focusCircleType = FocusCircleType.FlightStrip;
+      state.focusCircle = {};
+      state.focusCircle.top = 908;
+      state.focusCircle.left = 1182;
+      state.focusCircle.width = 37;
+      state.focusCircle.height = 24;
+    }, 500);
+
+    setTimeout(() => {
+      setGameLoopState(state)(false);
+    }, 1200);
+  }
+
+  if(!scenarioTwoUserEvent1 && altitudeValue) {
+    scenarioTwoUserEvent1 = true;
+    if(altitudeValue <= 6000) {
+      state.focusCircleType = null;
+      setGameLoopState(state)(true);
+    }
   }
 }

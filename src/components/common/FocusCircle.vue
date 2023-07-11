@@ -12,6 +12,22 @@ export default {
   name: "FocusCircle",
   data() {
     return {
+      Circle: {
+        focusCircle: {},
+        circle: {
+          border: "2px solid white",
+          "border-radius": "50%",
+        },
+
+        small: {
+          focusCircle: {},
+          circle: {
+            border: "2px solid white",
+            "border-radius": "50%",
+          },
+        },
+      },
+
       ControlPanel: {
         focusCircle: {
           top: "814px",

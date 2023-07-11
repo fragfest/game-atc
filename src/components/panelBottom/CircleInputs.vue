@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import InputField from './InputField.vue';
+import InputField from "./InputField.vue";
 import {
   leftPadZeros,
   convHdgRadToThreeDigits,
@@ -72,6 +72,9 @@ export default {
     planes: { type: Object, required: true },
     planeSelected: { type: Object, required: true },
   },
+
+  emits: ["updatedAltitudeEv"],
+
   data() {
     return {
       inputHeading: null,
@@ -80,7 +83,7 @@ export default {
       focusHeading: false,
       focusAltitude: false,
       focusSpeed: false,
-    }
+    };
   },
   components: { InputField },
 
@@ -88,8 +91,10 @@ export default {
     planeSelected(newPlane) {
       const heading = convHdgRadToThreeDigits(newPlane.headingTargetRad);
       const altTarget = newPlane.altitudeTarget;
-      const altShort = altTarget ? Math.floor(altTarget / 100).toString() : '---';
-      const speedTarget = newPlane.speedTarget ? newPlane.speedTarget : '---';
+      const altShort = altTarget
+        ? Math.floor(altTarget / 100).toString()
+        : "---";
+      const speedTarget = newPlane.speedTarget ? newPlane.speedTarget : "---";
 
       this.inputHeading = newPlane.id ? leftPadZeros(heading) : "";
       this.inputAltitude = newPlane.id ? leftPadZeros(altShort) : "";
@@ -102,10 +107,9 @@ export default {
       this.$nextTick(() => {
         if (newPlane.id) {
           if (!newPlane.isNonInteractive) {
-            if(newPlane.isHolding || newPlane.isHandoff) {
+            if (newPlane.isHolding || newPlane.isHandoff) {
               this.focusAltitude = true;
-            }
-            else this.focusHeading = true;
+            } else this.focusHeading = true;
           }
         } else {
           this.focusHeading = false;
@@ -115,14 +119,14 @@ export default {
     },
 
     isTakeoff(isTakeoff) {
-      const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
+      const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
       if (!planeSel) return false;
 
       const altTarget = planeSel.altitudeTarget;
       const altShort = Math.floor(altTarget / 100).toString();
       const speedTarget = planeSel.speedTarget;
 
-      if(!isTakeoff) {
+      if (!isTakeoff) {
         this.inputAltitude = leftPadZeros(altShort);
         this.inputSpeed = leftPadZeros(speedTarget);
         this.setFocus();
@@ -131,39 +135,43 @@ export default {
   },
 
   computed: {
-    isDisabledHeading: function() {
-      const planeFound = this.planes.find(x => x.id === this.planeSelected.id);
+    isDisabledHeading: function () {
+      const planeFound = this.planes.find(
+        (x) => x.id === this.planeSelected.id
+      );
       if (!planeFound) return true;
       const planeSel = this.planeSelected;
-      return planeSel.isNonInteractive || planeSel.isHolding || planeSel.isHandoff;
+      return (
+        planeSel.isNonInteractive || planeSel.isHolding || planeSel.isHandoff
+      );
     },
 
-    isDisabled: function() {
-      const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
+    isDisabled: function () {
+      const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
       if (!planeSel) return true;
       return this.planeSelected.isNonInteractive;
     },
 
-    isTakeoff: function() {
-      const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
+    isTakeoff: function () {
+      const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
       if (!planeSel) return false;
       return planeSel.takeoff;
     },
 
-    heading: function() {
-      const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
+    heading: function () {
+      const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
       if (!planeSel) return "";
       return planeSel.heading;
     },
 
-    altitude: function() {
-      const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
+    altitude: function () {
+      const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
       if (!planeSel) return "";
       return altitudeDisplay(planeSel.altitude);
     },
 
-    speed: function() {
-      const planeSel = this.planes.find(x => x.id === this.planeSelected.id);
+    speed: function () {
+      const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
       if (!planeSel) return "";
       return Math.round(planeSel.speed);
     },
@@ -180,11 +188,12 @@ export default {
       this.$nextTick(() => {
         const planeSel = this.planeSelected;
         if (!planeSel.isNonInteractive) {
-          if(planeSel.isHolding || planeSel.isHandoff) {
+          if (planeSel.isHolding || planeSel.isHandoff) {
             this.focusAltitude = true;
-          }
-          else {
-            this.inputHeading = leftPadZeros(convHdgRadToThreeDigits(planeSel.headingTargetRad));
+          } else {
+            this.inputHeading = leftPadZeros(
+              convHdgRadToThreeDigits(planeSel.headingTargetRad)
+            );
             this.focusHeading = true;
           }
         }
@@ -258,6 +267,7 @@ export default {
       this.$nextTick(() => {
         this.focusSpeed = true;
       });
+      this.$emit("updatedAltitudeEv", alt);
     },
 
     inputEventSpeed: function (ev) {
@@ -283,7 +293,7 @@ export default {
       }
 
       this.planeSelected.setSpeed(this.inputSpeed, false);
-      if(this.planeSelected.isHolding || this.planeSelected.isHandoff){
+      if (this.planeSelected.isHolding || this.planeSelected.isHandoff) {
         this.focusAltitude = false;
         this.$nextTick(() => {
           this.focusAltitude = true;
@@ -295,9 +305,8 @@ export default {
         this.focusHeading = true;
       });
     },
-
   },
-}
+};
 </script>
 
 <style lang="scss">
