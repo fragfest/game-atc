@@ -73,7 +73,7 @@ export default {
     planeSelected: { type: Object, required: true },
   },
 
-  emits: ["updatedAltitudeEv"],
+  emits: ["updatedHeadingEv", "updatedAltitudeEv"],
 
   data() {
     return {
@@ -237,6 +237,7 @@ export default {
       this.$nextTick(() => {
         this.focusAltitude = true;
       });
+      this.$emit("updatedHeadingEv", this.inputHeading);
     },
 
     inputEventAltitude: function (ev) {

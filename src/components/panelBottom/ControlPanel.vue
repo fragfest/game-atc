@@ -82,6 +82,7 @@
         :sizeClass="sizeClass"
         :planes="planes"
         :planeSelected="planeSelected"
+        @updatedHeadingEv="updatedHeadingEv"
         @updatedAltitudeEv="updatedAltitudeEv"
       />
 
@@ -169,7 +170,7 @@ export default {
     screenSize: { type: String },
   },
 
-  emits: ["updatedAltitudeEv"],
+  emits: ["updatedHeadingEv", "updatedAltitudeEv"],
 
   data() {
     return {
@@ -305,6 +306,10 @@ export default {
   },
 
   methods: {
+    updatedHeadingEv: function (hdg) {
+      this.$emit("updatedHeadingEv", hdg);
+    },
+
     updatedAltitudeEv: function (alt) {
       this.$emit("updatedAltitudeEv", alt);
     },

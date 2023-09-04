@@ -3,7 +3,7 @@ import { KeyboardEvents, subscribeKeyboard as subscribe } from '../events/keyboa
 import { DestinationType } from "../aircraft/airframe";
 import { nextWaypoint } from "../utils";
 import { setGameLoopState } from './game';
-import { planeSelectedFn, altitudeUpdatedFn } from '../tutorial/gameTutorial';
+import { buttonlandingFn, planeSelectedFn, headingUpdatedFn, altitudeUpdatedFn } from '../tutorial/gameTutorial';
 
 const isDeparture = (plane) => plane.destinationType === DestinationType.Departure;
 const isArrival = (plane) => plane.destinationType === DestinationType.Arrival;
@@ -111,7 +111,7 @@ export const setup = (
  * @param {VueRef} planeSelVueRef 
  * @param {Array} entityManagerArr 
  */
-export const gameUpdateCB = (planeSelVueRef, entityManagerArr) => {
+export const gameUpdateEventCB = (planeSelVueRef, entityManagerArr) => {
   const planeSelId = planeSelVueRef.value.id;
   const isFound = (plane) => plane.id === planeSelId;
   const planeSelFound = entityManagerArr.value.find(isFound);
@@ -125,8 +125,10 @@ export const gameUpdateCB = (planeSelVueRef, entityManagerArr) => {
  * @param {State} state game state
  */
 export const setupTutorialEvents = (tutorialEventArg, state) => {
+  tutorialEventArg.setLandingTutorial = (isLanding) => buttonlandingFn(isLanding);
+  tutorialEventArg.updatedHeadingTutorial = (hdg) => headingUpdatedFn(hdg);
   tutorialEventArg.setPlaneTutorial = () => planeSelectedFn(state);
-  tutorialEventArg.updatedAltitudeTutorial = (alt) => altitudeUpdatedFn(state)(alt);
+  tutorialEventArg.updatedAltitudeTutorial = (alt) => altitudeUpdatedFn(alt);
 }
 
 /**
@@ -134,12 +136,15 @@ export const setupTutorialEvents = (tutorialEventArg, state) => {
  * @param {String} focusCircleTypeProp 
  * @param {Object} tutorialBox contains vue ref properties
  * @param {Object} focusCircle
+ * @param {Object} planeSelCBs object with planeSel funcs
+ * @param {VueRef} planeSelVueRef vue ref to plane selected object
  * @param {State} state game state
  */
-export const tutorialUpdateCB = (self, focusCircleTypeProp, tutorialBox, focusCircle, state) => {
+export const tutorialUpdateEventCB = (self, focusCircleTypeProp, tutorialBox, focusCircle, planeSelCBs, planeSelVueRef, state) => {
   self[focusCircleTypeProp] = state.focusCircleType || "";
 
   if (state.focusCircle) {
+    focusCircle.size = state.focusCircle.size;
     focusCircle.top = state.focusCircle.top;
     focusCircle.left = state.focusCircle.left;
     focusCircle.width = state.focusCircle.width;
@@ -156,6 +161,10 @@ export const tutorialUpdateCB = (self, focusCircleTypeProp, tutorialBox, focusCi
       fillHtmlQueue(state.dialogBox.html, tutorialBoxHtmlQueue);
       state.dialogBox.html = "";
     }
+  }
+  if(planeSelVueRef?.value?.id) {
+    const planeSel = planeSelVueRef.value;
+    if(planeSelCBs.setLandingTutorial) planeSelCBs.setLandingTutorial(planeSel.landing);
   }
 }
 

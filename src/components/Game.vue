@@ -91,6 +91,7 @@
               :planes="planesSorted"
               :screenSize="screenSize"
               @updatedAltitudeEv="updatedAltitudeEv"
+              @updatedHeadingEv="updatedHeadingEv"
             ></ControlPanel>
           </div>
         </div>
@@ -150,8 +151,8 @@ import { setup as setupKeyboard } from "../js/events/keyboard";
 import {
   setup as setupEvents,
   attachHtmlQueue,
-  gameUpdateCB,
-  tutorialUpdateCB,
+  gameUpdateEventCB,
+  tutorialUpdateEventCB,
   setupTutorialEvents,
 } from "../js/game/gameEvents";
 import { setup as setupVictory } from "../js/game/victory";
@@ -172,6 +173,7 @@ let tutorialBoxTop = ref(0.4);
 let tutorialBoxLeft = ref(0.4);
 let tutorialBoxWidth = ref(0.4);
 
+let updatedHeadingTutorial_hdgArg = null;
 let updatedAltitudeTutorial_altArg = null;
 let setShowCircles_isShowCirclesArg = null;
 
@@ -285,6 +287,10 @@ export default {
   },
 
   methods: {
+    updatedHeadingEv: function (hdgVal) {
+      updatedHeadingTutorial_hdgArg(hdgVal);
+    },
+
     updatedAltitudeEv: function (altVal) {
       updatedAltitudeTutorial_altArg(altVal);
     },
@@ -334,6 +340,7 @@ export default {
     const gameState = {};
     const width = getGameSize(screenSize).width;
     const height = getGameSize(screenSize).height;
+
     const tutorialBoxHtmlQueue = [];
     const tutorialBox = {
       tutorialBoxTop,
@@ -342,10 +349,14 @@ export default {
       tutorialBoxHtmlQueue,
     };
     const tutorialEventArg = {
-      setPlaneTutorial: () => {},
+      setLandingTutorial: () => {},
+      updatedHeadingTutorial: () => {},
       updatedAltitudeTutorial: () => {},
+      setPlaneTutorial: () => {},
     };
 
+    updatedHeadingTutorial_hdgArg = (hdg) =>
+      tutorialEventArg.updatedHeadingTutorial(hdg);
     updatedAltitudeTutorial_altArg = (alt) =>
       tutorialEventArg.updatedAltitudeTutorial(alt);
     setShowCircles_isShowCirclesArg = setShowCircles(gameState);
@@ -368,12 +379,14 @@ export default {
       },
 
       gameUpdateCB: () => {
-        gameUpdateCB(squareClicked, entityManagerArr);
-        tutorialUpdateCB(
+        gameUpdateEventCB(squareClicked, entityManagerArr);
+        tutorialUpdateEventCB(
           this,
           "focusCircleType",
           tutorialBox,
           this.focusCircle,
+          tutorialEventArg,
+          squareClicked,
           gameState
         );
       },
@@ -525,25 +538,97 @@ export default {
   position: absolute;
 }
 
+// tutorial
 .tutorial.small {
   font-size: 11px;
+
   p {
-    padding: 6px 16px;
+    padding: 6px 24px;
     line-height: 1.1;
   }
+
+  .line {
+    margin-bottom: 3px;
+  }
+
+  .checkmark {
+    width: 11px;
+    height: 10px;
+    padding-bottom: 1px;
+    padding-left: 3px;
+    margin-right: 6px;
+
+    border-radius: 50%;
+    border: 1px solid white;
+    background-color: limegreen;
+    font-size: 10px;
+  }
+
+  .cross {
+    width: 11px;
+    height: 11px;
+    padding-bottom: 2px;
+    padding-left: 3px;
+    margin-right: 6px;
+
+    border-radius: 50%;
+    border: 1px solid white;
+    background-color: red;
+    font-size: 12px;
+    font-weight: bold;
+  }
 }
+// end small
+
 .tutorial {
   position: absolute;
   color: white;
   font-size: 14px;
+
   p {
-    padding: 10px 24px;
+    padding: 10px 34px;
     line-height: 1.2;
   }
   p:hover {
     cursor: default;
   }
+
+  .line {
+    display: flex;
+    margin-bottom: 4px;
+  }
+
+  .text {
+    padding-top: 2px;
+  }
+
+  .checkmark {
+    width: 14px;
+    height: 14px;
+    padding-top: 2px;
+    padding-left: 5px;
+    margin-right: 8px;
+
+    border-radius: 50%;
+    border: 1px solid white;
+    background-color: limegreen;
+  }
+
+  .cross {
+    width: 14px;
+    height: 14px;
+    padding-bottom: 3px;
+    padding-left: 4px;
+    margin-right: 8px;
+
+    border-radius: 50%;
+    border: 1px solid white;
+    background-color: red;
+    font-size: 16px;
+    font-weight: bold;
+  }
 }
+// END tutorial
 
 .canvas {
   position: absolute;
