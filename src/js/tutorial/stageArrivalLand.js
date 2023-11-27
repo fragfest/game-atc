@@ -1,3 +1,4 @@
+import { ElapsedTimes } from './typesTutorial';
 import { FocusCircleType } from "../types";
 import { flightStripFirst, controlPanelAltitude, controlPanelHeading, controlPanelLanding } from "./focusCircleTutorial.js";
 
@@ -35,7 +36,7 @@ export const stageArrivalLand = (state, objEventCB, screenSize, elapsedTime, pla
     }, 1000);
   }
   
-  if((elapsedTime > 28000) && (event === Events.WaitForInput0)) {
+  if((elapsedTime > ElapsedTimes.ArrivalLandFirstInputMs ) && (event === Events.WaitForInput0)) {
     event = Events.WaitForSelected0;
     objEventCB.isPlaneSelected = false;
   }
@@ -52,8 +53,8 @@ export const stageArrivalLand = (state, objEventCB, screenSize, elapsedTime, pla
     objEventCB.isPlaneSelected = false;
     state.focusCircleType = FocusCircleType.Rectangle;
     state.focusCircle = controlPanelAltitude(screenSize);
-    document.querySelector('.checkmark.check-0').removeAttribute('hidden');
-    document.querySelector('.cross.check-0').setAttribute('hidden', true);
+    document.querySelector('.checkmark.check-0')?.removeAttribute('hidden');
+    document.querySelector('.cross.check-0')?.setAttribute('hidden', true);
   }
 
   if((event === Events.WaitForInput1) && objEventCB.altitudeValue) {

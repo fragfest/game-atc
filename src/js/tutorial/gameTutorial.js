@@ -8,11 +8,12 @@ import {
   headingLayerClearFn,
 } from "../game/game";
 import Square from "../Square";
-import { getFlightArrival } from '../flights/LHR';
+import { getFlightArrival, getFlightDeparture } from '../flights/LHR';
 import { Waypoints, Runways } from '../airports/LHR';
 import { DestinationType, getPerformance } from '../aircraft/airframe';
+import { Stages, ElapsedTimes } from './typesTutorial';
 import { stageArrivalLand } from './stageArrivalLand';
-import { Stages } from './typesTutorial';
+import { stageDeparture } from './stageDeparture';
 
 /**
  * @typedef {import('../game/game.js').State} State
@@ -49,24 +50,18 @@ export const setup = (state) => (argObj) => {
 }
 
 const objEventCB = {
+  buttonTakeoff: false,
   buttonLanding: false,
   headingValue: null,
   altitudeValue: null,
   isPlaneSelected: false,
 };
 
-export const buttonlandingFn = (isLanding) => {
-  objEventCB.buttonLanding = isLanding;
-}
-
-export const headingUpdatedFn = (hdgVal) => {
-  objEventCB.headingValue = hdgVal;
-}
-
-export const altitudeUpdatedFn = (altVal) => {
-  objEventCB.altitudeValue = altVal;
-};
-
+export const buttonHandoffFn = isHandoff => objEventCB.buttonHandoff = isHandoff;
+export const buttonTakeoffFn = isTakeoff => objEventCB.buttonTakeoff = isTakeoff;
+export const buttonLandingFn = isLanding => objEventCB.buttonLanding = isLanding;
+export const headingUpdatedFn = hdgVal => objEventCB.headingValue = hdgVal;
+export const altitudeUpdatedFn = altVal => objEventCB.altitudeValue = altVal;
 export const planeSelectedFn = (state) => {
   objEventCB.isPlaneSelected = true;
   setGameLoopState(state)(true);
@@ -74,10 +69,36 @@ export const planeSelectedFn = (state) => {
 
 // PRIVATE /////////////////////////////////////////////////////////////////////////////
 
+const createPlaneDepartureStage = ({
+  screenSize, entityManagerArr, canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl, clickCB
+}) => {
+  const destinationType = DestinationType.Departure;
+  const runway = entityManagerArr.find(x => x.title === '27L');
+
+  const newPlane = {
+    x: runway.x,
+    y: runway.y,
+    heading: '270',
+    waypoint: 'DET',
+  };
+  const altitude = 0;
+  const speed = 0;
+
+  const flight = getFlightDeparture([]);
+  const airframeObj = getPerformance(flight.airframe, screenSize);
+
+  const square = new Square(flight, canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl,
+    { x: newPlane.x, y: newPlane.y, heading: newPlane.heading, altitude, speed },
+    { destinationType, airframeObj, waypoint: newPlane.waypoint, runway: runway.title }
+  );
+  square.clickEventCB = () => clickCB(square);
+
+  return square;
+}
+
 const createPlaneArrivalStage = ({
   screenSize, width, height, canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl, clickCB
 }) => {
-
   const flight = getFlightArrival([]);
   const destinationType = DestinationType.Arrival;
 
@@ -104,6 +125,8 @@ const completeStage = stageArg => {
   stageCompleted.push(stageArg);
 }
 
+let startTimeStageDeparture = 0;
+
 const tutorial = (state, entityManagerArr, startTime, canvasObj, screenSize) => () => {
   const addToGame = entityManagerAdd(entityManagerArr);
   const planeSelected = entityManagerArr.find(x => x.isSelected);
@@ -112,7 +135,9 @@ const tutorial = (state, entityManagerArr, startTime, canvasObj, screenSize) => 
   const elapsedTime = now - startTime;
   
   if(elapsedTime > 500 && stage === '') {
-    stage = Stages.Intro;
+    // stage = Stages.Intro;
+    stage = Stages.Departure;
+    startTimeStageDeparture = elapsedTime;
   }
 
   if (isAtStage(Stages.Intro)) {
@@ -122,7 +147,7 @@ const tutorial = (state, entityManagerArr, startTime, canvasObj, screenSize) => 
     completeStage(Stages.Intro);
   }
   
-  if(elapsedTime > 18000 && isLastStage(Stages.Intro)) {
+  if(elapsedTime > ElapsedTimes.ArrivalLandStartMs && isLastStage(Stages.Intro)) {
     stage = Stages.ArrivalLand;
   }
 
@@ -130,7 +155,23 @@ const tutorial = (state, entityManagerArr, startTime, canvasObj, screenSize) => 
     stageArrivalLand(state, objEventCB, screenSize, elapsedTime, planeSelected,
       () => addToGame(createPlaneArrivalStage(canvasObj)),
       setGameLoopState(state),
-      () => completeStage(Stages.ArrivalLand));
+      () => {
+        completeStage(Stages.ArrivalLand);
+        startTimeStageDeparture = elapsedTime;
+        stage = Stages.Departure;
+      });
+  }
+
+  const elapsedTimeDeparture = elapsedTime - startTimeStageDeparture;
+  if((elapsedTimeDeparture > ElapsedTimes.DepartureStartMs) && isAtStage(Stages.Departure)) {
+    const obj = {...canvasObj, entityManagerArr };
+    stageDeparture(state, objEventCB, screenSize, elapsedTimeDeparture, planeSelected,
+      () => addToGame(createPlaneDepartureStage(obj)),
+      setGameLoopState(state),
+      () => {
+        completeStage(Stages.Departure);
+      }
+    );
   }
 
 }

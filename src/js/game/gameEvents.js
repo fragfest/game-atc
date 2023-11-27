@@ -3,7 +3,14 @@ import { KeyboardEvents, subscribeKeyboard as subscribe } from '../events/keyboa
 import { DestinationType } from "../aircraft/airframe";
 import { nextWaypoint } from "../utils";
 import { setGameLoopState } from './game';
-import { buttonlandingFn, planeSelectedFn, headingUpdatedFn, altitudeUpdatedFn } from '../tutorial/gameTutorial';
+import {
+  buttonHandoffFn,
+  buttonTakeoffFn,
+  buttonLandingFn,
+  planeSelectedFn,
+  headingUpdatedFn,
+  altitudeUpdatedFn
+} from '../tutorial/gameTutorial';
 
 const isDeparture = (plane) => plane.destinationType === DestinationType.Departure;
 const isArrival = (plane) => plane.destinationType === DestinationType.Arrival;
@@ -125,7 +132,9 @@ export const gameUpdateEventCB = (planeSelVueRef, entityManagerArr) => {
  * @param {State} state game state
  */
 export const setupTutorialEvents = (tutorialEventArg, state) => {
-  tutorialEventArg.setLandingTutorial = (isLanding) => buttonlandingFn(isLanding);
+  tutorialEventArg.setHandoffTutorial = (isTakeoff) => buttonHandoffFn(isTakeoff);
+  tutorialEventArg.setTakeoffTutorial = (isTakeoff) => buttonTakeoffFn(isTakeoff);
+  tutorialEventArg.setLandingTutorial = (isLanding) => buttonLandingFn(isLanding);
   tutorialEventArg.updatedHeadingTutorial = (hdg) => headingUpdatedFn(hdg);
   tutorialEventArg.setPlaneTutorial = () => planeSelectedFn(state);
   tutorialEventArg.updatedAltitudeTutorial = (alt) => altitudeUpdatedFn(alt);
@@ -164,6 +173,8 @@ export const tutorialUpdateEventCB = (self, focusCircleTypeProp, tutorialBox, fo
   }
   if(planeSelVueRef?.value?.id) {
     const planeSel = planeSelVueRef.value;
+    if(planeSelCBs.setHandoffTutorial) planeSelCBs.setHandoffTutorial(planeSel.isHandoff);
+    if(planeSelCBs.setTakeoffTutorial) planeSelCBs.setTakeoffTutorial(planeSel.takeoff);
     if(planeSelCBs.setLandingTutorial) planeSelCBs.setLandingTutorial(planeSel.landing);
   }
 }

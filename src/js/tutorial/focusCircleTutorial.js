@@ -1,5 +1,44 @@
 import { ScreenSizes } from "../utils";
 
+export const flightStripQueue = size => {
+  if(size === ScreenSizes.Small) {
+    return {
+      size,
+      top: 0,
+      left: 1018,
+      width: 279,
+      height: 60,
+    };
+  }
+
+  return {
+    size,
+    top: 0,
+    left: 1346,
+    width: 362,
+    height: 78,
+  };
+}
+
+export const controlPanelTakeoff = size => {
+  if(size === ScreenSizes.Small) {
+    return {
+      size,
+      top: 618,
+      left: 686,
+      width: 64,
+      height: 28,
+    };
+  }
+
+  return {
+    size,
+    top: 816,
+    left: 956,
+    width: 80,
+    height: 40,
+  };
+}
 
 export const controlPanelLanding = size => {
   if(size === ScreenSizes.Small) {
