@@ -28,7 +28,6 @@ export default {
   },
 
   computed: {
-    // TODO needed ?
     sizeClass: function () {
       return getClassSize(this.size);
     },
@@ -43,28 +42,6 @@ export default {
         height: this.height + "px",
       };
     },
-
-    // styleFocusCircle: function () {
-    //   if (!this.type) return;
-
-    //   let positionObj = this[this.type];
-    //   if (this.sizeClass === "small") positionObj = positionObj.small;
-    //   const focusCircle = positionObj.focusCircle;
-
-    //   if (this.top) focusCircle.top = this.top + "px";
-    //   if (this.left) focusCircle.left = this.left + "px";
-    //   if (this.width) focusCircle.width = this.width + "px";
-    //   if (this.height) focusCircle.height = this.height + "px";
-    //   return focusCircle;
-    // },
-
-    // styleCircle: function () {
-    //   if (!this.type) return;
-
-    //   let positionObj = this[this.type];
-    //   if (this.sizeClass === "small") positionObj = positionObj.small;
-    //   return positionObj.circle;
-    // },
   },
 };
 </script>
