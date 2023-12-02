@@ -2,6 +2,7 @@ export const Stages = Object.freeze({
   Intro: 'Intro',
   ArrivalLand: 'ArrivalLand',
   Departure: 'Departure',
+  Waypoint: 'Waypoint',
 });
 
 export const ElapsedTimes = Object.freeze({
@@ -10,5 +11,6 @@ export const ElapsedTimes = Object.freeze({
   // DepartureStartMs: 8000,
   DepartureStartMs: 800,
   // DepartureFirstInputMs: 16000,
-  DepartureFirstInputMs: 4000,
+  FirstInputMs: 6000,
+  WaypointStartMs: 4000,
 });

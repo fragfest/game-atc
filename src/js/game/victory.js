@@ -74,7 +74,7 @@ const GoalsLevels = {
   0: {
     Arrivals: 1,
     Departures: 1,
-    Failed: 2,
+    Failed: 1,
     TaxiQueue: 4,
     Conflict: 999,
     SpawnRate: 1,

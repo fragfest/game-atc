@@ -37,7 +37,7 @@ export const stageDeparture = (state, objEventCB, screenSize, elapsedTime, plane
     }, 1000);
   }
 
-  if((elapsedTime > ElapsedTimes.DepartureFirstInputMs ) && (event === Events.WaitForInput0)) {
+  if((elapsedTime > ElapsedTimes.FirstInputMs ) && (event === Events.WaitForInput0)) {
     event = Events.WaitForSelected0;
     objEventCB.isPlaneSelected = false;
   }

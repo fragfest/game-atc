@@ -104,18 +104,59 @@ export const flightStripFirst = size => {
   if(size === ScreenSizes.Small) {
     return {
       size,
-      top: 70,
+      top: 72,
       left: 1018,
       width: 279,
-      height: 60,
+      height: 52,
     };
   }
 
   return {
     size,
-    top: 82,
+    top: 86,
     left: 1346,
     width: 362,
-    height: 78,
+    height: 70,
+  };
+}
+
+export const flightStripSecondWaypoint = size => {
+  if(size === ScreenSizes.Small) {
+    return {
+      size,
+      top: 144,
+      left: 1090,
+      width: 58,
+      height: 28,
+    };
+  }
+
+  return {
+    size,
+    top: 174,
+    left: 1436,
+    width: 68,
+    height: 36,
+  };
+}
+
+// TODO needed?
+export const flightStripSecond = size => {
+  if(size === ScreenSizes.Small) {
+    return {
+      size,
+      top: 129,
+      left: 1018,
+      width: 279,
+      height: 52,
+    };
+  }
+
+  return {
+    size,
+    top: 157,
+    left: 1346,
+    width: 362,
+    height: 70,
   };
 }
