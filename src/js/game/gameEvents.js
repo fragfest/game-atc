@@ -4,6 +4,7 @@ import { DestinationType } from "../aircraft/airframe";
 import { nextWaypoint } from "../utils";
 import { setGameLoopState } from './game';
 import {
+  buttonIsHoldingFn,
   buttonHandoffFn,
   buttonTakeoffFn,
   buttonLandingFn,
@@ -132,6 +133,7 @@ export const gameUpdateEventCB = (planeSelVueRef, entityManagerArr) => {
  * @param {State} state game state
  */
 export const setupTutorialEvents = (tutorialEventArg, state) => {
+  tutorialEventArg.setIsHoldingTutorial = (isHolding) => buttonIsHoldingFn(isHolding);
   tutorialEventArg.setHandoffTutorial = (isTakeoff) => buttonHandoffFn(isTakeoff);
   tutorialEventArg.setTakeoffTutorial = (isTakeoff) => buttonTakeoffFn(isTakeoff);
   tutorialEventArg.setLandingTutorial = (isLanding) => buttonLandingFn(isLanding);
@@ -173,6 +175,7 @@ export const tutorialUpdateEventCB = (self, focusCircleTypeProp, tutorialBox, fo
   }
   if(planeSelVueRef?.value?.id) {
     const planeSel = planeSelVueRef.value;
+    if(planeSelCBs.setIsHoldingTutorial) planeSelCBs.setIsHoldingTutorial(planeSel.isHolding);
     if(planeSelCBs.setHandoffTutorial) planeSelCBs.setHandoffTutorial(planeSel.isHandoff);
     if(planeSelCBs.setTakeoffTutorial) planeSelCBs.setTakeoffTutorial(planeSel.takeoff);
     if(planeSelCBs.setLandingTutorial) planeSelCBs.setLandingTutorial(planeSel.landing);

@@ -104,6 +104,7 @@ export default class Square {
     this.hasProximityAlert = false;
     this.destinationType = planeObj.destinationType || ''; // TODO consolidate with WaypointType
     this.runway = planeObj.runway || '';
+    this.waypoint = '';
     this.setWaypoint(planeObj.waypoint || '');
     this.airframe = planeObj.airframeObj.type || '';
     this.wake = planeObj.airframeObj.wake;

@@ -51,6 +51,7 @@ export const setup = (state) => (argObj) => {
 }
 
 const objEventCB = {
+  buttonIsHolding: false,
   buttonTakeoff: false,
   buttonLanding: false,
   headingValue: null,
@@ -58,6 +59,7 @@ const objEventCB = {
   isPlaneSelected: false,
 };
 
+export const buttonIsHoldingFn = isHolding => objEventCB.buttonIsHolding = isHolding;
 export const buttonHandoffFn = isHandoff => objEventCB.buttonHandoff = isHandoff;
 export const buttonTakeoffFn = isTakeoff => objEventCB.buttonTakeoff = isTakeoff;
 export const buttonLandingFn = isLanding => objEventCB.buttonLanding = isLanding;
@@ -128,6 +130,9 @@ const completeStage = stageArg => {
 let startTimeStageDeparture = 0;
 let startTimeStageWaypoint = 0;
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// TUTORIAL
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const tutorial = (state, entityManagerArr, startTime, canvasObj, screenSize) => () => {
   const addToGame = entityManagerAdd(entityManagerArr);
   const planeSelected = entityManagerArr.find(x => x.isSelected);
@@ -141,7 +146,7 @@ const tutorial = (state, entityManagerArr, startTime, canvasObj, screenSize) => 
     startTimeStageWaypoint = elapsedTime;
     const positionObj = { x: canvasObj.width / 1.35, y: canvasObj.height / 2, heading: '240', altitude: 5500, speed: 220 };
     const obj = { ...canvasObj, positionObj };
-    addToGame(createPlaneArrivalStage(obj));
+    // addToGame(createPlaneArrivalStage(obj));
   }
 
   if (isAtStage(Stages.Intro)) {
@@ -169,6 +174,7 @@ const tutorial = (state, entityManagerArr, startTime, canvasObj, screenSize) => 
   }
 
   const elapsedTimeDeparture = elapsedTime - startTimeStageDeparture;
+
   if(isAtStage(Stages.Departure) && (elapsedTimeDeparture > ElapsedTimes.DepartureStartMs)) {
     const obj = {...canvasObj, entityManagerArr };
     stageDeparture(state, objEventCB, screenSize, elapsedTimeDeparture, planeSelected,
@@ -183,14 +189,15 @@ const tutorial = (state, entityManagerArr, startTime, canvasObj, screenSize) => 
   }
 
   const elapsedTimeWaypoint = elapsedTime - startTimeStageWaypoint;
+  
   if(isAtStage(Stages.Waypoint) && (elapsedTimeWaypoint > ElapsedTimes.WaypointStartMs)) {
-    const positionObj = { x: canvasObj.width / 1.15, y: canvasObj.height / 1.5, heading: '270', altitude: 6000, speed: 220 };
+    const positionObj = { x: canvasObj.width / 1.4, y: canvasObj.height / 1.4, heading: '090', altitude: 6000, speed: 220 };
     const obj = { ...canvasObj, positionObj };
-    stageWaypoint(state, objEventCB, screenSize, elapsedTime, planeSelected,
+    stageWaypoint(state, objEventCB, screenSize, elapsedTimeWaypoint, planeSelected,
       () => addToGame(createPlaneArrivalStage(obj)),
       setGameLoopState(state),
       () => {
-        console.log('WAYPOINT COMPLETE')
+        completeStage(Stages.Waypoint);
       });
   }
 

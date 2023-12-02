@@ -1,6 +1,6 @@
 import { ElapsedTimes } from './typesTutorial';
 import { FocusCircleType } from '../types';
-import { flightStripSecondWaypoint } from './focusCircleTutorial';
+import { controlPanelHolding, flightStripSecond, flightStripSecondWaypoint } from './focusCircleTutorial';
 
 let event = '';
 const Events = Object.freeze({
@@ -12,8 +12,11 @@ const Events = Object.freeze({
   WaitForSelected0: 'WaitForSelected0',
 });
 
-// let isSetCheckmarkTaxiQueue = false;
-// let isValidCheckmarkAltitude = false;
+let isSetCheckmarkPlaneSelected = false;
+let isSetCheckmarkWaypoint = false;
+let isValidWaypoint = false;
+let isSetCheckmarkHolding = false;
+let isValidHolding = false;
 
 export const stageWaypoint = (state, objEventCB, screenSize, elapsedTime, planeSelected, addToGameFn, setGameLoopStateFn, completeStageFn) => {
   if (!event) {
@@ -23,8 +26,9 @@ export const stageWaypoint = (state, objEventCB, screenSize, elapsedTime, planeS
     setTimeout(() => {
       const html = `<b>Arrival - Hold at waypoint</b><br>` +
       `<div class="line"> Set arriving aircraft waypoint to circle in a holding pattern</div>` +
-      `<div class="line"> <span hidden class="checkmark check-0">&check;</span> <span class="cross check-0">&times;</span> <span class="text">select waypoint BIG</span></div>` +
-      `<div class="line"> <span hidden class="checkmark check-1">&check;</span> <span class="cross check-1">&times;</span> <span class="text"></span></div>`;
+      `<div class="line"> <span hidden class="checkmark check-0">&check;</span> <span class="cross check-0">&times;</span> <span class="text">select second arrival</span></div>` +
+      `<div class="line"> <span hidden class="checkmark check-1">&check;</span> <span class="cross check-1">&times;</span> <span class="text">select waypoint BIG (click or hit W key)</span></div>` +
+      `<div class="line"> <span hidden class="checkmark check-2">&check;</span> <span class="cross check-2">&times;</span> <span class="text">enable holding at waypoint BIG</span></div>`;
       
       addToGameFn();
       state.dialogBox = { top: 0.07, left: 0.3, width: 0.6, html };
@@ -36,95 +40,77 @@ export const stageWaypoint = (state, objEventCB, screenSize, elapsedTime, planeS
     objEventCB.isPlaneSelected = false;
   }
 
-  if ((event === Events.WaitForSelected0) && !objEventCB.isPlaneSelected) {
+  const isSecondPlaneSelected = objEventCB.isPlaneSelected && !planeSelected?.landing
+
+  if ((event === Events.WaitForSelected0) && !isSecondPlaneSelected) {
     state.focusCircleType = FocusCircleType.Rectangle;
-    state.focusCircle = flightStripSecondWaypoint(screenSize);
+    state.focusCircle = flightStripSecond(screenSize);
     setGameLoopStateFn(false);
   }
 
-  // if((event === Events.WaitForSelected0) && objEventCB.isPlaneSelected) {
-  //   event = Events.WaitForInput1;
-  //   objEventCB.isPlaneSelected = false;
-  //   isSetCheckmarkTaxiQueue = true;
-  //   state.focusCircleType = FocusCircleType.Rectangle;
-  //   state.focusCircle = controlPanelTakeoff(screenSize);
-  // }
+  if((event === Events.WaitForSelected0) && isSecondPlaneSelected) {
+    event = Events.WaitForInput1;
+    objEventCB.isPlaneSelected = false;
+    isSetCheckmarkPlaneSelected = true;
+    state.focusCircleType = FocusCircleType.Rectangle;
+    state.focusCircle = flightStripSecondWaypoint(screenSize);
+  }
 
-  // if((event === Events.WaitForInput1) && objEventCB.buttonTakeoff) {
-  //   event = Events.WaitForInput2;
-  //   objEventCB.buttonTakeoff = false;
-  //   state.focusCircleType = null;
-  //   isSetCheckmarkTakeoff = true;
-  //   objEventCB.altitudeValue = null;
-  // }
+  const isWaypointSelected = !planeSelected?.landing && (planeSelected?.waypoint === 'BIG');
 
-  // if((event === Events.WaitForInput2) && !objEventCB.altitudeValue) {
-  //   state.focusCircleType = FocusCircleType.Rectangle;
-  //   state.focusCircle = controlPanelAltitude(screenSize);
-  // }
+  if(event === Events.WaitForInput1 && isWaypointSelected) {
+    isSetCheckmarkWaypoint = true;
+    event = Events.WaitForInput2;
+    objEventCB.buttonIsHolding = false;
+    state.focusCircleType = FocusCircleType.Rectangle;
+    state.focusCircle = controlPanelHolding(screenSize);
+  }
 
-  // if((event === Events.WaitForInput2) && objEventCB.altitudeValue) {
-  //   if(objEventCB.altitudeValue >= 6000) {
-  //     objEventCB.altitudeValue = null;
-  //     state.focusCircleType = null;
-  //     isSetCheckmarkAltitude = true;
-  //     event = Events.WaitForInput3;
-  //     objEventCB.buttonHandoff = false;
-  //   }
-  // }
+  if(isSetCheckmarkWaypoint && isWaypointSelected) {
+    isValidWaypoint = true;
+  } else {
+    isValidWaypoint = false;
+  }
 
-  // if(planeSelected && isSetCheckmarkAltitude) {
-  //   if(planeSelected.altitude >= 6000) isValidCheckmarkAltitude = true;
-  //   else isValidCheckmarkAltitude = false
-  // }
+  const isHoldingSelected = isWaypointSelected && planeSelected?.isHolding;
 
-  // if((event === Events.WaitForInput3) && !objEventCB.buttonHandoff) {
-  //   state.focusCircleType = FocusCircleType.Rectangle;
-  //   state.focusCircle = controlPanelTakeoff(screenSize);
-  // }
+  if(event === Events.WaitForInput2 && objEventCB.buttonIsHolding && isHoldingSelected) {
+    event = Events.WaitForInput3;
+    isSetCheckmarkHolding = true;
+    state.focusCircleType = null;
+  }
 
-  // if((event === Events.WaitForInput3) && objEventCB.buttonHandoff) {
-  //   objEventCB.buttonHandoff = false;
-  //   state.focusCircleType = null;
-  //   isSetCheckmarkHandoff = true;
-  //   event = Events.WaitForInput4;
-  // }
+  if(isSetCheckmarkHolding && isHoldingSelected) {
+    isValidHolding = true;
+  } else {
+    isValidHolding = false;
+  }
 
-  // if(planeSelected && isSetCheckmarkHandoff) {
-  //   isValidCheckmarkHandoff = planeSelected.isHandoff;
-  // }
+  if(isSetCheckmarkPlaneSelected && isValidWaypoint && isValidHolding) {
+    completeStageFn();
+    setTimeout(() => {
+      state.dialogBox = { top: 0.07, left: 0.3, width: 0.6, html: '<clear>' };
+    }, 5000);
+  }
 
-  // if(isSetCheckmarkTaxiQueue && isSetCheckmarkTakeoff && isValidCheckmarkAltitude && isValidCheckmarkHandoff) {
-  //   completeStageFn();
-  //   setTimeout(() => {
-  //     state.dialogBox = { top: 0.07, left: 0.3, width: 0.6, html: '<clear>' };
-  //   }, 5000);
-  // }
+  if(isSetCheckmarkPlaneSelected) {
+    document.querySelector('.checkmark.check-0')?.removeAttribute('hidden');
+    document.querySelector('.cross.check-0')?.setAttribute('hidden', true);
+  }
 
-  // if(isSetCheckmarkTaxiQueue) {
-  //   document.querySelector('.checkmark.check-0')?.removeAttribute('hidden');
-  //   document.querySelector('.cross.check-0')?.setAttribute('hidden', true);
-  // }
-  
-  // if(isSetCheckmarkTakeoff) {
-  //   document.querySelector('.checkmark.check-1')?.removeAttribute('hidden');
-  //   document.querySelector('.cross.check-1')?.setAttribute('hidden', true);
-  // }
+  if(isValidWaypoint) {
+    document.querySelector('.checkmark.check-1')?.removeAttribute('hidden');
+    document.querySelector('.cross.check-1')?.setAttribute('hidden', true);
+  } else {
+    document.querySelector('.checkmark.check-1')?.setAttribute('hidden', true);
+    document.querySelector('.cross.check-1')?.removeAttribute('hidden');
+  }
 
-  // if(isValidCheckmarkAltitude) {
-  //   document.querySelector('.checkmark.check-2')?.removeAttribute('hidden');
-  //   document.querySelector('.cross.check-2')?.setAttribute('hidden', true);
-  // } else {
-  //   document.querySelector('.checkmark.check-2')?.setAttribute('hidden', true);
-  //   document.querySelector('.cross.check-2')?.removeAttribute('hidden');
-  // }
-
-  // if(isValidCheckmarkHandoff) {
-  //   document.querySelector('.checkmark.check-3')?.removeAttribute('hidden');
-  //   document.querySelector('.cross.check-3')?.setAttribute('hidden', true);
-  // } else {
-  //   document.querySelector('.checkmark.check-3')?.setAttribute('hidden', true);
-  //   document.querySelector('.cross.check-3')?.removeAttribute('hidden');
-  // }
-
+  if(isValidHolding) {
+    document.querySelector('.checkmark.check-2')?.removeAttribute('hidden');
+    document.querySelector('.cross.check-2')?.setAttribute('hidden', true);
+  } else {
+    document.querySelector('.checkmark.check-2')?.setAttribute('hidden', true);
+    document.querySelector('.cross.check-2')?.removeAttribute('hidden');
+  }
 }

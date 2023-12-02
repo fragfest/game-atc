@@ -40,6 +40,26 @@ export const controlPanelTakeoff = size => {
   };
 }
 
+export const controlPanelHolding = size => {
+  if(size === ScreenSizes.Small) {
+    return {
+      size,
+      top: 618,
+      left: 742,
+      width: 42,
+      height: 28,
+    };
+  }
+
+  return {
+    size,
+    top: 816,
+    left: 1022,
+    width: 53,
+    height: 40,
+  };
+}
+
 export const controlPanelLanding = size => {
   if(size === ScreenSizes.Small) {
     return {
@@ -140,7 +160,6 @@ export const flightStripSecondWaypoint = size => {
   };
 }
 
-// TODO needed?
 export const flightStripSecond = size => {
   if(size === ScreenSizes.Small) {
     return {

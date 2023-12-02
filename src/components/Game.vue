@@ -349,6 +349,7 @@ export default {
       tutorialBoxHtmlQueue,
     };
     const tutorialEventArg = {
+      setIsHoldingTutorial: () => {},
       setTakeoffTutorial: () => {},
       setLandingTutorial: () => {},
       updatedHeadingTutorial: () => {},
