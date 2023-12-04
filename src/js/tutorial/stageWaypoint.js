@@ -23,17 +23,17 @@ export const stageWaypoint = (state, objEventCB, screenSize, elapsedTime, planeS
   if (!event) {
     objEventCB.isPlaneSelected = false;
     event = Events.WaitForInput0;
-    state.dialogBox = { top: 0.07, left: 0.3, width: 0.6, html: '<clear>' };
+    state.dialogBox = { top: 0.07, left: 0.3, width: 0.57, html: '<clear>' };
 
     setTimeout(() => {
-      const html = `<b>Arrival - Hold at waypoint</b><br>` +
-      `<div class="line"> Set arriving aircraft waypoint to circle in a holding pattern</div>` +
-      `<div class="line"> <span hidden class="checkmark check-0">&check;</span> <span class="cross check-0">&times;</span> <span class="text">select second arrival</span></div>` +
-      `<div class="line"> <span hidden class="checkmark check-1">&check;</span> <span class="cross check-1">&times;</span> <span class="text">select waypoint BIG (click or hit W key)</span></div>` +
-      `<div class="line"> <span hidden class="checkmark check-2">&check;</span> <span class="cross check-2">&times;</span> <span class="text">enable holding at waypoint BIG</span></div>`;
+      const html = `<div class="line"><b>Arrival - Hold at waypoint</b><br></div>` +
+      `<div class="line"> Set arriving aircraft's waypoint and direct it to circle in a holding pattern</div>` +
+      `<div class="line"> <span hidden class="checkmark check-0">&check;</span> <span class="cross check-0">&times;</span> <span class="text">Select second arriving aircraft (Arrows)</span></div>` +
+      `<div class="line"> <span hidden class="checkmark check-1">&check;</span> <span class="cross check-1">&times;</span> <span class="text">Select arrival waypoint BIG (W)</span></div>` +
+      `<div class="line"> <span hidden class="checkmark check-2">&check;</span> <span class="cross check-2">&times;</span> <span class="text">Activate hold at waypoint (H)</span></div>`;
       
       addToGameFn();
-      state.dialogBox = { top: 0.07, left: 0.3, width: 0.6, html };
+      state.dialogBox = { top: 0.07, left: 0.3, width: 0.57, html };
     }, 1000);
   }
 
@@ -96,7 +96,7 @@ export const stageWaypoint = (state, objEventCB, screenSize, elapsedTime, planeS
   if(isSetCheckmarkPlaneSelected && isValidWaypoint && isValidHolding) {
     completeStageFn();
     setTimeout(() => {
-      state.dialogBox = { top: 0.07, left: 0.3, width: 0.6, html: '<clear>' };
+      state.dialogBox = { top: 0.07, left: 0.3, width: 0.57, html: '<clear>' };
     }, 5000);
   }
 

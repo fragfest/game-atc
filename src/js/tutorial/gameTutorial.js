@@ -18,6 +18,8 @@ import { stageWaypoint } from './stageWaypoint';
 import { stageConflict } from './stageConflict';
 import { FocusCircleType } from '../types';
 import { scorePanel } from './focusCircleTutorial';
+import { ScoreEvents, subscribeScore } from '../game/score';
+import { isVictory, publishSuccess } from '../game/victory';
 
 /**
  * @typedef {import('../game/game.js').State} State
@@ -241,6 +243,13 @@ const tutorial = (state, entityManagerArr, startTime, canvasObj, screenSize) => 
     state.focusCircleType = FocusCircleType.Rectangle;
     state.focusCircle = scorePanel(screenSize);
     }, 1000);
+
+    setTimeout(() => {
+      subscribeScore(ScoreEvents.ScoreEV, (score) => {
+        if(isVictory(score)) publishSuccess();
+      });
+    }, 8000);
+
     completeStage(Stages.Done);
   }
 }

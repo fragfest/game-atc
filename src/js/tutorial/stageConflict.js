@@ -17,10 +17,10 @@ export const stageConflict = (state, elapsedTime, entityManagerArr, completeStag
     state.dialogBox = { top: 0.07, left: 0.1, width: 0.43, html: '<clear>' };
 
     setTimeout(() => {
-      const html = `<b>Conflict (TCAS) - Ensure spacing between planes</b><br>` +
+      const html = `<div class="line"><b>Conflict (TCAS) - Ensure spacing between planes</b><br></div>` +
       `<div class="line">When planes get too close, create spacing of 3 miles or 1000 feet.<br>` +
-      `For this scenario the optional conflict circles button has been enabled.</div>` +
-      `<div class="line"> <span hidden class="checkmark check-0">&check;</span> <span class="cross check-0">&times;</span> <span class="text">use any commands to end the conflict</span></div>`;
+      `For this scenario the optional conflict circles are enabled.<br></div>` +
+      `<div class="line"> <span hidden class="checkmark check-0">&check;</span> <span class="cross check-0">&times;</span> <span class="text">Use any commands to end the conflict</span></div>`;
       
       state.dialogBox = { top: 0.07, left: 0.1, width: 0.43, html };
     }, 1000);

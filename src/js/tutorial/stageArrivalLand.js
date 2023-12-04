@@ -24,18 +24,18 @@ export const stageArrivalLand = (state, objEventCB, screenSize, elapsedTime, pla
   if (!event) {
     objEventCB.isPlaneSelected = false;
     event = Events.WaitForInput0;
-    state.dialogBox = { top: 0.07, left: 0.3, width: 0.59, html: '<clear>' };
+    state.dialogBox = { top: 0.07, left: 0.3, width: 0.61, html: '<clear>' };
 
     setTimeout(() => {
-      const html = `<b>Arrival - Land Aircraft</b><br>` +
-      `<div class="line"> Descend aircraft for an assisted (ILS) approach. Steer aircraft to runway and authorize the approach.</div>` +
-      `<div class="line"> <span hidden class="checkmark check-0">&check;</span> <span class="cross check-0">&times;</span> <span class="text">select plane</span></div>` +
-      `<div class="line"> <span hidden class="checkmark check-1">&check;</span> <span class="cross check-1">&times;</span> <span class="text">lower to approach altitude of 5000ft or below</span></div>` +
-      `<div class="line"> <span hidden class="checkmark check-2">&check;</span> <span class="cross check-2">&times;</span> <span class="text">change heading to runway 27L</span></div>` +
-      `<div class="line"> <span hidden class="checkmark check-3">&check;</span> <span class="cross check-3">&times;</span> <span class="text">when in range, click land</span></div>`;
+      const html = `<div class="line"><b>Arrival - Land Aircraft</b><br></div>` +
+      `<div class="line"> Descend aircraft for an assisted (ILS) approach. Direct aircraft to runway and authorize the approach.</div>` +
+      `<div class="line"> <span hidden class="checkmark check-0">&check;</span> <span class="cross check-0">&times;</span> <span class="text">Select arriving aircraft (Arrows)</span></div>` +
+      `<div class="line"> <span hidden class="checkmark check-1">&check;</span> <span class="cross check-1">&times;</span> <span class="text">Lower to approach altitude of 5000ft or below (Enter)</span></div>` +
+      `<div class="line"> <span hidden class="checkmark check-2">&check;</span> <span class="cross check-2">&times;</span> <span class="text">Change heading to runway 27L (Enter)</span></div>` +
+      `<div class="line"> <span hidden class="checkmark check-3">&check;</span> <span class="cross check-3">&times;</span> <span class="text">When in range, click land (L)</span></div>`;
       
       addToGameFn();
-      state.dialogBox = { top: 0.07, left: 0.3, width: 0.59, html };
+      state.dialogBox = { top: 0.07, left: 0.3, width: 0.61, html };
     }, 1000);
   }
   
@@ -117,7 +117,7 @@ export const stageArrivalLand = (state, objEventCB, screenSize, elapsedTime, pla
   if(isValidCheckmarkSelected && isValidCheckmarkAltitude && isValidCheckmarkHeading && isValidCheckmarkLanding) {
     completeStageFn();
     setTimeout(() => {
-      state.dialogBox = { top: 0.07, left: 0.3, width: 0.6, html: '<clear>' };
+      state.dialogBox = { top: 0.07, left: 0.3, width: 0.61, html: '<clear>' };
     }, 5000);
   }
 

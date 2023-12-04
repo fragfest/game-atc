@@ -66,6 +66,14 @@ export const isDefeat = score => isFailedCondition(score.failed) ||
   isConflictCondition(score.conflict) ||
   isExceededTaxiingCondition(score.taxiQueue);
 
+export const publishSuccess = () => {
+  document.dispatchEvent(new CustomEvent(VictoryEvents.Success));
+}
+
+export const publishFailed = () => {
+  document.dispatchEvent(new CustomEvent(VictoryEvents.Failed));
+}
+
 // PRIVATE //////////////////////////////////////////////////
 
 const FinalLevel = 3;
@@ -122,11 +130,3 @@ const Goals = {
   Conflict: 0,
   SpawnRate: 0,
 };
-
-const publishSuccess = () => {
-  document.dispatchEvent(new CustomEvent(VictoryEvents.Success));
-}
-
-const publishFailed = () => {
-  document.dispatchEvent(new CustomEvent(VictoryEvents.Failed));
-}

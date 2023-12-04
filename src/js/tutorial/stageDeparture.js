@@ -23,18 +23,18 @@ export const stageDeparture = (state, objEventCB, screenSize, elapsedTime, plane
   if (!event) {
     objEventCB.isPlaneSelected = false;
     event = Events.WaitForInput0;
-    state.dialogBox = { top: 0.07, left: 0.3, width: 0.6, html: '<clear>' };
+    state.dialogBox = { top: 0.04, left: 0.2, width: 0.67, html: '<clear>' };
 
     setTimeout(() => {
-      const html = `<b>Departure - Take off and Handoff</b><br>` +
-      `<div class="line"> Start aircraft departure roll. Once airborne, climb aircraft and steer to handoff waypoint.</div>` +
-      `<div class="line"> <span hidden class="checkmark check-0">&check;</span> <span class="cross check-0">&times;</span> <span class="text">select plane from taxi queue</span></div>` +
-      `<div class="line"> <span hidden class="checkmark check-1">&check;</span> <span class="cross check-1">&times;</span> <span class="text">start takeoff roll</span></div>` +
-      `<div class="line"> <span hidden class="checkmark check-2">&check;</span> <span class="cross check-2">&times;</span> <span class="text">wait until airborne, then set handoff altitude of 6000ft or above</span></div>` +
-      `<div class="line"> <span hidden class="checkmark check-3">&check;</span> <span class="cross check-3">&times;</span> <span class="text">set handoff, aircraft will steer towards waypoint</span></div>`;
+      const html = `<div class="line"><b>Departure - Take off and Handoff</b><br></div>` +
+      `<div class="line"> Start aircraft departure roll. Once airborne, climb aircraft and direct to handoff waypoint. Brackets show keyboard shortcut keys.</div>` +
+      `<div class="line"> <span hidden class="checkmark check-0">&check;</span> <span class="cross check-0">&times;</span> <span class="text">Select plane from taxi queue (Arrows)</span></div>` +
+      `<div class="line"> <span hidden class="checkmark check-1">&check;</span> <span class="cross check-1">&times;</span> <span class="text">Start takeoff roll (T)</span></div>` +
+      `<div class="line"> <span hidden class="checkmark check-2">&check;</span> <span class="cross check-2">&times;</span> <span class="text">Wait until airborne, then set handoff altitude of 6000ft or above (Enter: set and cycle)</span></div>` +
+      `<div class="line"> <span hidden class="checkmark check-3">&check;</span> <span class="cross check-3">&times;</span> <span class="text">Set handoff, aircraft will steer towards departure waypoint (H)</span></div>`;
       
       addToGameFn();
-      state.dialogBox = { top: 0.07, left: 0.3, width: 0.6, html };
+      state.dialogBox = { top: 0.04, left: 0.2, width: 0.67, html };
     }, 1000);
   }
 

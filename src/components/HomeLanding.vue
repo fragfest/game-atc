@@ -80,7 +80,7 @@ export default {
 
   data() {
     return {
-      isTutorial: getHighestLevelCompleted() !== 0,
+      isTutorial: getHighestLevelCompleted() === null,
       levelComplete: getHighestLevelCompleted(),
       levelNext: getHighestLevelCompleted() + 1,
       scoreHistoryArr: getScoreHistory()

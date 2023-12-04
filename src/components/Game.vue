@@ -155,8 +155,17 @@ import {
   tutorialUpdateEventCB,
   setupTutorialEvents,
 } from "../js/game/gameEvents";
-import { setup as setupVictory } from "../js/game/victory";
-import { resetScore, getScoreHistory } from "../js/game/score";
+import {
+  setup as setupVictory,
+  isDefeat,
+  publishFailed,
+} from "../js/game/victory";
+import {
+  resetScore,
+  getScoreHistory,
+  subscribeScore,
+  ScoreEvents,
+} from "../js/game/score";
 
 const isDeparture = (plane) =>
   plane.destinationType === DestinationType.Departure;
@@ -412,18 +421,21 @@ export default {
     );
     drawInertElements(imgLayerObj, { screenSize, width, height });
     setupEntities(setupArg);
-    setupVictory();
     resetScore();
 
     const isTutorialCompleted = !!getScoreHistory().find((x) => x.level === 0);
 
     if (!isTutorialCompleted) {
+      subscribeScore(ScoreEvents.ScoreEV, (score) => {
+        if (isDefeat(score)) publishFailed();
+      });
       attachHtmlQueue(this, "tutorialBoxHtml", tutorialBoxHtmlQueue);
       setupTutorialEvents(tutorialEventArg, gameState);
       setupTutorial(gameState)(setupArg);
       return;
     }
 
+    setupVictory();
     setupFullGame(gameState)(setupArg);
 
     // window.addEventListener("resize", () => {
