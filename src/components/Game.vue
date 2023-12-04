@@ -156,7 +156,7 @@ import {
   setupTutorialEvents,
 } from "../js/game/gameEvents";
 import { setup as setupVictory } from "../js/game/victory";
-import { resetScore, getScore } from "../js/game/score";
+import { resetScore, getScoreHistory } from "../js/game/score";
 
 const isDeparture = (plane) =>
   plane.destinationType === DestinationType.Departure;
@@ -412,18 +412,18 @@ export default {
     );
     drawInertElements(imgLayerObj, { screenSize, width, height });
     setupEntities(setupArg);
-
+    setupVictory();
     resetScore();
-    const isTutorial = !getScore().level;
 
-    if (isTutorial) {
+    const isTutorialCompleted = !!getScoreHistory().find((x) => x.level === 0);
+
+    if (!isTutorialCompleted) {
       attachHtmlQueue(this, "tutorialBoxHtml", tutorialBoxHtmlQueue);
       setupTutorialEvents(tutorialEventArg, gameState);
       setupTutorial(gameState)(setupArg);
       return;
     }
 
-    setupVictory();
     setupFullGame(gameState)(setupArg);
 
     // window.addEventListener("resize", () => {

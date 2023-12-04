@@ -1,5 +1,25 @@
 import { ScreenSizes } from "../utils";
 
+export const scorePanel = size => {
+  if(size === ScreenSizes.Small) {
+    return {
+      size,
+      top: 660,
+      left: 320,
+      width: 320,
+      height: 90,
+    };
+  }
+
+  return {
+    size,
+    top: 870,
+    left: 590,
+    width: 320,
+    height: 90,
+  };
+}
+
 export const flightStripQueue = size => {
   if(size === ScreenSizes.Small) {
     return {
@@ -140,11 +160,11 @@ export const flightStripFirst = size => {
   };
 }
 
-export const flightStripSecondWaypoint = size => {
+export const flightStripThirdWaypoint = size => {
   if(size === ScreenSizes.Small) {
     return {
       size,
-      top: 144,
+      top: 201,
       left: 1090,
       width: 58,
       height: 28,
@@ -153,7 +173,7 @@ export const flightStripSecondWaypoint = size => {
 
   return {
     size,
-    top: 174,
+    top: 245,
     left: 1436,
     width: 68,
     height: 36,
@@ -174,6 +194,26 @@ export const flightStripSecond = size => {
   return {
     size,
     top: 157,
+    left: 1346,
+    width: 362,
+    height: 70,
+  };
+}
+
+export const flightStripThird= size => {
+  if(size === ScreenSizes.Small) {
+    return {
+      size,
+      top: 186,
+      left: 1018,
+      width: 279,
+      height: 52,
+    };
+  }
+
+  return {
+    size,
+    top: 228,
     left: 1346,
     width: 362,
     height: 70,

@@ -5,7 +5,8 @@
         <div>
           <span v-if="isSuccess" class="green">Success</span>
           <span v-else class="red">Failed</span>
-          <span> level {{ level }}</span>
+          <span v-if="level"> level {{ level }}</span>
+          <span v-else> tutorial level</span>
         </div>
         <div>ATC difficulty: easy</div>
       </h1>
@@ -102,8 +103,9 @@ export default {
     if (isFailedCondition(score.failed)) this.failedClass = "red";
     if (isConflictCondition(score.conflict)) this.conflictClass = "red";
     if (isConflictCondition(score.conflict)) this.conflictClass = "red";
-    if (isExceededTaxiingCondition(score.taxiQueue))
+    if (isExceededTaxiingCondition(score.taxiQueue)) {
       this.taxiQueueClass = "red";
+    }
 
     const baseScorePass = getBaseScore();
     const failedScoreMax = getGoals().Failed;

@@ -1,6 +1,7 @@
 import { ElapsedTimes } from './typesTutorial';
 import { FocusCircleType } from '../types';
-import { controlPanelHolding, flightStripSecond, flightStripSecondWaypoint } from './focusCircleTutorial';
+import { controlPanelHolding, flightStripThird, flightStripThirdWaypoint } from './focusCircleTutorial';
+import { DestinationType } from '../aircraft/airframe';
 
 let event = '';
 const Events = Object.freeze({
@@ -20,6 +21,7 @@ let isValidHolding = false;
 
 export const stageWaypoint = (state, objEventCB, screenSize, elapsedTime, planeSelected, addToGameFn, setGameLoopStateFn, completeStageFn) => {
   if (!event) {
+    objEventCB.isPlaneSelected = false;
     event = Events.WaitForInput0;
     state.dialogBox = { top: 0.07, left: 0.3, width: 0.6, html: '<clear>' };
 
@@ -35,25 +37,30 @@ export const stageWaypoint = (state, objEventCB, screenSize, elapsedTime, planeS
     }, 1000);
   }
 
-  if((elapsedTime > ElapsedTimes.FirstInputMs ) && (event === Events.WaitForInput0)) {
+  let allowCheckmarkUpdate = false;
+  if(elapsedTime > ElapsedTimes.ArrivalLandFirstInputMs) {
+    allowCheckmarkUpdate = true;
+  }
+
+  if((elapsedTime > ElapsedTimes.WaypointFirstInputMs ) && (event === Events.WaitForInput0)) {
     event = Events.WaitForSelected0;
     objEventCB.isPlaneSelected = false;
   }
 
-  const isSecondPlaneSelected = objEventCB.isPlaneSelected && !planeSelected?.landing
+  const isThirdPlaneSelected = objEventCB.isPlaneSelected && (planeSelected?.destinationType === DestinationType.Arrival) && !planeSelected?.landing;
 
-  if ((event === Events.WaitForSelected0) && !isSecondPlaneSelected) {
+  if ((event === Events.WaitForSelected0) && !isThirdPlaneSelected) {
     state.focusCircleType = FocusCircleType.Rectangle;
-    state.focusCircle = flightStripSecond(screenSize);
+    state.focusCircle = flightStripThird(screenSize);
     setGameLoopStateFn(false);
   }
 
-  if((event === Events.WaitForSelected0) && isSecondPlaneSelected) {
+  if((event === Events.WaitForSelected0) && isThirdPlaneSelected) {
     event = Events.WaitForInput1;
     objEventCB.isPlaneSelected = false;
     isSetCheckmarkPlaneSelected = true;
     state.focusCircleType = FocusCircleType.Rectangle;
-    state.focusCircle = flightStripSecondWaypoint(screenSize);
+    state.focusCircle = flightStripThirdWaypoint(screenSize);
   }
 
   const isWaypointSelected = !planeSelected?.landing && (planeSelected?.waypoint === 'BIG');
@@ -92,6 +99,8 @@ export const stageWaypoint = (state, objEventCB, screenSize, elapsedTime, planeS
       state.dialogBox = { top: 0.07, left: 0.3, width: 0.6, html: '<clear>' };
     }, 5000);
   }
+
+  if(!allowCheckmarkUpdate) return;
 
   if(isSetCheckmarkPlaneSelected) {
     document.querySelector('.checkmark.check-0')?.removeAttribute('hidden');

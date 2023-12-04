@@ -20,7 +20,7 @@
           </div>
 
           <div class="button-start">
-            <h3 v-if="!levelComplete">
+            <h3 v-if="isTutorial">
               <span class="font-mono white">training</span>
             </h3>
             <h3 v-else-if="!isGameComplete">
@@ -80,9 +80,12 @@ export default {
 
   data() {
     return {
+      isTutorial: getHighestLevelCompleted() !== 0,
       levelComplete: getHighestLevelCompleted(),
       levelNext: getHighestLevelCompleted() + 1,
-      scoreHistoryArr: getScoreHistory().sort((a, b) => a.level - b.level),
+      scoreHistoryArr: getScoreHistory()
+        .sort((a, b) => a.level - b.level)
+        .filter((x) => x.level),
       finalLevel: getFinalLevel(),
       isGameComplete: false,
     };

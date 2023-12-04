@@ -1,6 +1,7 @@
 import { ElapsedTimes } from './typesTutorial';
 import { FocusCircleType } from "../types";
-import { flightStripFirst, controlPanelAltitude, controlPanelHeading, controlPanelLanding } from "./focusCircleTutorial.js";
+import { controlPanelAltitude, controlPanelHeading, controlPanelLanding, flightStripSecond } from "./focusCircleTutorial.js";
+import { DestinationType } from '../aircraft/airframe';
 
 let event = '';
 const Events = Object.freeze({
@@ -11,6 +12,7 @@ const Events = Object.freeze({
   WaitForInput3: 'WaitForInput3',
 })
 
+let isValidCheckmarkSelected = false;
 let isSetCheckmarkAltitude = false;
 let isValidCheckmarkAltitude = false;
 let isSetCheckmarkHeading = false;
@@ -20,8 +22,9 @@ let isValidCheckmarkLanding = false;
 
 export const stageArrivalLand = (state, objEventCB, screenSize, elapsedTime, planeSelected, addToGameFn, setGameLoopStateFn, completeStageFn) => {
   if (!event) {
+    objEventCB.isPlaneSelected = false;
     event = Events.WaitForInput0;
-    state.dialogBox = { top: 0.1, left: 0.4, width: 0.50, html: '<clear>' };
+    state.dialogBox = { top: 0.07, left: 0.3, width: 0.59, html: '<clear>' };
 
     setTimeout(() => {
       const html = `<b>Arrival - Land Aircraft</b><br>` +
@@ -32,29 +35,31 @@ export const stageArrivalLand = (state, objEventCB, screenSize, elapsedTime, pla
       `<div class="line"> <span hidden class="checkmark check-3">&check;</span> <span class="cross check-3">&times;</span> <span class="text">when in range, click land</span></div>`;
       
       addToGameFn();
-      state.dialogBox = { top: 0.07, left: 0.3, width: 0.6, html };
+      state.dialogBox = { top: 0.07, left: 0.3, width: 0.59, html };
     }, 1000);
   }
   
-  if((elapsedTime > ElapsedTimes.ArrivalLandFirstInputMs ) && (event === Events.WaitForInput0)) {
-    event = Events.WaitForSelected0;
-    objEventCB.isPlaneSelected = false;
+  let allowCheckmarkUpdate = false;
+  if(elapsedTime > ElapsedTimes.ArrivalLandFirstInputMs) {
+    allowCheckmarkUpdate = true;
   }
 
-  if ((event === Events.WaitForSelected0) && !objEventCB.isPlaneSelected) {
+  const isArrivalPlaneSelected = (planeSelected?.destinationType === DestinationType.Arrival) && objEventCB.isPlaneSelected;
+
+  if((elapsedTime > ElapsedTimes.ArrivalLandFirstInputMs) && (event === Events.WaitForInput0) && !isArrivalPlaneSelected) {
+    event = Events.WaitForSelected0;
     state.focusCircleType = FocusCircleType.Rectangle;
-    state.focusCircle = flightStripFirst(screenSize);
+    state.focusCircle = flightStripSecond(screenSize);
     setGameLoopStateFn(false);
   }
-  
-  if((event === Events.WaitForSelected0) && objEventCB.isPlaneSelected) {
+
+  if(isArrivalPlaneSelected) {
+    isValidCheckmarkSelected = true;
     event = Events.WaitForInput1;
     objEventCB.altitudeValue = null;
     objEventCB.isPlaneSelected = false;
     state.focusCircleType = FocusCircleType.Rectangle;
     state.focusCircle = controlPanelAltitude(screenSize);
-    document.querySelector('.checkmark.check-0')?.removeAttribute('hidden');
-    document.querySelector('.cross.check-0')?.setAttribute('hidden', true);
   }
 
   if((event === Events.WaitForInput1) && objEventCB.altitudeValue) {
@@ -109,11 +114,18 @@ export const stageArrivalLand = (state, objEventCB, screenSize, elapsedTime, pla
     else isValidCheckmarkLanding = false;
   }
 
-  if(isValidCheckmarkAltitude && isValidCheckmarkHeading && isValidCheckmarkLanding) {
+  if(isValidCheckmarkSelected && isValidCheckmarkAltitude && isValidCheckmarkHeading && isValidCheckmarkLanding) {
     completeStageFn();
     setTimeout(() => {
       state.dialogBox = { top: 0.07, left: 0.3, width: 0.6, html: '<clear>' };
     }, 5000);
+  }
+
+  if(!allowCheckmarkUpdate) return;
+
+  if(isValidCheckmarkSelected) {
+    document.querySelector('.checkmark.check-0')?.removeAttribute('hidden');
+    document.querySelector('.cross.check-0')?.setAttribute('hidden', true);
   }
 
   if(isValidCheckmarkAltitude) {

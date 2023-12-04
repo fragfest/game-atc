@@ -21,11 +21,12 @@ let isValidCheckmarkHandoff = false;
 
 export const stageDeparture = (state, objEventCB, screenSize, elapsedTime, planeSelected, addToGameFn, setGameLoopStateFn, completeStageFn) => {
   if (!event) {
+    objEventCB.isPlaneSelected = false;
     event = Events.WaitForInput0;
     state.dialogBox = { top: 0.07, left: 0.3, width: 0.6, html: '<clear>' };
 
     setTimeout(() => {
-      const html = `<b>Departure - Take off & Handoff</b><br>` +
+      const html = `<b>Departure - Take off and Handoff</b><br>` +
       `<div class="line"> Start aircraft departure roll. Once airborne, climb aircraft and steer to handoff waypoint.</div>` +
       `<div class="line"> <span hidden class="checkmark check-0">&check;</span> <span class="cross check-0">&times;</span> <span class="text">select plane from taxi queue</span></div>` +
       `<div class="line"> <span hidden class="checkmark check-1">&check;</span> <span class="cross check-1">&times;</span> <span class="text">start takeoff roll</span></div>` +
@@ -37,18 +38,19 @@ export const stageDeparture = (state, objEventCB, screenSize, elapsedTime, plane
     }, 1000);
   }
 
-  if((elapsedTime > ElapsedTimes.FirstInputMs ) && (event === Events.WaitForInput0)) {
-    event = Events.WaitForSelected0;
-    objEventCB.isPlaneSelected = false;
+  let allowCheckmarkUpdate = false;
+  if(elapsedTime > ElapsedTimes.DepartureFirstInputMs) {
+    allowCheckmarkUpdate = true;
   }
 
-  if ((event === Events.WaitForSelected0) && !objEventCB.isPlaneSelected) {
+  if((elapsedTime > ElapsedTimes.DepartureFirstInputMs) && (event === Events.WaitForInput0) && !objEventCB.isPlaneSelected) {
+    event = Events.WaitForSelected0;
     state.focusCircleType = FocusCircleType.Rectangle;
     state.focusCircle = flightStripQueue(screenSize);
     setGameLoopStateFn(false);
   }
 
-  if((event === Events.WaitForSelected0) && objEventCB.isPlaneSelected) {
+  if(objEventCB.isPlaneSelected) {
     event = Events.WaitForInput1;
     objEventCB.isPlaneSelected = false;
     isSetCheckmarkTaxiQueue = true;
@@ -71,7 +73,6 @@ export const stageDeparture = (state, objEventCB, screenSize, elapsedTime, plane
 
   if((event === Events.WaitForInput2) && objEventCB.altitudeValue) {
     if(objEventCB.altitudeValue >= 6000) {
-      objEventCB.altitudeValue = null;
       state.focusCircleType = null;
       isSetCheckmarkAltitude = true;
       event = Events.WaitForInput3;
@@ -79,8 +80,8 @@ export const stageDeparture = (state, objEventCB, screenSize, elapsedTime, plane
     }
   }
 
-  if(planeSelected && isSetCheckmarkAltitude) {
-    if(planeSelected.altitude >= 6000) isValidCheckmarkAltitude = true;
+  if(isSetCheckmarkAltitude) {
+    if(objEventCB.altitudeValue >= 6000) isValidCheckmarkAltitude = true;
     else isValidCheckmarkAltitude = false
   }
 
@@ -102,10 +103,9 @@ export const stageDeparture = (state, objEventCB, screenSize, elapsedTime, plane
 
   if(isSetCheckmarkTaxiQueue && isSetCheckmarkTakeoff && isValidCheckmarkAltitude && isValidCheckmarkHandoff) {
     completeStageFn();
-    setTimeout(() => {
-      state.dialogBox = { top: 0.07, left: 0.3, width: 0.6, html: '<clear>' };
-    }, 5000);
   }
+
+  if(!allowCheckmarkUpdate) return;
 
   if(isSetCheckmarkTaxiQueue) {
     document.querySelector('.checkmark.check-0')?.removeAttribute('hidden');

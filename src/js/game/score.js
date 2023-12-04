@@ -11,7 +11,7 @@ export const setup = () => {
   resetScore();
   const score = getScore();
   const highestLevel = getHighestLevelCompleted();
-  const nextLevel = highestLevel ? (highestLevel + 1) : 0;
+  const nextLevel = (highestLevel === null) ? 0 : (highestLevel + 1);
 
   score.level = (nextLevel <= getFinalLevel()) ? nextLevel : getFinalLevel();
   setScore(score);
@@ -55,7 +55,7 @@ export const levelRetry = (level) => {
 
 export const getHighestLevelCompleted = () => {
   const sorted = getScoreHistory().sort((a, b) => b.level - a.level);
-  if(!sorted.length) return 0;
+  if(!sorted.length) return null;
   return sorted[0].level;
 }
 

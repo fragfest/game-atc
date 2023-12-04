@@ -15,6 +15,9 @@ import { Stages, ElapsedTimes } from './typesTutorial';
 import { stageArrivalLand } from './stageArrivalLand';
 import { stageDeparture } from './stageDeparture';
 import { stageWaypoint } from './stageWaypoint';
+import { stageConflict } from './stageConflict';
+import { FocusCircleType } from '../types';
+import { scorePanel } from './focusCircleTutorial';
 
 /**
  * @typedef {import('../game/game.js').State} State
@@ -121,14 +124,16 @@ let stage = '';
 const stageCompleted = [];
 
 const isAtStage = stageArg => stageArg === stage && !stageCompleted.find(x => x === stage);
-const isLastStage = stageArg => stageArg === stage;
 const completeStage = stageArg => {
   if(stageCompleted.find(x => x === stageArg)) return;
   stageCompleted.push(stageArg);
 }
 
+let startTimeStageArrival = 0;
 let startTimeStageDeparture = 0;
 let startTimeStageWaypoint = 0;
+let startTimeStageConflict = 0;
+let areConflictPlanesCreated = false;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // TUTORIAL
@@ -141,65 +146,102 @@ const tutorial = (state, entityManagerArr, startTime, canvasObj, screenSize) => 
   const elapsedTime = now - startTime;
   
   if(elapsedTime > 500 && stage === '') {
-    // stage = Stages.Intro;
-    stage = Stages.Waypoint;
+    stage = Stages.Intro;
     startTimeStageWaypoint = elapsedTime;
-    const positionObj = { x: canvasObj.width / 1.35, y: canvasObj.height / 2, heading: '240', altitude: 5500, speed: 220 };
-    const obj = { ...canvasObj, positionObj };
-    // addToGame(createPlaneArrivalStage(obj));
   }
 
   if (isAtStage(Stages.Intro)) {
-    const html = `Welcome <b>Trainee</b>, <br><br> Before directing real traffic we need you to qualify on the Future Flight Ops system.<br>` +
-    ` Complete all the training scenarios so we feel safe letting you lose on the paying public. <br><br> Good Luck!`;
-    state.dialogBox = { top: 0.1, left: 0.1, width: 0.50, html };
-    completeStage(Stages.Intro);
+      const html = `Welcome <b>Trainee</b>, <br><br> Before directing real traffic we need you to qualify on the Future Flight Ops system.<br>` +
+      ` Complete all the training scenarios so we feel safe letting you lose on the paying public. <br><br> Good Luck!`;
+      state.dialogBox = { top: 0.1, left: 0.1, width: 0.50, html };
+      completeStage(Stages.Intro);
+      startTimeStageDeparture = elapsedTime;
+      stage = Stages.Departure
   }
   
-  if(elapsedTime > ElapsedTimes.ArrivalLandStartMs && isLastStage(Stages.Intro)) {
-    stage = Stages.ArrivalLand;
-  }
-
-  if(isAtStage(Stages.ArrivalLand)) {
-    const positionObj = { x: canvasObj.width / 1.35, y: canvasObj.height / 2, heading: '240', altitude: 5500, speed: 220 };
-    const obj = { ...canvasObj, positionObj };
-    stageArrivalLand(state, objEventCB, screenSize, elapsedTime, planeSelected,
-      () => addToGame(createPlaneArrivalStage(obj)),
-      setGameLoopState(state),
-      () => {
-        completeStage(Stages.ArrivalLand);
-        startTimeStageDeparture = elapsedTime;
-        stage = Stages.Departure;
-      });
-  }
-
   const elapsedTimeDeparture = elapsedTime - startTimeStageDeparture;
-
+  
   if(isAtStage(Stages.Departure) && (elapsedTimeDeparture > ElapsedTimes.DepartureStartMs)) {
     const obj = {...canvasObj, entityManagerArr };
+    
     stageDeparture(state, objEventCB, screenSize, elapsedTimeDeparture, planeSelected,
       () => addToGame(createPlaneDepartureStage(obj)),
       setGameLoopState(state),
       () => {
         completeStage(Stages.Departure);
-        startTimeStageWaypoint = elapsedTime;
-        stage = Stages.Waypoint;
+        startTimeStageArrival = elapsedTime;
+        stage = Stages.ArrivalLand;
       }
     );
   }
 
+  const elapsedTimeArrival = elapsedTime - startTimeStageArrival;
+
+  if(isAtStage(Stages.ArrivalLand) && (elapsedTimeArrival > ElapsedTimes.ArrivalLandStartMs)) {
+    const positionObj = { x: canvasObj.width / 1.35, y: canvasObj.height / 2, heading: '240', altitude: 5500, speed: 220 };
+    const obj = { ...canvasObj, positionObj };
+
+    stageArrivalLand(state, objEventCB, screenSize, elapsedTimeArrival, planeSelected,
+      () => addToGame(createPlaneArrivalStage(obj)),
+      setGameLoopState(state),
+      () => {
+        completeStage(Stages.ArrivalLand);
+        startTimeStageWaypoint = elapsedTime;
+        stage = Stages.Waypoint;
+      });
+  }
+
   const elapsedTimeWaypoint = elapsedTime - startTimeStageWaypoint;
-  
+
   if(isAtStage(Stages.Waypoint) && (elapsedTimeWaypoint > ElapsedTimes.WaypointStartMs)) {
     const positionObj = { x: canvasObj.width / 1.4, y: canvasObj.height / 1.4, heading: '090', altitude: 6000, speed: 220 };
     const obj = { ...canvasObj, positionObj };
+
     stageWaypoint(state, objEventCB, screenSize, elapsedTimeWaypoint, planeSelected,
       () => addToGame(createPlaneArrivalStage(obj)),
       setGameLoopState(state),
       () => {
         completeStage(Stages.Waypoint);
+        startTimeStageConflict = elapsedTime;
+        stage = Stages.Conflict;
       });
   }
 
+  const elapsedTimeConflict = elapsedTime - startTimeStageConflict;
+  
+  if(isAtStage(Stages.Conflict) && (elapsedTimeConflict > ElapsedTimes.ConflictStartMs)) {
+    const positionObj = { x: 0.05 * canvasObj.width, y: canvasObj.height / 2.5, heading: '090', altitude: 6000, speed: 220 };
+    const positionObjB = { ...positionObj, x: 1.2 * positionObj.x, y: 1.1 * positionObj.y, altitude: 6500 };
+    const objA = { ...canvasObj, positionObj };
+    const objB = { ...objA, positionObj: positionObjB };
+    if(!areConflictPlanesCreated) {
+      areConflictPlanesCreated = true;
+      const planeA = createPlaneArrivalStage(objA)
+      planeA.hasProximityAlert = true;
+      const planeB = createPlaneArrivalStage(objB)
+      planeB.hasProximityAlert = true;
+      addToGame(planeA);
+      addToGame(planeB);
+    }
+
+    stageConflict(state, elapsedTimeWaypoint, entityManagerArr,
+      () => {
+        completeStage(Stages.Conflict);
+        setTimeout(() => stage = Stages.Done, 8000 );
+      });
+  }
+
+  if(isAtStage(Stages.Done)) {
+    state.dialogBox = { top: 0.07, left: 0.1, width: 0.5, html: '<clear>' };
+    setTimeout(() => {
+      const html = `Congratulations <b>Controller</b>, <br><br> Your training is complete and you are ready to direct real aircraft.<br>` +
+      `Please wait for the <b>departures</b> and <b>arrivals</b> goals to complete<br><br>` +
+      `Welcome to the Future Flight Ops system!`;
+    state.dialogBox = { top: 0.1, left: 0.1, width: 0.50, html };
+    state.focusCircleType = FocusCircleType.Rectangle;
+    state.focusCircle = scorePanel(screenSize);
+    }, 1000);
+    completeStage(Stages.Done);
+  }
 }
 
