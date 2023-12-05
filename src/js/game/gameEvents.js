@@ -84,7 +84,7 @@ export const setup = (
   subscribe(KeyboardEvents.KeyboardLetter_W_EV, () => {
     callMethodEV(getPlaneSelectedIndex(), (plane) => {
       const waypoint = nextWaypoint(arrivalWaypoints, plane);
-      plane.setWaypoint(waypoint);
+      if(isArrival(plane)) plane.setWaypoint(waypoint);
     });
   });
 
