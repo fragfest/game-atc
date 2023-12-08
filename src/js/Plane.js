@@ -1,24 +1,39 @@
-import Square from './Square';
-import { isSquare } from './types';
-import { convHdgDegToThreeDigits, convHdgRadToThreeDigits } from './utils';
-import { getFlightArrival, getFlightDeparture } from './flights/LHR';
-import { DestinationType, getPerformance } from './aircraft/airframe';
-import { Waypoints, getWaypointDepartureRnd, getRunwayRnd } from './airports/LHR';
-import { getGoals } from './game/victory';
-import { getScore } from './game/score';
+import Square from "./Square";
+import { isSquare } from "./types";
+import { convHdgDegToThreeDigits, convHdgRadToThreeDigits } from "./utils";
+import { getFlightArrival, getFlightDeparture } from "./flights/LHR";
+import { DestinationType, getPerformance } from "./aircraft/airframe";
+import {
+  Waypoints,
+  getWaypointDepartureRnd,
+  getRunwayRnd,
+} from "./airports/LHR";
+import { getGoals } from "./game/victory";
+import { getScore } from "./game/score";
 
-export const create = ({
-  entityManagerArr, screenSize, width, height,
-  canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl, clickCB
-}, chanceOfDeparture ) => {
+export const create = (
+  {
+    entityManagerArr,
+    screenSize,
+    width,
+    height,
+    canvasObjEntity,
+    canvasObjText,
+    canvasObjHeading,
+    canvasEntityEl,
+    clickCB,
+  },
+  chanceOfDeparture
+) => {
   const runwayTitleRnd = getRunwayRnd();
-  const runway = entityManagerArr.find(x => x.title === runwayTitleRnd);
+  const runway = entityManagerArr.find((x) => x.title === runwayTitleRnd);
 
   let destinationType = DestinationType.Arrival;
-  if (Math.random() < chanceOfDeparture) destinationType = DestinationType.Departure;
+  if (Math.random() < chanceOfDeparture)
+    destinationType = DestinationType.Departure;
 
   let square;
-  
+
   if (destinationType === DestinationType.Arrival) {
     // sections numbered from WNW going clockwise: 1 - 8
     const sectionsCount = 8;
@@ -30,10 +45,25 @@ export const create = ({
     const flight = createFlight(getFlightArrival);
     const airframeObj = getPerformance(flight.airframe, screenSize);
 
-    square = new Square(flight, canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl,
-      // { x: width / 1.69, y: height / 1.88, heading: '270', altitude: 1200, speed: 180 }, // landing debug
-      { x: newPlane.x, y: newPlane.y, heading: newPlane.heading, altitude, speed },
-      { destinationType, airframeObj, waypoint: newPlane.waypoint, runway: runway.title }
+    square = new Square(
+      flight,
+      canvasObjEntity,
+      canvasObjText,
+      canvasObjHeading,
+      canvasEntityEl,
+      {
+        x: newPlane.x,
+        y: newPlane.y,
+        heading: newPlane.heading,
+        altitude,
+        speed,
+      },
+      {
+        destinationType,
+        airframeObj,
+        waypoint: newPlane.waypoint,
+        runway: runway.title,
+      }
     );
     square.clickEventCB = () => clickCB(square);
   }
@@ -51,10 +81,26 @@ export const create = ({
     const flight = createFlight(getFlightDeparture);
     const airframeObj = getPerformance(flight.airframe, screenSize);
 
-    square = new Square(flight, canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl,
+    square = new Square(
+      flight,
+      canvasObjEntity,
+      canvasObjText,
+      canvasObjHeading,
+      canvasEntityEl,
       // { x: width / 2 + 200, y: 40, heading: '270', altitude: 6500, speed: 200 },
-      { x: newPlane.x, y: newPlane.y, heading: newPlane.heading, altitude, speed },
-      { destinationType, airframeObj, waypoint: newPlane.waypoint, runway: runway.title }
+      {
+        x: newPlane.x,
+        y: newPlane.y,
+        heading: newPlane.heading,
+        altitude,
+        speed,
+      },
+      {
+        destinationType,
+        airframeObj,
+        waypoint: newPlane.waypoint,
+        runway: runway.title,
+      }
     );
     square.clickEventCB = () => clickCB(square);
   }
@@ -62,48 +108,55 @@ export const create = ({
   return { square };
 };
 
-export const spawnRndPlane = (canvasObj, entityManagerArr, createSquare_entityFnArgChanceArg) => (deltaTimeMs) => {
-  const goals = getGoals();
-  const score = getScore();
-  const spawnRateModifier = 0.7;
-  const spawnRate = goals.SpawnRate || 1;
+export const spawnRndPlane =
+  (canvasObj, entityManagerArr, createSquare_entityFnArgChanceArg) =>
+  (deltaTimeMs) => {
+    const goals = getGoals();
+    const score = getScore();
+    const spawnRateModifier = 0.7;
+    const spawnRate = goals.SpawnRate || 1;
 
-  const lowCount = 8;
-  const highCount = 16;
-  let chanceOfPlanePerSec = 0.03;
+    const lowCount = 8;
+    const highCount = 16;
+    let chanceOfPlanePerSec = 0.03;
 
-  const count = entityManagerArr.filter(isSquare).length;
-  if (count < lowCount) chanceOfPlanePerSec = 0.1;
-  if (count > highCount) chanceOfPlanePerSec = 0.005;
+    const count = entityManagerArr.filter(isSquare).length;
+    if (count < lowCount) chanceOfPlanePerSec = 0.1;
+    if (count > highCount) chanceOfPlanePerSec = 0.005;
 
-  const isDeparture = obj => isSquare(obj) && obj.destinationType === DestinationType.Departure;
-  const isArrival = obj => isSquare(obj) && obj.destinationType === DestinationType.Arrival;
+    const isDeparture = (obj) =>
+      isSquare(obj) && obj.destinationType === DestinationType.Departure;
+    const isArrival = (obj) =>
+      isSquare(obj) && obj.destinationType === DestinationType.Arrival;
 
-  const departureCount = entityManagerArr.filter(isDeparture).length;
-  const departureGoalRemaining = goals.Departures - score.departures;
-  const arrivalCount = entityManagerArr.filter(isArrival).length;
-  const arrivalGoalRemaining = goals.Arrivals - score.arrivals;
+    const departureCount = entityManagerArr.filter(isDeparture).length;
+    const departureGoalRemaining = goals.Departures - score.departures;
+    const arrivalCount = entityManagerArr.filter(isArrival).length;
+    const arrivalGoalRemaining = goals.Arrivals - score.arrivals;
 
-  let chanceOfDeparture = 0.45;
-  let noMoreDepartures = false;
-  let noMoreArrivals = false;
-  if(departureCount >= departureGoalRemaining) {
-    chanceOfDeparture = 0;
-    chanceOfPlanePerSec = 0.5
-    noMoreDepartures = true;
-  }
-  if(arrivalCount >= arrivalGoalRemaining) {
-    chanceOfDeparture = 1;
-    chanceOfPlanePerSec = 0.5
-    noMoreArrivals = true;
-  }
-  
-  const chanceOfPlaneBase = chanceOfPlanePerSec * deltaTimeMs / 1000;
-  let chanceOfPlane = chanceOfPlaneBase * (spawnRate * spawnRateModifier);
-  if(noMoreDepartures && noMoreArrivals) chanceOfPlane = 0;
+    let chanceOfDeparture = 0.45;
+    let noMoreDepartures = false;
+    let noMoreArrivals = false;
+    if (departureCount >= departureGoalRemaining) {
+      chanceOfDeparture = 0;
+      chanceOfPlanePerSec = 0.5;
+      noMoreDepartures = true;
+    }
+    if (arrivalCount >= arrivalGoalRemaining) {
+      chanceOfDeparture = 1;
+      chanceOfPlanePerSec = 0.5;
+      noMoreArrivals = true;
+    }
 
-  createSquare_entityFnArgChanceArg(() => create(canvasObj, chanceOfDeparture).square, chanceOfPlane);
-}
+    const chanceOfPlaneBase = (chanceOfPlanePerSec * deltaTimeMs) / 1000;
+    let chanceOfPlane = chanceOfPlaneBase * (spawnRate * spawnRateModifier);
+    if (noMoreDepartures && noMoreArrivals) chanceOfPlane = 0;
+
+    createSquare_entityFnArgChanceArg(
+      () => create(canvasObj, chanceOfDeparture).square,
+      chanceOfPlane
+    );
+  };
 
 ////////////// PRIVATE ////////////////////////////////////////////////
 
@@ -117,7 +170,7 @@ const createFlight = (getFlightFn) => {
   }
   spawned.push(newFlight);
   return newFlight;
-}
+};
 
 const rand = (min, max) => min + Math.random() * (max - min);
 const setAlt = () => Math.floor(rand(7000, 10000) / 100) * 100;

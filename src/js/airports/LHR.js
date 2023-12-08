@@ -175,24 +175,28 @@ const waypoints = (waypoint, screenSize) => {
     switch (waypoint) {
       case 'BNN':
         return {
+          holdingPosition: HoldingPosition.North,
           type: WaypointType.Arrival,
           x: width / 2 - 160,
           y: height / 2 - 118,
         };
       case 'OCK':
         return {
+          holdingPosition: HoldingPosition.South,
           type: WaypointType.Arrival,
           x: 350,
           y: height - 120,
         };
       case 'LAM':
         return {
+          holdingPosition: HoldingPosition.North,
           type: WaypointType.Arrival,
           x: width / 2 + 290,
           y: height / 2 - 112,
         };
       case 'BIG':
         return {
+          holdingPosition: HoldingPosition.South,
           type: WaypointType.Arrival,
           x: width / 2 + 260,
           y: height / 2 + 115,
