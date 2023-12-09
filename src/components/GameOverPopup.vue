@@ -38,7 +38,12 @@
         <div class="item score margin-top border-top gold">{{ total }}</div>
       </div>
 
-      <div class="btn" tabindex="1" ref="okBtn" @keyup.space="btnKeyEvent">
+      <div
+        class="btn"
+        tabindex="1"
+        ref="okBtn"
+        @keyup.space.enter="btnKeyEvent"
+      >
         <router-link tabindex="-1" :to="btnRouteObj">
           <h1>OK</h1>
         </router-link>
@@ -53,7 +58,7 @@ import {
   getBaseScore,
   resetScore,
   levelComplete,
-} from "../js/game/score";
+} from '../js/game/score';
 import {
   isDeparturesSuccess,
   isArrivalsSuccess,
@@ -62,30 +67,30 @@ import {
   isConflictCondition,
   isVictory,
   getGoals,
-} from "../js/game/victory";
+} from '../js/game/victory';
 
 export default {
   data() {
     return {
       isSuccess: false,
-      btnRouteObj: { name: "homeLanding" },
+      btnRouteObj: { name: 'homeLanding' },
 
       level: 0,
-      departures: "0/" + getGoals().Departures,
+      departures: '0/' + getGoals().Departures,
       departureScore: 0,
-      departuresClass: "red",
-      arrivals: "0/" + getGoals().Arrivals,
+      departuresClass: 'red',
+      arrivals: '0/' + getGoals().Arrivals,
       arrivalScore: 0,
-      arrivalsClass: "red",
-      failed: "0/" + getGoals().Failed,
+      arrivalsClass: 'red',
+      failed: '0/' + getGoals().Failed,
       failedScore: 0,
-      failedClass: "green",
-      taxiQueue: "0/" + getGoals().TaxiQueue,
+      failedClass: 'green',
+      taxiQueue: '0/' + getGoals().TaxiQueue,
       taxiQueueScore: 0,
-      taxiQueueClass: "green",
-      conflict: "0/" + getGoals().Conflict,
+      taxiQueueClass: 'green',
+      conflict: '0/' + getGoals().Conflict,
       conflictScore: 0,
-      conflictClass: "green",
+      conflictClass: 'green',
       hotRunway: 0,
       tinPusher: 0,
       total: 0,
@@ -98,13 +103,13 @@ export default {
 
     if (isVictory(score)) this.isSuccess = true;
 
-    if (isDeparturesSuccess(score.departures)) this.departuresClass = "green";
-    if (isArrivalsSuccess(score.arrivals)) this.arrivalsClass = "green";
-    if (isFailedCondition(score.failed)) this.failedClass = "red";
-    if (isConflictCondition(score.conflict)) this.conflictClass = "red";
-    if (isConflictCondition(score.conflict)) this.conflictClass = "red";
+    if (isDeparturesSuccess(score.departures)) this.departuresClass = 'green';
+    if (isArrivalsSuccess(score.arrivals)) this.arrivalsClass = 'green';
+    if (isFailedCondition(score.failed)) this.failedClass = 'red';
+    if (isConflictCondition(score.conflict)) this.conflictClass = 'red';
+    if (isConflictCondition(score.conflict)) this.conflictClass = 'red';
     if (isExceededTaxiingCondition(score.taxiQueue)) {
-      this.taxiQueueClass = "red";
+      this.taxiQueueClass = 'red';
     }
 
     const baseScorePass = getBaseScore();
@@ -117,11 +122,11 @@ export default {
       (baseScorePass / conflictScoreMax);
 
     this.level = score.level;
-    this.departures = "" + score.departures + "/" + getGoals().Departures;
-    this.arrivals = "" + score.arrivals + "/" + getGoals().Arrivals;
-    this.failed = "" + score.failed + "/" + getGoals().Failed;
-    this.taxiQueue = "" + score.taxiQueue + "/" + getGoals().TaxiQueue;
-    this.conflict = "" + Math.floor(score.conflict) + "/" + getGoals().Conflict;
+    this.departures = '' + score.departures + '/' + getGoals().Departures;
+    this.arrivals = '' + score.arrivals + '/' + getGoals().Arrivals;
+    this.failed = '' + score.failed + '/' + getGoals().Failed;
+    this.taxiQueue = '' + score.taxiQueue + '/' + getGoals().TaxiQueue;
+    this.conflict = '' + Math.floor(score.conflict) + '/' + getGoals().Conflict;
 
     this.departureScore = isVictory(score) ? baseScorePass : 0;
     this.arrivalScore = isVictory(score) ? baseScorePass : 0;
@@ -189,7 +194,7 @@ export default {
   border-radius: 22px;
   border: solid 3px darkslategrey;
   box-shadow: 4px 8px 16px #000000a0;
-  background-image: url("/public/img/teal-bckgnd.jpg");
+  background-image: url('/public/img/teal-bckgnd.jpg');
 
   color: white;
   font-family: monospace;

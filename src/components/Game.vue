@@ -123,49 +123,49 @@
  * @typedef {import('../js/game/game.js').State} State
  */
 
-import { ref } from "vue";
+import { ref } from 'vue';
 
-import FocusCircle from "./common/FocusCircle";
-import CyberBox from "./common/CyberBox";
-import ButtonPanel from "./panelBottom/ButtonPanel";
-import DetailsPanel from "./panelBottom/DetailsPanel";
-import ScorePanel from "./panelBottom/ScorePanel";
-import ControlPanel from "./panelBottom/ControlPanel";
-import FlightStrip from "./FlightStrip";
-import FlightStripDeparture from "./FlightStripDeparture";
-import GameOverPopup from "./GameOverPopup.vue";
+import FocusCircle from './common/FocusCircle';
+import CyberBox from './common/CyberBox';
+import ButtonPanel from './panelBottom/ButtonPanel';
+import DetailsPanel from './panelBottom/DetailsPanel';
+import ScorePanel from './panelBottom/ScorePanel';
+import ControlPanel from './panelBottom/ControlPanel';
+import FlightStrip from './FlightStrip';
+import FlightStripDeparture from './FlightStripDeparture';
+import GameOverPopup from './GameOverPopup.vue';
 
-import { DestinationType } from "../js/aircraft/airframe";
-import { getWaypointArrivalsAll } from "../js/airports/LHR";
+import { DestinationType } from '../js/aircraft/airframe';
+import { getWaypointArrivalsAll } from '../js/airports/LHR';
 import {
   setup as setupFullGame,
   setupEntities,
   setPlaneSelected,
   setShowCircles,
   drawInertElements,
-} from "../js/game/game";
-import { setup as setupTutorial } from "../js/tutorial/gameTutorial";
-import { isSquare } from "../js/types";
-import { ScreenSizes, getGameSize, setupGameLoadAndExit } from "../js/utils";
-import { setup as setupKeyboard } from "../js/events/keyboard";
+} from '../js/game/game';
+import { setup as setupTutorial } from '../js/tutorial/gameTutorial';
+import { isSquare } from '../js/types';
+import { ScreenSizes, getGameSize, setupGameLoadAndExit } from '../js/utils';
+import { setup as setupKeyboard } from '../js/events/keyboard';
 import {
   setup as setupEvents,
   attachHtmlQueue,
   gameUpdateEventCB,
   tutorialUpdateEventCB,
   setupTutorialEvents,
-} from "../js/game/gameEvents";
+} from '../js/game/gameEvents';
 import {
   setup as setupVictory,
   isDefeat,
   publishFailed,
-} from "../js/game/victory";
+} from '../js/game/victory';
 import {
   resetScore,
   getScoreHistory,
   subscribeScore,
   ScoreEvents,
-} from "../js/game/score";
+} from '../js/game/score';
 
 const isDeparture = (plane) =>
   plane.destinationType === DestinationType.Departure;
@@ -187,7 +187,7 @@ let updatedAltitudeTutorial_altArg = null;
 let setShowCircles_isShowCirclesArg = null;
 
 export default {
-  name: "atc-game",
+  name: 'atc-game',
   components: {
     FocusCircle,
     CyberBox,
@@ -204,16 +204,16 @@ export default {
   data() {
     return {
       screenSize,
-      inputAltitude: "",
-      inputHeading: "",
-      inputSpeed: "",
+      inputAltitude: '',
+      inputHeading: '',
+      inputSpeed: '',
       width,
       height,
       squareClicked,
       hasPopup: false,
       // tutorial
-      tutorialBoxHtml: "",
-      focusCircleType: "",
+      tutorialBoxHtml: '',
+      focusCircleType: '',
       focusCircle: {},
     };
   },
@@ -247,13 +247,13 @@ export default {
     },
 
     styleTutorial: () => ({
-      top: height * tutorialBoxTop.value + "px",
-      left: width * tutorialBoxLeft.value + "px",
+      top: height * tutorialBoxTop.value + 'px',
+      left: width * tutorialBoxLeft.value + 'px',
     }),
 
     styleScope: () => ({
-      width: width + 1 + "px",
-      height: height + 3 + "px",
+      width: width + 1 + 'px',
+      height: height + 3 + 'px',
     }),
 
     stylePanelRight: () => {
@@ -264,16 +264,16 @@ export default {
         // maxHeight = 795;
       }
       return {
-        "min-width": minWidth + "px",
-        width: "100%",
-        "min-height": "99vh",
+        'min-width': minWidth + 'px',
+        width: '100%',
+        'min-height': '99vh',
         // "max-height": maxHeight + "px",
       };
     },
 
     styleEntityDiv: () => ({
-      width: width - 2 + "px",
-      height: height - 1 + "px",
+      width: width - 2 + 'px',
+      height: height - 1 + 'px',
     }),
   },
 
@@ -285,13 +285,13 @@ export default {
 
     // w/h aspect ratio: 1.6525
     if (windowWidth < screenOneWidth || windowHeight < screenOneHeight) {
-      console.log("screen size", "small");
+      console.log('screen size', 'small');
       width = getGameSize(ScreenSizes.Small).width;
       height = getGameSize(ScreenSizes.Small).height;
       screenSize = ScreenSizes.Small;
       return;
     }
-    console.log("screen size", "large");
+    console.log('screen size', 'large');
     screenSize = ScreenSizes.Large;
   },
 
@@ -316,15 +316,15 @@ export default {
     const layerThree = this.$refs.layerThree;
     const layerFour = this.$refs.layerFour;
     // const layerFive = this.$refs.layerFive;
-    const backgroundCtx = background.getContext("2d");
+    const backgroundCtx = background.getContext('2d');
 
-    const layerOneCtx = layerOne.getContext("2d");
+    const layerOneCtx = layerOne.getContext('2d');
     const imgLayerObj = { ctx: layerOneCtx };
-    const layerTwoCtx = layerTwo.getContext("2d");
-    const layerThreeCtx = layerThree.getContext("2d");
-    const layerFourCtx = layerFour.getContext("2d");
+    const layerTwoCtx = layerTwo.getContext('2d');
+    const layerThreeCtx = layerThree.getContext('2d');
+    const layerFourCtx = layerFour.getContext('2d');
     // const layerFiveCtx = layerFive.getContext('2d');
-    const layerSixDiv = document.querySelector(".entity-div");
+    const layerSixDiv = document.querySelector('.entity-div');
 
     const backgroundObj = { ctx: backgroundCtx };
     const layerTwoObj = {
@@ -393,7 +393,7 @@ export default {
         gameUpdateEventCB(squareClicked, entityManagerArr);
         tutorialUpdateEventCB(
           this,
-          "focusCircleType",
+          'focusCircleType',
           tutorialBox,
           this.focusCircle,
           tutorialEventArg,
@@ -429,7 +429,7 @@ export default {
       subscribeScore(ScoreEvents.ScoreEV, (score) => {
         if (isDefeat(score)) publishFailed();
       });
-      attachHtmlQueue(this, "tutorialBoxHtml", tutorialBoxHtmlQueue);
+      attachHtmlQueue(this, 'tutorialBoxHtml', tutorialBoxHtmlQueue);
       setupTutorialEvents(tutorialEventArg, gameState);
       setupTutorial(gameState)(setupArg);
       return;
@@ -461,7 +461,7 @@ export default {
 
 .panel-right {
   padding: 6px 12px;
-  background-image: url("/public/img/teal-bckgnd.jpg");
+  background-image: url('/public/img/teal-bckgnd.jpg');
   // background-image: linear-gradient(
   //     rgba(255, 255, 255, 0.1),
   //     rgba(255, 255, 255, 0.1)
@@ -497,7 +497,7 @@ export default {
       rgba(255, 255, 255, 0.1),
       rgba(255, 255, 255, 0.1)
     ),
-    url("/public/img/teal-bckgnd.jpg");
+    url('/public/img/teal-bckgnd.jpg');
   background-size: cover;
   background-position: right;
 }

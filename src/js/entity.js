@@ -1,29 +1,25 @@
-import { ScreenSizes } from "./utils";
+import { ScreenSizes } from './utils';
 
-const hasEntityState = state => {
-  return 'id' in state
-    && 'x' in state
-    && 'y' in state
-    && 'altitude' in state;
+const hasEntityState = (state) => {
+  return 'id' in state && 'x' in state && 'y' in state && 'altitude' in state;
 };
 
-export const hasEntityFuncs = entity => {
+export const hasEntityFuncs = (entity) => {
   return (
-    typeof entity.update === 'function' &&
-    typeof entity.draw === 'function'
+    typeof entity.update === 'function' && typeof entity.draw === 'function'
   );
 };
 
-export const distBetweenEntities = entityOne => entityTwo => {
+export const distBetweenEntities = (entityOne) => (entityTwo) => {
   const x = entityOne.x - entityTwo.x;
   const y = entityOne.y - entityTwo.y;
   return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
 };
 
 /**
- * @param {Object} entityDestination 
- * @param {Object} entity 
- * @param {Number} distPrev 
+ * @param {Object} entityDestination
+ * @param {Object} entity
+ * @param {Number} distPrev
  * @returns {Boolean}
  */
 export const isEntityGettingCloser = (entityDestination, entity, distPrev) => {
@@ -32,7 +28,7 @@ export const isEntityGettingCloser = (entityDestination, entity, distPrev) => {
   return dist < distPrev;
 };
 
-export const isCloseToWaypoint = waypoint => entity => {
+export const isCloseToWaypoint = (waypoint) => (entity) => {
   if (!hasEntityState(waypoint) || !hasEntityState(entity)) {
     console.error('entity is missing required state props');
     return false;
@@ -47,18 +43,18 @@ export const isCloseToWaypoint = waypoint => entity => {
   return false;
 };
 
-export const getTooCloseDistance = screenSize => {
+export const getTooCloseDistance = (screenSize) => {
   if (screenSize === ScreenSizes.Large) return 51;
   if (screenSize === ScreenSizes.Small) return 37;
 };
 
-export const isCloseToEntity = screenSize => entity => entityOther => {
+export const isCloseToEntity = (screenSize) => (entity) => (entityOther) => {
   if (!hasEntityState(entity) || !hasEntityState(entityOther)) {
     console.error('entity is missing required state props');
     return false;
   }
   if (entityOther.id === entity.id) return false;
-  
+
   const distMax = getTooCloseDistance(screenSize);
   const isCloseHorizontal = distBetweenEntities(entity)(entityOther) < distMax;
 
