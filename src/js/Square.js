@@ -29,7 +29,15 @@ import { DestinationType } from './aircraft/airframe';
 // class Square
 ////////////////////////////////////////////////////////////
 export default class Square {
-  constructor(flightObj, entityLayerObj, textLayerObj, headingLayerObj, htmlDiv, positionObj, planeObj) {
+  constructor(
+    flightObj,
+    entityLayerObj,
+    textLayerObj,
+    headingLayerObj,
+    htmlDiv,
+    positionObj,
+    planeObj
+  ) {
     this.id = Math.random();
     this.ctx = entityLayerObj.ctx;
     this.canvasWidth = entityLayerObj.width;
@@ -59,7 +67,7 @@ export default class Square {
     this.speedMax = planeObj.airframeObj.speedMax;
     this.speedTakeoff = planeObj.airframeObj.speedTakeoff;
     this.isSmall = planeObj.airframeObj.isSmall;
-    
+
     // html div
     this.htmlDiv = htmlDiv;
     this.htmlSquareDiv = null;
@@ -126,7 +134,9 @@ export default class Square {
     this.isTaxiing = true;
   }
 
-  clickEventCB() { throw new Error('clickEventCB not attached'); }
+  clickEventCB() {
+    throw new Error('clickEventCB not attached');
+  }
 
   setShowCircle(isShowCircle) {
     this.isShowCircle = !!isShowCircle;
@@ -149,7 +159,7 @@ export default class Square {
   }
 
   startTakeoff() {
-    if (!this.isTaxiing) return
+    if (!this.isTaxiing) return;
     this.setIsTaxiing(false);
     this.takeoff = true;
   }
@@ -225,8 +235,8 @@ export default class Square {
     if (isLanding) speedMin = this.speedLanding;
     if (this.isTouchedDown) speedMin = 0;
 
-    speed = (speed < speedMin) ? speedMin : speed;
-    speed = (speed > this.speedMax) ? this.speedMax : speed;
+    speed = speed < speedMin ? speedMin : speed;
+    speed = speed > this.speedMax ? this.speedMax : speed;
     this.speedTarget = Math.floor(speed / 5) * 5;
   }
 
@@ -240,8 +250,8 @@ export default class Square {
       return;
     }
 
-    altitude = (altitude < this.altitudeMin) ? this.altitudeMin : altitude;
-    altitude = (altitude > this.altitudeMax) ? this.altitudeMax : altitude;
+    altitude = altitude < this.altitudeMin ? this.altitudeMin : altitude;
+    altitude = altitude > this.altitudeMax ? this.altitudeMax : altitude;
     this.altitudeTarget = Math.floor(altitude / 100) * 100;
   }
 
@@ -255,16 +265,20 @@ export default class Square {
    * @param {Number} headingRad heading in rad. Zero is East, positive angle is CW
    * @param {Boolean} isLanding set/cancel landing mode
    * @param {Boolean} isHolding set/cancel holding mode
-   * @param {Direction | null} direction set heading turn direction. when null do not modify direction 
-   * @returns 
+   * @param {Direction | null} direction set heading turn direction. when null do not modify direction
+   * @returns
    */
   setHeadingTarget(headingRad, isLanding, isHolding, direction) {
     if (this.isNonInteractive) return;
 
-    // cancel landing 
+    // cancel landing
     if (this.landing && !isLanding) {
-      const speed = (this.speedTarget < this.speedMin) ? this.speedMin : this.speed;
-      const alt = (this.altitudeTarget < this.altitudeMin) ? this.altitudeMin : this.altitude;
+      const speed =
+        this.speedTarget < this.speedMin ? this.speedMin : this.speed;
+      const alt =
+        this.altitudeTarget < this.altitudeMin
+          ? this.altitudeMin
+          : this.altitude;
       this.setSpeed(speed);
       this.setAltitude(alt);
     }
@@ -286,14 +300,22 @@ export default class Square {
     const heading = parseInt(inputHeading);
     if (heading > 360 || heading <= 0) return;
 
-    this.setHeadingTarget(inputHeadingToRad(heading), false, false, Direction.None);
+    this.setHeadingTarget(
+      inputHeadingToRad(heading),
+      false,
+      false,
+      Direction.None
+    );
   }
 
   setNonInteractive() {
     this.isNonInteractive = true;
     if (this.htmlSquareDiv) {
-      this.htmlSquareDiv.addEventListener('mouseup', () => { });
-      this.htmlSquareDiv.addEventListener('mouseenter', () => this.htmlSquareDiv.style.cursor = 'default');
+      this.htmlSquareDiv.addEventListener('mouseup', () => {});
+      this.htmlSquareDiv.addEventListener(
+        'mouseenter',
+        () => (this.htmlSquareDiv.style.cursor = 'default')
+      );
     }
   }
 
@@ -312,7 +334,10 @@ export default class Square {
     }
     if (this.isHandoff) {
       planeHandoffSuccess();
-      publish(MessageEvents.MessageAllEV, this.title + ' departure handoff complete');
+      publish(
+        MessageEvents.MessageAllEV,
+        this.title + ' departure handoff complete'
+      );
       return;
     }
     if (this.isTouchedDown) {
@@ -325,7 +350,7 @@ export default class Square {
   updateHandoff({ entityManagerArr }) {
     if (this.destinationType !== DestinationType.Departure) return;
 
-    const isTargetWaypoint = entity =>
+    const isTargetWaypoint = (entity) =>
       entity.class === 'waypoint' && // TODO deprecate the class prop
       entity.title === this.waypoint;
 
@@ -341,7 +366,7 @@ export default class Square {
     if (!this.destroyFlag) return;
 
     this.destroy();
-    const index = entityManagerArr.findIndex(entity => entity.id === this.id);
+    const index = entityManagerArr.findIndex((entity) => entity.id === this.id);
     if (index === -1) return;
     entityManagerArr.splice(index, 1);
   }
@@ -353,8 +378,9 @@ export default class Square {
     const headingTargetLarge = headingTargetSmall + 2 * Math.PI;
 
     let smallDiff = Math.abs(headingTargetSmall - headingSmall);
-    let highestSmall = (headingTargetSmall > headingSmall) ? headingTargetSmall : headingSmall;
-    const isLowestLargeTarget = (headingTargetLarge < headingLarge);
+    let highestSmall =
+      headingTargetSmall > headingSmall ? headingTargetSmall : headingSmall;
+    const isLowestLargeTarget = headingTargetLarge < headingLarge;
     let lowestLarge = isLowestLargeTarget ? headingTargetLarge : headingLarge;
     let betweenDiff = lowestLarge - highestSmall;
     const isClosestSmall = smallDiff < betweenDiff;
@@ -370,13 +396,25 @@ export default class Square {
     if (direction === Direction.Left) return headingDecrease;
     if (isClosestSmall) {
       const turnRight = headingTargetSmall > headingSmall;
-      if (turnRight) return (headingIncrease > headingTargetSmall) ? headingTargetSmall : headingIncrease;
-      else return (headingDecrease < headingTargetSmall) ? headingTargetSmall : headingDecrease;
+      if (turnRight)
+        return headingIncrease > headingTargetSmall
+          ? headingTargetSmall
+          : headingIncrease;
+      else
+        return headingDecrease < headingTargetSmall
+          ? headingTargetSmall
+          : headingDecrease;
     }
     // else isClosestBetween
     const turnRight = isLowestLargeTarget;
-    if (turnRight) return (headingIncrease > headingTargetLarge) ? headingTargetLarge : headingIncrease;
-    else return (headingLargeDecrease < headingTargetSmall) ? headingTargetSmall : headingLargeDecrease;
+    if (turnRight)
+      return headingIncrease > headingTargetLarge
+        ? headingTargetLarge
+        : headingIncrease;
+    else
+      return headingLargeDecrease < headingTargetSmall
+        ? headingTargetSmall
+        : headingLargeDecrease;
   }
 
   updateAltitude(altitudeOld, altitudeTarget, altitudeChange) {
@@ -384,8 +422,14 @@ export default class Square {
     const altitudeIncrease = altitudeOld + altitudeChange;
     const altitudeDecrease = altitudeOld - altitudeChange;
     if (delta === 0) return altitudeOld;
-    else if (delta > 0) return (altitudeIncrease > altitudeTarget) ? altitudeTarget : altitudeIncrease;
-    else return (altitudeDecrease < altitudeTarget) ? altitudeTarget : altitudeDecrease;
+    else if (delta > 0)
+      return altitudeIncrease > altitudeTarget
+        ? altitudeTarget
+        : altitudeIncrease;
+    else
+      return altitudeDecrease < altitudeTarget
+        ? altitudeTarget
+        : altitudeDecrease;
   }
 
   updateSpeed(speed, speedTarget, speedIncreaseArg, speedDecreaseArg) {
@@ -393,17 +437,18 @@ export default class Square {
     const speedIncrease = speed + speedIncreaseArg;
     const speedDecrease = speed - speedDecreaseArg;
     if (delta === 0) return speed;
-    if (delta > 0) return (speedIncrease > speedTarget) ? speedTarget : speedIncrease;
-    return (speedDecrease < speedTarget) ? speedTarget : speedDecrease;
+    if (delta > 0)
+      return speedIncrease > speedTarget ? speedTarget : speedIncrease;
+    return speedDecrease < speedTarget ? speedTarget : speedDecrease;
   }
 
   getSpeedDelta(speed, deltaTimeMs) {
     const speedDeltaPerMs = this.speedDeltaPerMs;
     const speedTakeoff = this.speedTakeoff;
-    const calcDelta = speedDeltaPerMsArg => {
+    const calcDelta = (speedDeltaPerMsArg) => {
       const pixelsSpeedDeltaBase = speedDeltaPerMsArg * deltaTimeMs;
       return pixelsSpeedDeltaBase * this.pixelsBasePerKnot;
-    }
+    };
 
     // touch down rollout
     if (this.isTouchedDown) {
@@ -430,11 +475,18 @@ export default class Square {
     const headingTarget = this.headingTargetRad;
     const headingChange = this.turnRateRadPerMs * deltaTimeMs;
     const direction = this.direction;
-    const headingRadNewLarge = this.updateHeading(headingOld, headingTarget, headingChange, direction);
-    const headingRadNew = convertToPosRad(convertToSmallRad(headingRadNewLarge));
+    const headingRadNewLarge = this.updateHeading(
+      headingOld,
+      headingTarget,
+      headingChange,
+      direction
+    );
+    const headingRadNew = convertToPosRad(
+      convertToSmallRad(headingRadNewLarge)
+    );
 
     if (this.takeoff) this.setSpeed(220, false, true);
-    if (this.takeoff && (this.speed > this.speedTakeoff)) {
+    if (this.takeoff && this.speed > this.speedTakeoff) {
       this.isNonInteractive = false;
       this.takeoff = false;
       this.setSpeed(220, false, false);
@@ -442,7 +494,12 @@ export default class Square {
     }
 
     const speedDelta = this.getSpeedDelta(this.speed, deltaTimeMs);
-    const speedNew = this.updateSpeed(this.speed, this.speedTarget, speedDelta, speedDelta);
+    const speedNew = this.updateSpeed(
+      this.speed,
+      this.speedTarget,
+      speedDelta,
+      speedDelta
+    );
     const pixelsSpeedRateBase = this.speedRatePerMs * deltaTimeMs;
     const pixelsSpeed = pixelsSpeedRateBase * this.pixelsBasePerKnot * speedNew;
     const pixelsInX = Math.cos(headingRadNew) * pixelsSpeed;
@@ -450,15 +507,19 @@ export default class Square {
 
     const altitudeOld = this.altitude;
     const altitudeChange = this.altitudeRatePerMs * deltaTimeMs;
-    const altitudeNew = this.updateAltitude(altitudeOld, this.altitudeTarget, altitudeChange);
+    const altitudeNew = this.updateAltitude(
+      altitudeOld,
+      this.altitudeTarget,
+      altitudeChange
+    );
 
     this.x += pixelsInX;
     this.y += pixelsInY;
     if (this.htmlSquareDiv) {
       const squareSize = _htmlSquareSize(this.isSmall, this.iconSize).side;
       const squareTop = _htmlSquareSize(this.isSmall, this.iconSize).top;
-      this.htmlSquareDiv.style.left = this.x - (squareSize / 2) + 'px';
-      this.htmlSquareDiv.style.top = this.y - squareTop - (squareSize / 2) + 'px';
+      this.htmlSquareDiv.style.left = this.x - squareSize / 2 + 'px';
+      this.htmlSquareDiv.style.top = this.y - squareTop - squareSize / 2 + 'px';
     }
     this.headingRad = headingRadNew;
     this.heading = convHdgRadToThreeDigits(headingRadNew);
@@ -466,8 +527,10 @@ export default class Square {
     this.speed = speedNew;
 
     // square leaving canvas
-    const outsideCanvasWidth = (x, offset) => (x > (this.canvasWidth + offset)) || (x < (0 - offset));
-    const outsideCanvasHeight = (y, offset) => (y > (this.canvasHeight + offset)) || (y < (0 - offset));
+    const outsideCanvasWidth = (x, offset) =>
+      x > this.canvasWidth + offset || x < 0 - offset;
+    const outsideCanvasHeight = (y, offset) =>
+      y > this.canvasHeight + offset || y < 0 - offset;
     // TODO fix edge case where plane (i.e holding/handoff) becomes nonInteractive and turns back
     if (outsideCanvasWidth(this.x, 0) || outsideCanvasHeight(this.y, 0)) {
       this.setNonInteractive();
@@ -483,10 +546,10 @@ export default class Square {
     const setIfImgSrcDiff = (str) => {
       const src = this.htmlImgEl.src;
       const srcPathOnly = '/' + src.split('/').slice(3).join('/');
-      if(srcPathOnly !== str) {
+      if (srcPathOnly !== str) {
         this.htmlImgEl.src = str;
       }
-    }
+    };
 
     this.hide();
     if (this.isTaxiing) return;
@@ -513,7 +576,7 @@ export default class Square {
     const intervalSecs = 3;
     if (this.takeoff) return;
     if (!timestamp) return;
-    if (timestamp > (this.trailPixelMs + intervalSecs * 1000)) {
+    if (timestamp > this.trailPixelMs + intervalSecs * 1000) {
       this.trailPixelMs = timestamp;
       const x = this.x;
       const y = this.y;
@@ -541,13 +604,19 @@ export default class Square {
 
   setProximity({ entityManagerArr, screenSize, showCircles, timestamp }) {
     const isEntityCloseTo = isCloseToEntity(screenSize)(this);
-    const isAirborne = plane => !plane.isTaxiing && !plane.takeoff && !plane.isTouchedDown;
-    const isOnRunway = plane => !plane.isTaxiing && (plane.takeoff || plane.isTouchedDown);
-    const isSameRunway = plane => plane.runway === this.runway;
+    const isAirborne = (plane) =>
+      !plane.isTaxiing && !plane.takeoff && !plane.isTouchedDown;
+    const isOnRunway = (plane) =>
+      !plane.isTaxiing && (plane.takeoff || plane.isTouchedDown);
+    const isSameRunway = (plane) => plane.runway === this.runway;
 
-    const isCloseAirborne = plane => isAirborne(plane) && isAirborne(this);
-    const isCloseRunway = plane => isOnRunway(plane) && isOnRunway(this) && isSameRunway(plane);
-    const isPlaneClose = plane => isSquare(plane) && isEntityCloseTo(plane) && (isCloseAirborne(plane) || isCloseRunway(plane));
+    const isCloseAirborne = (plane) => isAirborne(plane) && isAirborne(this);
+    const isCloseRunway = (plane) =>
+      isOnRunway(plane) && isOnRunway(this) && isSameRunway(plane);
+    const isPlaneClose = (plane) =>
+      isSquare(plane) &&
+      isEntityCloseTo(plane) &&
+      (isCloseAirborne(plane) || isCloseRunway(plane));
 
     const timestampMs = timestamp;
     this.setShowCircle(!!showCircles);
@@ -562,7 +631,11 @@ export default class Square {
     this.hasProximityAlert = true;
     const pairFound = uniqueProximityPair(this, planeClose, timestampMs);
     if (pairFound) {
-      const scoreDecrease = planeProximityPenalty(this, planeClose, timestampMs);
+      const scoreDecrease = planeProximityPenalty(
+        this,
+        planeClose,
+        timestampMs
+      );
       if (scoreDecrease === null) return;
 
       const msg = this.title + ' & ' + planeClose.title + ' conflict';
@@ -583,19 +656,20 @@ const _trailMax = 12;
 const _clearTrailPixelsAll = (self) => {
   self.trailPixelArr.forEach((pixel) => _clearTrailPixel(self, pixel));
   self.trailPixelArr = [];
-}
-const _clearTrailPixel = (self, pixel) => self.ctx.clearRect(pixel.x - 2, pixel.y - 2, 4, 4);
+};
+const _clearTrailPixel = (self, pixel) =>
+  self.ctx.clearRect(pixel.x - 2, pixel.y - 2, 4, 4);
 const _drawTrailPixel = (self, pixel, opacity) => {
   self.ctx.globalAlpha = opacity;
   self.ctx.fillStyle = 'white';
   self.ctx.fillRect(pixel.x - 1, pixel.y - 1, 2, 2);
   self.ctx.globalAlpha = 1;
-}
+};
 
 const _htmlSquareSize = (isSmall, iconSize) => ({
-  side: isSmall ? (0.68 * iconSize.side) : iconSize.side,
+  side: isSmall ? 0.68 * iconSize.side : iconSize.side,
   top: isSmall ? 0 : iconSize.top,
-})
+});
 
 const _createHtmlEl = (self) => {
   const squareSize = _htmlSquareSize(self.isSmall, self.iconSize).side;
@@ -606,10 +680,16 @@ const _createHtmlEl = (self) => {
   self.htmlSquareDiv.id = self.title;
   self.htmlSquareDiv.style.position = 'absolute';
   self.htmlSquareDiv.addEventListener('mouseup', () => self.clickEventCB());
-  self.htmlSquareDiv.addEventListener('mouseenter', () => self.htmlSquareDiv.style.cursor = 'pointer');
-  self.htmlSquareDiv.addEventListener('mouseleave', () => self.htmlSquareDiv.style.cursor = 'none');
-  self.htmlSquareDiv.style.left = self.x - (squareSize / 2) + 'px';
-  self.htmlSquareDiv.style.top = self.y - squareTop - (squareSize / 2) + 'px';
+  self.htmlSquareDiv.addEventListener(
+    'mouseenter',
+    () => (self.htmlSquareDiv.style.cursor = 'pointer')
+  );
+  self.htmlSquareDiv.addEventListener(
+    'mouseleave',
+    () => (self.htmlSquareDiv.style.cursor = 'none')
+  );
+  self.htmlSquareDiv.style.left = self.x - squareSize / 2 + 'px';
+  self.htmlSquareDiv.style.top = self.y - squareTop - squareSize / 2 + 'px';
   self.htmlSquareDiv.style.width = squareSize + 'px';
   self.htmlSquareDiv.style.height = squareSize + 'px';
 
@@ -625,18 +705,25 @@ const _createHtmlEl = (self) => {
 
   // self.htmlImgEl.hidden = true;
   // self.htmlImgEl.style.border = '1px solid orange';
-}
-
+};
 
 const _draw = (self, color) => {
   // self.textLayerObj.ctx.fillStyle = 'red';
   // self.textLayerObj.ctx.fillRect(self.x - 2, self.y - 2, 4, 4);
-  
-  const proximityDist = self.isSmall ? getTooCloseDistance(ScreenSizes.Small) : getTooCloseDistance(ScreenSizes.Large);
-  if(self.isShowCircle) {
+
+  const proximityDist = self.isSmall
+    ? getTooCloseDistance(ScreenSizes.Small)
+    : getTooCloseDistance(ScreenSizes.Large);
+  if (self.isShowCircle) {
     self.textLayerObj.ctx.strokeStyle = 'white';
     self.textLayerObj.ctx.beginPath();
-    self.textLayerObj.ctx.arc(self.x, self.y, proximityDist / 2, 0, 2 * Math.PI);
+    self.textLayerObj.ctx.arc(
+      self.x,
+      self.y,
+      proximityDist / 2,
+      0,
+      2 * Math.PI
+    );
     self.textLayerObj.ctx.closePath();
     self.textLayerObj.ctx.stroke();
   }
@@ -648,10 +735,22 @@ const _draw = (self, color) => {
   const altDisplay = altitudeDisplay(self.altitude);
 
   self.textLayerObj.ctx.fillStyle = color;
-  self.textLayerObj.ctx.font = "10px Arial"
+  self.textLayerObj.ctx.font = '10px Arial';
   self.textLayerObj.ctx.fillText(self.title, self.x + 10, self.y - 8);
   self.textLayerObj.ctx.fillStyle = color;
-  self.textLayerObj.ctx.fillText('                ' + degreesDisplay + '\u00B0', self.x, self.y - 8);
-  self.textLayerObj.ctx.fillText('                ' + altDisplay + ' ft', self.x, self.y + 2);
-  self.textLayerObj.ctx.fillText('                ' + speedDisplay + ' kts', self.x, self.y + 12);
+  self.textLayerObj.ctx.fillText(
+    '                ' + degreesDisplay + '\u00B0',
+    self.x,
+    self.y - 8
+  );
+  self.textLayerObj.ctx.fillText(
+    '                ' + altDisplay + ' ft',
+    self.x,
+    self.y + 2
+  );
+  self.textLayerObj.ctx.fillText(
+    '                ' + speedDisplay + ' kts',
+    self.x,
+    self.y + 12
+  );
 };

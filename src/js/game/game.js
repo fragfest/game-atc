@@ -1,23 +1,23 @@
-import Waypoint from "../Waypoint";
-import Runway from "../Runway";
+import Waypoint from '../Waypoint';
+import Runway from '../Runway';
 import {
   getTooCloseDistance,
   distBetweenEntities,
   hasEntityFuncs,
-} from "../entity";
+} from '../entity';
 import {
   getRunway,
   Runways,
   getWaypoint,
   getWaypointDestinationsAll,
   getWaypointArrivalsAll,
-} from "../airports/LHR";
-import { getGameSize } from "../utils";
-import { draw as drawScale } from "../canvas/scale";
-import { isSquare } from "../types";
-import { DestinationType } from "../aircraft/airframe";
-import { create, spawnRndPlane } from "../Plane";
-import { setTaxiQueue } from "./score";
+} from '../airports/LHR';
+import { getGameSize } from '../utils';
+import { draw as drawScale } from '../canvas/scale';
+import { isSquare } from '../types';
+import { DestinationType } from '../aircraft/airframe';
+import { create, spawnRndPlane } from '../Plane';
+import { setTaxiQueue } from './score';
 
 /**
  * @typedef {object} State
@@ -155,17 +155,17 @@ export const setPlaneSelected = (state) => (argObj, square) => {
 
   argObj.textLayerObj.ctx.clearRect(0, 0, width, height);
   argObj.headingLayerObj.ctx.clearRect(0, 0, width, height);
-  entityManagerArr.forEach(callFn("setSelected", false));
+  entityManagerArr.forEach(callFn('setSelected', false));
   square.setSelected(true);
   entityManagerArr.forEach(
-    callFn("setProximity", { entityManagerArr, screenSize, showCircles })
+    callFn('setProximity', { entityManagerArr, screenSize, showCircles })
   );
-  entityManagerArr.forEach(callFn("draw"));
+  entityManagerArr.forEach(callFn('draw'));
 };
 
 export const entityManagerAdd = (entityManagerArr) => (obj) => {
   if (hasEntityFuncs(obj)) entityManagerArr.push(obj);
-  else throw new Error("non-entity not added \n" + JSON.stringify(obj));
+  else throw new Error('non-entity not added \n' + JSON.stringify(obj));
 };
 
 export const gameTick =
@@ -189,25 +189,25 @@ export const gameTick =
     if (gameLoopRunning && deltaTime > updateIntervalMs) {
       timestampPrev = timestamp;
       // cleanup
-      entityManagerArr.forEach(callFn("updateDestroy", { entityManagerArr }));
+      entityManagerArr.forEach(callFn('updateDestroy', { entityManagerArr }));
       textLayerClearFn();
       headingLayerClearFn();
       // update
       spawnPlaneFn_timestampArg(updateIntervalMs);
-      entityManagerArr.forEach(callFn("hide"));
+      entityManagerArr.forEach(callFn('hide'));
       entityManagerArr.forEach(
-        callFn("update", { deltaTimeMs: updateIntervalMs, entityManagerArr })
+        callFn('update', { deltaTimeMs: updateIntervalMs, entityManagerArr })
       );
-      entityManagerArr.forEach(callFn("updateHandoff", { entityManagerArr }));
+      entityManagerArr.forEach(callFn('updateHandoff', { entityManagerArr }));
       entityManagerArr.forEach(
-        callFn("setProximity", {
+        callFn('setProximity', {
           entityManagerArr,
           screenSize,
           showCircles,
           timestamp,
         })
       );
-      entityManagerArr.forEach(callFn("draw", timestamp));
+      entityManagerArr.forEach(callFn('draw', timestamp));
       // goals
       setTaxiQueue(getTaxiLength(entityManagerArr));
       // callbacks

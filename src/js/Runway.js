@@ -1,4 +1,10 @@
-import { inputHeadingToRad, radToDegrees, convertToSmallDegrees, ScreenSizes, Direction } from './utils';
+import {
+  inputHeadingToRad,
+  radToDegrees,
+  convertToSmallDegrees,
+  ScreenSizes,
+  Direction,
+} from './utils';
 import Square from './Square';
 import { MessageEvents, publishMessage as publish } from './events/messages';
 import { planeGoAroundPenalty } from './game/score';
@@ -12,7 +18,7 @@ export default class Runway {
     this.title = title.trim();
     this.x = runwayObj.x;
     this.y = runwayObj.y;
-    this.isSmall = (screenSize === ScreenSizes.Small) ? true : false;
+    this.isSmall = screenSize === ScreenSizes.Small ? true : false;
     this.ctx = imgLayerObj.ctx;
     this.width = runwayObj.width;
     this.height = runwayObj.length;
@@ -29,12 +35,23 @@ export default class Runway {
     // this.ctx.fillStyle = 'greenyellow';
     // this.ctx.fillRect(this.x - 2, this.y - 2, 4, 4);
 
+    this.audio = {
+      ding: new Audio('/audio/ding.mp3'),
+      denied: new Audio('/audio/denied.mp3'),
+    };
+
     const img = new Image();
     img.onload = () => {
       this.ctx.save();
       this.ctx.translate(this.x, this.y);
       this.ctx.rotate(this.runwayHeading - Math.PI / 2);
-      this.ctx.drawImage(img, -1 * this.width / 2, 0, this.width, this.height);
+      this.ctx.drawImage(
+        img,
+        (-1 * this.width) / 2,
+        0,
+        this.width,
+        this.height
+      );
       this.ctx.restore();
     };
     img.src = '/img/runway.png';
@@ -61,7 +78,7 @@ export default class Runway {
     for (let i = 0; i < numDashes; i++) {
       this.ctx.moveTo(dashX, dashY);
       this.ctx.lineTo(dashX + dashLengthInX, dashY + dashLengthInY);
-      dashX = dashX + dashSpaceMultiple * dashLengthInX
+      dashX = dashX + dashSpaceMultiple * dashLengthInX;
       dashY = dashY + dashSpaceMultiple * dashLengthInY;
     }
     this.ctx.stroke();
@@ -69,17 +86,20 @@ export default class Runway {
 
   updateGoAround(entity) {
     const scoreRemoved = planeGoAroundPenalty();
-    publish(MessageEvents.MessageAllEV, entity.title + ' landing go-around (' + scoreRemoved + ')');
+    publish(
+      MessageEvents.MessageAllEV,
+      entity.title + ' landing go-around (' + scoreRemoved + ')'
+    );
     entity.setHeadingTarget(this.runwayHeading, false, false, Direction.None);
     if (entity.speedTarget <= 220) entity.setSpeed(220, false, true);
     if (entity.altitudeTarget <= 2000) entity.setAltitude(2000, false);
   }
 
   update({ entityManagerArr }) {
-    const isSquare = entity => entity instanceof Square;
+    const isSquare = (entity) => entity instanceof Square;
     const isEntityOnRunway = isOnRunway(this.landingEntities);
 
-    entityManagerArr.forEach(entity => {
+    entityManagerArr.forEach((entity) => {
       if (!isSquare(entity)) return;
       const distObj = distToRunwayObj(this, entity);
       const isGettingCloser = distObj.dist < entity.distPrevLanding;
@@ -87,14 +107,29 @@ export default class Runway {
       if (entity.destroyFlag) return;
       if (entity.runway !== this.title) return;
       if (!entity.landing) return;
-      if (!isGettingCloser && !isEntityOnRunway(entity)) { return this.updateGoAround(entity); }
+      if (!isGettingCloser && !isEntityOnRunway(entity)) {
+        return this.updateGoAround(entity);
+      }
       if (isEntityOnRunway(entity)) return;
 
-      if (!isHeadingClose(this, entity) && !entity.onGlidePath) { return entity.setLanding(false); }
-      if (!isCloseToGlidepath(this, entity) && !entity.onGlidePath) { return entity.setLanding(false); }
-      if (isTooHigh(this, entity)) { return entity.setLanding(false); }
-      entity.setDistPrevLanding(distObj.dist);
+      if (!isHeadingClose(this, entity) && !entity.onGlidePath) {
+        this.audio.denied.play();
+        return entity.setLanding(false);
+      }
+      if (!isCloseToGlidepath(this, entity) && !entity.onGlidePath) {
+        this.audio.denied.play();
+        return entity.setLanding(false);
+      }
+      if (isTooHigh(this, entity)) {
+        this.audio.denied.play();
+        return entity.setLanding(false);
+      }
+
+      if (!entity.onGlidePath) {
+        this.audio.ding.play();
+      }
       entity.setOnGlidepath(true);
+      entity.setDistPrevLanding(distObj.dist);
 
       // console.log(entity.title + ' :: intercept glidepath ');
       const interceptHeading = Math.atan(distObj.y / distObj.x) + Math.PI;
@@ -107,9 +142,9 @@ export default class Runway {
     const isEntityTouchedDown = isTouchedDown(this);
     const isEntityOnRunway = isOnRunway(this.landingEntities);
 
-    entityManagerArr.forEach(entity => {
+    entityManagerArr.forEach((entity) => {
       const isSquare = entity instanceof Square;
-      const placeOnRunway = entity => this.landingEntities.push(entity);
+      const placeOnRunway = (entity) => this.landingEntities.push(entity);
 
       if (!isSquare) return;
       if (!entity.landing) return;
@@ -127,7 +162,7 @@ export default class Runway {
     });
   }
 
-  draw() { }
+  draw() {}
 }
 ////////////////////////////////////////////////////////////
 // end class Runway
@@ -135,7 +170,7 @@ export default class Runway {
 
 const isTooHigh = (self, entity) => {
   if (entity.altitude > self.altitudeMax) return true;
-  return false
+  return false;
 };
 
 const isHeadingClose = (self, entity) => {
@@ -170,12 +205,15 @@ const updateSpeedAlt = (self, square) => {
   }
 
   if (square.speedTarget > speedTarget) square.setSpeed(speedTarget, true);
-  if (square.altitudeTarget > altitudeTarget) square.setAltitude(altitudeTarget, true);
+  if (square.altitudeTarget > altitudeTarget)
+    square.setAltitude(altitudeTarget, true);
 };
 
 const landingRollout = (self, entity) => {
-  const removeFromRunway = entity => {
-    self.landingEntities = self.landingEntities.filter(landing => landing.id !== entity.id);
+  const removeFromRunway = (entity) => {
+    self.landingEntities = self.landingEntities.filter(
+      (landing) => landing.id !== entity.id
+    );
   };
 
   // console.log(entity.title + ' :: landing rollout');
@@ -213,21 +251,26 @@ const isCloseToGlidepath = (self, entity) => {
   //   self.imgLayerCtx.fillRect(xdiff, ydiff, 3, 3);
   // }
 
-  const angleToGlidepath = convertToSmallDegrees(radToDegrees(Math.acos(x / dist)) - 90);
-  return (angleToGlidepath < angleMaxDeg) && isGettingCloser && isWithinMaxDist;
+  const angleToGlidepath = convertToSmallDegrees(
+    radToDegrees(Math.acos(x / dist)) - 90
+  );
+  return angleToGlidepath < angleMaxDeg && isGettingCloser && isWithinMaxDist;
 };
 
-const isOnRunway = landingEntities => entity => landingEntities.find(landing => landing.id === entity.id);
+const isOnRunway = (landingEntities) => (entity) =>
+  landingEntities.find((landing) => landing.id === entity.id);
 
-const isTouchedDown = self => entityOther => {
+const isTouchedDown = (self) => (entityOther) => {
   if (entityOther.id === self.id) return false;
 
   const distX = Math.abs(self.x - entityOther.x);
   const distY = Math.abs(self.y - entityOther.y);
   const distVert = Math.abs(self.altitude - entityOther.altitude);
   const deltaHeading = Math.abs(self.runwayHeading - entityOther.headingRad);
-  const deltaLandingSpeed = Math.abs(entityOther.speedLanding - entityOther.speed);
-  const isCloseHorizontal = (distX < 5 && distY < 5);
+  const deltaLandingSpeed = Math.abs(
+    entityOther.speedLanding - entityOther.speed
+  );
+  const isCloseHorizontal = distX < 5 && distY < 5;
   const isCloseVertical = distVert < 200;
   const isRunwayHeading = deltaHeading < 0.5;
   const isCloseLandingSpeed = deltaLandingSpeed < 15;
@@ -238,5 +281,10 @@ const isTouchedDown = self => entityOther => {
   //     + ' :: isRunwayHeading: ' + isRunwayHeading
   //     + ' :: isCloseLandingSpeed: ' + isCloseLandingSpeed);
   // }
-  return isCloseHorizontal && isCloseVertical && isRunwayHeading && isCloseLandingSpeed;
+  return (
+    isCloseHorizontal &&
+    isCloseVertical &&
+    isRunwayHeading &&
+    isCloseLandingSpeed
+  );
 };
