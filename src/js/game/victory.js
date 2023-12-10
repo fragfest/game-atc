@@ -19,7 +19,7 @@ export const setup = () => {
       return publishSuccess();
     }
   });
-}
+};
 
 export const getFinalLevel = () => FinalLevel;
 
@@ -28,31 +28,38 @@ export const getFinalLevel = () => FinalLevel;
  * @param {scoreCB} cb
  */
 export const subscribeVictory = (victoryEvent, cb) => {
-  if (!VictoryEvents[victoryEvent]) throw new Error('unknown victory event: ' + victoryEvent);
+  if (!VictoryEvents[victoryEvent])
+    throw new Error('unknown victory event: ' + victoryEvent);
   document.addEventListener(victoryEvent, () => cb());
 };
 
-export const setGoal = levelNum => {
-  const goals = GoalsLevels[levelNum] || {...Goals};
+export const setGoal = (levelNum) => {
+  const goals = GoalsLevels[levelNum] || { ...Goals };
   localStorage.setItem('goals', JSON.stringify(goals));
 };
 
 export const getGoals = () => {
   const goals = JSON.parse(localStorage.getItem('goals'));
-  return goals || {...Goals};
-}
+  return goals || { ...Goals };
+};
 
-export const isDeparturesSuccess = (departuresCount) => departuresCount >= getGoals().Departures;
-export const isArrivalsSuccess = (arrivalsCount) => arrivalsCount >= getGoals().Arrivals;
-export const isFailedCondition = (failedCount) => failedCount >= getGoals().Failed;
-export const isExceededTaxiingCondition = (taxiQueueCount) => taxiQueueCount >= getGoals().TaxiQueue;
-export const isConflictCondition = (conflictCount) => conflictCount >= getGoals().Conflict;
+export const isDeparturesSuccess = (departuresCount) =>
+  departuresCount >= getGoals().Departures;
+export const isArrivalsSuccess = (arrivalsCount) =>
+  arrivalsCount >= getGoals().Arrivals;
+export const isFailedCondition = (failedCount) =>
+  failedCount >= getGoals().Failed;
+export const isExceededTaxiingCondition = (taxiQueueCount) =>
+  taxiQueueCount >= getGoals().TaxiQueue;
+export const isConflictCondition = (conflictCount) =>
+  conflictCount >= getGoals().Conflict;
 
 /**
  * @param {Score} score
  * @returns {Boolean}
  */
-export const isVictory = score => isDeparturesSuccess(score.departures) &&
+export const isVictory = (score) =>
+  isDeparturesSuccess(score.departures) &&
   isArrivalsSuccess(score.arrivals) &&
   !isFailedCondition(score.failed) &&
   !isExceededTaxiingCondition(score.taxiQueue) &&
@@ -62,17 +69,18 @@ export const isVictory = score => isDeparturesSuccess(score.departures) &&
  * @param {Score} score
  * @returns {Boolean}
  */
-export const isDefeat = score => isFailedCondition(score.failed) ||
+export const isDefeat = (score) =>
+  isFailedCondition(score.failed) ||
   isConflictCondition(score.conflict) ||
   isExceededTaxiingCondition(score.taxiQueue);
 
 export const publishSuccess = () => {
   document.dispatchEvent(new CustomEvent(VictoryEvents.Success));
-}
+};
 
 export const publishFailed = () => {
   document.dispatchEvent(new CustomEvent(VictoryEvents.Failed));
-}
+};
 
 // PRIVATE //////////////////////////////////////////////////
 

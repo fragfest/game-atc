@@ -372,6 +372,8 @@ export default {
       tutorialEventArg.updatedAltitudeTutorial(alt);
     setShowCircles_isShowCirclesArg = setShowCircles(gameState);
 
+    const isTutorialCompleted = !!getScoreHistory().find((x) => x.level === 0);
+
     const setupArg = {
       screenSize,
       backgroundObj,
@@ -391,15 +393,17 @@ export default {
 
       gameUpdateCB: () => {
         gameUpdateEventCB(squareClicked, entityManagerArr);
-        tutorialUpdateEventCB(
-          this,
-          'focusCircleType',
-          tutorialBox,
-          this.focusCircle,
-          tutorialEventArg,
-          squareClicked,
-          gameState
-        );
+        if (!isTutorialCompleted) {
+          tutorialUpdateEventCB(
+            this,
+            'focusCircleType',
+            tutorialBox,
+            this.focusCircle,
+            tutorialEventArg,
+            squareClicked,
+            gameState
+          );
+        }
       },
     };
 
@@ -417,14 +421,14 @@ export default {
       () => {
         this.hasPopup = true;
       },
+      tutorialBox,
       gameState
     );
     drawInertElements(imgLayerObj, { screenSize, width, height });
     setupEntities(setupArg);
     resetScore();
 
-    const isTutorialCompleted = !!getScoreHistory().find((x) => x.level === 0);
-
+    // TUTORIAL
     if (!isTutorialCompleted) {
       subscribeScore(ScoreEvents.ScoreEV, (score) => {
         if (isDefeat(score)) publishFailed();
@@ -434,7 +438,9 @@ export default {
       setupTutorial(gameState)(setupArg);
       return;
     }
+    // END TUTORIAL
 
+    attachHtmlQueue(this, 'tutorialBoxHtml', tutorialBoxHtmlQueue);
     setupVictory();
     setupFullGame(gameState)(setupArg);
 
@@ -631,7 +637,7 @@ export default {
   .cross {
     width: 14px;
     height: 14px;
-    padding-bottom: 3px;
+    padding-bottom: 4px;
     padding-left: 4px;
     margin-right: 8px;
 

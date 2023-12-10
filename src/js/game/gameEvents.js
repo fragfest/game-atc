@@ -1,7 +1,10 @@
 import { VictoryEvents, subscribeVictory } from './victory';
-import { KeyboardEvents, subscribeKeyboard as subscribe } from '../events/keyboard';
-import { DestinationType } from "../aircraft/airframe";
-import { nextWaypoint } from "../utils";
+import {
+  KeyboardEvents,
+  subscribeKeyboard as subscribe,
+} from '../events/keyboard';
+import { DestinationType } from '../aircraft/airframe';
+import { nextWaypoint } from '../utils';
 import { setGameLoopState } from './game';
 import {
   buttonIsHoldingFn,
@@ -10,10 +13,12 @@ import {
   buttonLandingFn,
   planeSelectedFn,
   headingUpdatedFn,
-  altitudeUpdatedFn
+  altitudeUpdatedFn,
 } from '../tutorial/gameTutorial';
+import { gameOver } from './gameOver';
 
-const isDeparture = (plane) => plane.destinationType === DestinationType.Departure;
+const isDeparture = (plane) =>
+  plane.destinationType === DestinationType.Departure;
 const isArrival = (plane) => plane.destinationType === DestinationType.Arrival;
 
 /**
@@ -27,6 +32,7 @@ const isArrival = (plane) => plane.destinationType === DestinationType.Arrival;
  * @param {Function} controlPanelFocusFn function to focus input field in controlPanel
  * @param {Function} selectPlaneFn function to set the selected plane
  * @param {Function} gamePopupFn function to set the game over pop-up
+ * @param {Object} tutorialBox contains vue ref properties
  * @param {State} state game state
  */
 export const setup = (
@@ -36,20 +42,35 @@ export const setup = (
   controlPanelFocusFn,
   selectPlaneFn,
   gamePopupFn,
-  state,
+  tutorialBox,
+  state
 ) => {
-  const gameOver = () => {
+  let isGameOver = false;
+  const gameOverFreezePopup = () => {
     setGameLoopState(state)(false);
-    gamePopupFn();
-  }
+    setTimeout(() => {
+      gamePopupFn();
+    }, 12000);
+  };
 
-  subscribeVictory(VictoryEvents.Success, () => gameOver());
-  subscribeVictory(VictoryEvents.Failed, () => gameOver());
+  subscribeVictory(VictoryEvents.Success, () => {
+    if (isGameOver) return;
+    isGameOver = true;
+    gameOver(tutorialBox, true);
+    gameOverFreezePopup();
+  });
+
+  subscribeVictory(VictoryEvents.Failed, () => {
+    if (isGameOver) return;
+    isGameOver = true;
+    gameOver(tutorialBox, false);
+    gameOverFreezePopup();
+  });
 
   const selectEV = (newIndex) => {
     const planeSelected = self.planesSorted[newIndex];
     planeSelVueRef.value = planeSelected;
-    controlPanelFocusFn()
+    controlPanelFocusFn();
     selectPlaneFn();
   };
 
@@ -84,7 +105,7 @@ export const setup = (
   subscribe(KeyboardEvents.KeyboardLetter_W_EV, () => {
     callMethodEV(getPlaneSelectedIndex(), (plane) => {
       const waypoint = nextWaypoint(arrivalWaypoints, plane);
-      if(isArrival(plane)) plane.setWaypoint(waypoint);
+      if (isArrival(plane)) plane.setWaypoint(waypoint);
     });
   });
 
@@ -109,15 +130,15 @@ export const setup = (
   subscribe(KeyboardEvents.KeyboardArrowDownEV, () => {
     arrowDownEV(getPlaneSelectedIndex());
   });
-  
+
   subscribe(KeyboardEvents.KeyboardArrowUpEV, () => {
     arrowUpEV(getPlaneSelectedIndex());
   });
-}
+};
 
 /**
- * @param {VueRef} planeSelVueRef 
- * @param {Array} entityManagerArr 
+ * @param {VueRef} planeSelVueRef
+ * @param {Array} entityManagerArr
  */
 export const gameUpdateEventCB = (planeSelVueRef, entityManagerArr) => {
   const planeSelId = planeSelVueRef.value.id;
@@ -126,33 +147,45 @@ export const gameUpdateEventCB = (planeSelVueRef, entityManagerArr) => {
   if (!planeSelFound) {
     planeSelVueRef.value = {};
   }
-}
+};
 
 /**
- * @param {Object} tutorialEventArg 
+ * @param {Object} tutorialEventArg
  * @param {State} state game state
  */
 export const setupTutorialEvents = (tutorialEventArg, state) => {
-  tutorialEventArg.setIsHoldingTutorial = (isHolding) => buttonIsHoldingFn(isHolding);
-  tutorialEventArg.setHandoffTutorial = (isTakeoff) => buttonHandoffFn(isTakeoff);
-  tutorialEventArg.setTakeoffTutorial = (isTakeoff) => buttonTakeoffFn(isTakeoff);
-  tutorialEventArg.setLandingTutorial = (isLanding) => buttonLandingFn(isLanding);
+  tutorialEventArg.setIsHoldingTutorial = (isHolding) =>
+    buttonIsHoldingFn(isHolding);
+  tutorialEventArg.setHandoffTutorial = (isTakeoff) =>
+    buttonHandoffFn(isTakeoff);
+  tutorialEventArg.setTakeoffTutorial = (isTakeoff) =>
+    buttonTakeoffFn(isTakeoff);
+  tutorialEventArg.setLandingTutorial = (isLanding) =>
+    buttonLandingFn(isLanding);
   tutorialEventArg.updatedHeadingTutorial = (hdg) => headingUpdatedFn(hdg);
   tutorialEventArg.setPlaneTutorial = () => planeSelectedFn(state);
   tutorialEventArg.updatedAltitudeTutorial = (alt) => altitudeUpdatedFn(alt);
-}
+};
 
 /**
- * @param {VueThis} self 
- * @param {String} focusCircleTypeProp 
+ * @param {VueThis} self
+ * @param {String} focusCircleTypeProp
  * @param {Object} tutorialBox contains vue ref properties
  * @param {Object} focusCircle
  * @param {Object} planeSelCBs object with planeSel funcs
  * @param {VueRef} planeSelVueRef vue ref to plane selected object
  * @param {State} state game state
  */
-export const tutorialUpdateEventCB = (self, focusCircleTypeProp, tutorialBox, focusCircle, planeSelCBs, planeSelVueRef, state) => {
-  self[focusCircleTypeProp] = state.focusCircleType || "";
+export const tutorialUpdateEventCB = (
+  self,
+  focusCircleTypeProp,
+  tutorialBox,
+  focusCircle,
+  planeSelCBs,
+  planeSelVueRef,
+  state
+) => {
+  self[focusCircleTypeProp] = state.focusCircleType || '';
 
   if (state.focusCircle) {
     focusCircle.size = state.focusCircle.size;
@@ -162,7 +195,12 @@ export const tutorialUpdateEventCB = (self, focusCircleTypeProp, tutorialBox, fo
     focusCircle.height = state.focusCircle.height;
   }
 
-  const { tutorialBoxTop, tutorialBoxLeft, tutorialBoxWidth, tutorialBoxHtmlQueue } = tutorialBox;
+  const {
+    tutorialBoxTop,
+    tutorialBoxLeft,
+    tutorialBoxWidth,
+    tutorialBoxHtmlQueue,
+  } = tutorialBox;
   if (state.dialogBox) {
     tutorialBoxTop.value = state.dialogBox.top;
     tutorialBoxLeft.value = state.dialogBox.left;
@@ -170,22 +208,26 @@ export const tutorialUpdateEventCB = (self, focusCircleTypeProp, tutorialBox, fo
 
     if (state.dialogBox.html.length) {
       fillHtmlQueue(state.dialogBox.html, tutorialBoxHtmlQueue);
-      state.dialogBox.html = "";
+      state.dialogBox.html = '';
     }
   }
-  if(planeSelVueRef?.value?.id) {
+  if (planeSelVueRef?.value?.id) {
     const planeSel = planeSelVueRef.value;
-    if(planeSelCBs.setIsHoldingTutorial) planeSelCBs.setIsHoldingTutorial(planeSel.isHolding);
-    if(planeSelCBs.setHandoffTutorial) planeSelCBs.setHandoffTutorial(planeSel.isHandoff);
-    if(planeSelCBs.setTakeoffTutorial) planeSelCBs.setTakeoffTutorial(planeSel.takeoff);
-    if(planeSelCBs.setLandingTutorial) planeSelCBs.setLandingTutorial(planeSel.landing);
+    if (planeSelCBs.setIsHoldingTutorial)
+      planeSelCBs.setIsHoldingTutorial(planeSel.isHolding);
+    if (planeSelCBs.setHandoffTutorial)
+      planeSelCBs.setHandoffTutorial(planeSel.isHandoff);
+    if (planeSelCBs.setTakeoffTutorial)
+      planeSelCBs.setTakeoffTutorial(planeSel.takeoff);
+    if (planeSelCBs.setLandingTutorial)
+      planeSelCBs.setLandingTutorial(planeSel.landing);
   }
-}
+};
 
 /**
- * @param {VueThis} self 
- * @param {String} outputProp 
- * @param {Array.<String>} inputQueue 
+ * @param {VueThis} self
+ * @param {String} outputProp
+ * @param {Array.<String>} inputQueue
  */
 export const attachHtmlQueue = (self, outputProp, inputQueue) => {
   setInterval(() => {
@@ -197,22 +239,22 @@ export const attachHtmlQueue = (self, outputProp, inputQueue) => {
     }
     self[outputProp] += letter;
   }, 30);
-}
+};
 
 /**
- * @param {String} inputHtmlStr 
- * @param {Array.<String>} outputQueue 
+ * @param {String} inputHtmlStr
+ * @param {Array.<String>} outputQueue
  */
-export const fillHtmlQueue= (inputHtmlStr, outputQueue) => {
-  let tag = "";
+export const fillHtmlQueue = (inputHtmlStr, outputQueue) => {
+  let tag = '';
   inputHtmlStr.split('').forEach((letter) => {
     if (tag && (letter === '>' || letter === ';')) {
       letter = tag + letter;
-      tag = "";
-    } else if (tag || letter === "<" || letter === '&') {
+      tag = '';
+    } else if (tag || letter === '<' || letter === '&') {
       tag += letter;
       return;
     }
     outputQueue.push(letter);
   });
-}
+};
