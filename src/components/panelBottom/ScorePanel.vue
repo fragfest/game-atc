@@ -11,7 +11,7 @@
       </div>
       <div class="score-row" :class="sizeClass">
         <span class="margin-top badge conflict">
-          failed <small>handoff & landings</small>
+          failed <small>handoffs & landings</small>
         </span>
         <span>{{ score.failed }}/{{ goals.Failed }}</span>
       </div>
@@ -47,12 +47,12 @@
 </template>
 
 <script>
-import { ScoreEvents, subscribeScore } from "../../js/game/score";
-import { getClassSize } from "../../js/utils";
-import { getGoals } from "../../js/game/victory";
+import { ScoreEvents, subscribeScore } from '../../js/game/score';
+import { getClassSize } from '../../js/utils';
+import { getGoals } from '../../js/game/victory';
 
 export default {
-  name: "ScorePanel",
+  name: 'ScorePanel',
   props: {
     screenSize: { type: String },
   },

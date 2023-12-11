@@ -13,6 +13,13 @@ import {
 export const gameOver = (tutorialBox, isSuccess) => {
   if (isSuccess) return;
 
+  const {
+    tutorialBoxTop,
+    tutorialBoxLeft,
+    tutorialBoxWidth,
+    tutorialBoxHtmlQueue,
+  } = tutorialBox;
+
   const score = getScore();
   const isFailed = isFailedCondition(score.failed);
   const isConflict = isConflictCondition(score.conflict);
@@ -33,26 +40,19 @@ export const gameOver = (tutorialBox, isSuccess) => {
     crossText = 'Delays (taxiing slots)';
   }
 
-  const html =
-    `<b>${title}</b><br><br>` +
-    `You are relieved of duty, <b>Controller</b>! Another controller will take over.` +
-    `<div class="line"></div>` +
-    `<div class="line"><span class="cross">&times;</span> <span class="text"><b>${crossText}</b></span></div>`;
+  let html = '<clear>';
   const dialogBox = { top: 0.1, left: 0.1, width: 0.45, html };
-  const {
-    tutorialBoxTop,
-    tutorialBoxLeft,
-    tutorialBoxWidth,
-    tutorialBoxHtmlQueue,
-  } = tutorialBox;
-  if (dialogBox) {
-    tutorialBoxTop.value = dialogBox.top;
-    tutorialBoxLeft.value = dialogBox.left;
-    tutorialBoxWidth.value = dialogBox.width;
+  tutorialBoxTop.value = dialogBox.top;
+  tutorialBoxLeft.value = dialogBox.left;
+  tutorialBoxWidth.value = dialogBox.width;
+  fillHtmlQueue(dialogBox.html, tutorialBoxHtmlQueue);
 
-    if (dialogBox.html.length) {
-      fillHtmlQueue(dialogBox.html, tutorialBoxHtmlQueue);
-      dialogBox.html = '';
-    }
-  }
+  setTimeout(() => {
+    dialogBox.html =
+      `<b>${title}</b><br><br>` +
+      `You are relieved of duty, <b>Controller</b>! Another controller will take over.` +
+      `<div class="line"></div>` +
+      `<div class="line"><span class="cross">&times;</span> <span class="text"><b>${crossText}</b></span></div>`;
+    fillHtmlQueue(dialogBox.html, tutorialBoxHtmlQueue);
+  }, 1000);
 };
