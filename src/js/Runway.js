@@ -8,6 +8,7 @@ import {
 import Square from './Square';
 import { MessageEvents, publishMessage as publish } from './events/messages';
 import { planeGoAroundPenalty } from './game/score';
+import { play, SoundType } from './game/sound';
 
 ////////////////////////////////////////////////////////////
 // class Runway
@@ -34,11 +35,6 @@ export default class Runway {
 
     // this.ctx.fillStyle = 'greenyellow';
     // this.ctx.fillRect(this.x - 2, this.y - 2, 4, 4);
-
-    this.audio = {
-      ding: new Audio('/audio/ding.mp3'),
-      denied: new Audio('/audio/denied.mp3'),
-    };
 
     const img = new Image();
     img.onload = () => {
@@ -113,20 +109,20 @@ export default class Runway {
       if (isEntityOnRunway(entity)) return;
 
       if (!isHeadingClose(this, entity) && !entity.onGlidePath) {
-        this.audio.denied.play();
+        play(SoundType.Fail);
         return entity.setLanding(false);
       }
       if (!isCloseToGlidepath(this, entity) && !entity.onGlidePath) {
-        this.audio.denied.play();
+        play(SoundType.Fail);
         return entity.setLanding(false);
       }
       if (isTooHigh(this, entity)) {
-        this.audio.denied.play();
+        play(SoundType.Fail);
         return entity.setLanding(false);
       }
 
       if (!entity.onGlidePath) {
-        this.audio.ding.play();
+        play(SoundType.Ding);
       }
       entity.setOnGlidepath(true);
       entity.setDistPrevLanding(distObj.dist);

@@ -18,9 +18,11 @@ import { isSquare } from '../types';
 import { DestinationType } from '../aircraft/airframe';
 import { create, spawnRndPlane } from '../Plane';
 import { setTaxiQueue } from './score';
+import { SoundType, playLoop, stop } from './sound';
 
 /**
  * @typedef {object} State
+ * @property {Boolean} playProximitySound
  * @property {Boolean} gameLoopRunning
  * @property {Boolean} showCircles
  * @property {Object} dialogBox
@@ -210,6 +212,8 @@ export const gameTick =
       entityManagerArr.forEach(callFn('draw', timestamp));
       // goals
       setTaxiQueue(getTaxiLength(entityManagerArr));
+      // sounds
+      setProximityAlarm(state, entityManagerArr);
       // callbacks
       gameUpdateFn();
     }
@@ -231,12 +235,25 @@ export const gameTick =
 //////////////////////////////////////////////////////////////////////////////
 // PRIVATE
 //////////////////////////////////////////////////////////////////////////////
-
 const isNotTaxiing = (obj) => !obj.isTaxiing;
 const isWithinDist = (distMax, obj1, obj2) =>
   distBetweenEntities(obj1)(obj2) < distMax;
-const isDeparture = (plane) =>
+const isDeparture = (plane) => {
   plane.destinationType === DestinationType.Departure;
+};
+
+const setProximityAlarm = (state, entityManagerArr) => {
+  const planes = entityManagerArr.filter(isSquare);
+  const isAlarmOn = !!planes.find((x) => x.hasProximityAlert);
+
+  if (!state.playProximitySound && isAlarmOn) {
+    playLoop(SoundType.Collision);
+  }
+  if (!isAlarmOn) {
+    stop(SoundType.Collision);
+  }
+  state.playProximitySound = isAlarmOn;
+};
 
 const getTaxiLength = (entityManagerArr) => {
   const planes = entityManagerArr.filter(isSquare);
