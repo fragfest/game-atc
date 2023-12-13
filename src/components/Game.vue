@@ -148,6 +148,8 @@ import { setup as setupTutorial } from '../js/tutorial/gameTutorial';
 import { isSquare } from '../js/types';
 import { ScreenSizes, getGameSize, setupGameLoadAndExit } from '../js/utils';
 import { setup as setupKeyboard } from '../js/events/keyboard';
+import { setup as setupSound } from '../js/game/sound';
+
 import {
   setup as setupEvents,
   attachHtmlQueue,
@@ -408,6 +410,7 @@ export default {
     };
 
     setupGameLoadAndExit();
+    setupSound();
     setupKeyboard();
     setupEvents(
       this,

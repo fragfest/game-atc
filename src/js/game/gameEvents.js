@@ -46,25 +46,25 @@ export const setup = (
   state
 ) => {
   let isGameOver = false;
-  const gameOverFreezePopup = () => {
+  const gameOverFreezePopup = (delayMs) => {
     setGameLoopState(state)(false);
     setTimeout(() => {
       gamePopupFn();
-    }, 12000);
+    }, delayMs);
   };
 
   subscribeVictory(VictoryEvents.Success, () => {
     if (isGameOver) return;
     isGameOver = true;
     gameOver(tutorialBox, true);
-    gameOverFreezePopup();
+    gameOverFreezePopup(2000);
   });
 
   subscribeVictory(VictoryEvents.Failed, () => {
     if (isGameOver) return;
     isGameOver = true;
     gameOver(tutorialBox, false);
-    gameOverFreezePopup();
+    gameOverFreezePopup(12000);
   });
 
   const selectEV = (newIndex) => {

@@ -1,15 +1,15 @@
-import Square from "./Square";
-import { isSquare } from "./types";
-import { convHdgDegToThreeDigits, convHdgRadToThreeDigits } from "./utils";
-import { getFlightArrival, getFlightDeparture } from "./flights/LHR";
-import { DestinationType, getPerformance } from "./aircraft/airframe";
+import Square from './Square';
+import { isSquare } from './types';
+import { convHdgDegToThreeDigits, convHdgRadToThreeDigits } from './utils';
+import { getFlightArrival, getFlightDeparture } from './flights/LHR';
+import { DestinationType, getPerformance } from './aircraft/airframe';
 import {
   Waypoints,
   getWaypointDepartureRnd,
   getRunwayRnd,
-} from "./airports/LHR";
-import { getGoals } from "./game/victory";
-import { getScore } from "./game/score";
+} from './airports/LHR';
+import { getGoals } from './game/victory';
+import { getScore } from './game/score';
 
 export const create = (
   {

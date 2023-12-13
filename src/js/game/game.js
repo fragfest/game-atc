@@ -236,8 +236,9 @@ export const gameTick =
 // PRIVATE
 //////////////////////////////////////////////////////////////////////////////
 const isNotTaxiing = (obj) => !obj.isTaxiing;
-const isWithinDist = (distMax, obj1, obj2) =>
-  distBetweenEntities(obj1)(obj2) < distMax;
+const isWithinDist = (distMax, obj1, obj2) => {
+  return distBetweenEntities(obj1)(obj2) < distMax;
+};
 const isDeparture = (plane) => {
   return plane.destinationType === DestinationType.Departure;
 };

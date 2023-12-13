@@ -1,4 +1,5 @@
 import { VictoryEvents, subscribeVictory } from './victory';
+import { subscribeScore, ScoreEvents } from './score';
 
 const collision = new Audio('/audio/collision-warning.mp3');
 const ding = new Audio('/audio/ding.mp3');
@@ -7,6 +8,7 @@ const takeoff = new Audio('/audio/take-off.mp3');
 const chime = new Audio('/audio/chime-ping.mp3');
 const pling = new Audio('/audio/pling.mp3');
 const flick = new Audio('/audio/select-flick.mp3');
+const squelch = new Audio('/audio/radio-squelch.mp3');
 
 export const SoundType = Object.freeze({
   Collision: 'Collision',
@@ -18,6 +20,31 @@ export const SoundType = Object.freeze({
   Spawn: 'Spawn',
   Select: 'Select',
 });
+
+let oldScore = null;
+
+let isSetup = false;
+export const setup = () => {
+  if (isSetup) return;
+  isSetup = true;
+
+  subscribeScore(ScoreEvents.ScoreEV, (score) => {
+    if (oldScore) {
+      if (
+        score.departures > oldScore.departures ||
+        score.arrivals > oldScore.arrivals
+      ) {
+        play(SoundType.Success);
+      }
+
+      if (score.failed > oldScore.failed) {
+        play(SoundType.Fail);
+      }
+    }
+
+    oldScore = { ...score };
+  });
+};
 
 let isCollisionSubscribed = false;
 
@@ -61,8 +88,7 @@ export const play = (soundType) => {
     return chime.play();
   }
   if (soundType === SoundType.Spawn) {
-    const squelch = new Audio('/audio/radio-squelch.mp3');
-    return enqueuePlay(squelch);
+    return squelch.play();
   }
   if (soundType === SoundType.Select) {
     return flick.play();
@@ -82,23 +108,4 @@ export const stop = (soundType) => {
   }
 
   console.error('soundType not supported:', soundType);
-};
-
-// PRIVATE ////////////////////////////////////////////////////////////
-const playQueue = [];
-
-let lock = false;
-setInterval(() => {
-  if (playQueue.length && !lock) {
-    lock = true;
-    const audio = playQueue.pop();
-    audio.addEventListener('ended', () => {
-      lock = false;
-    });
-    audio?.play();
-  }
-}, 10);
-
-const enqueuePlay = (audio) => {
-  playQueue.push(audio);
 };
