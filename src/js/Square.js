@@ -24,6 +24,7 @@ import {
   planeHandoffSuccess,
 } from './game/score';
 import { DestinationType } from './aircraft/airframe';
+import { play, SoundType } from './game/sound';
 
 ////////////////////////////////////////////////////////////
 // class Square
@@ -160,18 +161,26 @@ export default class Square {
 
   startTakeoff() {
     if (!this.isTaxiing) return;
-    this.setIsTaxiing(false);
+    this.cancelTaxiing();
     this.takeoff = true;
+    play(SoundType.Takeoff);
   }
 
-  setIsTaxiing(isTaxiing) {
-    this.isTaxiing = !!isTaxiing;
+  cancelTaxiing() {
+    this.isTaxiing = false;
     if (!this.htmlSquareDiv) {
       _createHtmlEl(this);
     }
   }
 
   setHandoff(isHandoff) {
+    if (isHandoff && !this.isHandoff) {
+      play(SoundType.Select);
+    }
+    if (!isHandoff && this.isHandoff) {
+      play(SoundType.Select);
+    }
+
     if (!isHandoff) {
       this.setDistPrevHandoff(Infinity);
     }
@@ -179,6 +188,13 @@ export default class Square {
   }
 
   setHolding(isHolding) {
+    if (isHolding && !this.isHolding) {
+      play(SoundType.Select);
+    }
+    if (!isHolding && this.isHolding) {
+      play(SoundType.Select);
+    }
+
     if (!isHolding) {
       this.setIsAtWaypoint(false);
       this.setDirection(Direction.None);
@@ -213,6 +229,10 @@ export default class Square {
   }
 
   setLanding(isLanding) {
+    if (!isLanding && this.landing) {
+      play(SoundType.Select);
+    }
+
     if (!isLanding) {
       this.onGlidePath = false;
       this.setDistPrevLanding(Infinity);

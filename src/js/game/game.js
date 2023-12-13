@@ -18,7 +18,7 @@ import { isSquare } from '../types';
 import { DestinationType } from '../aircraft/airframe';
 import { create, spawnRndPlane } from '../Plane';
 import { setTaxiQueue } from './score';
-import { SoundType, playLoop, stop } from './sound';
+import { SoundType, play, playLoop, stop } from './sound';
 
 /**
  * @typedef {object} State
@@ -239,7 +239,7 @@ const isNotTaxiing = (obj) => !obj.isTaxiing;
 const isWithinDist = (distMax, obj1, obj2) =>
   distBetweenEntities(obj1)(obj2) < distMax;
 const isDeparture = (plane) => {
-  plane.destinationType === DestinationType.Departure;
+  return plane.destinationType === DestinationType.Departure;
 };
 
 const setProximityAlarm = (state, entityManagerArr) => {
@@ -281,6 +281,7 @@ const createSquare =
         return;
       }
 
+      play(SoundType.Spawn);
       addPlaneToGame(newEntity);
     }
   };
