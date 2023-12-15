@@ -232,6 +232,12 @@ export const gameTick =
     );
   };
 
+export const getTaxiLength = (entityManagerArr) => {
+  const planes = entityManagerArr.filter(isSquare);
+  const departures = planes.filter(isDeparture);
+  return departures.filter((plane) => plane.isTaxiing).length;
+};
+
 //////////////////////////////////////////////////////////////////////////////
 // PRIVATE
 //////////////////////////////////////////////////////////////////////////////
@@ -254,12 +260,6 @@ const setProximityAlarm = (state, entityManagerArr) => {
     stop(SoundType.Collision);
   }
   state.playProximitySound = isAlarmOn;
-};
-
-const getTaxiLength = (entityManagerArr) => {
-  const planes = entityManagerArr.filter(isSquare);
-  const departures = planes.filter(isDeparture);
-  return departures.filter((plane) => plane.isTaxiing).length;
 };
 
 const createSquare =
