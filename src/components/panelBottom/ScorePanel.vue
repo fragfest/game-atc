@@ -50,14 +50,18 @@
 import { ScoreEvents, subscribeScore } from '../../js/game/score';
 import { getClassSize } from '../../js/utils';
 import { getGoals } from '../../js/game/victory';
+import { getScreenSize } from '../../js/canvas/scale';
 
 export default {
   name: 'ScorePanel',
-  props: {
-    screenSize: { type: String },
-  },
+
   data() {
     return {
+      screenSize: '',
+
+      focusType: null,
+      focusCircle: {},
+
       scoreTotal: 0,
       score: {
         departures: 0,
@@ -66,20 +70,34 @@ export default {
         taxiQueue: 0,
         conflict: 0,
       },
-      goals: {},
+      goals: getGoals(),
     };
   },
 
   mounted() {
+    this.screenSize = getScreenSize();
+
     subscribeScore(ScoreEvents.ScoreEV, (score) => {
       this.score = score;
     });
-    this.goals = getGoals();
   },
 
   computed: {
     sizeClass: function () {
       return getClassSize(this.screenSize);
+    },
+
+    focusCircleTop: function () {
+      return this.focusCircle?.top;
+    },
+    focusCircleLeft: function () {
+      return this.focusCircle?.left;
+    },
+    focusCircleWidth: function () {
+      return this.focusCircle?.width;
+    },
+    focusCircleHeight: function () {
+      return this.focusCircle?.height;
     },
   },
 };

@@ -81,7 +81,7 @@
                 :screenSize="screenSize"
                 @showCirclesEv="showCirclesEv"
               ></ButtonPanel>
-              <ScorePanel :screenSize="screenSize"></ScorePanel>
+              <ScorePanel></ScorePanel>
             </div>
           </div>
           <div class="row-bottom-right">
@@ -206,11 +206,11 @@ export default {
   data() {
     return {
       screenSize,
+      width,
+      height,
       inputAltitude: '',
       inputHeading: '',
       inputSpeed: '',
-      width,
-      height,
       squareClicked,
       hasPopup: false,
       // tutorial
@@ -287,14 +287,17 @@ export default {
 
     // w/h aspect ratio: 1.6525
     if (windowWidth < screenOneWidth || windowHeight < screenOneHeight) {
-      console.log('screen size', 'small');
-      width = getGameSize(ScreenSizes.Small).width;
-      height = getGameSize(ScreenSizes.Small).height;
+      console.log('screenSize', 'small');
       screenSize = ScreenSizes.Small;
+      width = getGameSize(screenSize).width;
+      height = getGameSize(screenSize).height;
       return;
     }
-    console.log('screen size', 'large');
+
+    console.log('screenSize', 'large');
     screenSize = ScreenSizes.Large;
+    width = getGameSize(screenSize).width;
+    height = getGameSize(screenSize).height;
   },
 
   methods: {
@@ -409,7 +412,7 @@ export default {
       },
     };
 
-    setupGameLoadAndExit();
+    setupGameLoadAndExit(screenSize);
     setupSound();
     setupKeyboard();
     setupEvents(

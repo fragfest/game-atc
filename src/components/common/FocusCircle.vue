@@ -5,11 +5,11 @@
 </template>
 
 <script>
-import { getClassSize } from "../../js/utils";
-import { FocusCircleType } from "../../js/types";
+import { getClassSize } from '../../js/utils';
+import { FocusCircleType } from '../../js/types';
 
 export default {
-  name: "FocusCircle",
+  name: 'FocusCircle',
   data() {
     return {};
   },
@@ -36,10 +36,10 @@ export default {
       if (!this.type) return;
 
       return {
-        top: this.top + "px",
-        left: this.left + "px",
-        width: this.width + "px",
-        height: this.height + "px",
+        top: this.top + 'px',
+        left: this.left + 'px',
+        width: this.width + 'px',
+        height: this.height + 'px',
       };
     },
   },

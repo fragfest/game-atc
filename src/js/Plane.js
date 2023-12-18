@@ -10,7 +10,7 @@ import {
 } from './airports/LHR';
 import { getGoals } from './game/victory';
 import { getScore } from './game/score';
-import { getTaxiLength } from './game/game';
+import { isTaxiQueueAlmostFull } from './game/game';
 
 export const create = (
   {
@@ -117,19 +117,15 @@ export const spawnRndPlane =
     const spawnRateModifier = 0.7;
     const spawnRate = goals.SpawnRate || 1;
 
+    let chanceOfPlanePerSec = 0.03;
     const lowCount = 8;
     const highCount = 16;
     const highChance = 0.1;
     const slowChance = 0.005;
 
-    let chanceOfPlanePerSec = 0.03;
-
     const count = entityManagerArr.filter(isSquare).length;
     if (count < lowCount) chanceOfPlanePerSec = highChance;
     if (count > highCount) chanceOfPlanePerSec = slowChance;
-
-    const taxiQueueLength = getTaxiLength(entityManagerArr);
-    const fastTaxiQueueLength = Math.ceil(0.6 * getGoals().TaxiQueue);
 
     const isDeparture = (obj) =>
       isSquare(obj) && obj.destinationType === DestinationType.Departure;
@@ -154,7 +150,7 @@ export const spawnRndPlane =
       chanceOfPlanePerSec = 0.5;
       noMoreArrivals = true;
     }
-    if (taxiQueueLength > fastTaxiQueueLength) {
+    if (isTaxiQueueAlmostFull(entityManagerArr)) {
       chanceOfPlanePerSec = slowChance;
     }
 

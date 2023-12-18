@@ -18,6 +18,7 @@ import { isSquare } from '../types';
 import { DestinationType } from '../aircraft/airframe';
 import { create, spawnRndPlane } from '../Plane';
 import { setTaxiQueue } from './score';
+import { getGoals } from '../game/victory';
 import { SoundType, play, playLoop, stop } from './sound';
 
 /**
@@ -238,13 +239,20 @@ export const getTaxiLength = (entityManagerArr) => {
   return departures.filter((plane) => plane.isTaxiing).length;
 };
 
+export const isTaxiQueueAlmostFull = (entityManagerArr) => {
+  return getTaxiLength(entityManagerArr) > getTaxiWarnLength();
+};
+
 //////////////////////////////////////////////////////////////////////////////
 // PRIVATE
 //////////////////////////////////////////////////////////////////////////////
 const isNotTaxiing = (obj) => !obj.isTaxiing;
+const getTaxiWarnLength = () => Math.ceil(0.6 * getGoals().TaxiQueue);
+
 const isWithinDist = (distMax, obj1, obj2) => {
   return distBetweenEntities(obj1)(obj2) < distMax;
 };
+
 const isDeparture = (plane) => {
   return plane.destinationType === DestinationType.Departure;
 };
