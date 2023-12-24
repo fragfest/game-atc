@@ -13,10 +13,10 @@
                 >{{ levelComplete }} / {{ finalLevel }}</span
               >
             </h3>
-            <h3>
+            <!-- <h3>
               difficulty &nbsp;&nbsp;
               <span class="white">easy</span>
-            </h3>
+            </h3> -->
           </div>
 
           <div class="button-start">
@@ -63,15 +63,15 @@
 </template>
 
 <script>
-import { getFinalLevel } from "../js/game/victory";
+import { getFinalLevel } from '../js/game/victory';
 import {
   setup as setupScore,
   levelRetry,
   getScoreHistory,
-} from "../js/game/score";
-import { getHighestLevelCompleted } from "../js/game/score";
+} from '../js/game/score';
+import { getHighestLevelCompleted } from '../js/game/score';
 
-import CyberBox from "./common/CyberBox";
+import CyberBox from './common/CyberBox';
 
 export default {
   components: {
@@ -98,12 +98,12 @@ export default {
 
   methods: {
     onStartClick: function () {
-      window.location.href = "/game";
+      window.location.href = '/game';
     },
 
     onRetryClick: function (level) {
       levelRetry(level);
-      window.location.href = "/game";
+      window.location.href = '/game';
     },
   },
 };
@@ -115,7 +115,7 @@ export default {
   flex-direction: column;
   height: 99.7vh;
 
-  background-image: url("/public/img/sky.jpg");
+  background-image: url('/public/img/sky.jpg');
   background-size: cover;
 }
 
@@ -145,7 +145,7 @@ export default {
 
   font-size: 24px;
   color: lightgreen;
-  background-image: url("/public/img/teal-bckgnd.jpg");
+  background-image: url('/public/img/teal-bckgnd.jpg');
 }
 
 .home section .content {

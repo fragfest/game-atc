@@ -1,14 +1,14 @@
 import { VictoryEvents, subscribeVictory } from './victory';
 import { subscribeScore, ScoreEvents } from './score';
 
-const collision = new Audio('/audio/collision-warning.mp3');
-const ding = new Audio('/audio/ding.mp3');
-const denied = new Audio('/audio/denied.mp3');
-const takeoff = new Audio('/audio/take-off.mp3');
-const chime = new Audio('/audio/chime-ping.mp3');
-const pling = new Audio('/audio/pling.mp3');
-const flick = new Audio('/audio/select-flick.mp3');
-const squelch = new Audio('/audio/radio-squelch.mp3');
+let collision;
+let ding;
+let denied;
+let takeoff;
+let chime;
+let pling;
+let flick;
+let squelch;
 
 export const SoundType = Object.freeze({
   Collision: 'Collision',
@@ -22,11 +22,20 @@ export const SoundType = Object.freeze({
 });
 
 let oldScore = null;
-
 let isSetup = false;
+
 export const setup = () => {
   if (isSetup) return;
   isSetup = true;
+
+  collision = new Audio('/audio/collision-warning.mp3');
+  ding = new Audio('/audio/ding.mp3');
+  denied = new Audio('/audio/denied.mp3');
+  takeoff = new Audio('/audio/take-off.mp3');
+  chime = new Audio('/audio/chime-ping.mp3');
+  pling = new Audio('/audio/pling.mp3');
+  flick = new Audio('/audio/select-flick.mp3');
+  squelch = new Audio('/audio/radio-squelch.mp3');
 
   subscribeScore(ScoreEvents.ScoreEV, (score) => {
     if (oldScore) {

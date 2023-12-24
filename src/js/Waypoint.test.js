@@ -9,6 +9,8 @@ import {
 import * as jestExtended from 'jest-extended';
 import Waypoint from './Waypoint';
 import Square from './Square';
+import * as sound from './game/sound';
+
 import { Direction, ScreenSizes } from './utils';
 import { getWaypoint } from '../js/airports/LHR';
 import { DestinationType } from './aircraft/airframe';
@@ -28,6 +30,9 @@ describe('Waypoint', () => {
   beforeEach(() => {
     // eslint-disable-next-line no-global-assign
     Image = jest.fn(() => global.document.createElement('img'));
+    jest.spyOn(sound, 'playLoop').mockImplementation(() => {});
+    jest.spyOn(sound, 'play').mockImplementation(() => {});
+    jest.spyOn(sound, 'stop').mockImplementation(() => {});
   });
 
   beforeEach(() => {

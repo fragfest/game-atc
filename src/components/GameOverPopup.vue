@@ -8,7 +8,7 @@
           <span v-if="level"> level {{ level }}</span>
           <span v-else> tutorial level</span>
         </div>
-        <div>ATC difficulty: easy</div>
+        <!-- <div>ATC difficulty: easy</div> -->
       </h1>
 
       <div class="content">
