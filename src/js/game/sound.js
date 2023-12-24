@@ -88,6 +88,7 @@ export const play = (soundType) => {
     return chime.play();
   }
   if (soundType === SoundType.Spawn) {
+    // TODO Safari only plays squelch after other user-triggered sounds
     return squelch.play();
   }
   if (soundType === SoundType.Select) {
