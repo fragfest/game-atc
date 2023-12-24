@@ -23,15 +23,15 @@
 </template>
 
 <script>
-import ToolTip from "../common/ToolTip";
-import { getClassSize } from "../../js/utils";
+import ToolTip from '../common/ToolTip';
+import { getClassSize } from '../../js/utils';
 
 export default {
-  name: "ButtonPanel",
+  name: 'ButtonPanel',
   props: {
     screenSize: { type: String },
   },
-  emits: ["showCirclesEv"],
+  emits: ['showCirclesEv'],
 
   components: {
     ToolTip,
@@ -49,27 +49,35 @@ export default {
     },
 
     showCircleClass: function () {
-      if (this.isShowCircles) return "show-circle";
-      return "";
+      if (this.isShowCircles) return 'show-circle';
+      return '';
     },
   },
 
   methods: {
     onShowCircles: function () {
       this.isShowCircles = !this.isShowCircles;
-      this.$emit("showCirclesEv", this.isShowCircles);
+      this.$emit('showCirclesEv', this.isShowCircles);
     },
   },
 };
 </script>
 
 <style lang="scss">
+// small
 .button-panel.small {
+  padding-top: 4px;
+
   button.button-tcas-circle {
-    height: 28px;
-    width: 28px;
+    height: 24px;
+    width: 24px;
+  }
+
+  button.button-tcas-circle.show-circle {
+    outline-width: 1px;
   }
 }
+// END small
 
 .button-panel {
   display: flex;
@@ -98,8 +106,8 @@ export default {
   }
 
   button.button-tcas-circle {
-    height: 36px;
-    width: 36px;
+    height: 34px;
+    width: 34px;
   }
 
   button.button-tcas-circle.show-circle {

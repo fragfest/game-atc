@@ -8,7 +8,7 @@
           <div>
             <h3 v-if="isGameComplete">all levels completed</h3>
             <h3 v-else-if="levelComplete">
-              levels complete &nbsp;&nbsp;
+              <span>levels complete &nbsp;&nbsp;</span>
               <span class="font-mono white"
                 >{{ levelComplete }} / {{ finalLevel }}</span
               >
@@ -24,7 +24,7 @@
               <span class="font-mono white">training</span>
             </h3>
             <h3 v-else-if="!isGameComplete">
-              level &nbsp;&nbsp;
+              <span>level &nbsp;&nbsp;</span>
               <span class="font-mono white">{{ levelNext }}</span>
             </h3>
 

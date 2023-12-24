@@ -1,5 +1,5 @@
 <template>
-  <div class="score-panel">
+  <div class="score-panel" :class="sizeClass">
     <div class="score-info">
       <div class="score-row" :class="sizeClass">
         <span class="margin-top font-large badge blue">departures</span>
@@ -104,15 +104,21 @@ export default {
 </script>
 
 <style lang="scss">
+// score-panel
 .score-panel {
   display: flex;
   justify-content: flex-end;
   width: 100%;
-  margin-top: 10px;
+  margin-top: 6px;
   margin-bottom: 10px;
   margin-right: 6px;
   cursor: default;
 }
+
+.score-panel.small {
+  margin-top: 4px;
+}
+// END score-panel
 
 .score-info {
   display: flex;
@@ -172,10 +178,15 @@ export default {
 
 // score-row small
 .score-row.small {
-  font-size: 14px;
+  font-size: 12px;
+
   .font-large {
-    font-size: 16px;
+    font-size: 14px;
+  }
+
+  .badge {
+    padding: 6px;
   }
 }
-// score-row END
+// END score-row
 </style>

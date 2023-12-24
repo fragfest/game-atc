@@ -49,15 +49,15 @@
 </template>
 
 <script>
-import { getClassSize } from "../../js/utils";
+import { getClassSize } from '../../js/utils';
 import {
   DestinationType,
   getAirframe,
   getPerformance,
-} from "../../js/aircraft/airframe";
+} from '../../js/aircraft/airframe';
 
 export default {
-  name: "InfoPanel",
+  name: 'InfoPanel',
   props: {
     screenSize: { type: String },
     planeSelected: { type: Object },
@@ -81,14 +81,14 @@ export default {
 
     cityType: function () {
       const plane = this.plane;
-      if (!plane) return "";
+      if (!plane) return '';
       if (plane.destinationType === DestinationType.Departure) {
-        return "Destination";
+        return 'Destination';
       }
       if (plane.destinationType === DestinationType.Arrival) {
-        return "Arriving";
+        return 'Arriving';
       }
-      return "";
+      return '';
     },
 
     airframeDetails: function () {
@@ -107,8 +107,10 @@ export default {
 </script>
 
 <style lang="scss">
+// small
 .info-panel.small {
-  min-height: 300px;
+  min-height: 210px;
+  padding: 2px 8px;
 
   h1 {
     font-size: 18px;
@@ -121,6 +123,33 @@ export default {
     font-size: 11px;
   }
 }
+
+.info-panel.small .header {
+  padding: 6px 0;
+
+  h1 {
+    font-size: 14px;
+  }
+  h2 {
+    font-size: 10px;
+  }
+  img {
+    max-width: 12%;
+  }
+}
+
+.info-panel.small .plane-info {
+  padding: 6px 0;
+}
+
+.info-panel.small .plane-info hr {
+  margin: 6px 0px;
+}
+
+.info-panel.small .img-profile {
+  margin-top: 75px;
+}
+// END small
 
 .info-panel {
   min-height: 400px;

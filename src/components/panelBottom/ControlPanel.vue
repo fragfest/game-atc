@@ -140,25 +140,25 @@ import {
   leftPadZeros,
   altitudeDisplay,
   getClassSize,
-} from "../../js/utils";
+} from '../../js/utils';
 import {
   MessageEvents,
   subscribeMessage as subscribe,
-} from "../../js/events/messages";
-import { DestinationType } from "../../js/aircraft/airframe";
+} from '../../js/events/messages';
+import { DestinationType } from '../../js/aircraft/airframe';
 
-import ToolTip from "../common/ToolTip";
-import CircleInputs from "./CircleInputs";
+import ToolTip from '../common/ToolTip';
+import CircleInputs from './CircleInputs';
 
 const setCompass = (headingRad) => {
   const headingDegree = convertToSmallDegrees(radToDegrees(headingRad));
-  const tickEl = document.querySelector("#gauge-tick-arrow");
+  const tickEl = document.querySelector('#gauge-tick-arrow');
   if (!tickEl) return;
-  tickEl.setAttribute("transform", "rotate(" + headingDegree + ")");
+  tickEl.setAttribute('transform', 'rotate(' + headingDegree + ')');
 };
 
 export default {
-  name: "ControlPanel",
+  name: 'ControlPanel',
 
   components: { ToolTip, CircleInputs },
 
@@ -170,7 +170,7 @@ export default {
     screenSize: { type: String },
   },
 
-  emits: ["updatedHeadingEv", "updatedAltitudeEv"],
+  emits: ['updatedHeadingEv', 'updatedAltitudeEv'],
 
   data() {
     return {
@@ -179,15 +179,15 @@ export default {
   },
 
   mounted() {
-    const gauge = document.querySelector("#gauge");
-    const tick = document.querySelector("#gauge-tick");
+    const gauge = document.querySelector('#gauge');
+    const tick = document.querySelector('#gauge-tick');
     const tickInc = 30;
 
     for (let i = tickInc; i <= 360; i = i + tickInc) {
       const new_tick = tick.cloneNode(true);
-      new_tick.getElementsByTagName("text")[0].textContent = i;
-      new_tick.setAttribute("transform", "rotate(" + i + ")");
-      new_tick.id = "tick-" + leftPadZeros(i);
+      new_tick.getElementsByTagName('text')[0].textContent = i;
+      new_tick.setAttribute('transform', 'rotate(' + i + ')');
+      new_tick.id = 'tick-' + leftPadZeros(i);
       gauge.appendChild(new_tick);
     }
 
@@ -198,7 +198,7 @@ export default {
 
     subscribe(MessageEvents.MessageProximityEV, (msgObj) => {
       const isProximityMsg = (msg) => {
-        if (typeof msg === "string") return false;
+        if (typeof msg === 'string') return false;
         if (!msg.id) return false;
         if (msg.id === msgObj.id) return true;
         return false;
@@ -210,7 +210,7 @@ export default {
         const scoreDecrease = objFound.scoreDecrease + msgObj.scoreDecrease;
         const objNew = {
           id: objFound.id,
-          msg: msgObj.msg + " (" + scoreDecrease + ")",
+          msg: msgObj.msg + ' (' + scoreDecrease + ')',
           scoreDecrease,
         };
         this.messages.splice(objFoundIndex, 1, objNew);
@@ -218,7 +218,7 @@ export default {
       if (!objFound) {
         this.messages.unshift({
           id: msgObj.id,
-          msg: msgObj.msg + " (" + msgObj.scoreDecrease + ")",
+          msg: msgObj.msg + ' (' + msgObj.scoreDecrease + ')',
           scoreDecrease: msgObj.scoreDecrease,
         });
       }
@@ -253,18 +253,18 @@ export default {
 
     landBtnClass: function () {
       const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
-      if (!planeSel) return "";
+      if (!planeSel) return '';
       let classes = getClassSize(this.screenSize);
-      if (this.planeSelected.landing) classes += " is-landing";
+      if (this.planeSelected.landing) classes += ' is-landing';
       return classes;
     },
 
     holdHandoffBtnClass: function () {
       const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
-      if (!planeSel) return "";
+      if (!planeSel) return '';
       let classes = getClassSize(this.screenSize);
       if (this.planeSelected.isHolding || this.planeSelected.isHandoff)
-        classes += " is-holdhandoff";
+        classes += ' is-holdhandoff';
       return classes;
     },
 
@@ -280,20 +280,20 @@ export default {
 
     heading: function () {
       const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
-      if (!planeSel) return "";
+      if (!planeSel) return '';
       setCompass(planeSel.headingRad);
       return planeSel.heading;
     },
 
     altitude: function () {
       const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
-      if (!planeSel) return "";
+      if (!planeSel) return '';
       return altitudeDisplay(planeSel.altitude);
     },
 
     speed: function () {
       const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
-      if (!planeSel) return "";
+      if (!planeSel) return '';
       return Math.round(planeSel.speed);
     },
   },
@@ -307,11 +307,11 @@ export default {
 
   methods: {
     updatedHeadingEv: function (hdg) {
-      this.$emit("updatedHeadingEv", hdg);
+      this.$emit('updatedHeadingEv', hdg);
     },
 
     updatedAltitudeEv: function (alt) {
-      this.$emit("updatedAltitudeEv", alt);
+      this.$emit('updatedAltitudeEv', alt);
     },
 
     setFocus: function () {
@@ -538,6 +538,7 @@ export default {
 
 .circle-panel {
   width: 220px;
+  margin: 8px;
   position: relative;
   cursor: default;
 }

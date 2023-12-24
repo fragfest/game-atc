@@ -133,7 +133,7 @@ import ScorePanel from './panelBottom/ScorePanel';
 import ControlPanel from './panelBottom/ControlPanel';
 import FlightStrip from './FlightStrip';
 import FlightStripDeparture from './FlightStripDeparture';
-import GameOverPopup from './GameOverPopup.vue';
+import GameOverPopup from './GameOverPopup';
 
 import { DestinationType } from '../js/aircraft/airframe';
 import { getWaypointArrivalsAll } from '../js/airports/LHR';
@@ -517,13 +517,11 @@ export default {
 .row-bottom-left {
   display: flex;
   width: 100%;
-  padding: 8px;
   max-height: 780px;
 }
 
 .row-bottom-right {
   display: flex;
-  padding: 8px;
   max-height: 780px;
 }
 
@@ -565,6 +563,7 @@ export default {
 }
 
 // tutorial
+// small
 .tutorial.small {
   font-size: 11px;
 
@@ -604,7 +603,7 @@ export default {
     font-weight: bold;
   }
 }
-// end small
+// END small
 
 .tutorial {
   position: absolute;

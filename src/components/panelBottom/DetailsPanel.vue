@@ -21,12 +21,12 @@
 </template>
 
 <script>
-import { getClassSize } from "../../js/utils";
-import HelpPanel from "./HelpPanel";
-import InfoPanel from "./InfoPanel";
+import { getClassSize } from '../../js/utils';
+import HelpPanel from './HelpPanel';
+import InfoPanel from './InfoPanel';
 
 export default {
-  name: "DetailsPanel",
+  name: 'DetailsPanel',
   components: {
     HelpPanel,
     InfoPanel,
@@ -50,11 +50,11 @@ export default {
     },
 
     selectedClass0: function () {
-      return this.tabIndex === 0 ? "selected" : "";
+      return this.tabIndex === 0 ? 'selected' : '';
     },
 
     selectedClass1: function () {
-      return this.tabIndex === 1 ? "selected" : "";
+      return this.tabIndex === 1 ? 'selected' : '';
     },
   },
 
@@ -69,6 +69,12 @@ export default {
 <style lang="scss">
 .details-panel.small {
   width: 270px;
+
+  .tab {
+    height: 16px;
+    padding: 2px 12px;
+    font-size: 12px;
+  }
 }
 
 .details-panel {
