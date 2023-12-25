@@ -21,6 +21,7 @@ export const SoundType = Object.freeze({
   Select: 'Select',
 });
 
+let isMuted = true;
 let oldScore = null;
 let isSetup = false;
 
@@ -36,6 +37,7 @@ export const setup = () => {
   pling = new Audio('/audio/pling.mp3');
   flick = new Audio('/audio/select-flick.mp3');
   squelch = new Audio('/audio/radio-squelch.mp3');
+  setMute(true);
 
   subscribeScore(ScoreEvents.ScoreEV, (score) => {
     if (oldScore) {
@@ -53,6 +55,21 @@ export const setup = () => {
 
     oldScore = { ...score };
   });
+};
+
+/**
+ * @param {Boolean} isMutedArg
+ */
+export const setMute = (isMutedArg) => {
+  isMuted = !!isMutedArg;
+  collision.muted = isMuted;
+  ding.muted = isMuted;
+  denied.muted = isMuted;
+  takeoff.muted = isMuted;
+  chime.muted = isMuted;
+  pling.muted = isMuted;
+  flick.muted = isMuted;
+  squelch.muted = isMuted;
 };
 
 let isCollisionSubscribed = false;

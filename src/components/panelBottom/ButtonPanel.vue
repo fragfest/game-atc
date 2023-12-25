@@ -1,8 +1,43 @@
 <template>
   <div class="button-panel" :class="screenSize">
+    <!-- mute -->
     <ToolTip :size="screenSize">
       <button
-        class="button-tcas-circle"
+        class="button-square"
+        :class="showMutedClass"
+        @click="onMuteToggle"
+      >
+        <svg viewBox="0 0 75 75">
+          <path
+            d="M39.389,13.769 L22.235,28.606 L6,28.606 L6,47.699 L21.989,47.699 L39.389,62.75 L39.389,13.769z"
+            style="
+              stroke: #white;
+              stroke-width: 5;
+              stroke-linejoin: round;
+              fill: white;
+            "
+          />
+          <path
+            d="M48,27.6a19.5,19.5 0 0 1 0,21.4M55.1,20.5a30,30 0 0 1 0,35.6M61.6,14a38.8,38.8 0 0 1 0,48.6"
+            style="
+              fill: none;
+              stroke: white;
+              stroke-width: 5;
+              stroke-linecap: round;
+            "
+          />
+        </svg>
+      </button>
+      <template v-slot:hover>
+        <span v-if="isMuted">unmute</span>
+        <span v-else>mute</span>
+      </template>
+    </ToolTip>
+
+    <!-- conflict circles -->
+    <ToolTip :size="screenSize">
+      <button
+        class="button-square"
         :class="showCircleClass"
         @click="onShowCircles"
       >
@@ -25,6 +60,7 @@
 <script>
 import ToolTip from '../common/ToolTip';
 import { getClassSize } from '../../js/utils';
+import { setMute } from '../../js/game/sound';
 
 export default {
   name: 'ButtonPanel',
@@ -39,6 +75,7 @@ export default {
 
   data() {
     return {
+      isMuted: true,
       isShowCircles: false,
     };
   },
@@ -48,13 +85,23 @@ export default {
       return getClassSize(this.screenSize);
     },
 
+    showMutedClass: function () {
+      if (!this.isMuted) return 'active';
+      return '';
+    },
+
     showCircleClass: function () {
-      if (this.isShowCircles) return 'show-circle';
+      if (this.isShowCircles) return 'active';
       return '';
     },
   },
 
   methods: {
+    onMuteToggle: function () {
+      this.isMuted = !this.isMuted;
+      setMute(this.isMuted);
+    },
+
     onShowCircles: function () {
       this.isShowCircles = !this.isShowCircles;
       this.$emit('showCirclesEv', this.isShowCircles);
@@ -68,12 +115,12 @@ export default {
 .button-panel.small {
   padding-top: 4px;
 
-  button.button-tcas-circle {
+  button.button-square {
     height: 24px;
     width: 24px;
   }
 
-  button.button-tcas-circle.show-circle {
+  button.active {
     outline-width: 1px;
   }
 }
@@ -82,6 +129,7 @@ export default {
 .button-panel {
   display: flex;
   justify-content: flex-end;
+  gap: 14px;
   padding-top: 10px;
 
   button {
@@ -105,12 +153,12 @@ export default {
     }
   }
 
-  button.button-tcas-circle {
+  button.button-square {
     height: 34px;
     width: 34px;
   }
 
-  button.button-tcas-circle.show-circle {
+  button.active {
     outline: 2px solid limegreen;
     box-shadow: none;
   }

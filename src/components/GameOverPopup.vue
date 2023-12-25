@@ -182,7 +182,7 @@ export default {
   justify-content: space-around;
 
   width: 46%;
-  height: 680px;
+  height: 600px;
   min-width: 800px;
   max-width: 1200px;
 
@@ -220,6 +220,7 @@ export default {
 .popup .modal .title {
   align-self: center;
   text-align: center;
+  margin-bottom: 0;
 }
 
 .popup .modal .content {
@@ -238,6 +239,7 @@ export default {
   align-self: center;
   text-align: center;
   width: 120px;
+  margin-bottom: 8px;
 
   background-color: darkslategrey;
   border: solid 1px white;

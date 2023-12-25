@@ -201,12 +201,12 @@
 </template>
 
 <script>
-import Bowser from "bowser";
+import Bowser from 'bowser';
 
-import { getClassSize, nextWaypoint } from "../js/utils";
-import { getWaypointArrivalsAll } from "../js/airports/LHR";
-import { DestinationType } from "../js/aircraft/airframe";
-import ToolTip from "./common/ToolTip";
+import { getClassSize, nextWaypoint } from '../js/utils';
+import { getWaypointArrivalsAll } from '../js/airports/LHR';
+import { DestinationType } from '../js/aircraft/airframe';
+import ToolTip from './common/ToolTip';
 
 const getPlane = (plane, planes) => {
   if (!plane.id) return false;
@@ -215,7 +215,7 @@ const getPlane = (plane, planes) => {
 };
 
 export default {
-  name: "FlightStrip",
+  name: 'FlightStrip',
   props: {
     plane: { type: Object, default: () => ({}) },
     planeSelected: { type: Object },
@@ -237,7 +237,7 @@ export default {
     const browser = Bowser.getParser(
       window.navigator.userAgent
     ).getBrowserName();
-    this.isSafari = browser === "Safari";
+    this.isSafari = browser === 'Safari';
   },
 
   computed: {
@@ -278,7 +278,7 @@ export default {
     },
 
     dashVal: function () {
-      return this.isQueueStrip ? "1" : "";
+      return this.isQueueStrip ? '1' : '';
     },
 
     stripClass: function () {
@@ -286,13 +286,13 @@ export default {
       const size = getClassSize(this.screenSize);
 
       const isSelected = plane ? plane.id === this.planeSelected.id : false;
-      const selected = isSelected ? "selected" : "";
-      const hover = this.isHover ? "hover" : "";
-      const empty = this.isEmptyStrip ? "empty" : "";
-      const queue = this.isQueueStrip ? "empty" : "";
+      const selected = isSelected ? 'selected' : '';
+      const hover = this.isHover ? 'hover' : '';
+      const empty = this.isEmptyStrip ? 'empty' : '';
+      const queue = this.isQueueStrip ? 'empty' : '';
 
       const classes = [].concat(queue, empty, hover, selected, size);
-      return classes.join(" ");
+      return classes.join(' ');
     },
 
     outerLineSmall: function () {
@@ -311,36 +311,36 @@ export default {
 
     outerLineStroke: function () {
       const plane = getPlane(this.plane, this.planes);
-      if (this.isEmptyStrip) return "#24b3c9";
-      if (!plane) return "white";
-      if (this.isTaxiing) return "white";
+      if (this.isEmptyStrip) return '#24b3c9';
+      if (!plane) return 'white';
+      if (this.isTaxiing) return 'white';
 
       const type = plane.destinationType || DestinationType.Arrival;
       const isSelected = plane.id === this.planeSelected.id;
-      if (isSelected) return "limegreen";
-      if (type === DestinationType.Arrival) return "#c98301";
-      if (type === DestinationType.Departure) return "#24b3c9";
-      return "#c98301";
+      if (isSelected) return 'limegreen';
+      if (type === DestinationType.Arrival) return '#c98301';
+      if (type === DestinationType.Departure) return '#24b3c9';
+      return '#c98301';
     },
 
     gradientStart: function () {
       const plane = getPlane(this.plane, this.planes);
-      if (!plane) return "#122534";
+      if (!plane) return '#122534';
 
       const type = plane.destinationType || DestinationType.Arrival;
-      if (type === DestinationType.Arrival) return "#674300";
-      if (type === DestinationType.Departure) return "#122534";
-      return "#674300";
+      if (type === DestinationType.Arrival) return '#674300';
+      if (type === DestinationType.Departure) return '#122534';
+      return '#674300';
     },
 
     gradientEnd: function () {
       const plane = getPlane(this.plane, this.planes);
-      if (!plane) return "#2d6794";
+      if (!plane) return '#2d6794';
 
       const type = plane.destinationType || DestinationType.Arrival;
-      if (type === DestinationType.Arrival) return "#c98301";
-      if (type === DestinationType.Departure) return "#2d6794";
-      return "#c98301";
+      if (type === DestinationType.Arrival) return '#c98301';
+      if (type === DestinationType.Departure) return '#2d6794';
+      return '#c98301';
     },
   },
 
@@ -373,6 +373,7 @@ export default {
 // strip small
 .strip.small {
   width: 280px;
+  min-width: 280px;
   height: 56px;
 
   // strip-info
@@ -414,6 +415,7 @@ export default {
 .strip {
   position: relative;
   width: 360px;
+  min-width: 360px;
   height: 71px;
   margin-left: 16px;
   cursor: pointer;
