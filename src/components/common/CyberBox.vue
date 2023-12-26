@@ -87,10 +87,10 @@
 </template>
 
 <script>
-import Bowser from "bowser";
+import Bowser from 'bowser';
 
 export default {
-  name: "CyberBox",
+  name: 'CyberBox',
   data() {
     return {
       isSafari: false,
@@ -101,13 +101,13 @@ export default {
   },
 
   props: {
-    width: { type: String, default: () => "40" },
+    width: { type: String, default: () => '40' },
     type: {
       type: String,
       validator(value) {
-        return ["dialog", "button"].includes(value);
+        return ['dialog', 'button'].includes(value);
       },
-      default: () => "dialog",
+      default: () => 'dialog',
     },
   },
 
@@ -116,31 +116,34 @@ export default {
       window.navigator.userAgent
     ).getBrowserName();
 
-    this.isSafari = browser === "Safari";
-    this.id = crypto.randomUUID();
+    this.isSafari = browser === 'Safari';
+
+    //TODO fails with yarn build
+    // this.id = crypto.randomUUID();
+    this.id = Math.random();
   },
 
   computed: {
     gradientStart: function () {
-      if (this.type === "dialog") return "#464545";
-      if (this.type === "button") return "#122534";
-      return "#122534";
+      if (this.type === 'dialog') return '#464545';
+      if (this.type === 'button') return '#122534';
+      return '#122534';
     },
 
     gradientEnd: function () {
-      if (this.type === "dialog") return "#7d7d7d";
-      if (this.type === "button") return "#2d6794";
-      return "#2d6794";
+      if (this.type === 'dialog') return '#7d7d7d';
+      if (this.type === 'button') return '#2d6794';
+      return '#2d6794';
     },
 
     outerLineStroke: function () {
-      if (this.type === "dialog") return "lightgrey";
-      if (this.type === "button") return "lightgreen";
-      return "lightgreen";
+      if (this.type === 'dialog') return 'lightgrey';
+      if (this.type === 'button') return 'lightgreen';
+      return 'lightgreen';
     },
 
     contentStyle: function () {
-      return "width: " + this.width + "px";
+      return 'width: ' + this.width + 'px';
     },
   },
 };
