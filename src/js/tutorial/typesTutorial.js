@@ -1,7 +1,7 @@
 export const Stages = Object.freeze({
   Intro: 'Intro',
-  ArrivalLand: 'ArrivalLand',
   Departure: 'Departure',
+  ArrivalLand: 'ArrivalLand',
   Waypoint: 'Waypoint',
   Conflict: 'Conflict',
   Done: 'Done',

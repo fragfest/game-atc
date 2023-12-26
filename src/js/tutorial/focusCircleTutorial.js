@@ -1,27 +1,27 @@
-import { ScreenSizes } from "../utils";
+import { ScreenSizes } from '../utils';
 
-export const scorePanel = size => {
-  if(size === ScreenSizes.Small) {
+export const scorePanel = (size) => {
+  if (size === ScreenSizes.Small) {
     return {
       size,
-      top: 660,
-      left: 320,
+      top: 640,
+      left: 312,
       width: 320,
-      height: 90,
+      height: 72,
     };
   }
 
   return {
     size,
-    top: 870,
-    left: 590,
+    top: 858,
+    left: 580,
     width: 320,
     height: 90,
   };
-}
+};
 
-export const flightStripQueue = size => {
-  if(size === ScreenSizes.Small) {
+export const flightStripQueue = (size) => {
+  if (size === ScreenSizes.Small) {
     return {
       size,
       top: 0,
@@ -38,14 +38,14 @@ export const flightStripQueue = size => {
     width: 362,
     height: 78,
   };
-}
+};
 
-export const controlPanelTakeoff = size => {
-  if(size === ScreenSizes.Small) {
+export const controlPanelTakeoff = (size) => {
+  if (size === ScreenSizes.Small) {
     return {
       size,
-      top: 618,
-      left: 686,
+      top: 610,
+      left: 679,
       width: 64,
       height: 28,
     };
@@ -53,19 +53,19 @@ export const controlPanelTakeoff = size => {
 
   return {
     size,
-    top: 816,
-    left: 956,
+    top: 808,
+    left: 948,
     width: 80,
     height: 40,
   };
-}
+};
 
-export const controlPanelHolding = size => {
-  if(size === ScreenSizes.Small) {
+export const controlPanelHolding = (size) => {
+  if (size === ScreenSizes.Small) {
     return {
       size,
-      top: 618,
-      left: 742,
+      top: 610,
+      left: 734,
       width: 42,
       height: 28,
     };
@@ -73,19 +73,19 @@ export const controlPanelHolding = size => {
 
   return {
     size,
-    top: 816,
-    left: 1022,
+    top: 808,
+    left: 1014,
     width: 53,
     height: 40,
   };
-}
+};
 
-export const controlPanelLanding = size => {
-  if(size === ScreenSizes.Small) {
+export const controlPanelLanding = (size) => {
+  if (size === ScreenSizes.Small) {
     return {
       size,
-      top: 618,
-      left: 686,
+      top: 610,
+      left: 679,
       width: 42,
       height: 28,
     };
@@ -93,15 +93,15 @@ export const controlPanelLanding = size => {
 
   return {
     size,
-    top: 816,
-    left: 956,
+    top: 808,
+    left: 949,
     width: 53,
     height: 40,
   };
-}
+};
 
-export const controlPanelAltitude = size => {
-  if(size === ScreenSizes.Small) {
+export const controlPanelAltitude = (size) => {
+  if (size === ScreenSizes.Small) {
     return {
       size,
       top: 694,
@@ -118,10 +118,10 @@ export const controlPanelAltitude = size => {
     width: 38,
     height: 26,
   };
-}
+};
 
-export const controlPanelHeading = size => {
-  if(size === ScreenSizes.Small) {
+export const controlPanelHeading = (size) => {
+  if (size === ScreenSizes.Small) {
     return {
       size,
       top: 653,
@@ -138,10 +138,10 @@ export const controlPanelHeading = size => {
     width: 38,
     height: 26,
   };
-}
+};
 
-export const flightStripFirst = size => {
-  if(size === ScreenSizes.Small) {
+export const flightStripFirst = (size) => {
+  if (size === ScreenSizes.Small) {
     return {
       size,
       top: 72,
@@ -158,10 +158,10 @@ export const flightStripFirst = size => {
     width: 362,
     height: 70,
   };
-}
+};
 
-export const flightStripThirdWaypoint = size => {
-  if(size === ScreenSizes.Small) {
+export const flightStripThirdWaypoint = (size) => {
+  if (size === ScreenSizes.Small) {
     return {
       size,
       top: 201,
@@ -178,10 +178,10 @@ export const flightStripThirdWaypoint = size => {
     width: 68,
     height: 36,
   };
-}
+};
 
-export const flightStripSecond = size => {
-  if(size === ScreenSizes.Small) {
+export const flightStripSecond = (size) => {
+  if (size === ScreenSizes.Small) {
     return {
       size,
       top: 129,
@@ -198,10 +198,10 @@ export const flightStripSecond = size => {
     width: 362,
     height: 70,
   };
-}
+};
 
-export const flightStripThird= size => {
-  if(size === ScreenSizes.Small) {
+export const flightStripThird = (size) => {
+  if (size === ScreenSizes.Small) {
     return {
       size,
       top: 186,
@@ -218,4 +218,4 @@ export const flightStripThird= size => {
     width: 362,
     height: 70,
   };
-}
+};

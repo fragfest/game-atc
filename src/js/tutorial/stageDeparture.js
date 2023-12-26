@@ -1,19 +1,19 @@
-import { ElapsedTimes } from "./typesTutorial";
-import { FocusCircleType } from "../types";
+import { ElapsedTimes } from './typesTutorial';
+import { FocusCircleType } from '../types';
 import {
   controlPanelAltitude,
   flightStripQueue,
   controlPanelTakeoff,
-} from "./focusCircleTutorial";
+} from './focusCircleTutorial';
 
-let event = "";
+let event = '';
 const Events = Object.freeze({
-  WaitForInput0: "WaitForInput0",
-  WaitForInput1: "WaitForInput1",
-  WaitForInput2: "WaitForInput2",
-  WaitForInput3: "WaitForInput3",
-  WaitForInput4: "WaitForInput4",
-  WaitForSelected0: "WaitForSelected0",
+  WaitForInput0: 'WaitForInput0',
+  WaitForInput1: 'WaitForInput1',
+  WaitForInput2: 'WaitForInput2',
+  WaitForInput3: 'WaitForInput3',
+  WaitForInput4: 'WaitForInput4',
+  WaitForSelected0: 'WaitForSelected0',
 });
 
 let isSetCheckmarkTaxiQueue = false;
@@ -36,7 +36,7 @@ export const stageDeparture = (
   if (!event) {
     objEventCB.isPlaneSelected = false;
     event = Events.WaitForInput0;
-    state.dialogBox = { top: 0.04, left: 0.2, width: 0.67, html: "<clear>" };
+    state.dialogBox = { top: 0.04, left: 0.2, width: 0.67, html: '<clear>' };
 
     setTimeout(() => {
       const html =
@@ -48,7 +48,7 @@ export const stageDeparture = (
         `<div class="line"> <span hidden class="checkmark check-3">&check;</span> <span class="cross check-3">&times;</span> <span class="text">Set handoff, aircraft will steer towards departure waypoint DET (H)</span></div>`;
 
       addToGameFn();
-      state.dialogBox = { top: 0.04, left: 0.2, width: 0.67, html };
+      state.dialogBox = { top: 0.04, left: 0.2, width: 0.7, html };
     }, 1000);
   }
 
@@ -131,28 +131,28 @@ export const stageDeparture = (
   if (!allowCheckmarkUpdate) return;
 
   if (isSetCheckmarkTaxiQueue) {
-    document.querySelector(".checkmark.check-0")?.removeAttribute("hidden");
-    document.querySelector(".cross.check-0")?.setAttribute("hidden", true);
+    document.querySelector('.checkmark.check-0')?.removeAttribute('hidden');
+    document.querySelector('.cross.check-0')?.setAttribute('hidden', true);
   }
 
   if (isSetCheckmarkTakeoff) {
-    document.querySelector(".checkmark.check-1")?.removeAttribute("hidden");
-    document.querySelector(".cross.check-1")?.setAttribute("hidden", true);
+    document.querySelector('.checkmark.check-1')?.removeAttribute('hidden');
+    document.querySelector('.cross.check-1')?.setAttribute('hidden', true);
   }
 
   if (isValidCheckmarkAltitude) {
-    document.querySelector(".checkmark.check-2")?.removeAttribute("hidden");
-    document.querySelector(".cross.check-2")?.setAttribute("hidden", true);
+    document.querySelector('.checkmark.check-2')?.removeAttribute('hidden');
+    document.querySelector('.cross.check-2')?.setAttribute('hidden', true);
   } else {
-    document.querySelector(".checkmark.check-2")?.setAttribute("hidden", true);
-    document.querySelector(".cross.check-2")?.removeAttribute("hidden");
+    document.querySelector('.checkmark.check-2')?.setAttribute('hidden', true);
+    document.querySelector('.cross.check-2')?.removeAttribute('hidden');
   }
 
   if (isValidCheckmarkHandoff) {
-    document.querySelector(".checkmark.check-3")?.removeAttribute("hidden");
-    document.querySelector(".cross.check-3")?.setAttribute("hidden", true);
+    document.querySelector('.checkmark.check-3')?.removeAttribute('hidden');
+    document.querySelector('.cross.check-3')?.setAttribute('hidden', true);
   } else {
-    document.querySelector(".checkmark.check-3")?.setAttribute("hidden", true);
-    document.querySelector(".cross.check-3")?.removeAttribute("hidden");
+    document.querySelector('.checkmark.check-3')?.setAttribute('hidden', true);
+    document.querySelector('.cross.check-3')?.removeAttribute('hidden');
   }
 };

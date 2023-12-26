@@ -37,6 +37,7 @@
     <!-- conflict circles -->
     <ToolTip :size="screenSize">
       <button
+        id="button-tcas-circle"
         class="button-square"
         :class="showCircleClass"
         @click="onShowCircles"
