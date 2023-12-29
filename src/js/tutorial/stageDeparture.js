@@ -5,6 +5,7 @@ import {
   flightStripQueue,
   controlPanelTakeoff,
 } from './focusCircleTutorial';
+import { DestinationType } from '../aircraft/airframe';
 
 let event = '';
 const Events = Object.freeze({
@@ -12,12 +13,13 @@ const Events = Object.freeze({
   WaitForInput1: 'WaitForInput1',
   WaitForInput2: 'WaitForInput2',
   WaitForInput3: 'WaitForInput3',
-  WaitForInput4: 'WaitForInput4',
   WaitForSelected0: 'WaitForSelected0',
 });
 
 let isSetCheckmarkTaxiQueue = false;
+let isValidCheckmarkTaxiQueue = false;
 let isSetCheckmarkTakeoff = false;
+let isValidCheckmarkTakeoff = false;
 let isSetCheckmarkAltitude = false;
 let isValidCheckmarkAltitude = false;
 let isSetCheckmarkHandoff = false;
@@ -34,10 +36,13 @@ export const stageDeparture = (
   completeStageFn
 ) => {
   if (!event) {
+    event = Events.WaitForSelected0;
     objEventCB.isPlaneSelected = false;
-    event = Events.WaitForInput0;
-    state.dialogBox = { top: 0.04, left: 0.2, width: 0.67, html: '<clear>' };
+    objEventCB.buttonTakeoff = false;
+    objEventCB.altitudeValue = null;
+    objEventCB.buttonHandoff = null;
 
+    state.dialogBox = { top: 0.1, left: 0.1, width: 0.5, html: '<clear>' };
     setTimeout(() => {
       const html =
         `<div class="line"><b>Departure - Take off and Handoff</b><br></div>` +
@@ -52,90 +57,92 @@ export const stageDeparture = (
     }, 1000);
   }
 
-  let allowCheckmarkUpdate = false;
-  if (elapsedTime > ElapsedTimes.DepartureFirstInputMs) {
-    allowCheckmarkUpdate = true;
-  }
+  const isDeparturePlaneSelected =
+    planeSelected?.destinationType === DestinationType.Departure;
+  const isReadyFirstInput = elapsedTime > ElapsedTimes.DepartureFirstInputMs;
 
   if (
-    elapsedTime > ElapsedTimes.DepartureFirstInputMs &&
-    event === Events.WaitForInput0 &&
+    isReadyFirstInput &&
+    event === Events.WaitForSelected0 &&
     !objEventCB.isPlaneSelected
   ) {
-    event = Events.WaitForSelected0;
     state.focusCircleType = FocusCircleType.Rectangle;
     state.focusCircle = flightStripQueue(screenSize);
     setGameLoopStateFn(false);
   }
 
-  if (objEventCB.isPlaneSelected) {
-    event = Events.WaitForInput1;
-    objEventCB.isPlaneSelected = false;
+  if (event === Events.WaitForSelected0 && objEventCB.isPlaneSelected) {
+    event = Events.WaitForInput0;
     isSetCheckmarkTaxiQueue = true;
+  }
+
+  if (event === Events.WaitForInput0 && isSetCheckmarkTaxiQueue) {
+    event = Events.WaitForInput1;
     state.focusCircleType = FocusCircleType.Rectangle;
     state.focusCircle = controlPanelTakeoff(screenSize);
   }
 
   if (event === Events.WaitForInput1 && objEventCB.buttonTakeoff) {
     event = Events.WaitForInput2;
-    objEventCB.buttonTakeoff = false;
-    state.focusCircleType = null;
-    isSetCheckmarkTakeoff = true;
-    objEventCB.altitudeValue = null;
-  }
-
-  if (event === Events.WaitForInput2 && !objEventCB.altitudeValue) {
     state.focusCircleType = FocusCircleType.Rectangle;
     state.focusCircle = controlPanelAltitude(screenSize);
+    isSetCheckmarkTakeoff = true;
   }
 
   if (event === Events.WaitForInput2 && objEventCB.altitudeValue) {
     if (objEventCB.altitudeValue >= 6000) {
-      state.focusCircleType = null;
-      isSetCheckmarkAltitude = true;
       event = Events.WaitForInput3;
-      objEventCB.buttonHandoff = false;
+      state.focusCircleType = FocusCircleType.Rectangle;
+      state.focusCircle = controlPanelTakeoff(screenSize);
+      isSetCheckmarkAltitude = true;
     }
   }
 
-  if (isSetCheckmarkAltitude) {
-    if (objEventCB.altitudeValue >= 6000) isValidCheckmarkAltitude = true;
-    else isValidCheckmarkAltitude = false;
-  }
-
-  if (event === Events.WaitForInput3 && !objEventCB.buttonHandoff) {
-    state.focusCircleType = FocusCircleType.Rectangle;
-    state.focusCircle = controlPanelTakeoff(screenSize);
-  }
-
   if (event === Events.WaitForInput3 && objEventCB.buttonHandoff) {
-    objEventCB.buttonHandoff = false;
     state.focusCircleType = null;
     isSetCheckmarkHandoff = true;
-    event = Events.WaitForInput4;
   }
 
-  if (planeSelected && isSetCheckmarkHandoff) {
-    isValidCheckmarkHandoff = planeSelected.isHandoff;
+  if (isSetCheckmarkTaxiQueue && isDeparturePlaneSelected) {
+    isValidCheckmarkTaxiQueue = true;
+  }
+
+  if (isSetCheckmarkTakeoff && isDeparturePlaneSelected) {
+    isValidCheckmarkTakeoff = true;
+  }
+
+  const isValidAltitude = planeSelected?.altitudeTarget >= 6000;
+  if (isSetCheckmarkAltitude && isDeparturePlaneSelected && isValidAltitude) {
+    isValidCheckmarkAltitude = true;
+  } else {
+    isValidCheckmarkAltitude = false;
+  }
+
+  const isValidHandoff = !!planeSelected?.isHandoff;
+  if (isSetCheckmarkHandoff && isDeparturePlaneSelected && isValidHandoff) {
+    isValidCheckmarkHandoff = true;
+  } else {
+    isValidCheckmarkHandoff = false;
   }
 
   if (
-    isSetCheckmarkTaxiQueue &&
-    isSetCheckmarkTakeoff &&
+    isValidCheckmarkTaxiQueue &&
+    isValidCheckmarkTakeoff &&
     isValidCheckmarkAltitude &&
     isValidCheckmarkHandoff
   ) {
     completeStageFn();
   }
 
-  if (!allowCheckmarkUpdate) return;
+  // delay checkmark update until instructions dialog box complete
+  if (!isReadyFirstInput) return;
 
-  if (isSetCheckmarkTaxiQueue) {
+  if (isValidCheckmarkTaxiQueue) {
     document.querySelector('.checkmark.check-0')?.removeAttribute('hidden');
     document.querySelector('.cross.check-0')?.setAttribute('hidden', true);
   }
 
-  if (isSetCheckmarkTakeoff) {
+  if (isValidCheckmarkTakeoff) {
     document.querySelector('.checkmark.check-1')?.removeAttribute('hidden');
     document.querySelector('.cross.check-1')?.setAttribute('hidden', true);
   }

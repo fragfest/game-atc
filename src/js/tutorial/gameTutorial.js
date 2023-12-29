@@ -190,7 +190,8 @@ const tutorial =
 
     if (elapsedTime > 500 && stage === '') {
       stage = Stages.Intro;
-      startTimeStageWaypoint = elapsedTime;
+      // stage = Stages.Waypoint;
+      // startTimeStageWaypoint = elapsedTime;
     }
 
     // Stages.Intro

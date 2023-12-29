@@ -1,5 +1,6 @@
 import { ElapsedTimes } from './typesTutorial';
 import { FocusCircleType } from '../types';
+import { radToDegrees } from '../utils';
 import {
   controlPanelAltitude,
   controlPanelHeading,
@@ -15,6 +16,8 @@ const Events = Object.freeze({
   WaitForInput1: 'WaitForInput1',
   WaitForInput2: 'WaitForInput2',
   WaitForInput3: 'WaitForInput3',
+  WaitForInput4: 'WaitForInput4',
+  WaitForInput5: 'WaitForInput5',
 });
 
 let isValidCheckmarkSelected = false;
@@ -60,77 +63,95 @@ export const stageArrivalLand = (
   }
 
   const isArrivalPlaneSelected =
-    planeSelected?.destinationType === DestinationType.Arrival &&
+    planeSelected &&
+    planeSelected.destinationType === DestinationType.Arrival &&
     objEventCB.isPlaneSelected;
 
   if (
     elapsedTime > ElapsedTimes.ArrivalLandFirstInputMs &&
-    event === Events.WaitForInput0 &&
-    !isArrivalPlaneSelected
+    event === Events.WaitForInput0
   ) {
     event = Events.WaitForSelected0;
+  }
+
+  if (event === Events.WaitForSelected0 && !isArrivalPlaneSelected) {
     state.focusCircleType = FocusCircleType.Rectangle;
     state.focusCircle = flightStripSecond(screenSize);
     setGameLoopStateFn(false);
   }
 
-  if (isArrivalPlaneSelected) {
-    isValidCheckmarkSelected = true;
+  if (event === Events.WaitForSelected0 && isArrivalPlaneSelected) {
     event = Events.WaitForInput1;
+    isValidCheckmarkSelected = true;
     objEventCB.altitudeValue = null;
-    objEventCB.isPlaneSelected = false;
     state.focusCircleType = FocusCircleType.Rectangle;
     state.focusCircle = controlPanelAltitude(screenSize);
   }
 
-  if (event === Events.WaitForInput1 && objEventCB.altitudeValue) {
+  if (
+    event === Events.WaitForInput1 &&
+    isArrivalPlaneSelected &&
+    objEventCB.altitudeValue
+  ) {
     if (objEventCB.altitudeValue <= 5000) {
-      objEventCB.altitudeValue = null;
-      isSetCheckmarkAltitude = true;
       event = Events.WaitForInput2;
+      objEventCB.altitudeValue = null;
       objEventCB.headingValue = null;
-      return;
+      isSetCheckmarkAltitude = true;
     }
   }
 
-  if (planeSelected && isSetCheckmarkAltitude) {
-    if (planeSelected.altitude <= 5000) isValidCheckmarkAltitude = true;
+  if (event === Events.WaitForInput2 && isSetCheckmarkAltitude) {
+    event = Events.WaitForInput3;
+    if (planeSelected.altitudeTarget <= 5000) isValidCheckmarkAltitude = true;
     else isValidCheckmarkAltitude = false;
   }
 
-  if (event === Events.WaitForInput2 && !objEventCB.headingValue) {
+  if (event === Events.WaitForInput3 && !objEventCB.headingValue) {
     state.focusCircleType = FocusCircleType.Rectangle;
     state.focusCircle = controlPanelHeading(screenSize);
   }
 
-  if (event === Events.WaitForInput2 && objEventCB.headingValue) {
-    if (objEventCB.headingValue <= 280 && objEventCB.headingValue >= 260) {
+  if (
+    event === Events.WaitForInput3 &&
+    isArrivalPlaneSelected &&
+    objEventCB.headingValue
+  ) {
+    if (objEventCB.headingValue >= 260 && objEventCB.headingValue <= 280) {
+      event = Events.WaitForInput4;
       objEventCB.headingValue = null;
-      isSetCheckmarkHeading = true;
-      event = Events.WaitForInput3;
       objEventCB.buttonLanding = false;
-      return;
+      isSetCheckmarkHeading = true;
     }
   }
 
-  if (planeSelected && isSetCheckmarkHeading) {
-    const heading = parseInt(planeSelected.heading);
-    if (heading <= 280 && heading >= 260) isValidCheckmarkHeading = true;
-    else isValidCheckmarkHeading = false;
+  if (
+    event === Events.WaitForInput4 &&
+    isArrivalPlaneSelected &&
+    isSetCheckmarkHeading
+  ) {
+    const headingTargetDeg = radToDegrees(planeSelected.headingTargetRad);
+    if (headingTargetDeg >= 260 && headingTargetDeg <= 280) {
+      event = Events.WaitForInput5;
+      objEventCB.buttonLanding = false;
+      isValidCheckmarkHeading = true;
+    } else {
+      isValidCheckmarkHeading = false;
+    }
   }
 
-  if (event === Events.WaitForInput3 && !objEventCB.buttonLanding) {
+  if (event === Events.WaitForInput5 && !objEventCB.buttonLanding) {
     state.focusCircleType = FocusCircleType.Rectangle;
     state.focusCircle = controlPanelLanding(screenSize);
   }
 
-  if (event === Events.WaitForInput3 && objEventCB.buttonLanding) {
+  if (event === Events.WaitForInput5 && objEventCB.buttonLanding) {
     state.focusCircleType = null;
     objEventCB.buttonLanding = false;
     isSetCheckmarkLanding = true;
   }
 
-  if (planeSelected && isSetCheckmarkLanding) {
+  if (isArrivalPlaneSelected && isSetCheckmarkLanding) {
     if (planeSelected.landing) isValidCheckmarkLanding = true;
     else isValidCheckmarkLanding = false;
   }
