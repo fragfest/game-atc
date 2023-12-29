@@ -9,11 +9,11 @@ import { DestinationType } from '../aircraft/airframe';
 
 let event = '';
 const Events = Object.freeze({
+  WaitForSelected0: 'WaitForSelected0',
   WaitForInput0: 'WaitForInput0',
   WaitForInput1: 'WaitForInput1',
   WaitForInput2: 'WaitForInput2',
   WaitForInput3: 'WaitForInput3',
-  WaitForSelected0: 'WaitForSelected0',
 });
 
 let isSetCheckmarkTaxiQueue = false;

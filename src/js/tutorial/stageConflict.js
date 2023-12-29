@@ -4,10 +4,6 @@ import { ElapsedTimes } from './typesTutorial';
 let event = '';
 const Events = Object.freeze({
   WaitForInput0: 'WaitForInput0',
-  WaitForInput1: 'WaitForInput1',
-  WaitForInput2: 'WaitForInput2',
-  WaitForInput3: 'WaitForInput3',
-  WaitForInput4: 'WaitForInput4',
   WaitForSelected0: 'WaitForSelected0',
 });
 

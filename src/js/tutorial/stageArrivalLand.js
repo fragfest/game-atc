@@ -17,9 +17,9 @@ const Events = Object.freeze({
   WaitForInput2: 'WaitForInput2',
   WaitForInput3: 'WaitForInput3',
   WaitForInput4: 'WaitForInput4',
-  WaitForInput5: 'WaitForInput5',
 });
 
+let isSetCheckmarkSelected = false;
 let isValidCheckmarkSelected = false;
 let isSetCheckmarkAltitude = false;
 let isValidCheckmarkAltitude = false;
@@ -39,10 +39,13 @@ export const stageArrivalLand = (
   completeStageFn
 ) => {
   if (!event) {
+    event = Events.WaitForSelected0;
     objEventCB.isPlaneSelected = false;
-    event = Events.WaitForInput0;
-    state.dialogBox = { top: 0.07, left: 0.3, width: 0.61, html: '<clear>' };
+    objEventCB.altitudeValue = null;
+    objEventCB.headingValue = null;
+    objEventCB.buttonLanding = false;
 
+    state.dialogBox = { top: 0.04, left: 0.2, width: 0.63, html: '<clear>' };
     setTimeout(() => {
       const html =
         `<div class="line"><b>Arrival - Land Aircraft</b><br></div>` +
@@ -53,37 +56,33 @@ export const stageArrivalLand = (
         `<div class="line"> <span hidden class="checkmark check-3">&check;</span> <span class="cross check-3">&times;</span> <span class="text">When in range, click land (L)</span></div>`;
 
       addToGameFn();
-      state.dialogBox = { top: 0.07, left: 0.3, width: 0.63, html };
+      state.dialogBox = { top: 0.04, left: 0.2, width: 0.63, html };
     }, 1000);
   }
 
-  let allowCheckmarkUpdate = false;
-  if (elapsedTime > ElapsedTimes.ArrivalLandFirstInputMs) {
-    allowCheckmarkUpdate = true;
-  }
+  const isReadyFirstInput = elapsedTime > ElapsedTimes.ArrivalLandFirstInputMs;
 
   const isArrivalPlaneSelected =
-    planeSelected &&
-    planeSelected.destinationType === DestinationType.Arrival &&
+    planeSelected?.destinationType === DestinationType.Arrival &&
     objEventCB.isPlaneSelected;
 
   if (
-    elapsedTime > ElapsedTimes.ArrivalLandFirstInputMs &&
-    event === Events.WaitForInput0
+    isReadyFirstInput &&
+    event === Events.WaitForSelected0 &&
+    !isArrivalPlaneSelected
   ) {
-    event = Events.WaitForSelected0;
-  }
-
-  if (event === Events.WaitForSelected0 && !isArrivalPlaneSelected) {
     state.focusCircleType = FocusCircleType.Rectangle;
     state.focusCircle = flightStripSecond(screenSize);
     setGameLoopStateFn(false);
   }
 
   if (event === Events.WaitForSelected0 && isArrivalPlaneSelected) {
+    event = Events.WaitForInput0;
+    isSetCheckmarkSelected = true;
+  }
+
+  if (event === Events.WaitForInput0 && isSetCheckmarkSelected) {
     event = Events.WaitForInput1;
-    isValidCheckmarkSelected = true;
-    objEventCB.altitudeValue = null;
     state.focusCircleType = FocusCircleType.Rectangle;
     state.focusCircle = controlPanelAltitude(screenSize);
   }
@@ -95,65 +94,67 @@ export const stageArrivalLand = (
   ) {
     if (objEventCB.altitudeValue <= 5000) {
       event = Events.WaitForInput2;
-      objEventCB.altitudeValue = null;
-      objEventCB.headingValue = null;
+      state.focusCircleType = FocusCircleType.Rectangle;
+      state.focusCircle = controlPanelHeading(screenSize);
       isSetCheckmarkAltitude = true;
     }
   }
 
-  if (event === Events.WaitForInput2 && isSetCheckmarkAltitude) {
-    event = Events.WaitForInput3;
-    if (planeSelected.altitudeTarget <= 5000) isValidCheckmarkAltitude = true;
-    else isValidCheckmarkAltitude = false;
-  }
-
-  if (event === Events.WaitForInput3 && !objEventCB.headingValue) {
-    state.focusCircleType = FocusCircleType.Rectangle;
-    state.focusCircle = controlPanelHeading(screenSize);
-  }
-
   if (
-    event === Events.WaitForInput3 &&
+    event === Events.WaitForInput2 &&
     isArrivalPlaneSelected &&
     objEventCB.headingValue
   ) {
     if (objEventCB.headingValue >= 260 && objEventCB.headingValue <= 280) {
-      event = Events.WaitForInput4;
-      objEventCB.headingValue = null;
-      objEventCB.buttonLanding = false;
+      event = Events.WaitForInput3;
       isSetCheckmarkHeading = true;
     }
+  }
+
+  if (event === Events.WaitForInput3 && isSetCheckmarkHeading) {
+    event = Events.WaitForInput4;
+    state.focusCircleType = FocusCircleType.Rectangle;
+    state.focusCircle = controlPanelLanding(screenSize);
   }
 
   if (
     event === Events.WaitForInput4 &&
     isArrivalPlaneSelected &&
-    isSetCheckmarkHeading
+    objEventCB.buttonLanding
   ) {
-    const headingTargetDeg = radToDegrees(planeSelected.headingTargetRad);
-    if (headingTargetDeg >= 260 && headingTargetDeg <= 280) {
-      event = Events.WaitForInput5;
-      objEventCB.buttonLanding = false;
-      isValidCheckmarkHeading = true;
-    } else {
-      isValidCheckmarkHeading = false;
-    }
-  }
-
-  if (event === Events.WaitForInput5 && !objEventCB.buttonLanding) {
-    state.focusCircleType = FocusCircleType.Rectangle;
-    state.focusCircle = controlPanelLanding(screenSize);
-  }
-
-  if (event === Events.WaitForInput5 && objEventCB.buttonLanding) {
     state.focusCircleType = null;
-    objEventCB.buttonLanding = false;
     isSetCheckmarkLanding = true;
   }
 
-  if (isArrivalPlaneSelected && isSetCheckmarkLanding) {
-    if (planeSelected.landing) isValidCheckmarkLanding = true;
-    else isValidCheckmarkLanding = false;
+  if (isSetCheckmarkSelected && isArrivalPlaneSelected) {
+    isValidCheckmarkSelected = true;
+  } else {
+    isValidCheckmarkSelected = false;
+  }
+
+  const isValidAltitude = planeSelected?.altitudeTarget <= 5000;
+  if (isSetCheckmarkAltitude && isArrivalPlaneSelected && isValidAltitude) {
+    isValidCheckmarkAltitude = true;
+  } else {
+    isValidCheckmarkAltitude = false;
+  }
+
+  const headingTargetDeg = radToDegrees(planeSelected?.headingTargetRad);
+  const isValidHeading = headingTargetDeg >= 260 && headingTargetDeg <= 280;
+  if (isSetCheckmarkHeading && isArrivalPlaneSelected && isValidHeading) {
+    isValidCheckmarkHeading = true;
+  } else {
+    isValidCheckmarkHeading = false;
+  }
+
+  if (
+    isSetCheckmarkLanding &&
+    isArrivalPlaneSelected &&
+    planeSelected?.landing
+  ) {
+    isValidCheckmarkLanding = true;
+  } else {
+    isValidCheckmarkLanding = false;
   }
 
   if (
@@ -168,11 +169,15 @@ export const stageArrivalLand = (
     }, 5000);
   }
 
-  if (!allowCheckmarkUpdate) return;
+  // delay checkmark update until instructions dialog box complete
+  if (!isReadyFirstInput) return;
 
   if (isValidCheckmarkSelected) {
     document.querySelector('.checkmark.check-0')?.removeAttribute('hidden');
     document.querySelector('.cross.check-0')?.setAttribute('hidden', true);
+  } else {
+    document.querySelector('.checkmark.check-0')?.setAttribute('hidden', true);
+    document.querySelector('.cross.check-0')?.removeAttribute('hidden');
   }
 
   if (isValidCheckmarkAltitude) {

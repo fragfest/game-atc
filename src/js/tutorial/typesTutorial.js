@@ -9,7 +9,7 @@ export const Stages = Object.freeze({
 
 export const ElapsedTimes = Object.freeze({
   DepartureStartMs: 12000,
-  DepartureFirstInputMs: 30000,
+  DepartureFirstInputMs: 28000,
   ArrivalLandStartMs: 4000,
   ArrivalLandFirstInputMs: 16000,
   WaypointStartMs: 4000,
