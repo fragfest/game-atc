@@ -32,7 +32,7 @@ export const gameOver = (tutorialBox, isSuccess) => {
     crossText = 'Failed handoffs/landings';
   }
   if (isConflict) {
-    title = 'Collision minimums exceeded';
+    title = 'Traffic minimums exceeded';
     crossText = 'Conflict (seconds)';
   }
   if (isTaxiFail) {

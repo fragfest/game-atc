@@ -98,12 +98,12 @@ export default {
 
   methods: {
     onStartClick: function () {
-      window.location.href = '/game';
+      this.$router.push({ path: '/game' });
     },
 
     onRetryClick: function (level) {
       levelRetry(level);
-      window.location.href = '/game';
+      this.$router.push({ path: '/game' });
     },
   },
 };
