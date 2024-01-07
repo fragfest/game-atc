@@ -126,7 +126,9 @@ export default {
     this.arrivals = '' + score.arrivals + '/' + getGoals().Arrivals;
     this.failed = '' + score.failed + '/' + getGoals().Failed;
     this.taxiQueue = '' + score.taxiQueue + '/' + getGoals().TaxiQueue;
-    this.conflict = '' + Math.floor(score.conflict) + '/' + getGoals().Conflict;
+    const conflict =
+      score.conflict < conflictScoreMax ? score.conflict : conflictScoreMax;
+    this.conflict = '' + Math.floor(conflict) + '/' + getGoals().Conflict;
 
     this.departureScore = isVictory(score) ? baseScorePass : 0;
     this.arrivalScore = isVictory(score) ? baseScorePass : 0;

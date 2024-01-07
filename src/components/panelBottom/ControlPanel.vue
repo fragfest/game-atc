@@ -141,10 +141,10 @@ import {
   altitudeDisplay,
   getClassSize,
 } from '../../js/utils';
-import {
-  MessageEvents,
-  subscribeMessage as subscribe,
-} from '../../js/events/messages';
+// import {
+//   MessageEvents,
+//   subscribeMessage as subscribe,
+// } from '../../js/events/messages';
 import { DestinationType } from '../../js/aircraft/airframe';
 
 import ToolTip from '../common/ToolTip';
@@ -156,6 +156,8 @@ const setCompass = (headingRad) => {
   if (!tickEl) return;
   tickEl.setAttribute('transform', 'rotate(' + headingDegree + ')');
 };
+
+let circleInputs;
 
 export default {
   name: 'ControlPanel',
@@ -179,6 +181,8 @@ export default {
   },
 
   mounted() {
+    circleInputs = this.$refs.circleInputs;
+
     const gauge = document.querySelector('#gauge');
     const tick = document.querySelector('#gauge-tick');
     const tickInc = 30;
@@ -191,40 +195,40 @@ export default {
       gauge.appendChild(new_tick);
     }
 
-    subscribe(MessageEvents.MessageAllEV, (msg) => {
-      this.messages.unshift({ msg });
-      if (this.messages.length > 20) this.messages.splice(-1, 1);
-    });
+    // subscribe(MessageEvents.MessageAllEV, (msg) => {
+    //   this.messages.unshift({ msg });
+    //   if (this.messages.length > 20) this.messages.splice(-1, 1);
+    // });
 
-    subscribe(MessageEvents.MessageProximityEV, (msgObj) => {
-      const isProximityMsg = (msg) => {
-        if (typeof msg === 'string') return false;
-        if (!msg.id) return false;
-        if (msg.id === msgObj.id) return true;
-        return false;
-      };
-      const objFound = this.messages.find(isProximityMsg);
-      const objFoundIndex = this.messages.findIndex(isProximityMsg);
+    // subscribe(MessageEvents.MessageProximityEV, (msgObj) => {
+    //   const isProximityMsg = (msg) => {
+    //     if (typeof msg === 'string') return false;
+    //     if (!msg.id) return false;
+    //     if (msg.id === msgObj.id) return true;
+    //     return false;
+    //   };
+    //   const objFound = this.messages.find(isProximityMsg);
+    //   const objFoundIndex = this.messages.findIndex(isProximityMsg);
 
-      if (objFound) {
-        const scoreDecrease = objFound.scoreDecrease + msgObj.scoreDecrease;
-        const objNew = {
-          id: objFound.id,
-          msg: msgObj.msg + ' (' + scoreDecrease + ')',
-          scoreDecrease,
-        };
-        this.messages.splice(objFoundIndex, 1, objNew);
-      }
-      if (!objFound) {
-        this.messages.unshift({
-          id: msgObj.id,
-          msg: msgObj.msg + ' (' + msgObj.scoreDecrease + ')',
-          scoreDecrease: msgObj.scoreDecrease,
-        });
-      }
+    //   if (objFound) {
+    //     const scoreDecrease = objFound.scoreDecrease + msgObj.scoreDecrease;
+    //     const objNew = {
+    //       id: objFound.id,
+    //       msg: msgObj.msg + ' (' + scoreDecrease + ')',
+    //       scoreDecrease,
+    //     };
+    //     this.messages.splice(objFoundIndex, 1, objNew);
+    //   }
+    //   if (!objFound) {
+    //     this.messages.unshift({
+    //       id: msgObj.id,
+    //       msg: msgObj.msg + ' (' + msgObj.scoreDecrease + ')',
+    //       scoreDecrease: msgObj.scoreDecrease,
+    //     });
+    //   }
 
-      if (this.messages.length > 20) this.messages.splice(-1, 1);
-    });
+    //   if (this.messages.length > 20) this.messages.splice(-1, 1);
+    // });
   },
 
   computed: {
@@ -319,8 +323,8 @@ export default {
       if (!planeSel) return;
 
       this.$nextTick(() => {
-        if (planeSel.isHolding) this.$refs.circleInputs.setFocus();
-        else this.$refs.circleInputs.setFocus();
+        if (planeSel.isHolding) circleInputs.setFocus();
+        else circleInputs.setFocus();
       });
     },
 
@@ -335,7 +339,7 @@ export default {
       this.planeSelected.setHandoff(isHandoffToggled);
 
       this.$nextTick(() => {
-        this.$refs.circleInputs.setFocus();
+        circleInputs.setFocus();
       });
     },
 
@@ -345,7 +349,7 @@ export default {
       this.planeSelected.setHolding(isHoldingToggled);
 
       this.$nextTick(() => {
-        this.$refs.circleInputs.setFocus();
+        circleInputs.setFocus();
       });
     },
 

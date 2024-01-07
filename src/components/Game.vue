@@ -143,11 +143,15 @@ import {
   setPlaneSelected,
   setShowCircles,
   drawInertElements,
+  cancelGameLoop,
 } from '../js/game/game';
 import { setup as setupTutorial } from '../js/tutorial/gameTutorial';
 import { isSquare } from '../js/types';
 import { ScreenSizes, getGameSize, setupGameLoadAndExit } from '../js/utils';
-import { setup as setupKeyboard } from '../js/events/keyboard';
+import {
+  destroy as destroyKeyboard,
+  setup as setupKeyboard,
+} from '../js/events/keyboard';
 import { setup as setupSound } from '../js/game/sound';
 
 import {
@@ -177,6 +181,7 @@ let screenSize = ScreenSizes.Large;
 let width = getGameSize(ScreenSizes.Large).width;
 let height = getGameSize(ScreenSizes.Large).height;
 
+let gameState = {};
 let entityManagerArr = ref([]);
 let squareClicked = ref({});
 
@@ -279,6 +284,20 @@ export default {
     }),
   },
 
+  methods: {
+    updatedHeadingEv: function (hdgVal) {
+      updatedHeadingTutorial_hdgArg(hdgVal);
+    },
+
+    updatedAltitudeEv: function (altVal) {
+      updatedAltitudeTutorial_altArg(altVal);
+    },
+
+    showCirclesEv: function (isShowCircle) {
+      setShowCircles_isShowCirclesArg(isShowCircle);
+    },
+  },
+
   beforeCreate() {
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
@@ -300,21 +319,14 @@ export default {
     height = getGameSize(screenSize).height;
   },
 
-  methods: {
-    updatedHeadingEv: function (hdgVal) {
-      updatedHeadingTutorial_hdgArg(hdgVal);
-    },
-
-    updatedAltitudeEv: function (altVal) {
-      updatedAltitudeTutorial_altArg(altVal);
-    },
-
-    showCirclesEv: function (isShowCircle) {
-      setShowCircles_isShowCirclesArg(isShowCircle);
-    },
+  beforeUnmount() {
+    cancelGameLoop(gameState);
+    destroyKeyboard();
   },
 
   mounted() {
+    const controlPanel = this.$refs.controlPanel;
+
     const background = this.$refs.background;
     const layerOne = this.$refs.layerOne;
     const layerTwo = this.$refs.layerTwo;
@@ -348,10 +360,10 @@ export default {
       height: this.height,
     };
 
+    gameState = {};
     entityManagerArr.value = [];
     squareClicked.value = {};
 
-    const gameState = {};
     const width = getGameSize(screenSize).width;
     const height = getGameSize(screenSize).height;
 
@@ -391,7 +403,7 @@ export default {
 
       squareClickEventCB: (squareObj) => {
         squareClicked.value = squareObj;
-        this.$refs.controlPanel.setFocus();
+        controlPanel.setFocus();
         setPlaneSelected(gameState)(setupArg, squareObj);
         tutorialEventArg.setPlaneTutorial();
       },
@@ -419,7 +431,7 @@ export default {
       this,
       getWaypointArrivalsAll(),
       squareClicked,
-      () => this.$refs.controlPanel.setFocus(),
+      () => controlPanel.setFocus(),
       () => {
         setPlaneSelected(gameState)(setupArg, squareClicked.value);
         tutorialEventArg.setPlaneTutorial();

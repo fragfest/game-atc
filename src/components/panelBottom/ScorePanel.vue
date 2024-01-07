@@ -25,7 +25,7 @@
         <span class="margin-top badge conflict">
           conflict <small>seconds</small>
         </span>
-        <span>{{ Math.floor(score.conflict) }}/{{ goals.Conflict }}</span>
+        <span>{{ conflictDisplay }}/{{ goals.Conflict }}</span>
       </div>
 
       <!-- <hr />
@@ -85,6 +85,14 @@ export default {
   computed: {
     sizeClass: function () {
       return getClassSize(this.screenSize);
+    },
+
+    conflictDisplay: function () {
+      const conflict =
+        this.score.conflict < this.goals.Conflict
+          ? this.score.conflict
+          : this.goals.Conflict;
+      return Math.floor(conflict);
     },
 
     focusCircleTop: function () {

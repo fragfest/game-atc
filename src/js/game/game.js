@@ -23,8 +23,9 @@ import { SoundType, play, playLoop, stop } from './sound';
 
 /**
  * @typedef {object} State
- * @property {Boolean} playProximitySound
+ * @property {Boolean} gameLoopCancel
  * @property {Boolean} gameLoopRunning
+ * @property {Boolean} playProximitySound
  * @property {Boolean} showCircles
  * @property {Object} dialogBox
  * @property {String} focusCircleType
@@ -66,6 +67,7 @@ export const setup = (state) => (argObj) => {
 
   if (state.gameLoopRunning) return;
   state.gameLoopRunning = true;
+  state.gameLoopCancel = false;
 
   spawnFirstPlane();
 
@@ -137,8 +139,13 @@ export const getCanvasObj = (argObj) => ({
   clickCB: argObj.squareClickEventCB,
 });
 
-export const drawInertElements = (layerObj, { screenSize, width, height }) =>
+export const drawInertElements = (layerObj, { screenSize, width, height }) => {
   drawScale(layerObj, screenSize, width, height);
+};
+
+export const cancelGameLoop = (state) => {
+  state.gameLoopCancel = true;
+};
 
 export const setGameLoopState = (state) => (isRunning) => {
   state.gameLoopRunning = !!isRunning;
@@ -219,18 +226,20 @@ export const gameTick =
       gameUpdateFn();
     }
 
-    window.requestAnimationFrame(
-      gameTick(
-        state,
-        screenSize,
-        entityManagerArr,
-        timestampPrev,
-        spawnPlaneFn_timestampArg,
-        textLayerClearFn,
-        headingLayerClearFn,
-        gameUpdateFn
-      )
-    );
+    if (!state.gameLoopCancel) {
+      window.requestAnimationFrame(
+        gameTick(
+          state,
+          screenSize,
+          entityManagerArr,
+          timestampPrev,
+          spawnPlaneFn_timestampArg,
+          textLayerClearFn,
+          headingLayerClearFn,
+          gameUpdateFn
+        )
+      );
+    }
   };
 
 export const getTaxiLength = (entityManagerArr) => {
