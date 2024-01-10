@@ -23,12 +23,8 @@ export const SoundType = Object.freeze({
 
 let isMuted = true;
 let oldScore = null;
-let isSetup = false;
 
 export const setup = () => {
-  if (isSetup) return;
-  isSetup = true;
-
   collision = new Audio('/audio/collision-warning.mp3');
   ding = new Audio('/audio/ding.mp3');
   denied = new Audio('/audio/denied.mp3');
@@ -55,6 +51,18 @@ export const setup = () => {
 
     oldScore = { ...score };
   });
+};
+
+export const destroy = () => {
+  setMute(true);
+  collision = null;
+  ding = null;
+  denied = null;
+  takeoff = null;
+  chime = null;
+  pling = null;
+  flick = null;
+  squelch = null;
 };
 
 /**

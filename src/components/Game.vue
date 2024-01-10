@@ -152,7 +152,7 @@ import {
   destroy as destroyKeyboard,
   setup as setupKeyboard,
 } from '../js/events/keyboard';
-import { setup as setupSound } from '../js/game/sound';
+import { setup as setupSound, destroy as destroySound } from '../js/game/sound';
 
 import {
   setup as setupEvents,
@@ -322,6 +322,7 @@ export default {
   beforeUnmount() {
     cancelGameLoop(gameState);
     destroyKeyboard();
+    destroySound();
   },
 
   mounted() {
