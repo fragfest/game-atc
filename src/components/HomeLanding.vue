@@ -59,6 +59,10 @@
         <!-- END grid-score-buttons -->
       </div>
     </section>
+
+    <div class="version">
+      <p>{{ version }}</p>
+    </div>
   </div>
 </template>
 
@@ -91,6 +95,12 @@ export default {
     };
   },
 
+  computed: {
+    version: function () {
+      return 'v' + (process.env.VUE_APP_VERSION || '?.?.?');
+    },
+  },
+
   mounted() {
     setupScore();
     if (this.finalLevel === this.levelComplete) this.isGameComplete = true;
@@ -110,6 +120,15 @@ export default {
 </script>
 
 <style lang="scss">
+.version {
+  position: absolute;
+  left: 94vw;
+  top: 96vh;
+  font-size: 14px;
+  font-weight: 500;
+  color: darkblue;
+}
+
 .home {
   display: flex;
   flex-direction: column;
