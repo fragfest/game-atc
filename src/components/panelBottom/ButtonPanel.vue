@@ -1,7 +1,32 @@
 <template>
   <div class="button-panel" :class="screenSize">
-    <!-- mute -->
-    <ToolTip :size="screenSize">
+    <!-- muted -->
+    <ToolTip v-if="isMuted" :size="screenSize">
+      <button
+        class="button-square"
+        :class="showMutedClass"
+        @click="onMuteToggle"
+      >
+        <svg viewBox="0 0 75 75" stroke="white" stroke-width="5">
+          <path
+            d="m39,14-17,15H6V48H22l17,15z"
+            fill="white"
+            stroke-linejoin="round"
+          />
+          <path
+            d="m49,26 20,24m0-24-20,24"
+            fill="none"
+            stroke-linecap="round"
+          />
+        </svg>
+      </button>
+      <template v-slot:hover>
+        <span>sound on</span>
+      </template>
+    </ToolTip>
+
+    <!-- unmute -->
+    <ToolTip v-if="!isMuted" :size="screenSize">
       <button
         class="button-square"
         :class="showMutedClass"
@@ -11,7 +36,7 @@
           <path
             d="M39.389,13.769 L22.235,28.606 L6,28.606 L6,47.699 L21.989,47.699 L39.389,62.75 L39.389,13.769z"
             style="
-              stroke: #white;
+              stroke: white;
               stroke-width: 5;
               stroke-linejoin: round;
               fill: white;
@@ -29,8 +54,7 @@
         </svg>
       </button>
       <template v-slot:hover>
-        <span v-if="isMuted">unmute</span>
-        <span v-else>mute</span>
+        <span>sound off</span>
       </template>
     </ToolTip>
 
