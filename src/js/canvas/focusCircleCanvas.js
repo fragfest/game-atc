@@ -8,17 +8,17 @@ export const taxiQueueFlightstrip = () => {
     return {
       size,
       top: 20,
-      left: 1308,
-      width: 20,
-      height: 24,
+      left: 1310,
+      width: 16,
+      height: 22,
     };
   }
 
   return {
     size,
-    top: 22,
-    left: 1718,
-    width: 23,
-    height: 30,
+    top: 24,
+    left: 1720,
+    width: 19,
+    height: 27,
   };
 };

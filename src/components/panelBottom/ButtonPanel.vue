@@ -77,7 +77,7 @@
           />
         </svg>
       </button>
-      <template v-slot:hover>conflict circles (TCAS)</template>
+      <template v-slot:hover>TCAS conflict circles</template>
     </ToolTip>
   </div>
 </template>

@@ -115,7 +115,6 @@ export const play = (soundType) => {
     return pling.play();
   }
   if (soundType === SoundType.Takeoff) {
-    takeoff.volume = 0.5;
     return takeoff.play();
   }
   if (soundType === SoundType.Chime) {

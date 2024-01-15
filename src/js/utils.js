@@ -81,7 +81,7 @@ export const getClassSize = (screenSize) => {
   return '';
 };
 
-export const setupGameLoadAndExit = (screenSize) => {
+export const setupGameLoadAndExit = () => {
   if (process.env.NODE_ENV === 'production') {
     // browser prompts on reload and close
     window.onbeforeunload = function () {
@@ -91,8 +91,6 @@ export const setupGameLoadAndExit = (screenSize) => {
       return '';
     };
   }
-
-  setScreenSize(screenSize);
 };
 
 ////////////////////////////////////////////////////////////////////////////

@@ -16,7 +16,7 @@ import { getGameSize } from '../utils';
 import { draw as drawScale } from '../canvas/scale';
 import { isSquare } from '../types';
 import { DestinationType } from '../aircraft/airframe';
-import { create, spawnRndPlane } from '../Plane';
+import { createPlane, spawnRndPlane } from '../Plane';
 import { setTaxiQueue } from './score';
 import { getGoals } from '../game/victory';
 import { SoundType, play, playLoop, stop } from './sound';
@@ -45,7 +45,7 @@ export const setup = (state) => (argObj) => {
 
   const spawnFirstPlane = () =>
     createSquare(screenSize, entityManagerArr)(
-      () => create(canvasObj, 0.5).square,
+      () => createPlane(canvasObj, 1).square,
       1
     );
   const spawnPlaneFullGame_timestampArg = spawnRndPlane(
@@ -129,6 +129,7 @@ export const setupEntities = (argObj) => {
 
 export const getCanvasObj = (argObj) => ({
   entityManagerArr: argObj.entityManagerArr,
+  // TODO remove screenSize
   screenSize: argObj.screenSize,
   width: getGameSize(argObj.screenSize).width,
   height: getGameSize(argObj.screenSize).height,
@@ -282,7 +283,7 @@ const setProximityAlarm = (state, entityManagerArr) => {
 const createSquare =
   (screenSize, entityManagerArr) => (createEntityFn, chanceOfSquare) => {
     const addPlaneToGame = entityManagerAdd(entityManagerArr);
-    const minSpawnDist = getTooCloseDistance(screenSize) * 1.5;
+    const minSpawnDist = getTooCloseDistance(screenSize) * 2.5;
 
     const isCloseToPlane = (newObj) => (otherObj) =>
       isWithinDist(minSpawnDist, newObj, otherObj) &&

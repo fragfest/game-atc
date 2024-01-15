@@ -1,0 +1,24 @@
+
+ATCv0.1.2:
+  Fixes:
+    ☐ Retry tutorial
+    ✔ Chances level 1: departures only @done(24-01-14 18:56)
+    ☐ Chances level 2: arrivals focused
+    ☐ Chances level 3: both
+    ☐ Messages: landing misconfigured
+    ☐ Call setScreenSize() from HomeLanding.vue as in Game.vue
+
+  Major:
+    ☐ More levels
+    ☐ More Messages
+    ☐ Fuel mechanic
+    ☐ Weather mechanic
+
+  Minor:
+    ☐ GameOver popup: highlight game over goal
+    ☐ Slower landing rollouts (takeoffs too)
+    ☐ Pause button
+    ☐ Sound Tutorial dialogs
+    ☐ Sound Plane Select
+    ☐ More sounds
+

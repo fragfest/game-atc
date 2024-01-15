@@ -153,7 +153,6 @@ import {
   setup as setupKeyboard,
 } from '../js/events/keyboard';
 import { setup as setupSound, destroy as destroySound } from '../js/game/sound';
-
 import {
   setup as setupEvents,
   attachHtmlQueue,
@@ -172,6 +171,7 @@ import {
   subscribeScore,
   ScoreEvents,
 } from '../js/game/score';
+import { setScreenSize } from '../js/canvas/scale';
 
 const isDeparture = (plane) =>
   plane.destinationType === DestinationType.Departure;
@@ -308,15 +308,14 @@ export default {
     if (windowWidth < screenOneWidth || windowHeight < screenOneHeight) {
       console.log('screenSize', 'small');
       screenSize = ScreenSizes.Small;
-      width = getGameSize(screenSize).width;
-      height = getGameSize(screenSize).height;
-      return;
+    } else {
+      console.log('screenSize', 'large');
+      screenSize = ScreenSizes.Large;
     }
 
-    console.log('screenSize', 'large');
-    screenSize = ScreenSizes.Large;
     width = getGameSize(screenSize).width;
     height = getGameSize(screenSize).height;
+    setScreenSize(screenSize);
   },
 
   beforeUnmount() {
@@ -425,7 +424,7 @@ export default {
       },
     };
 
-    setupGameLoadAndExit(screenSize);
+    setupGameLoadAndExit();
     setupSound();
     setupKeyboard();
     setupEvents(
