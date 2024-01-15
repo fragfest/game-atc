@@ -7,6 +7,7 @@
         <div class="grid-score-buttons">
           <div>
             <h3 v-if="isGameComplete">all levels completed</h3>
+            <p v-if="isGameComplete">more to come!</p>
             <h3 v-else-if="levelComplete">
               <span>levels complete &nbsp;&nbsp;</span>
               <span class="font-mono white"

@@ -51,61 +51,6 @@ export const createPlane = (
   }
 };
 
-// export const spawnRndPlane =
-//   (canvasObj, entityManagerArr, createSquare_entityFnArgChanceArg) =>
-//   (deltaTimeMs) => {
-//     const goals = getGoals();
-//     const score = getScore();
-//     const spawnRateModifier = 0.7;
-//     const spawnRate = goals.SpawnRate || 1;
-
-//     let chanceOfPlanePerSec = 0.03;
-//     const lowCount = 8;
-//     const highCount = 16;
-//     const highChance = 0.1;
-//     const lowChance = 0.005;
-
-//     const count = entityManagerArr.filter(isSquare).length;
-//     if (count < lowCount) chanceOfPlanePerSec = highChance;
-//     if (count > highCount) chanceOfPlanePerSec = lowChance;
-
-//     const isDeparture = (obj) =>
-//       isSquare(obj) && obj.destinationType === DestinationType.Departure;
-//     const isArrival = (obj) =>
-//       isSquare(obj) && obj.destinationType === DestinationType.Arrival;
-
-//     const departureCount = entityManagerArr.filter(isDeparture).length;
-//     const departureGoalRemaining = goals.Departures - score.departures;
-//     const arrivalCount = entityManagerArr.filter(isArrival).length;
-//     const arrivalGoalRemaining = goals.Arrivals - score.arrivals;
-
-//     let chanceOfDeparture = 0.55;
-//     let noMoreDepartures = false;
-//     let noMoreArrivals = false;
-//     if (departureCount >= departureGoalRemaining) {
-//       chanceOfDeparture = 0;
-//       chanceOfPlanePerSec = 0.5;
-//       noMoreDepartures = true;
-//     }
-//     if (arrivalCount >= arrivalGoalRemaining) {
-//       chanceOfDeparture = 1;
-//       chanceOfPlanePerSec = 0.5;
-//       noMoreArrivals = true;
-//     }
-//     if (isTaxiQueueAlmostFull(entityManagerArr)) {
-//       chanceOfPlanePerSec = lowChance;
-//     }
-
-//     const chanceOfPlaneBase = (chanceOfPlanePerSec * deltaTimeMs) / 1000;
-//     let chanceOfPlane = chanceOfPlaneBase * (spawnRate * spawnRateModifier);
-//     if (noMoreDepartures && noMoreArrivals) chanceOfPlane = 0;
-
-//     createSquare_entityFnArgChanceArg(
-//       () => createPlane(canvasObj, chanceOfDeparture).square,
-//       chanceOfPlane
-//     );
-//   };
-
 ////////////// PRIVATE ////////////////////////////////////////////////
 
 export const spawnRndPlane =
@@ -113,21 +58,20 @@ export const spawnRndPlane =
   (deltaTimeMs) => {
     const goals = getGoals();
     const score = getScore();
+    const level = score.level;
     const spawnRate = goals.SpawnRate || 1;
 
-    const chanceDepartureBase = 0.55;
+    const chanceDepartureBase = 0.4;
+    const chanceDepartureLow = 0.1;
     const baseChance = 0.03;
-    // const lowChance = 0.005;
-    const lowChance = 0.01;
     const highChance = 0.1;
-    const taxiQueueChance = lowChance;
+    const veryHighChance = 0.5;
 
     const spawnPlane = (chanceOfPlane, chanceOfDeparture) =>
       createSquare_entityFnArgChanceArg(
         () => createPlane(canvasObj, chanceOfDeparture).square,
         chanceOfPlane
       );
-
     const getSpawnChance = (chanceOfPlanePerSec) => {
       const spawnRateModifier = 0.7;
       const chanceOfPlaneBase = (chanceOfPlanePerSec * deltaTimeMs) / 1000;
@@ -144,25 +88,57 @@ export const spawnRndPlane =
     const departureGoalRemaining = goals.Departures - score.departures;
     const arrivalCount = entityManagerArr.filter(isArrival).length;
     const arrivalGoalRemaining = goals.Arrivals - score.arrivals;
-
     const noMoreDepartures = departureCount >= departureGoalRemaining;
     const noMoreArrivals = arrivalCount >= arrivalGoalRemaining;
+
     if (noMoreDepartures && noMoreArrivals) return;
 
-    if (spawnRate <= 1) {
-      const chanceDeparture = 1;
+    // level 1
+    if (level === 1) {
       if (isTaxiQueueAlmostFull(entityManagerArr)) {
-        return spawnPlane(getSpawnChance(taxiQueueChance), chanceDeparture);
+        return spawnPlane(getSpawnChance(baseChance), chanceDepartureLow);
       }
       if (score.departures + departureCount <= 3) {
-        return spawnPlane(getSpawnChance(baseChance), chanceDeparture);
+        return spawnPlane(getSpawnChance(baseChance), 1);
       }
 
-      return spawnPlane(getSpawnChance(highChance), chanceDeparture);
+      return spawnPlane(getSpawnChance(highChance), 1);
     }
 
-    if (spawnRate > 1) {
-      return spawnPlane(getSpawnChance(baseChance), chanceDepartureBase);
+    // level 2
+    if (level === 2) {
+      return spawnPlane(getSpawnChance(baseChance), 0);
+    }
+
+    // level 3
+    if (level === 3) {
+      const lowCount = 4;
+      let chance = baseChance;
+
+      if (count <= lowCount) {
+        chance = veryHighChance;
+      }
+
+      if (noMoreDepartures) {
+        return spawnPlane(getSpawnChance(chance), 0);
+      }
+      if (isTaxiQueueAlmostFull(entityManagerArr)) {
+        return spawnPlane(getSpawnChance(chance), chanceDepartureLow);
+      }
+      if (noMoreArrivals) {
+        return spawnPlane(getSpawnChance(chance), 1);
+      }
+
+      if (count <= lowCount) {
+        if (departureCount > arrivalCount) {
+          return spawnPlane(getSpawnChance(chance), 0);
+        } else {
+          return spawnPlane(getSpawnChance(chance), 1);
+        }
+      }
+
+      // not a lowCount && both Arrivals + Departures remaining
+      return spawnPlane(getSpawnChance(chance), chanceDepartureBase);
     }
   };
 

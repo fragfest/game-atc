@@ -1,5 +1,3 @@
-import { setScreenSize } from './canvas/scale';
-
 // WAYPOINT /////////////////////////////////////////////////////////////////
 export const Direction = Object.freeze({
   None: 'none',

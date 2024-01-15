@@ -256,7 +256,6 @@ export const isTaxiQueueAlmostFull = (entityManagerArr) => {
 //////////////////////////////////////////////////////////////////////////////
 // PRIVATE
 //////////////////////////////////////////////////////////////////////////////
-const isNotTaxiing = (obj) => !obj.isTaxiing;
 const getTaxiWarnLength = () => Math.ceil(0.6 * getGoals().TaxiQueue);
 
 const isWithinDist = (distMax, obj1, obj2) => {
@@ -286,9 +285,9 @@ const createSquare =
     const minSpawnDist = getTooCloseDistance(screenSize) * 2.5;
 
     const isCloseToPlane = (newObj) => (otherObj) =>
-      isWithinDist(minSpawnDist, newObj, otherObj) &&
       isSquare(otherObj) &&
-      isNotTaxiing(otherObj);
+      !isDeparture(newObj) &&
+      isWithinDist(minSpawnDist, newObj, otherObj);
 
     if (Math.random() < chanceOfSquare) {
       const newEntity = createEntityFn();
