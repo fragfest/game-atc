@@ -167,7 +167,7 @@ import {
 } from '../js/game/victory';
 import {
   resetScore,
-  getScoreHistory,
+  getScore,
   subscribeScore,
   ScoreEvents,
 } from '../js/game/score';
@@ -389,7 +389,7 @@ export default {
       tutorialEventArg.updatedAltitudeTutorial(alt);
     setShowCircles_isShowCirclesArg = setShowCircles(gameState);
 
-    const isTutorialCompleted = !!getScoreHistory().find((x) => x.level === 0);
+    const isTutorial = getScore().level === 0;
 
     const setupArg = {
       screenSize,
@@ -410,7 +410,7 @@ export default {
 
       gameUpdateCB: () => {
         gameUpdateEventCB(squareClicked, entityManagerArr);
-        if (!isTutorialCompleted) {
+        if (isTutorial) {
           tutorialUpdateEventCB(
             this,
             'focusCircleType',
@@ -447,7 +447,7 @@ export default {
     resetScore();
 
     // TUTORIAL
-    if (!isTutorialCompleted) {
+    if (isTutorial) {
       subscribeScore(ScoreEvents.ScoreEV, (score) => {
         if (isDefeat(score)) publishFailed();
       });

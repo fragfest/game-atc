@@ -47,8 +47,6 @@ export const levelComplete = (scoreTotal) => {
 export const levelRetry = (level) => {
   const score = getScore();
   score.level = level;
-  if (score.level <= 0) score.level = 1;
-
   setScore(score);
   setGoal(score.level);
 };

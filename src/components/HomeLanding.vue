@@ -4,7 +4,9 @@
       <div class="content">
         <h1 class="title">ATC - Future Flight Ops</h1>
 
+        <!-- grid-score-buttons -->
         <div class="grid-score-buttons">
+          <!-- column left -->
           <div>
             <h3 v-if="isGameComplete">all levels completed</h3>
             <p v-if="isGameComplete">more to come!</p>
@@ -20,6 +22,7 @@
             </h3> -->
           </div>
 
+          <!-- column center -->
           <div class="button-start">
             <h3 v-if="isTutorial">
               <span class="font-mono white">training</span>
@@ -35,18 +38,24 @@
               </button>
             </CyberBox>
           </div>
+
+          <!-- column right -->
           <div></div>
 
           <!-- next grid row -->
-          <div v-if="levelComplete" class="score-history">
-            <h3>score history</h3>
+          <!-- column left -->
+          <div v-if="showHistory" class="score-history">
+            <h3>completed</h3>
             <div
               v-for="(scoreHist, index) in scoreHistoryArr"
               :key="index"
               class="row"
             >
-              <p class="lightgreen">level {{ scoreHist.level }}</p>
-              <p class="gold">{{ scoreHist.score }}</p>
+              <p v-if="!scoreHist.level" class="lightgreen">training</p>
+              <p v-if="scoreHist.level" class="lightgreen">
+                level {{ scoreHist.level }}
+              </p>
+              <p v-if="scoreHist.level" class="gold">{{ scoreHist.score }}</p>
               <div class="button-restart">
                 <button @click="onRetryClick(scoreHist.level)">
                   <h2>retry</h2>
@@ -54,8 +63,13 @@
               </div>
             </div>
           </div>
+
+          <!-- column center -->
           <div></div>
+
+          <!-- column right -->
           <div></div>
+          <!-- END next grid row -->
         </div>
         <!-- END grid-score-buttons -->
       </div>
@@ -88,17 +102,19 @@ export default {
       isTutorial: getHighestLevelCompleted() === null,
       levelComplete: getHighestLevelCompleted(),
       levelNext: getHighestLevelCompleted() + 1,
-      scoreHistoryArr: getScoreHistory()
-        .sort((a, b) => a.level - b.level)
-        .filter((x) => x.level),
+      scoreHistoryArr: getScoreHistory().sort((a, b) => a.level - b.level),
       finalLevel: getFinalLevel(),
       isGameComplete: false,
     };
   },
 
   computed: {
+    showHistory: function () {
+      return this.levelComplete || this.levelComplete === 0;
+    },
+
     version: function () {
-      return 'v' + (process.env.VUE_APP_VERSION || '?.?.?');
+      return 'v ' + (process.env.VUE_APP_VERSION || '?.?.?');
     },
   },
 

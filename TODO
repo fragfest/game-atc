@@ -1,7 +1,6 @@
 
 ATCv0.1.2:
   Fixes:
-    ☐ Retry tutorial
     ✔ Chances level 1: departures only @done(24-01-14 18:56)
     ✔ Chances level 2: arrivals focused @done(24-01-14 19:18)
     ✔ Chances level 3: both @done(24-01-15 00:13)
@@ -14,15 +13,15 @@ ATCv0.1.2:
     ☐ Fuel mechanic
     ☐ Weather mechanic
     ☐ Engine contrails
-
+      
   Minor:
+    ✔ Retry tutorial @done(24-01-16 07:30)
+    ☐ Pause button
+    ☐ Sound Plane Select
+    ☐ Sound Tutorial dialogs
+    ☐ More sounds
     ☐ Level intro prompt: airport name, scenario description
     ☐ GameOver popup: 0 score for Goals with value 0
-    ☐ GameOver popup: highlight game over goal
+    ☐ GameOver popup: highlight gameOver goal
     ☐ Slower landing rollouts (takeoffs too)
-    ☐ Pause button
-    ☐ Sound Tutorial dialogs
-    ☐ Sound Plane Select
-    ☐ More sounds
     ☐ Loading screen (while assets download)
-

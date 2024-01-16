@@ -67,12 +67,18 @@ export const ScreenSizes = Object.freeze({
   Small: 'small',
   Large: 'large',
 });
+
+/**
+ * @param {ScreenSizes} screenSize
+ */
 export const getGameSize = (screenSize) => {
-  const obj = gameSizes[screenSize]
-    ? gameSizes[screenSize]
-    : gameSizes['large'];
+  const obj = gameSizes[screenSize] ? gameSizes[screenSize] : gameSizes.large;
   return { ...obj };
 };
+
+/**
+ * @param {ScreenSizes} screenSize
+ */
 export const getClassSize = (screenSize) => {
   if (screenSize === ScreenSizes.Small) return 'small';
   if (screenSize === ScreenSizes.Large) return 'large';
@@ -96,6 +102,7 @@ export const setupGameLoadAndExit = () => {
 ///////////////////////////////////////////////////////////////////////////
 
 // SETUP /////////////////////////////////////////////////////////////////
+// keys are ScreenSizes values
 const gameSizes = {
   small: { width: 991, height: 600 },
   large: { width: 1322, height: 800 },
