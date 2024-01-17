@@ -89,6 +89,7 @@ import {
   getScoreHistory,
 } from '../js/game/score';
 import { getHighestLevelCompleted } from '../js/game/score';
+import { calculateScreenSize, setScreenSize } from '../js/utils';
 
 import CyberBox from './common/CyberBox';
 
@@ -116,6 +117,13 @@ export default {
     version: function () {
       return 'v ' + (process.env.VUE_APP_VERSION || '?.?.?');
     },
+  },
+
+  beforeCreate() {
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+    const screenSize = calculateScreenSize(windowWidth, windowHeight);
+    setScreenSize(screenSize);
   },
 
   mounted() {

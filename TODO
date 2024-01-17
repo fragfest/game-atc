@@ -4,7 +4,7 @@ ATCv0.1.2:
     ✔ Chances level 1: departures only @done(24-01-14 18:56)
     ✔ Chances level 2: arrivals focused @done(24-01-14 19:18)
     ✔ Chances level 3: both @done(24-01-15 00:13)
-    ☐ Call setScreenSize() from HomeLanding.vue as in Game.vue
+    ✔ Call setScreenSize() from HomeLanding.vue as in Game.vue @done(24-01-16 22:30)
     
   Major:
     ☐ Messages: landing misconfigured

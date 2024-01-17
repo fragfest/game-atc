@@ -1,7 +1,10 @@
 import Square from './Square';
 import { isSquare } from './types';
-import { getScreenSize } from './canvas/scale';
-import { convHdgDegToThreeDigits, convHdgRadToThreeDigits } from './utils';
+import {
+  getScreenSize,
+  convHdgDegToThreeDigits,
+  convHdgRadToThreeDigits,
+} from './utils';
 import { getFlightArrival, getFlightDeparture } from './flights/LHR';
 import { DestinationType, getPerformance } from './aircraft/airframe';
 import {

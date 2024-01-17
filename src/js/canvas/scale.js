@@ -32,17 +32,3 @@ export const draw = (layerObj, screenSize, width, height) => {
   );
   layerObj.ctx.stroke();
 };
-
-/**
- * @param {ScreenSizes} screenSize
- */
-export const setScreenSize = (screenSize) => {
-  localStorage.setItem('screen-size', screenSize);
-};
-
-/**
- * @returns {ScreenSizes} screenSize
- */
-export const getScreenSize = () => {
-  return localStorage.getItem('screen-size') || null;
-};

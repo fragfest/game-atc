@@ -147,7 +147,13 @@ import {
 } from '../js/game/game';
 import { setup as setupTutorial } from '../js/tutorial/gameTutorial';
 import { isSquare } from '../js/types';
-import { ScreenSizes, getGameSize, setupGameLoadAndExit } from '../js/utils';
+import {
+  setupGameLoadAndExit,
+  ScreenSizes,
+  getGameSize,
+  setScreenSize,
+  calculateScreenSize,
+} from '../js/utils';
 import {
   destroy as destroyKeyboard,
   setup as setupKeyboard,
@@ -171,7 +177,6 @@ import {
   subscribeScore,
   ScoreEvents,
 } from '../js/game/score';
-import { setScreenSize } from '../js/canvas/scale';
 
 const isDeparture = (plane) =>
   plane.destinationType === DestinationType.Departure;
@@ -301,18 +306,7 @@ export default {
   beforeCreate() {
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
-    const screenOneWidth = 1500;
-    const screenOneHeight = 1000;
-
-    // w/h aspect ratio: 1.6525
-    if (windowWidth < screenOneWidth || windowHeight < screenOneHeight) {
-      console.log('screenSize', 'small');
-      screenSize = ScreenSizes.Small;
-    } else {
-      console.log('screenSize', 'large');
-      screenSize = ScreenSizes.Large;
-    }
-
+    screenSize = calculateScreenSize(windowWidth, windowHeight);
     width = getGameSize(screenSize).width;
     height = getGameSize(screenSize).height;
     setScreenSize(screenSize);

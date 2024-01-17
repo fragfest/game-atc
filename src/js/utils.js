@@ -62,11 +62,37 @@ export const isValidSpeed = (plane, str) => {
   return isValidThreeDigitInput(str, isInRange);
 };
 
-// SETUP /////////////////////////////////////////////////////////////////
+// SIZE /////////////////////////////////////////////////////////////////
 export const ScreenSizes = Object.freeze({
   Small: 'small',
   Large: 'large',
 });
+
+export const calculateScreenSize = (windowWidth, windowHeight) => {
+  const screenOneWidth = 1500;
+  const screenOneHeight = 1000;
+
+  // w/h aspect ratio: 1.6525
+  if (windowWidth < screenOneWidth || windowHeight < screenOneHeight) {
+    return ScreenSizes.Small;
+  } else {
+    return ScreenSizes.Large;
+  }
+};
+
+/**
+ * @returns {ScreenSizes} screenSize
+ */
+export const getScreenSize = () => {
+  return localStorage.getItem('screen-size') || null;
+};
+
+/**
+ * @param {ScreenSizes} screenSize
+ */
+export const setScreenSize = (screenSize) => {
+  localStorage.setItem('screen-size', screenSize);
+};
 
 /**
  * @param {ScreenSizes} screenSize
@@ -84,6 +110,8 @@ export const getClassSize = (screenSize) => {
   if (screenSize === ScreenSizes.Large) return 'large';
   return '';
 };
+
+// SETUP /////////////////////////////////////////////////////////////////
 
 export const setupGameLoadAndExit = () => {
   if (process.env.NODE_ENV === 'production') {

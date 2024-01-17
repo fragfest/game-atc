@@ -48,9 +48,8 @@
 
 <script>
 import { ScoreEvents, subscribeScore } from '../../js/game/score';
-import { getClassSize } from '../../js/utils';
+import { getClassSize, getScreenSize } from '../../js/utils';
 import { getGoals } from '../../js/game/victory';
-import { getScreenSize } from '../../js/canvas/scale';
 
 export default {
   name: 'ScorePanel',

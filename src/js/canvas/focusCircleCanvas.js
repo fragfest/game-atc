@@ -1,5 +1,4 @@
-import { ScreenSizes } from '../utils';
-import { getScreenSize } from './scale';
+import { ScreenSizes, getScreenSize } from '../utils';
 
 export const taxiQueueFlightstrip = () => {
   const size = getScreenSize();
