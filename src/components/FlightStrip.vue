@@ -48,6 +48,10 @@
           <div class="font-large"><b>Landing</b></div>
           <div>ILS approach</div>
         </div>
+        <div v-else-if="isLandingMisconfigured" class="takeoff-landing">
+          <div class="font-large"><b>Landing</b></div>
+          <div>{{ landingMisconfiguredMsg }}</div>
+        </div>
         <div v-else-if="isTouchedDown" class="takeoff-landing">
           <div class="font-large"><b>Landing</b></div>
           <div>touchdown</div>
@@ -206,6 +210,11 @@ import Bowser from 'bowser';
 import { getClassSize, nextWaypoint } from '../js/utils';
 import { getWaypointArrivalsAll } from '../js/airports/LHR';
 import { DestinationType } from '../js/aircraft/airframe';
+import {
+  MessageEvents,
+  subscribeMessage as subscribe,
+} from '../js/events/messages';
+
 import ToolTip from './common/ToolTip';
 
 const getPlane = (plane, planes) => {
@@ -230,6 +239,9 @@ export default {
     return {
       isHover: false,
       isSafari: false,
+      isLandingMisconfigured: false,
+      landingMisconfiguredMsg: '',
+      landingTimerId: null,
     };
   },
 
@@ -238,6 +250,24 @@ export default {
       window.navigator.userAgent
     ).getBrowserName();
     this.isSafari = browser === 'Safari';
+
+    subscribe(MessageEvents.MessageLandingErrorEV, (planeErrorObj) => {
+      const plane = getPlane(this.plane, this.planes);
+      if (!plane) return;
+      if (plane.id !== planeErrorObj.id) return;
+
+      this.isLandingMisconfigured = true;
+      this.landingMisconfiguredMsg = planeErrorObj.msg;
+
+      if (this.landingTimerId) {
+        clearTimeout(this.landingTimerId);
+        this.landingTimerId = null;
+      }
+      this.landingTimerId = setTimeout(() => {
+        this.isLandingMisconfigured = false;
+        this.landingMisconfiguredMsg = '';
+      }, 4000);
+    });
   },
 
   computed: {

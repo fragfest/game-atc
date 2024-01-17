@@ -7,7 +7,7 @@ ATCv0.1.2:
     ✔ Call setScreenSize() from HomeLanding.vue as in Game.vue @done(24-01-16 22:30)
     
   Major:
-    ☐ Messages: landing misconfigured
+    ✔ Messages: landing misconfigured @done(24-01-17 08:47)
     ☐ More Messages
     ☐ More levels
     ☐ Fuel mechanic
@@ -18,7 +18,7 @@ ATCv0.1.2:
     ✔ Retry tutorial @done(24-01-16 07:30)
     ☐ Pause button
     ☐ Sound Plane Select
-    ☐ Sound Tutorial dialogs
+    ☐ Sound Tutorial dialogs (text spawn)
     ☐ More sounds
     ☐ Level intro prompt: airport name, scenario description
     ☐ GameOver popup: 0 score for Goals with value 0

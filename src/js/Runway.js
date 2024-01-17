@@ -7,7 +7,6 @@ import {
 } from './utils';
 import Square from './Square';
 import { MessageEvents, publishMessage as publish } from './events/messages';
-import { planeGoAroundPenalty } from './game/score';
 import { play, SoundType } from './game/sound';
 
 ////////////////////////////////////////////////////////////
@@ -81,11 +80,10 @@ export default class Runway {
   }
 
   updateGoAround(entity) {
-    const scoreRemoved = planeGoAroundPenalty();
-    publish(
-      MessageEvents.MessageAllEV,
-      entity.title + ' landing go-around (' + scoreRemoved + ')'
-    );
+    publish(MessageEvents.MessageLandingErrorEV, {
+      id: entity.id,
+      msg: 'abort: going around',
+    });
     entity.setHeadingTarget(this.runwayHeading, false, false, Direction.None);
     if (entity.speedTarget <= 220) entity.setSpeed(220, false, true);
     if (entity.altitudeTarget <= 2000) entity.setAltitude(2000, false);
@@ -104,19 +102,23 @@ export default class Runway {
       if (entity.runway !== this.title) return;
       if (!entity.landing) return;
       if (!isGettingCloser && !isEntityOnRunway(entity)) {
+        play(SoundType.Fail);
         return this.updateGoAround(entity);
       }
       if (isEntityOnRunway(entity)) return;
 
-      if (!isHeadingClose(this, entity) && !entity.onGlidePath) {
+      if (!isCloseToGlidepath(this, entity) && !entity.onGlidePath) {
+        showMsgTooFar(entity);
         play(SoundType.Fail);
         return entity.setLanding(false);
       }
-      if (!isCloseToGlidepath(this, entity) && !entity.onGlidePath) {
+      if (!isHeadingClose(this, entity) && !entity.onGlidePath) {
+        showMsgOffCourse(entity);
         play(SoundType.Fail);
         return entity.setLanding(false);
       }
       if (isTooHigh(this, entity)) {
+        showMsgTooHigh(entity);
         play(SoundType.Fail);
         return entity.setLanding(false);
       }
@@ -163,6 +165,27 @@ export default class Runway {
 ////////////////////////////////////////////////////////////
 // end class Runway
 ////////////////////////////////////////////////////////////
+
+const showMsgTooHigh = (plane) => {
+  publish(MessageEvents.MessageLandingErrorEV, {
+    id: plane.id,
+    msg: 'altitude too high',
+  });
+};
+
+const showMsgOffCourse = (plane) => {
+  publish(MessageEvents.MessageLandingErrorEV, {
+    id: plane.id,
+    msg: 'too far off course',
+  });
+};
+
+const showMsgTooFar = (plane) => {
+  publish(MessageEvents.MessageLandingErrorEV, {
+    id: plane.id,
+    msg: 'distance too far',
+  });
+};
 
 const isTooHigh = (self, entity) => {
   if (entity.altitude > self.altitudeMax) return true;

@@ -57,13 +57,6 @@ export const getHighestLevelCompleted = () => {
   return sorted[0].level;
 };
 
-export const planeGoAroundPenalty = () => {
-  const score = getScore();
-  score.failed += 1;
-  setScore(score);
-  publishScore(score);
-};
-
 export const resetProximity = (plane) => {
   proximityPairs[plane.id] = null;
 };

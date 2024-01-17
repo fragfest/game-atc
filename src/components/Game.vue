@@ -177,6 +177,10 @@ import {
   subscribeScore,
   ScoreEvents,
 } from '../js/game/score';
+import {
+  setup as setupMessages,
+  destroy as destroyMessages,
+} from '../js/events/messages';
 
 const isDeparture = (plane) =>
   plane.destinationType === DestinationType.Departure;
@@ -316,6 +320,7 @@ export default {
     cancelGameLoop(gameState);
     destroyKeyboard();
     destroySound();
+    destroyMessages();
   },
 
   mounted() {
@@ -421,6 +426,7 @@ export default {
     setupGameLoadAndExit();
     setupSound();
     setupKeyboard();
+    setupMessages();
     setupEvents(
       this,
       getWaypointArrivalsAll(),

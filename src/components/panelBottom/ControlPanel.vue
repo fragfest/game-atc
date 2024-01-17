@@ -1,9 +1,6 @@
 <template>
   <div class="control-panel">
-    <!-- <div class="message-panel" :class="sizeClass">
-      <textarea readonly v-model="messagesDisplay"></textarea>
-    </div> -->
-
+    <!-- btn-info-panel -->
     <div class="btn-info-panel" :class="sizeClass">
       <div class="btn-container">
         <div v-show="!isTaxiing && isArrival" class="btn">
@@ -53,7 +50,7 @@
         </div>
       </div>
 
-      <div class="info" v-show="planeSelected.id">
+      <div v-show="planeSelected.id" class="info">
         <div class="row title">
           <span>
             <b> {{ planeSelected.title }} </b>
@@ -73,7 +70,12 @@
           <span>{{ speed }} kts</span>
         </div>
       </div>
+
+      <!-- <div v-show="planeSelected.id" class="message-panel" :class="sizeClass">
+        <textarea readonly v-model="messagesDisplay"></textarea>
+      </div> -->
     </div>
+    <!-- END btn-info-panel -->
 
     <!-- circle-panel -->
     <div class="circle-panel" :class="sizeClass">
@@ -129,7 +131,7 @@
         </g>
       </svg>
     </div>
-    <!-- circle-panel end -->
+    <!-- END circle-panel -->
   </div>
 </template>
 
@@ -176,7 +178,14 @@ export default {
 
   data() {
     return {
-      messages: [],
+      messages: [
+        {
+          msg: 'first line',
+        },
+        {
+          msg: 'second line',
+        },
+      ],
     };
   },
 
@@ -232,10 +241,10 @@ export default {
   },
 
   computed: {
-    // messagesDisplay: function () {
-    //   const arr = this.messages.map((obj) => obj.msg);
-    //   return arr.join("\n");
-    // },
+    messagesDisplay: function () {
+      const arr = this.messages.map((obj) => obj.msg);
+      return arr.join('\n');
+    },
 
     isDeparture: function () {
       const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
@@ -369,44 +378,42 @@ export default {
 }
 
 // message-panel
-// .message-panel {
-//   width: 280px;
-//   max-height: 330px;
-//   margin-top: 10px;
-//   margin-bottom: 10px;
-//   margin-right: 20px;
+.message-panel {
+  width: 280px;
+  max-height: 330px;
+  margin-top: 10px;
 
-//   background-color: #2c5c816f;
-//   border: 1px solid lightgreen;
-//   border-radius: 8px;
-//   box-shadow: 3px 3px rgb(0, 84, 84);
+  background-color: #2c5c816f;
+  border: 1px solid darkgrey;
+  border-radius: 8px;
+  box-shadow: 3px 3px rgb(0, 84, 84);
 
-//   textarea {
-//     height: 93.5%;
-//     width: 92%;
-//     padding: 4px 10px;
+  textarea {
+    width: 65%;
+    padding-top: 6px;
+    padding-left: 10px;
 
-//     border: none;
-//     background: transparent;
-//     resize: none;
-//     overflow: hidden;
-//     color: white;
-//     font-size: 14px;
+    border: none;
+    background: transparent;
+    resize: none;
+    overflow: hidden;
+    color: white;
+    font-size: 14px;
 
-//     &:focus-visible {
-//       outline: none;
-//     }
-//   }
-// }
+    &:focus-visible {
+      outline: none;
+    }
+  }
+}
 
-// .message-panel.small {
-//   width: 220px;
-//   max-height: 270px;
-//   textarea {
-//     font-size: 11px;
-//   }
-// }
-// message-panel END
+.message-panel.small {
+  width: 220px;
+  max-height: 270px;
+  textarea {
+    font-size: 11px;
+  }
+}
+// END message-panel
 
 // btn-info-panel
 .btn-info-panel {
@@ -437,7 +444,7 @@ export default {
     padding: 6px 10px;
 
     background-color: #2c5c816f;
-    border: 1px solid lightgreen;
+    border: 1px solid darkgrey;
     border-radius: 8px;
     box-shadow: 3px 3px rgb(0, 84, 84);
     .row {
@@ -452,6 +459,7 @@ export default {
   }
 }
 
+// small
 .btn-info-panel.small {
   width: 100px;
 
@@ -466,7 +474,7 @@ export default {
     font-size: 14px;
   }
 }
-// btn-info-panel END
+// END btn-info-panel
 
 // btn-info-panel button
 .btn-info-panel button {
@@ -538,8 +546,9 @@ export default {
   height: 30px;
   font-size: 12px;
 }
-// btn-info-panel button END
+// END btn-info-panel button
 
+// circle-panel
 .circle-panel {
   width: 220px;
   margin: 8px;
@@ -588,4 +597,5 @@ export default {
     stroke: black;
   }
 }
+// END circle-panel
 </style>
