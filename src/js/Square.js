@@ -52,7 +52,7 @@ export default class Square {
     this.y = positionObj.y;
     this.altitude = positionObj.altitude;
     this.altitudeTarget = 0;
-    this.altitudeMin = 100;
+    this.altitudeMin = 1000;
     this.altitudeMax = 40000;
     this.setAltitude(positionObj.altitude, false);
     this.headingRad = inputHeadingToRad(positionObj.heading);
@@ -99,6 +99,9 @@ export default class Square {
     this.trailPixelMs = 0;
     this.trailPixelArr = [];
     // state numbers
+
+    this.prevPosition = { x: 0, y: 0 };
+    // TODO try instead always having a prev x,y position
     this.distPrevLanding = Infinity;
     this.distPrevHolding = Infinity;
     this.distPrevHandoff = Infinity;
@@ -234,7 +237,7 @@ export default class Square {
     }
 
     if (!isLanding) {
-      this.onGlidePath = false;
+      this.setOnGlidepath(false);
       this.setDistPrevLanding(Infinity);
     }
     this.landing = !!isLanding;
@@ -260,17 +263,16 @@ export default class Square {
     this.speedTarget = Math.floor(speed / 5) * 5;
   }
 
-  setAltitude(altitudeArg, isLanding, isTouchedDown) {
-    if (this.isNonInteractive && !isTouchedDown) return;
+  setAltitude(altitudeArg, isLanding, isOnGround) {
+    if (this.isNonInteractive && !isOnGround) return;
 
     this.setLanding(isLanding);
     let altitude = parseInt(altitudeArg);
-    if (isTouchedDown) {
-      this.altitudeTarget = altitude;
-      return;
-    }
+    let altitudeMin = this.altitudeMin;
+    if (isLanding) altitudeMin = 0;
+    if (isOnGround) altitudeMin = 0;
 
-    altitude = altitude < this.altitudeMin ? this.altitudeMin : altitude;
+    altitude = altitude < altitudeMin ? altitudeMin : altitude;
     altitude = altitude > this.altitudeMax ? this.altitudeMax : altitude;
     this.altitudeTarget = Math.floor(altitude / 100) * 100;
   }
@@ -532,6 +534,11 @@ export default class Square {
       this.altitudeTarget,
       altitudeChange
     );
+
+    this.prevPosition = {
+      x: this.x,
+      y: this.y,
+    };
 
     this.x += pixelsInX;
     this.y += pixelsInY;

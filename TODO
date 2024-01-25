@@ -1,14 +1,17 @@
 
 ATCv0.1.2:
-  Fixes:
+  Bugs:
     ✔ Chances level 1: departures only @done(24-01-14 18:56)
     ✔ Chances level 2: arrivals focused @done(24-01-14 19:18)
     ✔ Chances level 3: both @done(24-01-15 00:13)
     ✔ Call setScreenSize() from HomeLanding.vue as in Game.vue @done(24-01-16 22:30)
+    ✔ Enforce min alt 1000ft i.e. after go-around @done(24-01-17 14:28)
+    ✔ plane on-course passed runway, can still get into landing state briefly @done(24-01-25 00:53)
     
   Major:
     ✔ Messages: landing misconfigured @done(24-01-17 08:47)
     ☐ More Messages
+    ☐ Hold/Handoff text on flightstrip
     ☐ More levels
     ☐ Fuel mechanic
     ☐ Weather mechanic

@@ -44,7 +44,7 @@ export const isValidHeading = (str) => {
   return isValidThreeDigitInput(str, isInRange);
 };
 export const isValidAltitude = (plane, str) => {
-  let min = 1000;
+  let min = plane.altitudeMin;
   if (plane.landing) min = plane.altitudeMin;
   if (plane.isTouchedDown) min = 0;
 

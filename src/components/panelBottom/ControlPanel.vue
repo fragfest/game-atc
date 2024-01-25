@@ -71,9 +71,9 @@
         </div>
       </div>
 
-      <!-- <div v-show="planeSelected.id" class="message-panel" :class="sizeClass">
+      <div v-show="planeSelected.id" class="message-panel" :class="sizeClass">
         <textarea readonly v-model="messagesDisplay"></textarea>
-      </div> -->
+      </div>
     </div>
     <!-- END btn-info-panel -->
 
@@ -143,10 +143,10 @@ import {
   altitudeDisplay,
   getClassSize,
 } from '../../js/utils';
-// import {
-//   MessageEvents,
-//   subscribeMessage as subscribe,
-// } from '../../js/events/messages';
+import {
+  MessageEvents,
+  subscribeMessage as subscribe,
+} from '../../js/events/messages';
 import { DestinationType } from '../../js/aircraft/airframe';
 
 import ToolTip from '../common/ToolTip';
@@ -178,14 +178,7 @@ export default {
 
   data() {
     return {
-      messages: [
-        {
-          msg: 'first line',
-        },
-        {
-          msg: 'second line',
-        },
-      ],
+      messages: '',
     };
   },
 
@@ -203,6 +196,14 @@ export default {
       new_tick.id = 'tick-' + leftPadZeros(i);
       gauge.appendChild(new_tick);
     }
+
+    // setInterval(() => {
+    //   this.messages = 'lower to approach altitude 5000ft';
+    // }, 10000);
+
+    subscribe(MessageEvents.MessageLandingErrorEV, (planeErrorObj) => {
+      this.messages = planeErrorObj.instructions ?? '';
+    });
 
     // subscribe(MessageEvents.MessageAllEV, (msg) => {
     //   this.messages.unshift({ msg });
@@ -242,8 +243,7 @@ export default {
 
   computed: {
     messagesDisplay: function () {
-      const arr = this.messages.map((obj) => obj.msg);
-      return arr.join('\n');
+      return this.messages;
     },
 
     isDeparture: function () {

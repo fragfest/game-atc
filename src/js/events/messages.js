@@ -67,10 +67,12 @@ let messagesEventsAbortArr = [];
  * @typedef {Object} PlaneErrorObj
  * @property {string} id
  * @property {string} msg
+ * @property {string} instructions
  */
 const PlaneErrorObj = Object.freeze({
   id: '',
   msg: '',
+  instructions: '',
 });
 
 /**

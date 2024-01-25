@@ -1,4 +1,5 @@
 import {
+  convHdgRadToThreeDigits,
   inputHeadingToRad,
   radToDegrees,
   convertToSmallDegrees,
@@ -79,16 +80,6 @@ export default class Runway {
     this.ctx.stroke();
   }
 
-  updateGoAround(entity) {
-    publish(MessageEvents.MessageLandingErrorEV, {
-      id: entity.id,
-      msg: 'abort: going around',
-    });
-    entity.setHeadingTarget(this.runwayHeading, false, false, Direction.None);
-    if (entity.speedTarget <= 220) entity.setSpeed(220, false, true);
-    if (entity.altitudeTarget <= 2000) entity.setAltitude(2000, false);
-  }
-
   update({ entityManagerArr }) {
     const isSquare = (entity) => entity instanceof Square;
     const isEntityOnRunway = isOnRunway(this.landingEntities);
@@ -96,24 +87,37 @@ export default class Runway {
     entityManagerArr.forEach((entity) => {
       if (!isSquare(entity)) return;
       const distObj = distToRunwayObj(this, entity);
-      const isGettingCloser = distObj.dist < entity.distPrevLanding;
+
+      // const isGettingCloser = distObj.dist <= entity.distPrevLanding;
+      entity.setDistPrevLanding(distObj.dist);
+      const isGettingCloser =
+        distObj.dist <= distToRunwayObj(this, entity.prevPosition).dist;
+      // TODO set prev after checked here, but ideally don't set it here
 
       if (entity.destroyFlag) return;
       if (entity.runway !== this.title) return;
       if (!entity.landing) return;
-      if (!isGettingCloser && !isEntityOnRunway(entity)) {
-        play(SoundType.Fail);
-        return this.updateGoAround(entity);
-      }
       if (isEntityOnRunway(entity)) return;
 
-      if (!isCloseToGlidepath(this, entity) && !entity.onGlidePath) {
+      const { x, y } = { ...entity };
+      console.log({ x, y }, entity.prevPosition, entity.onGlidePath);
+
+      if (!isGettingCloser && entity.onGlidePath) {
+        play(SoundType.Fail);
+        return updateGoAround(this.runwayHeading, entity);
+      }
+
+      if (
+        !isCloseToGlidepath(this, isGettingCloser, entity) &&
+        !entity.onGlidePath
+      ) {
         showMsgTooFar(entity);
         play(SoundType.Fail);
         return entity.setLanding(false);
       }
+
       if (!isHeadingClose(this, entity) && !entity.onGlidePath) {
-        showMsgOffCourse(entity);
+        showMsgOffCourse(this.runwayHeading, entity);
         play(SoundType.Fail);
         return entity.setLanding(false);
       }
@@ -170,13 +174,16 @@ const showMsgTooHigh = (plane) => {
   publish(MessageEvents.MessageLandingErrorEV, {
     id: plane.id,
     msg: 'altitude too high',
+    instructions: 'lower to approach altitude 5000ft',
   });
 };
 
-const showMsgOffCourse = (plane) => {
+const showMsgOffCourse = (runwayHeading, plane) => {
+  const heading = convHdgRadToThreeDigits(runwayHeading);
   publish(MessageEvents.MessageLandingErrorEV, {
     id: plane.id,
     msg: 'too far off course',
+    instructions: 'turn to runway heading ' + heading,
   });
 };
 
@@ -184,6 +191,7 @@ const showMsgTooFar = (plane) => {
   publish(MessageEvents.MessageLandingErrorEV, {
     id: plane.id,
     msg: 'distance too far',
+    instructions: 'fly closer to runway',
   });
 };
 
@@ -251,7 +259,7 @@ const distToRunwayObj = (self, entity) => {
   return { x, y, dist };
 };
 
-const isCloseToGlidepath = (self, entity) => {
+const isCloseToGlidepath = (self, isGettingCloser, entity) => {
   const isSmall = self.isSmall;
   const angleMaxDeg = 6;
   const maxDistFromRunway = isSmall ? 300 : 400;
@@ -259,7 +267,7 @@ const isCloseToGlidepath = (self, entity) => {
   const dist = distToRunwayObj(self, entity).dist;
   const x = Math.abs(self.x - entity.x);
   const isWithinMaxDist = dist < maxDistFromRunway;
-  const isGettingCloser = dist < entity.distPrevLanding;
+  // const isGettingCloser = dist < entity.distPrevLanding;
   // if (isGettingCloser) {
   //   const outgoingHeading = self.runwayHeading + Math.PI;
   //   const oncourseX = dist * Math.cos(outgoingHeading);
@@ -273,6 +281,7 @@ const isCloseToGlidepath = (self, entity) => {
   const angleToGlidepath = convertToSmallDegrees(
     radToDegrees(Math.acos(x / dist)) - 90
   );
+
   return angleToGlidepath < angleMaxDeg && isGettingCloser && isWithinMaxDist;
 };
 
@@ -306,4 +315,16 @@ const isTouchedDown = (self) => (entityOther) => {
     isRunwayHeading &&
     isCloseLandingSpeed
   );
+};
+
+const updateGoAround = (runwayHeading, entity) => {
+  entity.setHeadingTarget(runwayHeading, false, false, Direction.None);
+  if (entity.speedTarget <= 220) entity.setSpeed(220, false, true);
+  if (entity.altitudeTarget <= 2000) entity.setAltitude(2000, false);
+
+  publish(MessageEvents.MessageLandingErrorEV, {
+    id: entity.id,
+    msg: 'abort - going around',
+    instructions: 'landing aborted',
+  });
 };
