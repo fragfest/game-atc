@@ -13,7 +13,7 @@ export const ElapsedTimes = Object.freeze({
   ArrivalLandStartMs: 4000,
   ArrivalLandFirstInputMs: 16000,
   WaypointStartMs: 4000,
-  WaypointFirstInputMs: 6000,
+  WaypointFirstInputMs: 16000,
   ConflictStartMs: 4000,
   ConflictFirstInputMs: 16000,
 });

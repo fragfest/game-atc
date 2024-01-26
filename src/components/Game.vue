@@ -643,7 +643,7 @@ export default {
     width: 14px;
     height: 14px;
     padding-top: 2px;
-    padding-left: 5px;
+    padding-left: 4px;
     margin-right: 8px;
 
     border-radius: 50%;
@@ -655,7 +655,7 @@ export default {
     width: 14px;
     height: 14px;
     padding-bottom: 4px;
-    padding-left: 4px;
+    padding-left: 3px;
     margin-right: 8px;
 
     border-radius: 50%;

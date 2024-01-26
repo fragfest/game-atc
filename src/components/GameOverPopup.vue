@@ -6,25 +6,29 @@
           <span v-if="isSuccess" class="green">Success</span>
           <span v-else class="red">Failed</span>
           <span v-if="level"> level {{ level }}</span>
-          <span v-else> tutorial level</span>
+          <span v-else> training level</span>
         </div>
         <!-- <div>ATC difficulty: easy</div> -->
       </h1>
 
       <div class="content">
-        <div class="item">departures</div>
+        <div class="item" :class="departuresTitleClass">departures</div>
         <div class="item score" :class="departuresClass">{{ departures }}</div>
         <div class="item score gold">{{ departureScore }}</div>
-        <div class="item">arrivals</div>
+        <div class="item" :class="arrivalsTitleClass">arrivals</div>
         <div class="item score" :class="arrivalsClass">{{ arrivals }}</div>
         <div class="item score gold">{{ arrivalScore }}</div>
-        <div class="item">failed handoffs & landings</div>
+        <div class="item" :class="failedTitleClass">
+          failed handoffs & landings
+        </div>
         <div class="item score" :class="failedClass">{{ failed }}</div>
         <div class="item score gold">{{ failedScore }}</div>
-        <div class="item">delays (taxiing slots)</div>
+        <div class="item" :class="taxiQueueTitleClass">
+          delays (taxiing slots)
+        </div>
         <div class="item score" :class="taxiQueueClass">{{ taxiQueue }}</div>
         <div class="item score gold">{{ taxiQueueScore }}</div>
-        <div class="item">conflict (seconds)</div>
+        <div class="item" :class="conflictTitleClass">conflict (seconds)</div>
         <div class="item score" :class="conflictClass">{{ conflict }}</div>
         <div class="item score gold">{{ conflictScore }}</div>
         <!-- <div class="item">BONUS hot runway</div>
@@ -78,18 +82,23 @@ export default {
       level: 0,
       departures: '0/' + getGoals().Departures,
       departureScore: 0,
+      departuresTitleClass: 'bckgrnd-blue',
       departuresClass: 'red',
       arrivals: '0/' + getGoals().Arrivals,
       arrivalScore: 0,
+      arrivalsTitleClass: 'bckgrnd-blue',
       arrivalsClass: 'red',
       failed: '0/' + getGoals().Failed,
       failedScore: 0,
+      failedTitleClass: 'border-red',
       failedClass: 'green',
       taxiQueue: '0/' + getGoals().TaxiQueue,
       taxiQueueScore: 0,
+      taxiQueueTitleClass: 'border-red',
       taxiQueueClass: 'green',
       conflict: '0/' + getGoals().Conflict,
       conflictScore: 0,
+      conflictTitleClass: 'border-red',
       conflictClass: 'green',
       hotRunway: 0,
       tinPusher: 0,
@@ -105,11 +114,18 @@ export default {
 
     if (isDeparturesSuccess(score.departures)) this.departuresClass = 'green';
     if (isArrivalsSuccess(score.arrivals)) this.arrivalsClass = 'green';
-    if (isFailedCondition(score.failed)) this.failedClass = 'red';
-    if (isConflictCondition(score.conflict)) this.conflictClass = 'red';
-    if (isConflictCondition(score.conflict)) this.conflictClass = 'red';
+    if (isFailedCondition(score.failed)) {
+      this.failedClass = 'red';
+      this.failedTitleClass = 'bckgrnd-red';
+    }
+    if (isConflictCondition(score.conflict)) {
+      this.conflictClass = 'red';
+      this.conflictTitleClass = 'bckgrnd-red';
+    }
+
     if (isExceededTaxiingCondition(score.taxiQueue)) {
       this.taxiQueueClass = 'red';
+      this.taxiQueueTitleClass = 'bckgrnd-red';
     }
 
     const baseScorePass = getBaseScore();
@@ -167,6 +183,21 @@ export default {
   z-index: 10;
   background-color: #00000080;
 
+  .bckgrnd-blue {
+    background-color: #122534;
+    border-radius: 6px;
+  }
+
+  .border-red {
+    border: 1px solid orangered;
+    border-radius: 6px;
+  }
+
+  .bckgrnd-red {
+    background-color: orangered;
+    border-radius: 6px;
+  }
+
   .green {
     color: limegreen;
   }
@@ -205,7 +236,7 @@ export default {
 
 .popup .modal .item {
   // background-color: black;
-  padding: 8px 0px;
+  padding: 8px 4px;
 
   &.score {
     text-align: right;

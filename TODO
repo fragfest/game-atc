@@ -22,7 +22,7 @@ ATCv0.1.2:
   Minor:
     ✔ Retry tutorial @done(24-01-16 07:30)
     ✔ nonInteractive planes can still turn back but remain nonInteractive @done(24-01-25 23:21)
-    ☐ GameOver popup: highlight gameOver goal
+    ✔ GameOver popup: highlight gameOver goal @done(24-01-26 00:26)
     ☐ Sound Plane Select
     ☐ Sound Tutorial dialogs (text spawn)
     ☐ Pause button
