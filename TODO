@@ -19,6 +19,7 @@ ATCv0.1.2:
       
   Minor:
     ✔ Retry tutorial @done(24-01-16 07:30)
+    ☐ Slower landing rollouts (takeoffs too)
     ☐ Pause button
     ☐ Sound Plane Select
     ☐ Sound Tutorial dialogs (text spawn)
@@ -26,5 +27,4 @@ ATCv0.1.2:
     ☐ Level intro prompt: airport name, scenario description
     ☐ GameOver popup: 0 score for Goals with value 0
     ☐ GameOver popup: highlight gameOver goal
-    ☐ Slower landing rollouts (takeoffs too)
     ☐ Loading screen (while assets download)

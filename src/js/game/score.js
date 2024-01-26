@@ -114,6 +114,13 @@ export const planeLandSuccess = () => {
   publishScore(score);
 };
 
+export const planeLandFail = () => {
+  const score = getScore();
+  score.failed += 1;
+  setScore(score);
+  publishScore(score);
+};
+
 export const planeLeaveFail = () => {
   const score = getScore();
   score.failed += 1;

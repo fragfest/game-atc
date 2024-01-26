@@ -152,6 +152,10 @@ import { DestinationType } from '../../js/aircraft/airframe';
 import ToolTip from '../common/ToolTip';
 import CircleInputs from './CircleInputs';
 
+/**
+ * @typedef {import('../../js/events/messages.js').PlaneErrorObj} PlaneErrorObj
+ */
+
 const setCompass = (headingRad) => {
   const headingDegree = convertToSmallDegrees(radToDegrees(headingRad));
   const tickEl = document.querySelector('#gauge-tick-arrow');
@@ -178,7 +182,9 @@ export default {
 
   data() {
     return {
-      messages: '',
+      // PlaneErrorObj
+      messages: { type: Object },
+      messagesTimeoutId: null,
     };
   },
 
@@ -197,12 +203,16 @@ export default {
       gauge.appendChild(new_tick);
     }
 
-    // setInterval(() => {
-    //   this.messages = 'lower to approach altitude 5000ft';
-    // }, 10000);
-
     subscribe(MessageEvents.MessageLandingErrorEV, (planeErrorObj) => {
-      this.messages = planeErrorObj.instructions ?? '';
+      this.messages = planeErrorObj ?? {};
+
+      if (this.messagesTimeoutId) {
+        clearTimeout(this.messagesTimeoutId);
+        this.messagesTimeoutId = null;
+      }
+      this.messagesTimeoutId = setTimeout(() => {
+        this.messages = {};
+      }, 8000);
     });
 
     // subscribe(MessageEvents.MessageAllEV, (msg) => {
@@ -243,7 +253,10 @@ export default {
 
   computed: {
     messagesDisplay: function () {
-      return this.messages;
+      const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
+      if (!planeSel) return '';
+      if (this.messages?.id !== this.planeSelected.id) return '';
+      return this.messages?.instructions;
     },
 
     isDeparture: function () {

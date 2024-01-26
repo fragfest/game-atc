@@ -61,9 +61,7 @@ export const isConflictCondition = (conflictCount) =>
 export const isVictory = (score) =>
   isDeparturesSuccess(score.departures) &&
   isArrivalsSuccess(score.arrivals) &&
-  !isFailedCondition(score.failed) &&
-  !isExceededTaxiingCondition(score.taxiQueue) &&
-  !isConflictCondition(score.conflict);
+  !isDefeat(score);
 
 /**
  * @param {Score} score

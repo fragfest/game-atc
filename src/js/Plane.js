@@ -174,6 +174,13 @@ const createArrival = (canvasObjs, entityManagerArr, clickCB) => {
     canvasObjText,
     canvasObjHeading,
     canvasEntityEl,
+    // {
+    //   x: 650,
+    //   y: 435,
+    //   heading: '310',
+    //   altitude: 5000,
+    //   speed,
+    // },
     {
       x: newPlane.x,
       y: newPlane.y,

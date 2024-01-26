@@ -101,8 +101,7 @@ export default class Square {
     // state numbers
 
     this.prevPosition = { x: 0, y: 0 };
-    // TODO try instead always having a prev x,y position
-    this.distPrevLanding = Infinity;
+    // TODO migrate to using prevPosition
     this.distPrevHolding = Infinity;
     this.distPrevHandoff = Infinity;
 
@@ -220,11 +219,6 @@ export default class Square {
     this.distPrevHolding = parseFloat(dist);
   }
 
-  setDistPrevLanding(dist) {
-    if (!parseFloat(dist)) return;
-    this.distPrevLanding = parseFloat(dist);
-  }
-
   setIsTouchedDown(isTouchedDown) {
     this.isTouchedDown = !!isTouchedDown;
     this.speedDeltaPerMs = this.speedDeltaPerMs * 2.5;
@@ -238,7 +232,6 @@ export default class Square {
 
     if (!isLanding) {
       this.setOnGlidepath(false);
-      this.setDistPrevLanding(Infinity);
     }
     this.landing = !!isLanding;
   }
