@@ -16,15 +16,15 @@ ATCv0.1.2:
     ☐ Fuel mechanic
     ☐ Weather mechanic
     ☐ Engine contrails
+    ☐ Level intro prompt: airport name, scenario description
+    ☐ Loading screen (while assets download)
       
   Minor:
     ✔ Retry tutorial @done(24-01-16 07:30)
-    ☐ Slower landing rollouts (takeoffs too)
-    ☐ Pause button
+    ✔ nonInteractive planes can still turn back but remain nonInteractive @done(24-01-25 23:21)
+    ☐ GameOver popup: highlight gameOver goal
     ☐ Sound Plane Select
     ☐ Sound Tutorial dialogs (text spawn)
+    ☐ Pause button
     ☐ More sounds
-    ☐ Level intro prompt: airport name, scenario description
-    ☐ GameOver popup: 0 score for Goals with value 0
-    ☐ GameOver popup: highlight gameOver goal
-    ☐ Loading screen (while assets download)
+    ☐ Slower landing rollouts (takeoffs too)

@@ -99,7 +99,6 @@ export default class Runway {
 
       // const { x, y } = { ...entity };
       // console.log({ x, y }, entity.prevPosition, entity.onGlidePath);
-
       // if (isGettingCloser) {
       //   const outgoingHeading = self.runwayHeading + Math.PI;
       //   const oncourseX = dist * Math.cos(outgoingHeading);

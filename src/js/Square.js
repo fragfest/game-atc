@@ -53,7 +53,7 @@ export default class Square {
     this.altitude = positionObj.altitude;
     this.altitudeTarget = 0;
     this.altitudeMin = 1000;
-    this.altitudeMax = 40000;
+    this.altitudeMax = 20000;
     this.setAltitude(positionObj.altitude, false);
     this.headingRad = inputHeadingToRad(positionObj.heading);
     this.heading = positionObj.heading;
@@ -222,7 +222,7 @@ export default class Square {
   setIsTouchedDown(isTouchedDown) {
     this.isTouchedDown = !!isTouchedDown;
     this.speedDeltaPerMs = this.speedDeltaPerMs * 2.5;
-    this.setNonInteractive();
+    this.setNonInteractive(true);
   }
 
   setLanding(isLanding) {
@@ -323,14 +323,21 @@ export default class Square {
     );
   }
 
-  setNonInteractive() {
-    this.isNonInteractive = true;
-    if (this.htmlSquareDiv) {
-      this.htmlSquareDiv.addEventListener('mouseup', () => {});
-      this.htmlSquareDiv.addEventListener(
-        'mouseenter',
-        () => (this.htmlSquareDiv.style.cursor = 'default')
-      );
+  setNonInteractive(isNonInteractive) {
+    if (isNonInteractive) {
+      this.isNonInteractive = true;
+      if (this.htmlSquareDiv) {
+        this.htmlSquareDiv.addEventListener('mouseup', () => {});
+        this.htmlSquareDiv.addEventListener(
+          'mouseenter',
+          () => (this.htmlSquareDiv.style.cursor = 'default')
+        );
+      }
+    } else {
+      this.isNonInteractive = false;
+      if (this.htmlSquareDiv) {
+        _setDivMouseEvents(this);
+      }
     }
   }
 
@@ -546,19 +553,29 @@ export default class Square {
     this.altitude = altitudeNew;
     this.speed = speedNew;
 
+    // square returning to canvas
+    if (
+      this.isNonInteractive &&
+      this.x > 0 &&
+      this.x < this.canvasWidth &&
+      this.y > 0 &&
+      this.y < this.canvasHeight
+    ) {
+      this.setNonInteractive(false);
+    }
+
     // square leaving canvas
     const outsideCanvasWidth = (x, offset) =>
       x > this.canvasWidth + offset || x < 0 - offset;
     const outsideCanvasHeight = (y, offset) =>
       y > this.canvasHeight + offset || y < 0 - offset;
-    // TODO fix edge case where plane (i.e holding/handoff) becomes nonInteractive and turns back
     if (outsideCanvasWidth(this.x, 0) || outsideCanvasHeight(this.y, 0)) {
-      this.setNonInteractive();
-      _clearTrailPixelsAll(this);
+      this.setNonInteractive(true);
     }
     if (outsideCanvasWidth(this.x, 15) || outsideCanvasHeight(this.y, 15)) {
-      this.setDestroyFlag(true);
+      _clearTrailPixelsAll(this);
       this.isFlyingOutOfArea = true;
+      this.setDestroyFlag(true);
     }
   }
 
@@ -699,11 +716,7 @@ const _createHtmlEl = (self) => {
   self.htmlDiv.appendChild(self.htmlSquareDiv);
   self.htmlSquareDiv.id = self.title;
   self.htmlSquareDiv.style.position = 'absolute';
-  self.htmlSquareDiv.addEventListener('mouseup', () => self.clickEventCB());
-  self.htmlSquareDiv.addEventListener(
-    'mouseenter',
-    () => (self.htmlSquareDiv.style.cursor = 'pointer')
-  );
+  _setDivMouseEvents(self);
   self.htmlSquareDiv.addEventListener(
     'mouseleave',
     () => (self.htmlSquareDiv.style.cursor = 'none')
@@ -725,6 +738,14 @@ const _createHtmlEl = (self) => {
 
   // self.htmlImgEl.hidden = true;
   // self.htmlImgEl.style.border = '1px solid orange';
+};
+
+const _setDivMouseEvents = (self) => {
+  self.htmlSquareDiv.addEventListener('mouseup', () => self.clickEventCB());
+  self.htmlSquareDiv.addEventListener(
+    'mouseenter',
+    () => (self.htmlSquareDiv.style.cursor = 'pointer')
+  );
 };
 
 const _draw = (self, color) => {
