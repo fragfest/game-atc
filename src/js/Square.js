@@ -177,10 +177,10 @@ export default class Square {
 
   setHandoff(isHandoff) {
     if (isHandoff && !this.isHandoff) {
-      play(SoundType.Select);
+      play(SoundType.Set);
     }
     if (!isHandoff && this.isHandoff) {
-      play(SoundType.Select);
+      play(SoundType.Set);
     }
 
     if (!isHandoff) {
@@ -191,10 +191,10 @@ export default class Square {
 
   setHolding(isHolding) {
     if (isHolding && !this.isHolding) {
-      play(SoundType.Select);
+      play(SoundType.Set);
     }
     if (!isHolding && this.isHolding) {
-      play(SoundType.Select);
+      play(SoundType.Set);
     }
 
     if (!isHolding) {
@@ -227,7 +227,7 @@ export default class Square {
 
   setLanding(isLanding) {
     if (!isLanding && this.landing) {
-      play(SoundType.Select);
+      play(SoundType.Set);
     }
 
     if (!isLanding) {
@@ -637,6 +637,9 @@ export default class Square {
 
   setSelected(isSelected) {
     this.isSelected = !!isSelected;
+    if (this.isSelected) {
+      play(SoundType.Select);
+    }
   }
 
   setProximity({ entityManagerArr, screenSize, showCircles, timestamp }) {

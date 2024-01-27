@@ -18,13 +18,13 @@ ATCv0.1.2:
     ☐ Engine contrails
     ☐ Level intro prompt: airport name, scenario description
     ☐ Loading screen (while assets download)
+    ☐ Slower landing rollouts (takeoffs too)
       
   Minor:
     ✔ Retry tutorial @done(24-01-16 07:30)
     ✔ nonInteractive planes can still turn back but remain nonInteractive @done(24-01-25 23:21)
     ✔ GameOver popup: highlight gameOver goal @done(24-01-26 00:26)
-    ☐ Sound Plane Select
+    ✔ Sound Plane Select (basic) @done(24-01-26 21:43)
+    ☐ More sounds
     ☐ Sound Tutorial dialogs (text spawn)
     ☐ Pause button
-    ☐ More sounds
-    ☐ Slower landing rollouts (takeoffs too)

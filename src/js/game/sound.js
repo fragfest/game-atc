@@ -7,6 +7,7 @@ let denied;
 let takeoff;
 let chime;
 let pling;
+let tock;
 let flick;
 let squelch;
 
@@ -18,6 +19,7 @@ export const SoundType = Object.freeze({
   Takeoff: 'Takeoff',
   Chime: 'Chime',
   Spawn: 'Spawn',
+  Set: 'Set',
   Select: 'Select',
 });
 
@@ -31,6 +33,7 @@ export const setup = () => {
   takeoff = new Audio('/audio/take-off.mp3');
   chime = new Audio('/audio/chime-ping.mp3');
   pling = new Audio('/audio/pling.mp3');
+  tock = new Audio('/audio/select-tock-short.mp3');
   flick = new Audio('/audio/select-flick.mp3');
   squelch = new Audio('/audio/radio-squelch.mp3');
   setMute(true);
@@ -61,6 +64,7 @@ export const destroy = () => {
   takeoff = null;
   chime = null;
   pling = null;
+  tock = null;
   flick = null;
   squelch = null;
 };
@@ -76,6 +80,7 @@ export const setMute = (isMutedArg) => {
   takeoff.muted = isMuted;
   chime.muted = isMuted;
   pling.muted = isMuted;
+  tock.muted = isMuted;
   flick.muted = isMuted;
   squelch.muted = isMuted;
 };
@@ -124,8 +129,11 @@ export const play = (soundType) => {
     // TODO Safari only plays squelch after other user-triggered sounds
     return squelch.play();
   }
-  if (soundType === SoundType.Select) {
+  if (soundType === SoundType.Set) {
     return flick.play();
+  }
+  if (soundType === SoundType.Select) {
+    return tock.play();
   }
 
   console.error('soundType not supported:', soundType);
