@@ -556,9 +556,10 @@ export default class Square {
 
     // square returning to canvas
     if (
+      this.isNonInteractive &&
+      !this.isTouchedDown &&
       !this.isTaxiing &&
       !this.takeoff &&
-      this.isNonInteractive &&
       this.x > 0 &&
       this.x < this.canvasWidth &&
       this.y > 0 &&

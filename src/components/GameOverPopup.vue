@@ -13,33 +13,49 @@
 
       <div class="content">
         <div class="item" :class="departuresTitleClass">departures</div>
-        <div class="item score" :class="departuresClass">{{ departures }}</div>
-        <div class="item score gold">{{ departureScore }}</div>
+        <div class="item points" :class="departuresScoreClass">
+          {{ departures }}
+        </div>
+        <div class="item score" :class="departuresScoreClass">
+          {{ departureScore }}
+        </div>
         <div class="item" :class="arrivalsTitleClass">arrivals</div>
-        <div class="item score" :class="arrivalsClass">{{ arrivals }}</div>
-        <div class="item score gold">{{ arrivalScore }}</div>
-        <div class="item" :class="failedTitleClass">
-          failed handoffs & landings
+        <div class="item points" :class="arrivalsScoreClass">
+          {{ arrivals }}
         </div>
-        <div class="item score" :class="failedClass">{{ failed }}</div>
-        <div class="item score gold">{{ failedScore }}</div>
-        <div class="item" :class="taxiQueueTitleClass">
-          delays (taxiing slots)
+        <div class="item score" :class="arrivalsScoreClass">
+          {{ arrivalScore }}
         </div>
-        <div class="item score" :class="taxiQueueClass">{{ taxiQueue }}</div>
-        <div class="item score gold">{{ taxiQueueScore }}</div>
-        <div class="item" :class="conflictTitleClass">conflict (seconds)</div>
-        <div class="item score" :class="conflictClass">{{ conflict }}</div>
-        <div class="item score gold">{{ conflictScore }}</div>
+        <div class="item" :class="failedClass">failed handoffs & landings</div>
+        <div class="item points" :class="failedPointsClass">{{ failed }}</div>
+        <div class="item score" :class="failedScoreClass">
+          {{ failedScore }}
+        </div>
+        <div class="item" :class="taxiQueueClass">delays (taxiing slots)</div>
+        <div class="item points" :class="taxiQueuePointsClass">
+          {{ taxiQueue }}
+        </div>
+        <div class="item score" :class="taxiQueueScoreClass">
+          {{ taxiQueueScore }}
+        </div>
+        <div class="item" :class="conflictClass">conflict (seconds)</div>
+        <div class="item points" :class="conflictPointsClass">
+          {{ conflict }}
+        </div>
+        <div class="item score" :class="conflictScoreClass">
+          {{ conflictScore }}
+        </div>
         <!-- <div class="item">BONUS hot runway</div>
         <div class="item"></div>
-        <div class="item score gold">{{ hotRunway }}</div> -->
+        <div class="item score">{{ hotRunway }}</div> -->
         <!-- <div class="item">BONUS tin pusher</div>
         <div class="item"></div>
-        <div class="item score gold">{{ tinPusher }}</div> -->
+        <div class="item score">{{ tinPusher }}</div> -->
         <div class="item margin-top border-top">SCORE</div>
         <div class="item margin-top"></div>
-        <div class="item score margin-top border-top gold">{{ total }}</div>
+        <div class="item score margin-top border-top" :class="scoreTotalClass">
+          {{ total }}
+        </div>
       </div>
 
       <div
@@ -83,23 +99,27 @@ export default {
       departures: '0/' + getGoals().Departures,
       departureScore: 0,
       departuresTitleClass: 'bckgrnd-blue',
-      departuresClass: 'red',
+      departuresScoreClass: 'silver',
       arrivals: '0/' + getGoals().Arrivals,
       arrivalScore: 0,
-      arrivalsTitleClass: 'bckgrnd-blue',
-      arrivalsClass: 'red',
+      arrivalsTitleClass: 'bckgrnd-yellow',
+      arrivalsScoreClass: 'silver',
       failed: '0/' + getGoals().Failed,
       failedScore: 0,
-      failedTitleClass: 'border-red',
-      failedClass: 'green',
+      failedClass: 'border-red',
+      failedPointsClass: '',
+      failedScoreClass: 'silver',
       taxiQueue: '0/' + getGoals().TaxiQueue,
       taxiQueueScore: 0,
-      taxiQueueTitleClass: 'border-red',
-      taxiQueueClass: 'green',
+      taxiQueueClass: 'border-red',
+      taxiQueuePointsClass: '',
+      taxiQueueScoreClass: 'silver',
       conflict: '0/' + getGoals().Conflict,
       conflictScore: 0,
-      conflictTitleClass: 'border-red',
-      conflictClass: 'green',
+      conflictClass: 'border-red',
+      conflictPointsClass: '',
+      conflictScoreClass: 'silver',
+      scoreTotalClass: 'silver',
       hotRunway: 0,
       tinPusher: 0,
       total: 0,
@@ -110,22 +130,31 @@ export default {
     this.$refs.okBtn.focus();
     const score = getScore();
 
-    if (isVictory(score)) this.isSuccess = true;
+    if (isVictory(score)) {
+      this.failedScoreClass = 'white';
+      this.taxiQueueScoreClass = 'white';
+      this.conflictScoreClass = 'white';
+      this.scoreTotalClass = 'white';
+      this.isSuccess = true;
+    }
 
-    if (isDeparturesSuccess(score.departures)) this.departuresClass = 'green';
-    if (isArrivalsSuccess(score.arrivals)) this.arrivalsClass = 'green';
+    if (isDeparturesSuccess(score.departures)) {
+      this.departuresScoreClass = 'white';
+    }
+    if (isArrivalsSuccess(score.arrivals)) {
+      this.arrivalsScoreClass = 'white';
+    }
     if (isFailedCondition(score.failed)) {
-      this.failedClass = 'red';
-      this.failedTitleClass = 'bckgrnd-red';
+      this.failedClass = 'bckgrnd-red';
+      this.failedPointsClass = 'bckgrnd-red';
+    }
+    if (isExceededTaxiingCondition(score.taxiQueue)) {
+      this.taxiQueueClass = 'bckgrnd-red';
+      this.taxiQueuePointsClass = 'bckgrnd-red';
     }
     if (isConflictCondition(score.conflict)) {
-      this.conflictClass = 'red';
-      this.conflictTitleClass = 'bckgrnd-red';
-    }
-
-    if (isExceededTaxiingCondition(score.taxiQueue)) {
-      this.taxiQueueClass = 'red';
-      this.taxiQueueTitleClass = 'bckgrnd-red';
+      this.conflictClass = 'bckgrnd-red';
+      this.conflictPointsClass = 'bckgrnd-red';
     }
 
     const baseScorePass = getBaseScore();
@@ -189,7 +218,7 @@ export default {
   }
 
   .border-red {
-    border: 1px solid orangered;
+    border: 1px solid #c45229;
     border-radius: 6px;
   }
 
@@ -198,14 +227,22 @@ export default {
     border-radius: 6px;
   }
 
+  .bckgrnd-yellow {
+    background-color: #674300;
+    border-radius: 6px;
+  }
+
+  .white {
+    color: white;
+  }
+  .silver {
+    color: silver;
+  }
   .green {
     color: limegreen;
   }
   .red {
     color: orangered;
-  }
-  .gold {
-    color: gold;
   }
 }
 
@@ -238,7 +275,13 @@ export default {
   // background-color: black;
   padding: 8px 4px;
 
+  &.points {
+    min-width: 75px;
+    text-align: right;
+    align-self: flex-start;
+  }
   &.score {
+    min-width: 40px;
     text-align: right;
     align-self: flex-start;
   }
@@ -259,7 +302,7 @@ export default {
 .popup .modal .content {
   display: grid;
   grid-template-columns: 6fr 1fr 1fr;
-  grid-auto-rows: minmax(20px, auto);
+  grid-auto-rows: minmax(40px, auto);
   row-gap: 8px;
   column-gap: 15%;
 
