@@ -7,12 +7,14 @@ ATCv0.1.2:
     ✔ Call setScreenSize() from HomeLanding.vue as in Game.vue @done(24-01-16 22:30)
     ✔ Enforce min alt 1000ft i.e. after go-around @done(24-01-17 14:28)
     ✔ plane on-course passed runway, can still get into landing state briefly @done(24-01-25 00:53)
+    ✔ Setting handoff steers plane during take off run @done(24-01-27 19:44)
     
   Major:
     ✔ Messages: landing misconfigured @done(24-01-17 08:47)
-    ☐ More Messages
+    ☐ Highlight success and failures on the map/scorePanel
     ☐ Hold/Handoff text on flightstrip
     ☐ More levels
+    ☐ More flights/airframes
     ☐ Fuel mechanic
     ☐ Weather mechanic
     ☐ Engine contrails
@@ -25,6 +27,7 @@ ATCv0.1.2:
     ✔ nonInteractive planes can still turn back but remain nonInteractive @done(24-01-25 23:21)
     ✔ GameOver popup: highlight gameOver goal @done(24-01-26 00:26)
     ✔ Sound Plane Select (basic) @done(24-01-26 21:43)
-    ☐ More sounds
+    ✔ Sound background tower @done(24-01-27 19:45)
+    ☐ Sound popups
     ☐ Sound Tutorial dialogs (text spawn)
     ☐ Pause button

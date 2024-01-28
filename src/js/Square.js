@@ -176,13 +176,14 @@ export default class Square {
   }
 
   setHandoff(isHandoff) {
+    if (this.isTaxiing || this.takeoff) return;
+
     if (isHandoff && !this.isHandoff) {
       play(SoundType.Set);
     }
     if (!isHandoff && this.isHandoff) {
       play(SoundType.Set);
     }
-
     if (!isHandoff) {
       this.setDistPrevHandoff(Infinity);
     }
@@ -555,6 +556,8 @@ export default class Square {
 
     // square returning to canvas
     if (
+      !this.isTaxiing &&
+      !this.takeoff &&
       this.isNonInteractive &&
       this.x > 0 &&
       this.x < this.canvasWidth &&
