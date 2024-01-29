@@ -135,7 +135,6 @@ import FlightStrip from './FlightStrip';
 import FlightStripDeparture from './FlightStripDeparture';
 import GameOverPopup from './GameOverPopup';
 
-import { DestinationType } from '../js/aircraft/airframe';
 import { getWaypointArrivalsAll } from '../js/airports/LHR';
 import {
   setup as setupFullGame,
@@ -146,7 +145,7 @@ import {
   cancelGameLoop,
 } from '../js/game/game';
 import { setup as setupTutorial } from '../js/tutorial/gameTutorial';
-import { isSquare } from '../js/types';
+import { isArrival, isDeparture, isSquare } from '../js/types';
 import {
   setupGameLoadAndExit,
   ScreenSizes,
@@ -181,10 +180,6 @@ import {
   setup as setupMessages,
   destroy as destroyMessages,
 } from '../js/events/messages';
-
-const isDeparture = (plane) =>
-  plane.destinationType === DestinationType.Departure;
-const isArrival = (plane) => plane.destinationType === DestinationType.Arrival;
 
 let screenSize = ScreenSizes.Large;
 let width = getGameSize(ScreenSizes.Large).width;

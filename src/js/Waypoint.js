@@ -1,17 +1,16 @@
 import Square from './Square';
-import { WaypointType, HoldingPosition } from './types';
+import {
+  DestinationType,
+  Direction,
+  WaypointType,
+  HoldingPosition,
+} from './types';
 import {
   isCloseToWaypoint,
   isEntityGettingCloser,
   distBetweenEntities,
 } from './entity';
-import {
-  Direction,
-  convertToSmallDegrees,
-  radToDegrees,
-  ScreenSizes,
-} from './utils';
-import { DestinationType } from './aircraft/airframe';
+import { convertToSmallDegrees, radToDegrees, ScreenSizes } from './utils';
 
 ////////////////////////////////////////////////////////////
 // class Waypoint

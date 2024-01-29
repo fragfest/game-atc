@@ -207,9 +207,9 @@
 <script>
 import Bowser from 'bowser';
 
+import { DestinationType } from '../js/types';
 import { getClassSize, nextWaypoint } from '../js/utils';
 import { getWaypointArrivalsAll } from '../js/airports/LHR';
-import { DestinationType } from '../js/aircraft/airframe';
 import {
   MessageEvents,
   subscribeMessage as subscribe,

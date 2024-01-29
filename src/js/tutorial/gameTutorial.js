@@ -10,13 +10,13 @@ import {
 import Square from '../Square';
 import { getFlightArrival, getFlightDeparture } from '../flights/LHR';
 import { Waypoints, Runways } from '../airports/LHR';
-import { DestinationType, getPerformance } from '../aircraft/airframe';
+import { getPerformance } from '../aircraft/airframe';
 import { Stages, ElapsedTimes } from './typesTutorial';
 import { stageArrivalLand } from './stageArrivalLand';
 import { stageDeparture } from './stageDeparture';
 import { stageWaypoint } from './stageWaypoint';
 import { stageConflict } from './stageConflict';
-import { FocusCircleType } from '../types';
+import { DestinationType, FocusCircleType } from '../types';
 import { scorePanel } from './focusCircleTutorial';
 import { ScoreEvents, subscribeScore } from '../game/score';
 import { isVictory, publishSuccess } from '../game/victory';

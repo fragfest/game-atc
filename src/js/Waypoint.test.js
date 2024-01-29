@@ -11,9 +11,9 @@ import Waypoint from './Waypoint';
 import Square from './Square';
 import * as sound from './game/sound';
 
-import { Direction, ScreenSizes } from './utils';
+import { DestinationType, Direction } from './types';
+import { ScreenSizes } from './utils';
 import { getWaypoint } from '../js/airports/LHR';
-import { DestinationType } from './aircraft/airframe';
 import { JSDOM } from 'jsdom';
 
 expect.extend(jestExtended);
@@ -116,9 +116,8 @@ describe('Waypoint', () => {
         waypoint.update({ entityManagerArr });
 
         expect(plane.setHandoff).toHaveBeenCalledWith(false);
-        expect(plane.setDistPrevHandoff).toHaveBeenNthCalledWith(1, Infinity);
         expect(plane.setDistPrevHandoff).toHaveBeenNthCalledWith(
-          2,
+          1,
           7.0710678118654755
         );
         expect(plane.setHeadingTarget).toHaveBeenNthCalledWith(

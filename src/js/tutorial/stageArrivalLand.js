@@ -1,5 +1,5 @@
 import { ElapsedTimes } from './typesTutorial';
-import { FocusCircleType } from '../types';
+import { DestinationType, FocusCircleType } from '../types';
 import { radToDegrees } from '../utils';
 import {
   controlPanelAltitude,
@@ -7,7 +7,6 @@ import {
   controlPanelLanding,
   flightStripSecond,
 } from './focusCircleTutorial.js';
-import { DestinationType } from '../aircraft/airframe';
 
 let event = '';
 const Events = Object.freeze({

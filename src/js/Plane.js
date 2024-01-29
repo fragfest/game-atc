@@ -1,12 +1,12 @@
 import Square from './Square';
-import { isSquare } from './types';
+import { DestinationType } from './types';
 import {
   getScreenSize,
   convHdgDegToThreeDigits,
   convHdgRadToThreeDigits,
 } from './utils';
 import { getFlightArrival, getFlightDeparture } from './flights/LHR';
-import { DestinationType, getPerformance } from './aircraft/airframe';
+import { getPerformance } from './aircraft/airframe';
 import {
   Waypoints,
   getWaypointDepartureRnd,
@@ -14,7 +14,7 @@ import {
 } from './airports/LHR';
 import { getGoals } from './game/victory';
 import { getScore } from './game/score';
-import { isTaxiQueueAlmostFull } from './game/game';
+import { level1, level2, level3 } from './levels/level1-3';
 
 export const createPlane = (
   {
@@ -54,8 +54,6 @@ export const createPlane = (
   }
 };
 
-////////////// PRIVATE ////////////////////////////////////////////////
-
 export const spawnRndPlane =
   (canvasObj, entityManagerArr, createSquare_entityFnArgChanceArg) =>
   (deltaTimeMs) => {
@@ -64,86 +62,30 @@ export const spawnRndPlane =
     const level = score.level;
     const spawnRate = goals.SpawnRate || 1;
 
-    const chanceDepartureBase = 0.4;
-    const chanceDepartureLow = 0.1;
-    const baseChance = 0.03;
-    const highChance = 0.1;
-    const veryHighChance = 0.5;
-
     const spawnPlane = (chanceOfPlane, chanceOfDeparture) =>
       createSquare_entityFnArgChanceArg(
         () => createPlane(canvasObj, chanceOfDeparture).square,
         chanceOfPlane
       );
+
     const getSpawnChance = (chanceOfPlanePerSec) => {
       const spawnRateModifier = 0.7;
       const chanceOfPlaneBase = (chanceOfPlanePerSec * deltaTimeMs) / 1000;
       return chanceOfPlaneBase * (spawnRate * spawnRateModifier);
     };
 
-    const isDeparture = (obj) =>
-      isSquare(obj) && obj.destinationType === DestinationType.Departure;
-    const isArrival = (obj) =>
-      isSquare(obj) && obj.destinationType === DestinationType.Arrival;
-
-    const count = entityManagerArr.filter(isSquare).length;
-    const departureCount = entityManagerArr.filter(isDeparture).length;
-    const departureGoalRemaining = goals.Departures - score.departures;
-    const arrivalCount = entityManagerArr.filter(isArrival).length;
-    const arrivalGoalRemaining = goals.Arrivals - score.arrivals;
-    const noMoreDepartures = departureCount >= departureGoalRemaining;
-    const noMoreArrivals = arrivalCount >= arrivalGoalRemaining;
-
-    if (noMoreDepartures && noMoreArrivals) return;
-
-    // level 1
     if (level === 1) {
-      if (isTaxiQueueAlmostFull(entityManagerArr)) {
-        return spawnPlane(getSpawnChance(baseChance), chanceDepartureLow);
-      }
-      if (score.departures + departureCount <= 3) {
-        return spawnPlane(getSpawnChance(baseChance), 1);
-      }
-
-      return spawnPlane(getSpawnChance(highChance), 1);
+      level1(entityManagerArr, goals, score, getSpawnChance, spawnPlane);
     }
-
-    // level 2
     if (level === 2) {
-      return spawnPlane(getSpawnChance(baseChance), 0);
+      level2(entityManagerArr, goals, score, getSpawnChance, spawnPlane);
     }
-
-    // level 3
     if (level === 3) {
-      const lowCount = 4;
-      let chance = baseChance;
-
-      if (count <= lowCount) {
-        chance = veryHighChance;
-      }
-
-      if (noMoreDepartures) {
-        return spawnPlane(getSpawnChance(chance), 0);
-      }
-      if (isTaxiQueueAlmostFull(entityManagerArr)) {
-        return spawnPlane(getSpawnChance(chance), chanceDepartureLow);
-      }
-      if (noMoreArrivals) {
-        return spawnPlane(getSpawnChance(chance), 1);
-      }
-
-      if (count <= lowCount) {
-        if (departureCount > arrivalCount) {
-          return spawnPlane(getSpawnChance(chance), 0);
-        } else {
-          return spawnPlane(getSpawnChance(chance), 1);
-        }
-      }
-
-      // not a lowCount && both Arrivals + Departures remaining
-      return spawnPlane(getSpawnChance(chance), chanceDepartureBase);
+      level3(entityManagerArr, goals, score, getSpawnChance, spawnPlane);
     }
   };
+
+// PRIVATE /////////////////////////////////////////////////////////////////
 
 const createArrival = (canvasObjs, entityManagerArr, clickCB) => {
   const {

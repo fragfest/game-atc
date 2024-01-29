@@ -136,6 +136,7 @@
 </template>
 
 <script>
+import { DestinationType } from '../../js/types';
 import {
   convertToSmallDegrees,
   radToDegrees,
@@ -147,7 +148,6 @@ import {
   MessageEvents,
   subscribeMessage as subscribe,
 } from '../../js/events/messages';
-import { DestinationType } from '../../js/aircraft/airframe';
 
 import ToolTip from '../common/ToolTip';
 import CircleInputs from './CircleInputs';

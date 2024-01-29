@@ -1,10 +1,10 @@
-// WAYPOINT /////////////////////////////////////////////////////////////////
-export const Direction = Object.freeze({
-  None: 'none',
-  Left: 'left',
-  Right: 'right',
-});
+import { isDeparture, isArrival } from './types';
 
+// PLANES /////////////////////////////////////////////////////////////////
+export const getDepartureCount = (arr) => arr.filter(isDeparture).length;
+export const getArrivalCount = (arr) => arr.filter(isArrival).length;
+
+// WAYPOINT /////////////////////////////////////////////////////////////////
 export const nextWaypoint = (waypointsArr, plane) => {
   const indexSel = waypointsArr.findIndex((str) => str === plane.waypoint);
   let indexNext = indexSel + 1;

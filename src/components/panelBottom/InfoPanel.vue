@@ -49,12 +49,9 @@
 </template>
 
 <script>
+import { DestinationType } from '../../js/types';
 import { getClassSize } from '../../js/utils';
-import {
-  DestinationType,
-  getAirframe,
-  getPerformance,
-} from '../../js/aircraft/airframe';
+import { getAirframe, getPerformance } from '../../js/aircraft/airframe';
 
 export default {
   name: 'InfoPanel',

@@ -3,7 +3,7 @@ import {
   KeyboardEvents,
   subscribeKeyboard as subscribe,
 } from '../events/keyboard';
-import { DestinationType } from '../aircraft/airframe';
+import { isArrival, isDeparture } from '../types';
 import { nextWaypoint } from '../utils';
 import { setGameLoopState } from './game';
 import {
@@ -16,10 +16,6 @@ import {
   altitudeUpdatedFn,
 } from '../tutorial/gameTutorial';
 import { gameOver } from './gameOver';
-
-const isDeparture = (plane) =>
-  plane.destinationType === DestinationType.Departure;
-const isArrival = (plane) => plane.destinationType === DestinationType.Arrival;
 
 /**
  * @typedef {import('./game.js').State} State

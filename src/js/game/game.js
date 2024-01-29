@@ -14,8 +14,7 @@ import {
 } from '../airports/LHR';
 import { getGameSize } from '../utils';
 import { draw as drawScale } from '../canvas/scale';
-import { isSquare } from '../types';
-import { DestinationType } from '../aircraft/airframe';
+import { isDeparture, isSquare } from '../types';
 import { createPlane, spawnRndPlane } from '../Plane';
 import { setTaxiQueue } from './score';
 import { getGoals } from '../game/victory';
@@ -253,17 +252,11 @@ export const isTaxiQueueAlmostFull = (entityManagerArr) => {
   return getTaxiLength(entityManagerArr) > getTaxiWarnLength();
 };
 
-//////////////////////////////////////////////////////////////////////////////
-// PRIVATE
-//////////////////////////////////////////////////////////////////////////////
+// PRIVATE ////////////////////////////////////////////////////////////////////
 const getTaxiWarnLength = () => Math.ceil(0.6 * getGoals().TaxiQueue);
 
 const isWithinDist = (distMax, obj1, obj2) => {
   return distBetweenEntities(obj1)(obj2) < distMax;
-};
-
-const isDeparture = (plane) => {
-  return plane.destinationType === DestinationType.Departure;
 };
 
 const setProximityAlarm = (state, entityManagerArr) => {

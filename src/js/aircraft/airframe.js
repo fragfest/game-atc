@@ -13,11 +13,6 @@ export const getPerformance = (airframe, screenSize) => {
   return performanceLarge;
 };
 
-export const DestinationType = Object.freeze({
-  Arrival: 'arrival',
-  Departure: 'departure',
-});
-
 export const Airframes = Object.freeze({
   A320: 'A320',
   A333: 'A333',

@@ -1,7 +1,6 @@
-import { isSquare } from './types';
+import { DestinationType, Direction, isSquare } from './types';
 import {
   ScreenSizes,
-  Direction,
   inputHeadingToRad,
   convertToSmallRad,
   convertToPosRad,
@@ -23,7 +22,6 @@ import {
   planeLeaveFail,
   planeHandoffSuccess,
 } from './game/score';
-import { DestinationType } from './aircraft/airframe';
 import { play, SoundType } from './game/sound';
 
 ////////////////////////////////////////////////////////////

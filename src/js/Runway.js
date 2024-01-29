@@ -1,10 +1,10 @@
+import { Direction } from './types';
 import {
   convertToSmallDegrees,
   convHdgRadToThreeDigits,
   inputHeadingToRad,
   radToDegrees,
   ScreenSizes,
-  Direction,
 } from './utils';
 import Square from './Square';
 import { MessageEvents, publishMessage as publish } from './events/messages';

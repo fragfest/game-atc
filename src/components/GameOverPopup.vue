@@ -107,17 +107,17 @@ export default {
       failed: '0/' + getGoals().Failed,
       failedScore: 0,
       failedClass: 'border-red',
-      failedPointsClass: '',
+      failedPointsClass: 'silver',
       failedScoreClass: 'silver',
       taxiQueue: '0/' + getGoals().TaxiQueue,
       taxiQueueScore: 0,
       taxiQueueClass: 'border-red',
-      taxiQueuePointsClass: '',
+      taxiQueuePointsClass: 'silver',
       taxiQueueScoreClass: 'silver',
       conflict: '0/' + getGoals().Conflict,
       conflictScore: 0,
       conflictClass: 'border-red',
-      conflictPointsClass: '',
+      conflictPointsClass: 'silver',
       conflictScoreClass: 'silver',
       scoreTotalClass: 'silver',
       hotRunway: 0,
@@ -131,8 +131,11 @@ export default {
     const score = getScore();
 
     if (isVictory(score)) {
+      this.failedPointsClass = 'white';
       this.failedScoreClass = 'white';
+      this.taxiQueuePointsClass = 'white';
       this.taxiQueueScoreClass = 'white';
+      this.conflictPointsClass = 'white';
       this.conflictScoreClass = 'white';
       this.scoreTotalClass = 'white';
       this.isSuccess = true;

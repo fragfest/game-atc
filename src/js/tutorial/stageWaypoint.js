@@ -1,11 +1,10 @@
 import { ElapsedTimes } from './typesTutorial';
-import { FocusCircleType } from '../types';
+import { DestinationType, FocusCircleType } from '../types';
 import {
   controlPanelHolding,
   flightStripThird,
   flightStripThirdWaypoint,
 } from './focusCircleTutorial';
-import { DestinationType } from '../aircraft/airframe';
 
 let event = '';
 const Events = Object.freeze({
