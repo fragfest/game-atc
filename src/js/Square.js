@@ -1,3 +1,4 @@
+import { getPlaneClass, getPulseClass } from '../components/canvas/Plane';
 import { DestinationType, Direction, isSquare } from './types';
 import {
   ScreenSizes,
@@ -78,6 +79,8 @@ export default class Square {
     this.iconSelected = planeObj.airframeObj.images.iconSelected;
     this.iconConflict = planeObj.airframeObj.images.iconConflict;
     this.iconLanding = planeObj.airframeObj.images.iconLanding;
+    // html class
+    this.isShowHtmlPulse = true;
 
     // states
     this.isSelected = false;
@@ -97,7 +100,6 @@ export default class Square {
     this.trailPixelMs = 0;
     this.trailPixelArr = [];
     // state numbers
-
     this.prevPosition = { x: 0, y: 0 };
     // TODO migrate to using prevPosition
     this.distPrevHolding = Infinity;
@@ -125,7 +127,7 @@ export default class Square {
     this.altitudeRatePerMs = planeObj.airframeObj.altitudeRatePerMs;
     this.turnRateRadPerMs = planeObj.airframeObj.turnRateRadPerMs;
 
-    // departure
+    // departure or arrival
     if (this.destinationType === DestinationType.Arrival) {
       _createHtmlEl(this);
       return;
@@ -368,6 +370,28 @@ export default class Square {
     }
   }
 
+  updateHtmlClass() {
+    if (!this.htmlSquareDiv) return;
+
+    if (this.isShowHtmlPulse) {
+      this.isShowHtmlPulse = false;
+      if (!this.htmlSquareDiv.classList.contains(getPulseClass())) {
+        this.htmlSquareDiv.classList.add(getPulseClass());
+        if (this.isSmall) {
+          if (!this.htmlSquareDiv.classList.contains('small')) {
+            this.htmlSquareDiv.classList.add('small');
+          }
+        }
+      }
+
+      setTimeout(() => {
+        if (this.htmlSquareDiv.classList.contains(getPulseClass())) {
+          this.htmlSquareDiv.classList.remove(getPulseClass());
+        }
+      }, 6000);
+    }
+  }
+
   updateHandoff({ entityManagerArr }) {
     if (this.destinationType !== DestinationType.Departure) return;
 
@@ -534,23 +558,25 @@ export default class Square {
       altitudeChange
     );
 
+    this.headingRad = headingRadNew;
+    this.heading = convHdgRadToThreeDigits(headingRadNew);
+    this.altitude = altitudeNew;
+    this.speed = speedNew;
+
     this.prevPosition = {
       x: this.x,
       y: this.y,
     };
-
     this.x += pixelsInX;
     this.y += pixelsInY;
+
     if (this.htmlSquareDiv) {
       const squareSize = _htmlSquareSize(this.isSmall, this.iconSize).side;
       const squareTop = _htmlSquareSize(this.isSmall, this.iconSize).top;
       this.htmlSquareDiv.style.left = this.x - squareSize / 2 + 'px';
       this.htmlSquareDiv.style.top = this.y - squareTop - squareSize / 2 + 'px';
+      this.updateHtmlClass();
     }
-    this.headingRad = headingRadNew;
-    this.heading = convHdgRadToThreeDigits(headingRadNew);
-    this.altitude = altitudeNew;
-    this.speed = speedNew;
 
     // square returning to canvas
     if (
@@ -573,6 +599,7 @@ export default class Square {
       y > this.canvasHeight + offset || y < 0 - offset;
     if (outsideCanvasWidth(this.x, 0) || outsideCanvasHeight(this.y, 0)) {
       this.setNonInteractive(true);
+      this.isShowHtmlPulse = true;
     }
     if (outsideCanvasWidth(this.x, 15) || outsideCanvasHeight(this.y, 15)) {
       _clearTrailPixelsAll(this);
@@ -720,6 +747,7 @@ const _createHtmlEl = (self) => {
   self.htmlSquareDiv = document.createElement('div');
   self.htmlDiv.appendChild(self.htmlSquareDiv);
   self.htmlSquareDiv.id = self.title;
+  self.htmlSquareDiv.classList.add(getPlaneClass());
   self.htmlSquareDiv.style.position = 'absolute';
   _setDivMouseEvents(self);
   self.htmlSquareDiv.addEventListener(

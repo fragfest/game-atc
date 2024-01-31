@@ -11,8 +11,8 @@ ATCv0.1.2:
     
   Major:
     ✔ Messages: landing misconfigured @done(24-01-17 08:47)
-    ☐ Highlight success and failures on the map
     ☐ Hold/Handoff text on flightstrip
+    ☐ Timeslots/delay mechanic
     ☐ More levels
     ☐ More flights/airframes
     ☐ Fuel mechanic
@@ -27,6 +27,7 @@ ATCv0.1.2:
     ✔ GameOver popup: highlight gameOver goal @done(24-01-26 00:26)
     ✔ Sound Plane Select (basic) @done(24-01-26 21:43)
     ✔ Sound background tower @done(24-01-27 19:45)      
+    ✔ Highlight success and failures with pule on map @started(24-01-31 07:22) @done(24-01-31 13:39) @lasted(6h17m58s)
     ☐ Sound popups
     ☐ Sound Tutorial dialogs (text spawn)
     ☐ Pause button

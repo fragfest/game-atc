@@ -42,6 +42,8 @@
             :height="height"
           ></canvas>
 
+          <Plane></Plane>
+
           <!-- TUTORIAL -->
           <FocusCircle
             v-if="focusCircleType"
@@ -125,6 +127,7 @@
 
 import { ref } from 'vue';
 
+import Plane from './canvas/Plane.vue';
 import FocusCircle from './common/FocusCircle';
 import CyberBox from './common/CyberBox';
 import ButtonPanel from './panelBottom/ButtonPanel';
@@ -200,6 +203,7 @@ let setShowCircles_isShowCirclesArg = null;
 export default {
   name: 'atc-game',
   components: {
+    Plane,
     FocusCircle,
     CyberBox,
     FlightStripDeparture,
@@ -465,8 +469,17 @@ export default {
 </script>
 
 <style lang="scss">
+p {
+  margin: 6px;
+}
+
 .container {
   position: relative;
+}
+
+.canvas {
+  position: absolute;
+  border: solid 1px;
 }
 
 .game {
@@ -661,13 +674,4 @@ export default {
   }
 }
 // END tutorial
-
-.canvas {
-  position: absolute;
-  border: solid 1px;
-}
-
-p {
-  margin: 6px;
-}
 </style>
