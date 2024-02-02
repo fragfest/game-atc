@@ -11,7 +11,20 @@ ATCv0.1.2:
     
   Major:
     ✔ Messages: landing misconfigured @done(24-01-17 08:47)
-    ☐ Hold/Handoff text on flightstrip
+    ✔ Hold/Handoff text on flightstrip @done(24-02-02 12:38)
+    
+  Minor:
+    ✔ Retry tutorial @done(24-01-16 07:30)
+    ✔ nonInteractive planes can still turn back but remain nonInteractive @done(24-01-25 23:21)
+    ✔ GameOver popup: highlight gameOver goal @done(24-01-26 00:26)
+    ✔ Sound Plane Select (basic) @done(24-01-26 21:43)
+    ✔ Sound background tower @done(24-01-27 19:45)      
+    ✔ Highlight success and failures with pule on map @started(24-01-31 07:22) @done(24-01-31 13:39) @lasted(6h17m58s)
+
+ATCv0.1.3:
+  Bugs:
+    
+  Major:
     ☐ Timeslots/delay mechanic
     ☐ More levels
     ☐ More flights/airframes
@@ -22,12 +35,6 @@ ATCv0.1.2:
     ☐ Loading screen (while assets download)
     
   Minor:
-    ✔ Retry tutorial @done(24-01-16 07:30)
-    ✔ nonInteractive planes can still turn back but remain nonInteractive @done(24-01-25 23:21)
-    ✔ GameOver popup: highlight gameOver goal @done(24-01-26 00:26)
-    ✔ Sound Plane Select (basic) @done(24-01-26 21:43)
-    ✔ Sound background tower @done(24-01-27 19:45)      
-    ✔ Highlight success and failures with pule on map @started(24-01-31 07:22) @done(24-01-31 13:39) @lasted(6h17m58s)
     ☐ Sound popups
     ☐ Sound Tutorial dialogs (text spawn)
     ☐ Pause button

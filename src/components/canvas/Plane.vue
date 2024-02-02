@@ -16,6 +16,7 @@ export default {
 .plane.pulse.small::after {
   width: 6px;
   height: 6px;
+  border: 2px solid limegreen;
   animation: pulse-small 1.5s infinite;
 }
 

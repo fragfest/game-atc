@@ -44,6 +44,18 @@
           <div class="font-large"><b>Traffic</b></div>
           <div>TCAS conflict</div>
         </div>
+        <div v-else-if="isAtHolding" class="holding-handoff">
+          <div class="font-large"><b>Hold</b></div>
+          <div>orbiting</div>
+        </div>
+        <div v-else-if="isNavToHolding" class="holding-handoff">
+          <div class="font-large"><b>Hold</b></div>
+          <div>enroute</div>
+        </div>
+        <div v-else-if="isNavToHandoff" class="holding-handoff">
+          <div class="font-large"><b>Handoff</b></div>
+          <div>enroute</div>
+        </div>
         <div v-else-if="isLanding" class="takeoff-landing">
           <div class="font-large"><b>Landing</b></div>
           <div>ILS approach</div>
@@ -271,6 +283,24 @@ export default {
   },
 
   computed: {
+    isNavToHandoff: function () {
+      const plane = getPlane(this.plane, this.planes);
+      if (!plane) return false;
+      return plane.isHandoff;
+    },
+
+    isAtHolding: function () {
+      const plane = getPlane(this.plane, this.planes);
+      if (!plane) return false;
+      return plane.isHolding && plane.isAtWaypoint;
+    },
+
+    isNavToHolding: function () {
+      const plane = getPlane(this.plane, this.planes);
+      if (!plane) return false;
+      return plane.isHolding && !plane.isAtWaypoint;
+    },
+
     isTakeoff: function () {
       const plane = getPlane(this.plane, this.planes);
       if (!plane) return false;
@@ -533,9 +563,16 @@ export default {
 
     .title {
       color: lightgreen;
+      text-shadow: 1px 1px black;
+    }
+
+    .holding-handoff {
+      color: lightgreen;
+      text-shadow: 1px 1px black;
     }
     .takeoff-landing {
       color: yellow;
+      text-shadow: 1px 1px black;
     }
     .conflict {
       width: 80%;
