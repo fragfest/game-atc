@@ -14,7 +14,7 @@
       @mouseout="flatten()"
     >
       <!-- <div class="col">
-        <div>12:35</div>
+        <div>1235</div>
       </div> -->
       <div class="col font-large title">
         <b>{{ plane.title }}</b>
@@ -44,18 +44,6 @@
           <div class="font-large"><b>Traffic</b></div>
           <div>TCAS conflict</div>
         </div>
-        <div v-else-if="isAtHolding" class="holding-handoff">
-          <div class="font-large"><b>Hold</b></div>
-          <div>orbiting</div>
-        </div>
-        <div v-else-if="isNavToHolding" class="holding-handoff">
-          <div class="font-large"><b>Hold</b></div>
-          <div>enroute</div>
-        </div>
-        <div v-else-if="isNavToHandoff" class="holding-handoff">
-          <div class="font-large"><b>Handoff</b></div>
-          <div>enroute</div>
-        </div>
         <div v-else-if="isLanding" class="takeoff-landing">
           <div class="font-large"><b>Landing</b></div>
           <div>ILS approach</div>
@@ -75,6 +63,18 @@
         <div v-else-if="isTaxiing" class="takeoff-landing">
           <div class="font-large"><b>Taxiing</b></div>
           <div>ready for take off</div>
+        </div>
+        <div v-else-if="isAtHolding" class="holding-handoff">
+          <div class="font-large"><b>Hold</b></div>
+          <div>orbiting</div>
+        </div>
+        <div v-else-if="isNavToHolding" class="holding-handoff">
+          <div class="font-large"><b>Hold</b></div>
+          <div>enroute</div>
+        </div>
+        <div v-else-if="isNavToHandoff" class="holding-handoff">
+          <div class="font-large"><b>Handoff</b></div>
+          <div>enroute</div>
         </div>
         <div v-else></div>
       </div>

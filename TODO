@@ -1,3 +1,23 @@
+ATCv0.1.3:
+  Bugs:
+    ✔ Level 3 spawns excessive Arrivals (greater than goals) when taxiQueue is in warning state @done(24-02-02 23:27)
+    ☐ Fix Waypoint.test file import
+    
+  Major:
+    ☐ Timeslots/delay mechanic
+    ☐ More levels
+    ☐ More flights/airframes
+    ☐ Fuel mechanic
+    ☐ Weather mechanic
+    ☐ Engine contrails
+    ☐ Level intro prompt: airport name, scenario description
+    ☐ Loading screen (while assets download)
+    
+  Minor:
+    ☐ Sound popups
+    ☐ Pause button
+    ☐ Slower landing rollouts (takeoffs too)
+    ☐ Sound Tutorial dialogs (text spawn)
 
 ATCv0.1.2:
   Bugs:
@@ -20,22 +40,3 @@ ATCv0.1.2:
     ✔ Sound Plane Select (basic) @done(24-01-26 21:43)
     ✔ Sound background tower @done(24-01-27 19:45)      
     ✔ Highlight success and failures with pule on map @started(24-01-31 07:22) @done(24-01-31 13:39) @lasted(6h17m58s)
-
-ATCv0.1.3:
-  Bugs:
-    
-  Major:
-    ☐ Timeslots/delay mechanic
-    ☐ More levels
-    ☐ More flights/airframes
-    ☐ Fuel mechanic
-    ☐ Weather mechanic
-    ☐ Engine contrails
-    ☐ Level intro prompt: airport name, scenario description
-    ☐ Loading screen (while assets download)
-    
-  Minor:
-    ☐ Sound popups
-    ☐ Sound Tutorial dialogs (text spawn)
-    ☐ Pause button
-    ☐ Slower landing rollouts (takeoffs too)

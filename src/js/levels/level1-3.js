@@ -126,11 +126,11 @@ export const level3 = (
   if (areDeparturesSpawned) {
     return SpawnPlane(GetSpawnChance(chance), noChance);
   }
-  if (isTaxiQueueAlmostFull(entityManagerArr)) {
-    return SpawnPlane(GetSpawnChance(chance), chanceDepartureLow);
-  }
   if (areArrivalsSpawned) {
     return SpawnPlane(GetSpawnChance(chance), guaranteedChance);
+  }
+  if (isTaxiQueueAlmostFull(entityManagerArr)) {
+    return SpawnPlane(GetSpawnChance(chance), chanceDepartureLow);
   }
 
   if (count <= lowCount) {
