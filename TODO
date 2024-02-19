@@ -1,6 +1,7 @@
 ATCv0.1.3:
   Bugs:
     ✔ Level 3 spawns excessive Arrivals (greater than goals) when taxiQueue is in warning state @done(24-02-02 23:27)
+    ✔ Excess ShowCircle spawning on failed handoff plane exit @done(24-02-19 06:09)
     ☐ Fix Waypoint.test file import
     
   Major:
@@ -15,7 +16,6 @@ ATCv0.1.3:
     
   Minor:
     ☐ Sound popups
-    ☐ Pause button
     ☐ Slower landing rollouts (takeoffs too)
     ☐ Sound Tutorial dialogs (text spawn)
 

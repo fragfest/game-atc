@@ -10,6 +10,7 @@ import {
   altitudeDisplay,
 } from './utils';
 import {
+  distBetweenEntities,
   getTooCloseDistance,
   isCloseToEntity,
   isCloseToWaypoint,
@@ -106,6 +107,7 @@ export default class Square {
     this.distPrevHandoff = Infinity;
 
     // flight info
+    this.time = flightObj.time;
     this.title = flightObj.flight.trim().substring(0, 6);
     this.city = flightObj.city;
     this.airport = flightObj.airport;
@@ -375,12 +377,12 @@ export default class Square {
 
     if (this.isShowHtmlPulse) {
       this.isShowHtmlPulse = false;
-      if (!this.htmlSquareDiv.classList.contains(getPulseClass())) {
-        this.htmlSquareDiv.classList.add(getPulseClass());
-        if (this.isSmall) {
-          if (!this.htmlSquareDiv.classList.contains('small')) {
-            this.htmlSquareDiv.classList.add('small');
-          }
+      if (this.htmlSquareDiv.classList.contains(getPulseClass())) return;
+
+      this.htmlSquareDiv.classList.add(getPulseClass());
+      if (this.isSmall) {
+        if (!this.htmlSquareDiv.classList.contains('small')) {
+          this.htmlSquareDiv.classList.add('small');
         }
       }
 
@@ -398,9 +400,13 @@ export default class Square {
     const isTargetWaypoint = (entity) =>
       entity.class === 'waypoint' && // TODO deprecate the class prop
       entity.title === this.waypoint;
-
     const waypointObj = entityManagerArr.find(isTargetWaypoint);
     if (!waypointObj) return;
+
+    const distToWaypoint = this.isSmall ? 18 : 28;
+    if (distBetweenEntities(waypointObj)(this) < distToWaypoint) {
+      this.isShowHtmlPulse = true;
+    }
     if (isCloseToWaypoint(waypointObj)(this)) {
       this.setDestroyFlag(true);
       this.setHandoff(true);

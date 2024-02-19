@@ -103,15 +103,18 @@ export default class Waypoint {
           plane.setHeadingTarget(headingRad, false, true, direction);
           return;
         }
+
         if (!plane.isAtWaypoint) {
           // plane heading towards waypoint
           plane.setDistPrevHolding(distBetweenEntities(this)(plane));
           plane.setHeadingTarget(headingRad, false, true, Direction.None);
           return;
         }
+
         // plane holding at waypoint
         plane.setDistPrevHolding(distBetweenEntities(this)(plane));
         plane.setHeadingTarget(headingRad, false, true, null);
+        return;
       }
     });
   }

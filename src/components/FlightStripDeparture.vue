@@ -162,7 +162,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .queue-length-box {
   display: flex;
   align-items: center;

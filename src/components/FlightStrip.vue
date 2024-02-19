@@ -13,11 +13,14 @@
       @mouseover="hover()"
       @mouseout="flatten()"
     >
-      <!-- <div class="col">
-        <div>1235</div>
-      </div> -->
-      <div class="col font-large title">
-        <b>{{ plane.title }}</b>
+      <div class="col font-large">
+        <span class="time"
+          ><b>{{ plane.time }}</b></span
+        >
+        <hr />
+        <span class="title">
+          <b>{{ plane.title }}</b>
+        </span>
       </div>
       <div class="col font-large">
         <b>{{ plane.runway }}</b>
@@ -553,6 +556,12 @@ export default {
       }
     }
 
+    hr {
+      border: none;
+      margin-top: 2px;
+      margin-bottom: 0px;
+    }
+
     .fixed-width {
       width: 120px;
       padding-left: 10px;
@@ -561,9 +570,13 @@ export default {
       border: none;
     }
 
+    .time {
+      text-shadow: 2px 2px black;
+    }
+
     .title {
       color: lightgreen;
-      text-shadow: 1px 1px black;
+      text-shadow: 2px 2px black;
     }
 
     .holding-handoff {

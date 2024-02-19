@@ -300,6 +300,7 @@ export default {
   align-self: center;
   text-align: center;
   margin-bottom: 0;
+  text-shadow: 2px 2px black;
 }
 
 .popup .modal .content {
