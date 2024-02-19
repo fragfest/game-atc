@@ -3,13 +3,13 @@
 </template>
 
 <script>
-// should match class names in <style> below
-export const getPlaneClass = () => 'plane';
-export const getPulseClass = () => 'pulse';
-
 export default {
   name: 'canvas-plane',
 };
+
+// css class names should match in funcs:
+// getPlaneClass
+// getPulseClass
 </script>
 
 <style lang="scss">

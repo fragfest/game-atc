@@ -1,4 +1,3 @@
-import { getPlaneClass, getPulseClass } from '../components/canvas/Plane';
 import { DestinationType, Direction, isSquare } from './types';
 import {
   ScreenSizes,
@@ -726,8 +725,11 @@ export default class Square {
 // end class Square
 ////////////////////////////////////////////////////////////
 
-const _trailMax = 12;
+// should match css class names in canvas/Plane.vue <style>
+const getPlaneClass = () => 'plane';
+const getPulseClass = () => 'pulse';
 
+const _trailMax = 12;
 const _clearTrailPixelsAll = (self) => {
   self.trailPixelArr.forEach((pixel) => _clearTrailPixel(self, pixel));
   self.trailPixelArr = [];
