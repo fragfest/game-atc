@@ -9,6 +9,7 @@ export const getFlightArrival = (spawned) => {
 
   const flightObj = flightsUnspawned[getRndIndex(total)];
   flightObj.flight = setRndFlightTitle(flightObj);
+  flightObj.time = setTimeSecs();
   return flightObj;
 };
 
@@ -19,10 +20,12 @@ export const getFlightDeparture = (spawned) => {
 
   const flightObj = flightsUnspawned[getRndIndex(total)];
   flightObj.flight = setRndFlightTitle(flightObj);
+  flightObj.time = setTimeSecs();
   return flightObj;
 };
 
 ////////////// PRIVATE //////////////////////////////////////
+const setTimeSecs = () => 15;
 const setRndFlightTitle = (obj) => {
   return obj.airlineCode + leftPadZeros(Math.floor(Math.random() * 1000));
 };

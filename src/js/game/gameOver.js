@@ -1,10 +1,6 @@
 import { fillHtmlQueue } from './gameEvents';
 import { getScore } from './score';
-import {
-  isFailedCondition,
-  isConflictCondition,
-  isExceededTaxiingCondition,
-} from './victory';
+import { isFailedCondition, isConflictCondition, isDelayed } from './victory';
 
 /**
  * @param {Object} tutorialBox contains vue ref properties
@@ -23,7 +19,7 @@ export const gameOver = (tutorialBox, isSuccess) => {
   const score = getScore();
   const isFailed = isFailedCondition(score.failed);
   const isConflict = isConflictCondition(score.conflict);
-  const isTaxiFail = isExceededTaxiingCondition(score.taxiQueue);
+  const isDelayedFail = isDelayed(score.delayed);
 
   let title = 'Failure';
   let crossText = 'Exceeded minimum conditions';
@@ -35,9 +31,9 @@ export const gameOver = (tutorialBox, isSuccess) => {
     title = 'Traffic minimums exceeded';
     crossText = 'Conflict (seconds)';
   }
-  if (isTaxiFail) {
-    title = 'Takeoff queue excessive';
-    crossText = 'Delays (taxiing slots)';
+  if (isDelayedFail) {
+    title = 'Flight delays excessive';
+    crossText = 'Delays';
   }
 
   fillHtmlQueue('<clear>', tutorialBoxHtmlQueue);

@@ -14,9 +14,12 @@
       @mouseout="flatten()"
     >
       <div class="col font-large">
-        <span class="time"
-          ><b>{{ plane.time }}</b></span
-        >
+        <span v-if="displayTime" class="time">
+          <b>{{ displayTime }}</b>
+        </span>
+        <span v-else class="time time-delay">
+          <b>DELAYED</b>
+        </span>
         <hr />
         <span class="title">
           <b>{{ plane.title }}</b>
@@ -286,6 +289,20 @@ export default {
   },
 
   computed: {
+    displayTime: function () {
+      const plane = getPlane(this.plane, this.planes);
+      if (!plane) return '-';
+      if (plane.time <= 0) {
+        return false;
+      }
+
+      const minutes = Math.floor(plane.time / 60);
+      const seconds = Math.floor(plane.time - minutes * 60);
+      const minutesStr = ('00' + minutes).slice(-2);
+      const secondsStr = ('00' + seconds).slice(-2);
+      return minutesStr + ':' + secondsStr;
+    },
+
     isNavToHandoff: function () {
       const plane = getPlane(this.plane, this.planes);
       if (!plane) return false;
@@ -599,4 +616,15 @@ export default {
   // strip-info END
 }
 // strip (large) END
+
+.strip .time-delay {
+  color: orangered;
+  animation: breath 4s ease-out infinite;
+}
+
+@keyframes breath {
+  50% {
+    opacity: 0.2;
+  }
+}
 </style>

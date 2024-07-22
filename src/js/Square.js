@@ -22,6 +22,7 @@ import {
   planeLandSuccess,
   planeLeaveFail,
   planeHandoffSuccess,
+  planeDelayFail,
 } from './game/score';
 import { play, SoundType } from './game/sound';
 
@@ -83,6 +84,7 @@ export default class Square {
     this.isShowHtmlPulse = true;
 
     // states
+    this.isDelayed = false;
     this.isSelected = false;
     this.isHandoff = false;
     this.isFlyingOutOfArea = false;
@@ -131,15 +133,20 @@ export default class Square {
     // departure or arrival
     if (this.destinationType === DestinationType.Arrival) {
       _createHtmlEl(this);
-      return;
+    } else {
+      this.setAltitude(0, false, true);
+      this.isNonInteractive = true;
+      this.isTaxiing = true;
     }
-    this.setAltitude(0, false, true);
-    this.isNonInteractive = true;
-    this.isTaxiing = true;
   }
 
   clickEventCB() {
     throw new Error('clickEventCB not attached');
+  }
+
+  setIsDelayed(isDelayed) {
+    this.isDelayed = !!isDelayed;
+    planeDelayFail();
   }
 
   setShowCircle(isShowCircle) {
@@ -581,6 +588,16 @@ export default class Square {
       this.htmlSquareDiv.style.left = this.x - squareSize / 2 + 'px';
       this.htmlSquareDiv.style.top = this.y - squareTop - squareSize / 2 + 'px';
       this.updateHtmlClass();
+    }
+
+    // timer
+    if (this.time <= 0) {
+      this.time = 0;
+      if (!this.isDelayed) {
+        this.setIsDelayed(true);
+      }
+    } else {
+      this.time -= deltaTimeMs / 1000;
     }
 
     // square returning to canvas

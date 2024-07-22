@@ -16,10 +16,8 @@
         <span>{{ score.failed }}/{{ goals.Failed }}</span>
       </div>
       <div class="score-row" :class="sizeClass">
-        <span class="margin-top badge conflict">
-          delays <small>taxiing slots</small>
-        </span>
-        <span>{{ score.taxiQueue }}/{{ goals.TaxiQueue }}</span>
+        <span class="margin-top badge conflict"> delays </span>
+        <span>{{ score.delayed }}/{{ goals.Delayed }}</span>
       </div>
       <div class="score-row" :class="sizeClass">
         <span class="margin-top badge conflict">
@@ -66,8 +64,8 @@ export default {
         departures: 0,
         arrivals: 0,
         failed: 0,
-        taxiQueue: 0,
         conflict: 0,
+        delayed: 0,
       },
       goals: getGoals(),
     };

@@ -31,12 +31,12 @@
         <div class="item score" :class="failedScoreClass">
           {{ failedScore }}
         </div>
-        <div class="item" :class="taxiQueueClass">delays (taxiing slots)</div>
-        <div class="item points" :class="taxiQueuePointsClass">
-          {{ taxiQueue }}
+        <div class="item" :class="delayClass">delays</div>
+        <div class="item points" :class="delayPointsClass">
+          {{ delays }}
         </div>
-        <div class="item score" :class="taxiQueueScoreClass">
-          {{ taxiQueueScore }}
+        <div class="item score" :class="delayScoreClass">
+          {{ delayScore }}
         </div>
         <div class="item" :class="conflictClass">conflict (seconds)</div>
         <div class="item points" :class="conflictPointsClass">
@@ -80,10 +80,10 @@ import {
   levelComplete,
 } from '../js/game/score';
 import {
+  isDelayed,
   isDeparturesSuccess,
   isArrivalsSuccess,
   isFailedCondition,
-  isExceededTaxiingCondition,
   isConflictCondition,
   isVictory,
   getGoals,
@@ -109,11 +109,11 @@ export default {
       failedClass: 'border-red',
       failedPointsClass: 'silver',
       failedScoreClass: 'silver',
-      taxiQueue: '0/' + getGoals().TaxiQueue,
-      taxiQueueScore: 0,
-      taxiQueueClass: 'border-red',
-      taxiQueuePointsClass: 'silver',
-      taxiQueueScoreClass: 'silver',
+      delays: '0/' + getGoals().Delayed,
+      delayScore: 0,
+      delayClass: 'border-red',
+      delayPointsClass: 'silver',
+      delayScoreClass: 'silver',
       conflict: '0/' + getGoals().Conflict,
       conflictScore: 0,
       conflictClass: 'border-red',
@@ -133,8 +133,8 @@ export default {
     if (isVictory(score)) {
       this.failedPointsClass = 'white';
       this.failedScoreClass = 'white';
-      this.taxiQueuePointsClass = 'white';
-      this.taxiQueueScoreClass = 'white';
+      this.delayPointsClass = 'white';
+      this.delayScoreClass = 'white';
       this.conflictPointsClass = 'white';
       this.conflictScoreClass = 'white';
       this.scoreTotalClass = 'white';
@@ -151,9 +151,9 @@ export default {
       this.failedClass = 'bckgrnd-red';
       this.failedPointsClass = 'bckgrnd-red';
     }
-    if (isExceededTaxiingCondition(score.taxiQueue)) {
-      this.taxiQueueClass = 'bckgrnd-red';
-      this.taxiQueuePointsClass = 'bckgrnd-red';
+    if (isDelayed(score.delayed)) {
+      this.delayClass = 'bckgrnd-red';
+      this.delayPointsClass = 'bckgrnd-red';
     }
     if (isConflictCondition(score.conflict)) {
       this.conflictClass = 'bckgrnd-red';
@@ -173,7 +173,7 @@ export default {
     this.departures = '' + score.departures + '/' + getGoals().Departures;
     this.arrivals = '' + score.arrivals + '/' + getGoals().Arrivals;
     this.failed = '' + score.failed + '/' + getGoals().Failed;
-    this.taxiQueue = '' + score.taxiQueue + '/' + getGoals().TaxiQueue;
+    this.delays = '' + score.delayed + '/' + getGoals().Delayed;
     const conflict =
       score.conflict < conflictScoreMax ? score.conflict : conflictScoreMax;
     this.conflict = '' + Math.floor(conflict) + '/' + getGoals().Conflict;
@@ -181,13 +181,13 @@ export default {
     this.departureScore = isVictory(score) ? baseScorePass : 0;
     this.arrivalScore = isVictory(score) ? baseScorePass : 0;
     this.failedScore = isVictory(score) ? Math.round(failedScore) : 0;
-    this.taxiQueueScore = isVictory(score) ? baseScorePass : 0;
+    this.delayScore = isVictory(score) ? baseScorePass : 0;
     this.conflictScore = isVictory(score) ? Math.round(conflictScore) : 0;
     this.total =
       this.departureScore +
       this.arrivalScore +
       this.failedScore +
-      this.taxiQueueScore +
+      this.delayScore +
       this.conflictScore;
 
     if (isVictory(score)) levelComplete(this.total);

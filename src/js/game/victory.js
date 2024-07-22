@@ -43,14 +43,13 @@ export const getGoals = () => {
   return goals || { ...Goals };
 };
 
+export const isDelayed = (delayCount) => delayCount >= getGoals().Delayed;
 export const isDeparturesSuccess = (departuresCount) =>
   departuresCount >= getGoals().Departures;
 export const isArrivalsSuccess = (arrivalsCount) =>
   arrivalsCount >= getGoals().Arrivals;
 export const isFailedCondition = (failedCount) =>
   failedCount >= getGoals().Failed;
-export const isExceededTaxiingCondition = (taxiQueueCount) =>
-  taxiQueueCount >= getGoals().TaxiQueue;
 export const isConflictCondition = (conflictCount) =>
   conflictCount >= getGoals().Conflict;
 
@@ -70,7 +69,7 @@ export const isVictory = (score) =>
 export const isDefeat = (score) =>
   isFailedCondition(score.failed) ||
   isConflictCondition(score.conflict) ||
-  isExceededTaxiingCondition(score.taxiQueue);
+  isDelayed(score.delayed);
 
 export const publishSuccess = () => {
   document.dispatchEvent(new CustomEvent(VictoryEvents.Success));
@@ -92,6 +91,7 @@ const GoalsLevels = {
     TaxiQueue: 4,
     Conflict: 999,
     SpawnRate: 1,
+    Delayed: 4,
   },
   1: {
     Arrivals: 0,
@@ -100,6 +100,7 @@ const GoalsLevels = {
     TaxiQueue: 6,
     Conflict: 60,
     SpawnRate: 1,
+    Delayed: 6,
   },
   2: {
     Arrivals: 8,
@@ -108,6 +109,7 @@ const GoalsLevels = {
     TaxiQueue: 6,
     Conflict: 60,
     SpawnRate: 1,
+    Delayed: 6,
   },
   3: {
     Arrivals: 8,
@@ -116,6 +118,7 @@ const GoalsLevels = {
     TaxiQueue: 6,
     Conflict: 60,
     SpawnRate: 1,
+    Delayed: 6,
   },
 };
 
@@ -127,6 +130,7 @@ const GoalsLevels = {
  * @property {number} TaxiQueue
  * @property {number} Conflict
  * @property {number} SpawnRate
+ * @property {number} Delayed
  */
 const Goals = {
   Arrivals: 0,
@@ -135,4 +139,5 @@ const Goals = {
   TaxiQueue: 0,
   Conflict: 0,
   SpawnRate: 0,
+  Delayed: 0,
 };
