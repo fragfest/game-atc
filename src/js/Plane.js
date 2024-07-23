@@ -15,7 +15,7 @@ import {
 } from './airports/LHR';
 import { getGoals } from './game/victory';
 import { getScore } from './game/score';
-import { level1, level2, level3 } from './levels/level1-3';
+import { level } from './levels/levels';
 
 export const createPlane = (
   {
@@ -71,10 +71,9 @@ export const spawnRndPlane =
   (deltaTimeMs) => {
     const goals = getGoals();
     const score = getScore();
-    const level = score.level;
     const spawnRate = goals.SpawnRate || 1;
 
-    const spawnPlane = (chanceOfPlane, chanceOfDeparture, flightObj) =>
+    const spawnPlaneFn = (chanceOfPlane, chanceOfDeparture, flightObj) =>
       createSquare_entityFnArgChanceArg(
         () =>
           createPlane(
@@ -84,21 +83,19 @@ export const spawnRndPlane =
         chanceOfPlane
       );
 
-    const getSpawnChance = (chanceOfPlanePerSec) => {
+    const getSpawnChanceFn = (chanceOfPlanePerSec) => {
       const spawnRateModifier = 0.7;
       const chanceOfPlaneBase = (chanceOfPlanePerSec * deltaTimeMs) / 1000;
       return chanceOfPlaneBase * (spawnRate * spawnRateModifier);
     };
 
-    if (level === 1) {
-      level1(entityManagerArr, goals, score, getSpawnChance, spawnPlane);
-    }
-    if (level === 2) {
-      level2(entityManagerArr, goals, score, getSpawnChance, spawnPlane);
-    }
-    if (level === 3) {
-      level3(entityManagerArr, goals, score, getSpawnChance, spawnPlane);
-    }
+    level(score.level, {
+      entityManagerArr,
+      goals,
+      score,
+      getSpawnChanceFn,
+      spawnPlaneFn,
+    });
   };
 
 // PRIVATE /////////////////////////////////////////////////////////////////

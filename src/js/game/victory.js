@@ -81,7 +81,7 @@ export const publishFailed = () => {
 
 // PRIVATE //////////////////////////////////////////////////
 
-const FinalLevel = 3;
+const FinalLevel = 4;
 
 const GoalsLevels = {
   0: {
@@ -109,6 +109,14 @@ const GoalsLevels = {
     Delayed: 6,
   },
   3: {
+    Arrivals: 8,
+    Departures: 8,
+    Failed: 3,
+    Conflict: 60,
+    SpawnRate: 1,
+    Delayed: 6,
+  },
+  4: {
     Arrivals: 8,
     Departures: 8,
     Failed: 3,

@@ -26,12 +26,10 @@ export const gameOver = (tutorialBox, isSuccess) => {
   if (isFailed) {
     title = 'Handoff/Landing deviations excessive';
     crossText = 'Failed handoffs/landings';
-  }
-  if (isConflict) {
+  } else if (isConflict) {
     title = 'Traffic minimums exceeded';
     crossText = 'Conflict (seconds)';
-  }
-  if (isDelayedFail) {
+  } else if (isDelayedFail) {
     title = 'Flight delays excessive';
     crossText = 'Delays';
   }
