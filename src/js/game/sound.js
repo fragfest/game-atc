@@ -57,6 +57,9 @@ export const setup = () => {
       if (score.failed > oldScore.failed) {
         play(SoundType.Fail);
       }
+      if (score.delayed > oldScore.delayed) {
+        play(SoundType.Fail);
+      }
     }
 
     oldScore = { ...score };
