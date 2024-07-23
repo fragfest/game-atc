@@ -331,10 +331,11 @@ const tutorial =
       state.dialogBox = { top: 0.07, left: 0.1, width: 0.5, html: '<clear>' };
       setTimeout(() => {
         const html =
-          `Congratulations <b>Controller</b>, <br><br> Your training is complete and you are ready to direct real aircraft.<br>` +
-          `Please wait for the <b>departures</b> and <b>arrivals</b> goals to complete<br><br>` +
+          `Congratulations <b>Controller</b>, <br><br> Your training is complete and you are ready to direct real aircraft. Note the flightstrip countdown timer,<br>` +
+          `indicating the time after which flights are considered delayed.<br><br>` +
+          `Please wait for the <b>Departures</b> and <b>Arrivals</b> goals to complete.<br>` +
           `Welcome to the Future Flight Ops system!`;
-        state.dialogBox = { top: 0.1, left: 0.1, width: 0.5, html };
+        state.dialogBox = { top: 0.1, left: 0.1, width: 0.6, html };
         state.focusCircleType = FocusCircleType.Rectangle;
         state.focusCircle = scorePanel(screenSize);
       }, 1000);

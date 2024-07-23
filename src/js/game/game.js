@@ -40,7 +40,7 @@ export const setup = (state) => (argObj) => {
   const height = getGameSize(argObj.screenSize).height;
   const canvasObj = getCanvasObj(argObj);
 
-  const firstPlaneCanvasObj = { ...canvasObj, flightObj: { time: 8 * 60 } };
+  const firstPlaneCanvasObj = { ...canvasObj, flightObj: { time: 10 * 60 } };
   const spawnFirstPlane = () =>
     createSquare(screenSize, entityManagerArr)(
       () => createPlane(firstPlaneCanvasObj, 1).square,

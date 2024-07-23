@@ -13,9 +13,7 @@ const baseChance = 0.03;
 const highChance = 0.1;
 const veryHighChance = 0.5;
 const guaranteedChance = 1;
-
 const chanceDepartureBase = 0.4;
-const chanceDepartureLow = 0.1;
 
 /**
  * @typedef {Function} GetSpawnChance
@@ -45,27 +43,12 @@ export const level1 = (
   SpawnPlane
 ) => {
   const flightObj = { time: 10 * 60 };
-  const departureCount = getDepartureCount(entityManagerArr);
   const areAllSpawned = noMoreDeparturesArrivals(
     entityManagerArr,
     goals,
     score
   );
-  const isLowCount = score.departures + departureCount <= 3;
-
   if (areAllSpawned) return;
-
-  // if (isTaxiQueueAlmostFull(entityManagerArr)) {
-  //   return SpawnPlane(
-  //     GetSpawnChance(baseChance),
-  //     chanceDepartureLow,
-  //     flightObj
-  //   );
-  // }
-  if (isLowCount) {
-    return SpawnPlane(GetSpawnChance(baseChance), guaranteedChance, flightObj);
-  }
-
   return SpawnPlane(GetSpawnChance(highChance), guaranteedChance, flightObj);
 };
 
@@ -84,7 +67,7 @@ export const level2 = (
   GetSpawnChance,
   SpawnPlane
 ) => {
-  const flightObj = { time: 10 * 60 };
+  const flightObj = { time: 15 * 60 };
   const areAllSpawned = noMoreDeparturesArrivals(
     entityManagerArr,
     goals,
@@ -121,7 +104,7 @@ export const level3 = (
     score
   );
   const lowCount = 4;
-  const flightObj = { time: 10 * 60 };
+  const flightObj = { time: 15 * 60 };
 
   if (areAllSpawned) return;
 
@@ -136,9 +119,6 @@ export const level3 = (
   if (areArrivalsSpawned) {
     return SpawnPlane(GetSpawnChance(chance), guaranteedChance, flightObj);
   }
-  // if (isTaxiQueueAlmostFull(entityManagerArr)) {
-  //   return SpawnPlane(GetSpawnChance(chance), chanceDepartureLow, flightObj);
-  // }
 
   if (count <= lowCount) {
     if (departureCount > arrivalCount) {
@@ -152,7 +132,7 @@ export const level3 = (
   return SpawnPlane(GetSpawnChance(chance), chanceDepartureBase, flightObj);
 };
 
-// PRIvATE ////////////////////////////////////////////////////////////////
+// PRIVATE ////////////////////////////////////////////////////////////////
 
 const departureGoalRemaining = (goals, score) =>
   goals.Departures - score.departures;
@@ -160,7 +140,6 @@ const arrivalGoalRemaining = (goals, score) => goals.Arrivals - score.arrivals;
 
 const noMoreRemaining = (countFn, remainingFn) => (arr, goals, score) =>
   countFn(arr) >= remainingFn(goals, score);
-
 const noMoreDepartures = noMoreRemaining(
   getDepartureCount,
   departureGoalRemaining
