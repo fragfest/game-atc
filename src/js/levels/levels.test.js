@@ -30,6 +30,20 @@ describe('Level', () => {
       expect(spawnPlaneFn).toHaveBeenCalledWith(0.123, 1, { time: 600 });
     });
 
+    test('level 1 only spawn departures', () => {
+      score = { arrivals: 0, departures: 1 };
+      level(1, {
+        entityManagerArr,
+        goals,
+        score,
+        getSpawnChanceFn,
+        spawnPlaneFn,
+      });
+
+      expect(getSpawnChanceFn).not.toHaveBeenCalled();
+      expect(spawnPlaneFn).not.toHaveBeenCalled();
+    });
+
     test('level 1 spawn complete', () => {
       score = { arrivals: 1, departures: 1 };
       level(1, {
@@ -56,6 +70,20 @@ describe('Level', () => {
 
       expect(getSpawnChanceFn).toHaveBeenCalledWith(0.03);
       expect(spawnPlaneFn).toHaveBeenCalledWith(0.123, 0, { time: 900 });
+    });
+
+    test('level 2 only spawn arrivals', () => {
+      score = { arrivals: 1, departures: 0 };
+      level(2, {
+        entityManagerArr,
+        goals,
+        score,
+        getSpawnChanceFn,
+        spawnPlaneFn,
+      });
+
+      expect(getSpawnChanceFn).not.toHaveBeenCalled();
+      expect(spawnPlaneFn).not.toHaveBeenCalled();
     });
 
     test('level 2 spawn complete', () => {

@@ -57,12 +57,15 @@ export const level1 = (arg) => {
   const { entityManagerArr, goals, score, getSpawnChanceFn, spawnPlaneFn } =
     arg;
   const flightObj = { time: 10 * 60 };
+  const areDeparturesSpawned = noMoreDepartures(entityManagerArr, goals, score);
   const areAllSpawned = noMoreDeparturesArrivals(
     entityManagerArr,
     goals,
     score
   );
   if (areAllSpawned) return;
+
+  if (areDeparturesSpawned) return;
   spawnPlaneFn(getSpawnChanceFn(highChance), guaranteedChance, flightObj);
 };
 
@@ -79,13 +82,15 @@ export const level2 = (arg) => {
   const { entityManagerArr, goals, score, getSpawnChanceFn, spawnPlaneFn } =
     arg;
   const flightObj = { time: 15 * 60 };
+  const areArrivalsSpawned = noMoreArrivals(entityManagerArr, goals, score);
   const areAllSpawned = noMoreDeparturesArrivals(
     entityManagerArr,
     goals,
     score
   );
-
   if (areAllSpawned) return;
+
+  if (areArrivalsSpawned) return;
   return spawnPlaneFn(getSpawnChanceFn(baseChance), noChance, flightObj);
 };
 
