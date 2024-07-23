@@ -23,7 +23,6 @@ export const resetScore = () => {
   score.departures = 0;
   score.arrivals = 0;
   score.failed = 0;
-  score.taxiQueue = 0;
   score.conflict = 0;
   score.delayed = 0;
   setScore(score);
@@ -32,13 +31,6 @@ export const resetScore = () => {
 export const planeDelayFail = () => {
   const score = getScore();
   score.delayed += 1;
-  setScore(score);
-  publishScore(score);
-};
-
-export const setTaxiQueue = (queueLength) => {
-  const score = getScore();
-  score.taxiQueue = queueLength;
   setScore(score);
   publishScore(score);
 };
@@ -215,7 +207,6 @@ const setScore = (score) => {
  * @property {number} departures
  * @property {number} arrivals
  * @property {number} failed
- * @property {number} taxiQueue
  * @property {number} conflict
  * @property {number} delayed
  */
@@ -224,7 +215,6 @@ const Score = {
   departures: 0,
   arrivals: 0,
   failed: 0,
-  taxiQueue: 0,
   conflict: 0,
   delayed: 0,
 };

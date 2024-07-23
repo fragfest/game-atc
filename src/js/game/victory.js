@@ -88,7 +88,6 @@ const GoalsLevels = {
     Arrivals: 1,
     Departures: 1,
     Failed: 1,
-    TaxiQueue: 4,
     Conflict: 999,
     SpawnRate: 1,
     Delayed: 4,
@@ -97,7 +96,6 @@ const GoalsLevels = {
     Arrivals: 0,
     Departures: 8,
     Failed: 3,
-    TaxiQueue: 6,
     Conflict: 60,
     SpawnRate: 1,
     Delayed: 6,
@@ -106,7 +104,6 @@ const GoalsLevels = {
     Arrivals: 8,
     Departures: 1,
     Failed: 3,
-    TaxiQueue: 6,
     Conflict: 60,
     SpawnRate: 1,
     Delayed: 6,
@@ -115,7 +112,6 @@ const GoalsLevels = {
     Arrivals: 8,
     Departures: 8,
     Failed: 3,
-    TaxiQueue: 6,
     Conflict: 60,
     SpawnRate: 1,
     Delayed: 6,
@@ -127,7 +123,6 @@ const GoalsLevels = {
  * @property {number} Departures
  * @property {number} Arrivals
  * @property {number} Failed
- * @property {number} TaxiQueue
  * @property {number} Conflict
  * @property {number} SpawnRate
  * @property {number} Delayed
@@ -136,7 +131,6 @@ const Goals = {
   Arrivals: 0,
   Departures: 0,
   Failed: 0,
-  TaxiQueue: 0,
   Conflict: 0,
   SpawnRate: 0,
   Delayed: 0,

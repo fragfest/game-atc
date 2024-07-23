@@ -1,14 +1,4 @@
 <template>
-  <FocusCircle
-    v-if="focusType"
-    :size="screenSize"
-    :type="focusType"
-    :top="focusCircleTop"
-    :left="focusCircleLeft"
-    :width="focusCircleWidth"
-    :height="focusCircleHeight"
-  ></FocusCircle>
-
   <div class="flightstrip-departure">
     <!-- empty taxi queue placeholder -->
     <FlightStrip
@@ -66,15 +56,10 @@
 
 <script>
 import FlightStrip from './FlightStrip';
-import FocusCircle from './common/FocusCircle';
 import { ScreenSizes, getClassSize } from '../js/utils';
-import { ScoreEvents, subscribeScore } from '../js/game/score';
-import { isTaxiQueueAlmostFull } from '../js/game/game';
-import { FocusCircleType } from '../js/types';
-import { taxiQueueFlightstrip } from '../js/canvas/focusCircleCanvas';
 
 export default {
-  components: { FlightStrip, FocusCircle },
+  components: { FlightStrip },
   props: {
     planeSelected: { type: Object },
     planes: { type: Array },
@@ -82,41 +67,11 @@ export default {
   },
 
   data() {
-    return {
-      focusType: null,
-      focusCircle: {},
-    };
+    return {};
   },
-
-  mounted() {
-    subscribeScore(ScoreEvents.ScoreEV, (score) => {
-      this.score = score;
-
-      if (this.planes) {
-        if (isTaxiQueueAlmostFull(this.planes)) {
-          this.focusType = FocusCircleType.Rectangle;
-          this.focusCircle = taxiQueueFlightstrip();
-        } else {
-          this.focusType = null;
-        }
-      }
-    });
-  },
+  mounted() {},
 
   computed: {
-    focusCircleTop: function () {
-      return this.focusCircle?.top;
-    },
-    focusCircleLeft: function () {
-      return this.focusCircle?.left;
-    },
-    focusCircleWidth: function () {
-      return this.focusCircle?.width;
-    },
-    focusCircleHeight: function () {
-      return this.focusCircle?.height;
-    },
-
     planesAirborne: function () {
       if (!this.planes || !this.planes.length) return null;
       const reversed = this.planes.filter((plane) => !plane.isTaxiing);

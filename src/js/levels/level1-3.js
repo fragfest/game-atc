@@ -1,6 +1,5 @@
 import { isSquare } from '../types';
 import { getDepartureCount, getArrivalCount } from '../utils';
-import { isTaxiQueueAlmostFull } from '../game/game';
 
 /**
  * @typedef {import('../game/score.js').Score} Score
@@ -56,13 +55,13 @@ export const level1 = (
 
   if (areAllSpawned) return;
 
-  if (isTaxiQueueAlmostFull(entityManagerArr)) {
-    return SpawnPlane(
-      GetSpawnChance(baseChance),
-      chanceDepartureLow,
-      flightObj
-    );
-  }
+  // if (isTaxiQueueAlmostFull(entityManagerArr)) {
+  //   return SpawnPlane(
+  //     GetSpawnChance(baseChance),
+  //     chanceDepartureLow,
+  //     flightObj
+  //   );
+  // }
   if (isLowCount) {
     return SpawnPlane(GetSpawnChance(baseChance), guaranteedChance, flightObj);
   }
@@ -137,9 +136,9 @@ export const level3 = (
   if (areArrivalsSpawned) {
     return SpawnPlane(GetSpawnChance(chance), guaranteedChance, flightObj);
   }
-  if (isTaxiQueueAlmostFull(entityManagerArr)) {
-    return SpawnPlane(GetSpawnChance(chance), chanceDepartureLow, flightObj);
-  }
+  // if (isTaxiQueueAlmostFull(entityManagerArr)) {
+  //   return SpawnPlane(GetSpawnChance(chance), chanceDepartureLow, flightObj);
+  // }
 
   if (count <= lowCount) {
     if (departureCount > arrivalCount) {
