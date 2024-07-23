@@ -25,7 +25,7 @@ export const getFlightDeparture = (spawned) => {
 };
 
 ////////////// PRIVATE //////////////////////////////////////
-const setTimeSecs = () => 15;
+const setTimeSecs = () => 15 * 60;
 const setRndFlightTitle = (obj) => {
   return obj.airlineCode + leftPadZeros(Math.floor(Math.random() * 1000));
 };
@@ -33,6 +33,7 @@ const getRndIndex = (total) => Math.floor(Math.random() * total);
 const isNotSpawned = (spawnedArr) => (obj) =>
   !spawnedArr.find((x) => x.flight === obj.flight);
 
+// NOTE time is being patched to contain {number} seconds
 const flightsArrival = [
   {
     type: DestinationType.Arrival,
@@ -86,6 +87,7 @@ const flightsArrival = [
   },
 ];
 
+// NOTE time is being patched to contain {number} seconds
 const flightsDeparture = [
   {
     type: DestinationType.Departure,

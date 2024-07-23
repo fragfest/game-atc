@@ -37,6 +37,7 @@ export const convHdgRadToThreeDigits = (rad) => {
 };
 
 // UTIL /////////////////////////////////////////////////////////////////
+export const randMinMax = (min, max) => min + Math.random() * (max - min);
 export const leftPadZeros = (str) => ('000' + str).slice(-3);
 
 export const isValidHeading = (str) => {

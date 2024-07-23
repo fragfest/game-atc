@@ -27,6 +27,7 @@ const chanceDepartureLow = 0.1;
  * @typedef {Function} SpawnPlane
  * @param {number} chanceOfPlane
  * @param {number} chanceOfDeparture
+ * @param {object} flightObj
  */
 
 /**
@@ -44,6 +45,7 @@ export const level1 = (
   GetSpawnChance,
   SpawnPlane
 ) => {
+  const flightObj = { time: 10 * 60 };
   const departureCount = getDepartureCount(entityManagerArr);
   const areAllSpawned = noMoreDeparturesArrivals(
     entityManagerArr,
@@ -55,13 +57,17 @@ export const level1 = (
   if (areAllSpawned) return;
 
   if (isTaxiQueueAlmostFull(entityManagerArr)) {
-    return SpawnPlane(GetSpawnChance(baseChance), chanceDepartureLow);
+    return SpawnPlane(
+      GetSpawnChance(baseChance),
+      chanceDepartureLow,
+      flightObj
+    );
   }
   if (isLowCount) {
-    return SpawnPlane(GetSpawnChance(baseChance), guaranteedChance);
+    return SpawnPlane(GetSpawnChance(baseChance), guaranteedChance, flightObj);
   }
 
-  return SpawnPlane(GetSpawnChance(highChance), guaranteedChance);
+  return SpawnPlane(GetSpawnChance(highChance), guaranteedChance, flightObj);
 };
 
 /**
@@ -79,6 +85,7 @@ export const level2 = (
   GetSpawnChance,
   SpawnPlane
 ) => {
+  const flightObj = { time: 10 * 60 };
   const areAllSpawned = noMoreDeparturesArrivals(
     entityManagerArr,
     goals,
@@ -86,7 +93,7 @@ export const level2 = (
   );
 
   if (areAllSpawned) return;
-  return SpawnPlane(GetSpawnChance(baseChance), noChance);
+  return SpawnPlane(GetSpawnChance(baseChance), noChance, flightObj);
 };
 
 /**
@@ -115,6 +122,7 @@ export const level3 = (
     score
   );
   const lowCount = 4;
+  const flightObj = { time: 10 * 60 };
 
   if (areAllSpawned) return;
 
@@ -124,25 +132,25 @@ export const level3 = (
   }
 
   if (areDeparturesSpawned) {
-    return SpawnPlane(GetSpawnChance(chance), noChance);
+    return SpawnPlane(GetSpawnChance(chance), noChance, flightObj);
   }
   if (areArrivalsSpawned) {
-    return SpawnPlane(GetSpawnChance(chance), guaranteedChance);
+    return SpawnPlane(GetSpawnChance(chance), guaranteedChance, flightObj);
   }
   if (isTaxiQueueAlmostFull(entityManagerArr)) {
-    return SpawnPlane(GetSpawnChance(chance), chanceDepartureLow);
+    return SpawnPlane(GetSpawnChance(chance), chanceDepartureLow, flightObj);
   }
 
   if (count <= lowCount) {
     if (departureCount > arrivalCount) {
-      return SpawnPlane(GetSpawnChance(chance), noChance);
+      return SpawnPlane(GetSpawnChance(chance), noChance, flightObj);
     } else {
-      return SpawnPlane(GetSpawnChance(chance), guaranteedChance);
+      return SpawnPlane(GetSpawnChance(chance), guaranteedChance, flightObj);
     }
   }
 
   // not a lowCount && both Arrivals + Departures remaining
-  return SpawnPlane(GetSpawnChance(chance), chanceDepartureBase);
+  return SpawnPlane(GetSpawnChance(chance), chanceDepartureBase, flightObj);
 };
 
 // PRIvATE ////////////////////////////////////////////////////////////////

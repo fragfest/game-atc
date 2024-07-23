@@ -4,6 +4,7 @@ import {
   getScreenSize,
   convHdgDegToThreeDigits,
   convHdgRadToThreeDigits,
+  randMinMax,
 } from './utils';
 import { getFlightArrival, getFlightDeparture } from './flights/LHR';
 import { getPerformance } from './aircraft/airframe';
@@ -25,6 +26,7 @@ export const createPlane = (
     canvasObjText,
     canvasObjHeading,
     canvasEntityEl,
+    flightObj,
     clickCB,
   },
   chanceOfDeparture
@@ -44,12 +46,22 @@ export const createPlane = (
   };
 
   if (destinationType === DestinationType.Arrival) {
-    const square = createArrival(canvasObjs, entityManagerArr, clickCB);
+    const square = createArrival(
+      entityManagerArr,
+      canvasObjs,
+      flightObj || {},
+      clickCB
+    );
     return { square };
   }
 
   if (destinationType === DestinationType.Departure) {
-    const square = createDeparture(canvasObjs, entityManagerArr, clickCB);
+    const square = createDeparture(
+      entityManagerArr,
+      canvasObjs,
+      flightObj || {},
+      clickCB
+    );
     return { square };
   }
 };
@@ -62,9 +74,13 @@ export const spawnRndPlane =
     const level = score.level;
     const spawnRate = goals.SpawnRate || 1;
 
-    const spawnPlane = (chanceOfPlane, chanceOfDeparture) =>
+    const spawnPlane = (chanceOfPlane, chanceOfDeparture, flightObj) =>
       createSquare_entityFnArgChanceArg(
-        () => createPlane(canvasObj, chanceOfDeparture).square,
+        () =>
+          createPlane(
+            { ...canvasObj, flightObj: { ...flightObj } },
+            chanceOfDeparture
+          ).square,
         chanceOfPlane
       );
 
@@ -87,7 +103,7 @@ export const spawnRndPlane =
 
 // PRIVATE /////////////////////////////////////////////////////////////////
 
-const createArrival = (canvasObjs, entityManagerArr, clickCB) => {
+const createArrival = (entityManagerArr, canvasObjs, flightObjArg, clickCB) => {
   const {
     canvasObjEntity,
     canvasObjText,
@@ -108,10 +124,11 @@ const createArrival = (canvasObjs, entityManagerArr, clickCB) => {
   const speed = setSpd();
 
   const flight = createFlight(getFlightArrival);
+  const flightObj = { ...flight, ...flightObjArg };
   const airframeObj = getPerformance(flight.airframe, getScreenSize());
 
   const square = new Square(
-    flight,
+    flightObj,
     canvasObjEntity,
     canvasObjText,
     canvasObjHeading,
@@ -141,7 +158,12 @@ const createArrival = (canvasObjs, entityManagerArr, clickCB) => {
   return square;
 };
 
-const createDeparture = (canvasObjs, entityManagerArr, clickCB) => {
+const createDeparture = (
+  entityManagerArr,
+  canvasObjs,
+  flightObjArg,
+  clickCB
+) => {
   const { canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl } =
     canvasObjs;
   const runwayTitleRnd = getRunwayRnd();
@@ -157,10 +179,11 @@ const createDeparture = (canvasObjs, entityManagerArr, clickCB) => {
   const speed = 0;
 
   const flight = createFlight(getFlightDeparture);
+  const flightObj = { ...flight, ...flightObjArg };
   const airframeObj = getPerformance(flight.airframe, getScreenSize());
 
   const square = new Square(
-    flight,
+    flightObj,
     canvasObjEntity,
     canvasObjText,
     canvasObjHeading,
@@ -194,72 +217,71 @@ const createFlight = (getFlightFn) => {
   return newFlight;
 };
 
-const rand = (min, max) => min + Math.random() * (max - min);
-const setAlt = () => Math.floor(rand(7000, 10000) / 100) * 100;
-const setSpd = () => Math.floor(rand(230, 250) / 5) * 5;
+const setAlt = () => Math.floor(randMinMax(7000, 10000) / 100) * 100;
+const setSpd = () => Math.floor(randMinMax(230, 250) / 5) * 5;
 
 const spawnArrival = (width, height, sectionInt) => {
   if (sectionInt === 1) {
     return {
       x: 0,
-      y: rand(0, height / 2 - 200),
-      heading: convHdgDegToThreeDigits(rand(120, 140)),
+      y: randMinMax(0, height / 2 - 200),
+      heading: convHdgDegToThreeDigits(randMinMax(120, 140)),
       waypoint: Waypoints.LAM,
     };
   }
   if (sectionInt === 2) {
     return {
-      x: rand(0, width / 2 - 200),
+      x: randMinMax(0, width / 2 - 200),
       y: 0,
-      heading: convHdgDegToThreeDigits(rand(120, 140)),
+      heading: convHdgDegToThreeDigits(randMinMax(120, 140)),
       waypoint: Waypoints.LAM,
     };
   }
   if (sectionInt === 3) {
     return {
-      x: rand(width / 2 + 200, width),
+      x: randMinMax(width / 2 + 200, width),
       y: 0,
-      heading: convHdgDegToThreeDigits(rand(220, 240)),
+      heading: convHdgDegToThreeDigits(randMinMax(220, 240)),
       waypoint: Waypoints.LAM,
     };
   }
   if (sectionInt === 4) {
     return {
       x: width,
-      y: rand(0, height / 2 - 200),
-      heading: convHdgDegToThreeDigits(rand(220, 240)),
+      y: randMinMax(0, height / 2 - 200),
+      heading: convHdgDegToThreeDigits(randMinMax(220, 240)),
       waypoint: Waypoints.LAM,
     };
   }
   if (sectionInt === 5) {
     return {
       x: width,
-      y: rand(height / 2 + 200, height),
-      heading: convHdgDegToThreeDigits(rand(310, 330)),
+      y: randMinMax(height / 2 + 200, height),
+      heading: convHdgDegToThreeDigits(randMinMax(310, 330)),
       waypoint: Waypoints.BIG,
     };
   }
   if (sectionInt === 6) {
     return {
-      x: rand(width / 2 + 200, width),
+      x: randMinMax(width / 2 + 200, width),
       y: height,
-      heading: convHdgDegToThreeDigits(rand(310, 330)),
+      heading: convHdgDegToThreeDigits(randMinMax(310, 330)),
       waypoint: Waypoints.BIG,
     };
   }
   if (sectionInt === 7) {
     return {
-      x: rand(0, width / 2 - 200),
+      x: randMinMax(0, width / 2 - 200),
       y: height,
-      heading: convHdgDegToThreeDigits(rand(40, 60)),
+      heading: convHdgDegToThreeDigits(randMinMax(40, 60)),
       waypoint: Waypoints.BIG,
     };
   }
   if (sectionInt === 8) {
     return {
       x: 0,
-      y: rand(height / 2 + 200, height),
-      heading: convHdgDegToThreeDigits(rand(40, 60)),
+      y: randMinMax(height / 2 + 200, height),
+      heading: convHdgDegToThreeDigits(randMinMax(40, 60)),
       waypoint: Waypoints.BIG,
     };
   }
