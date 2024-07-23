@@ -37,6 +37,11 @@ export default {
   0% {
     width: 6px;
     height: 6px;
+    opacity: 0;
+  }
+  20% {
+    width: 6px;
+    height: 6px;
     opacity: 1;
   }
   100% {
@@ -48,6 +53,11 @@ export default {
 
 @keyframes pulse {
   0% {
+    width: 10px;
+    height: 10px;
+    opacity: 0;
+  }
+  20% {
     width: 10px;
     height: 10px;
     opacity: 1;
