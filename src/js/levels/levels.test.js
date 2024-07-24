@@ -69,7 +69,7 @@ describe('Level', () => {
       });
 
       expect(getSpawnChanceFn).toHaveBeenCalledWith(0.03);
-      expect(spawnPlaneFn).toHaveBeenCalledWith(0.123, 0, { time: 900 });
+      expect(spawnPlaneFn).toHaveBeenCalledWith(0.123, 0, { time: 1080 });
     });
 
     test('level 2 only spawn arrivals', () => {
@@ -143,7 +143,7 @@ describe('Level', () => {
       });
 
       expect(getSpawnChanceFn).toHaveBeenCalledWith(0.5);
-      expect(spawnPlaneFn).toHaveBeenCalledWith(0.123, 1, { time: 900 });
+      expect(spawnPlaneFn).toHaveBeenCalledWith(0.123, 1, { time: 1080 });
     });
 
     test('lowCount spawn arrival', () => {
@@ -158,7 +158,7 @@ describe('Level', () => {
       });
 
       expect(getSpawnChanceFn).toHaveBeenCalledWith(0.5);
-      expect(spawnPlaneFn).toHaveBeenCalledWith(0.123, 0, { time: 900 });
+      expect(spawnPlaneFn).toHaveBeenCalledWith(0.123, 0, { time: 1080 });
     });
 
     test('not lowCount spawn random', () => {
@@ -176,7 +176,7 @@ describe('Level', () => {
       });
 
       expect(getSpawnChanceFn).toHaveBeenCalledWith(0.03);
-      expect(spawnPlaneFn).toHaveBeenCalledWith(0.123, 0.4, { time: 900 });
+      expect(spawnPlaneFn).toHaveBeenCalledWith(0.123, 0.4, { time: 1080 });
     });
 
     test('when all departures done, spawn arrivals', () => {
@@ -190,7 +190,7 @@ describe('Level', () => {
       });
 
       expect(getSpawnChanceFn).toHaveBeenCalledWith(0.5);
-      expect(spawnPlaneFn).toHaveBeenCalledWith(0.123, 0, { time: 900 });
+      expect(spawnPlaneFn).toHaveBeenCalledWith(0.123, 0, { time: 1080 });
     });
 
     test('when all arrivals done, spawn departures', () => {
@@ -204,7 +204,7 @@ describe('Level', () => {
       });
 
       expect(getSpawnChanceFn).toHaveBeenCalledWith(0.5);
-      expect(spawnPlaneFn).toHaveBeenCalledWith(0.123, 1, { time: 900 });
+      expect(spawnPlaneFn).toHaveBeenCalledWith(0.123, 1, { time: 1080 });
     });
   });
 });

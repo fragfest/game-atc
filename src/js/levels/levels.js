@@ -82,7 +82,7 @@ export const level1 = (arg) => {
 export const level2 = (arg) => {
   const { entityManagerArr, goals, score, getSpawnChanceFn, spawnPlaneFn } =
     arg;
-  const flightObj = { time: 15 * 60 };
+  const flightObj = { time: 18 * 60 };
   const areArrivalsSpawned = noMoreArrivals(entityManagerArr, goals, score);
   const areAllSpawned = noMoreDeparturesArrivals(
     entityManagerArr,
@@ -118,7 +118,7 @@ export const level3 = (arg) => {
     score
   );
   const lowCount = 4;
-  const flightObj = { time: 15 * 60 };
+  const flightObj = { time: 18 * 60 };
 
   if (areAllSpawned) return;
 

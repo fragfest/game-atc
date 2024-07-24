@@ -1,6 +1,6 @@
 import { Airframes } from '../aircraft/airframe';
 import { DestinationType } from '../../js/types';
-import { leftPadZeros } from '../../js/utils';
+// import { leftPadZeros } from '../../js/utils';
 
 export const getFlightArrival = (spawned) => {
   const flightsUnspawned = flightsArrival.filter(isNotSpawned(spawned));
@@ -8,7 +8,7 @@ export const getFlightArrival = (spawned) => {
   if (total === 0) return null;
 
   const flightObj = flightsUnspawned[getRndIndex(total)];
-  flightObj.flight = setRndFlightTitle(flightObj);
+  // flightObj.flight = setRndFlightTitle(flightObj);
   flightObj.time = setTimeSecs();
   return flightObj;
 };
@@ -19,22 +19,112 @@ export const getFlightDeparture = (spawned) => {
   if (total === 0) return null;
 
   const flightObj = flightsUnspawned[getRndIndex(total)];
-  flightObj.flight = setRndFlightTitle(flightObj);
+  // flightObj.flight = setRndFlightTitle(flightObj);
   flightObj.time = setTimeSecs();
   return flightObj;
 };
 
 ////////////// PRIVATE //////////////////////////////////////
 const setTimeSecs = () => 15 * 60;
-const setRndFlightTitle = (obj) => {
-  return obj.airlineCode + leftPadZeros(Math.floor(Math.random() * 1000));
-};
+// const setRndFlightTitle = (obj) => {
+//   return obj.airlineCode + leftPadZeros(Math.floor(Math.random() * 1000));
+// };
 const getRndIndex = (total) => Math.floor(Math.random() * total);
 const isNotSpawned = (spawnedArr) => (obj) =>
   !spawnedArr.find((x) => x.flight === obj.flight);
 
 // NOTE time is being patched to contain {number} seconds
 const flightsArrival = [
+  {
+    type: DestinationType.Arrival,
+    time: '06:55',
+    flight: 'UA901',
+    city: 'San Francisco',
+    airport: 'SFO',
+    airlineCode: 'UA',
+    airline: 'United Airlines',
+    airframe: Airframes.B789,
+  },
+  {
+    type: DestinationType.Arrival,
+    time: '06:55',
+    flight: 'BA138',
+    city: 'Mumbai',
+    airport: 'BOM',
+    airlineCode: 'BA',
+    airline: 'British Airways',
+    airframe: Airframes.B789,
+  },
+  {
+    type: DestinationType.Arrival,
+    time: '06:35',
+    flight: 'AC854',
+    city: 'Toronto',
+    airport: 'YYZ',
+    airlineCode: 'AC',
+    airline: 'Air Canada',
+    airframe: Airframes.B77W,
+  },
+  {
+    type: DestinationType.Arrival,
+    time: '06:30',
+    flight: 'AC866',
+    city: 'Montreal',
+    airport: 'YUL',
+    airlineCode: 'AC',
+    airline: 'Air Canada',
+    airframe: Airframes.B788,
+  },
+  {
+    type: DestinationType.Arrival,
+    time: '05:55',
+    flight: 'SQ322',
+    city: 'Singapore',
+    airport: 'SIN',
+    airlineCode: 'SQ',
+    airline: 'Singapore Airlines',
+    airframe: Airframes.A388,
+  },
+  {
+    type: DestinationType.Arrival,
+    time: '05:35',
+    flight: 'BA262',
+    city: 'Riyadh',
+    airport: 'RUH',
+    airlineCode: 'BA',
+    airline: 'British Airways',
+    airframe: Airframes.B772,
+  },
+  {
+    type: DestinationType.Arrival,
+    time: '05:25',
+    flight: 'BA74',
+    city: 'Lagos',
+    airport: 'LOS',
+    airlineCode: 'BA',
+    airline: 'British Airways',
+    airframe: Airframes.B78X,
+  },
+  {
+    type: DestinationType.Arrival,
+    time: '05:25',
+    flight: 'BA16',
+    city: 'Singapore',
+    airport: 'SIN',
+    airlineCode: 'BA',
+    airline: 'British Airways',
+    airframe: Airframes.B789,
+  },
+  {
+    type: DestinationType.Arrival,
+    time: '05:05',
+    flight: 'QF9',
+    city: 'Perth',
+    airport: 'PER',
+    airlineCode: 'QF',
+    airline: 'Qantas',
+    airframe: Airframes.B789,
+  },
   {
     type: DestinationType.Arrival,
     time: '06:20',
@@ -89,6 +179,96 @@ const flightsArrival = [
 
 // NOTE time is being patched to contain {number} seconds
 const flightsDeparture = [
+  {
+    type: DestinationType.Departure,
+    time: '10:10',
+    flight: 'BA285',
+    city: 'San Francisco',
+    airport: 'SFO',
+    airlineCode: 'BA',
+    airline: 'British Airways',
+    airframe: Airframes.A388,
+  },
+  {
+    type: DestinationType.Departure,
+    time: '09:35',
+    flight: 'AA109',
+    city: 'Boston',
+    airport: 'BOS',
+    airlineCode: 'AA',
+    airline: 'American Airlines',
+    airframe: Airframes.B772,
+  },
+  {
+    type: DestinationType.Departure,
+    time: '08:05',
+    flight: 'VS165',
+    city: 'Montego Bay',
+    airport: 'MBJ',
+    airlineCode: 'VS',
+    airline: 'Virgin Atlantic',
+    airframe: Airframes.B789,
+  },
+  {
+    type: DestinationType.Departure,
+    time: '08:00',
+    flight: 'UA883',
+    city: 'New York',
+    airport: 'EWR',
+    airlineCode: 'UA',
+    airline: 'United Airlines',
+    airframe: Airframes.B763,
+  },
+  {
+    type: DestinationType.Departure,
+    time: '06:45',
+    flight: 'BA552',
+    city: 'Rome',
+    airport: 'FCO',
+    airlineCode: 'BA',
+    airline: 'British Airways',
+    airframe: Airframes.A320,
+  },
+  {
+    type: DestinationType.Departure,
+    time: '06:40',
+    flight: 'SK1530',
+    city: 'Stockholm',
+    airport: 'ARN',
+    airlineCode: 'SAS',
+    airline: 'Scandinavian Airlines',
+    airframe: Airframes.A320,
+  },
+  {
+    type: DestinationType.Departure,
+    time: '06:40',
+    flight: 'BA724',
+    city: 'Geneva',
+    airport: 'GVA',
+    airlineCode: 'BA',
+    airline: 'British Airways',
+    airframe: Airframes.A319,
+  },
+  {
+    type: DestinationType.Departure,
+    time: '06:30',
+    flight: 'KL1000',
+    city: 'Amsterdam',
+    airport: 'AMS',
+    airlineCode: 'KLM',
+    airline: 'Royal Dutch Airlines',
+    airframe: Airframes.B738,
+  },
+  {
+    type: DestinationType.Departure,
+    time: '06:50',
+    flight: 'BA304',
+    city: 'Paris',
+    airport: 'CDG',
+    airlineCode: 'BA',
+    airline: 'British Airways',
+    airframe: Airframes.A319,
+  },
   {
     type: DestinationType.Departure,
     time: '06:15',
