@@ -41,6 +41,7 @@ export const level = (level, arg) => {
   if (level === 1) return level1(arg);
   if (level === 2) return level2(arg);
   if (level === 3) return level3(arg);
+  if (level === 4) return level3(arg);
   level1(arg);
 };
 

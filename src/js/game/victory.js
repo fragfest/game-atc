@@ -87,7 +87,7 @@ const GoalsLevels = {
   0: {
     Arrivals: 1,
     Departures: 1,
-    Failed: 1,
+    Failed: 3,
     Conflict: 999,
     SpawnRate: 1,
     Delayed: 4,
@@ -117,11 +117,11 @@ const GoalsLevels = {
     Delayed: 6,
   },
   4: {
-    Arrivals: 8,
-    Departures: 8,
+    Arrivals: 12,
+    Departures: 12,
     Failed: 3,
     Conflict: 60,
-    SpawnRate: 1,
+    SpawnRate: 2,
     Delayed: 6,
   },
 };

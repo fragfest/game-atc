@@ -232,7 +232,6 @@ export default {
   flex-direction: column;
   min-width: 280px;
   max-width: 400px;
-  max-height: 240px;
 
   background-color: #2c5c816f;
   border: 1px solid #24b3c9;
