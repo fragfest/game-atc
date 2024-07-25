@@ -15,7 +15,7 @@ import {
 } from './airports/LHR';
 import { getGoals } from './game/victory';
 import { getScore } from './game/score';
-import { level } from './levels/levels';
+import { spawnPlaneByLevel } from './levels/levels';
 
 export const createPlane = (
   {
@@ -89,7 +89,7 @@ export const spawnRndPlane =
       return chanceOfPlaneBase * (spawnRate * spawnRateModifier);
     };
 
-    level(score.level, {
+    spawnPlaneByLevel(score.level, {
       entityManagerArr,
       goals,
       score,

@@ -37,14 +37,17 @@ const chanceDepartureBase = 0.4;
  * @param {SpawnPlane} arg.spawnPlaneFn
  * @returns none
  */
-export const level = (level, arg) => {
-  if (level === 1) return level1(arg);
-  if (level === 2) return level2(arg);
-  if (level === 3) return level3(arg);
-  if (level === 4) return level3(arg);
-  level1(arg);
+export const spawnPlaneByLevel = (level, arg) => {
+  if (level === 1) return spawnPlaneLevel1(arg);
+  if (level === 2) return spawnPlaneLevel2(arg);
+  if (level === 3) return spawnPlaneLevel3(arg);
+  if (level === 4) return spawnPlaneLevel3(arg);
+  spawnPlaneLevel1(arg);
 };
 
+////////////////////////////////////////////////////////////////////////
+// LEVEL 1
+////////////////////////////////////////////////////////////////////////
 /**
  * @param {Object} arg
  * @param {Array} arg.entityManagerArr
@@ -54,7 +57,7 @@ export const level = (level, arg) => {
  * @param {SpawnPlane} arg.spawnPlaneFn
  * @returns none
  */
-export const level1 = (arg) => {
+export const spawnPlaneLevel1 = (arg) => {
   const { entityManagerArr, goals, score, getSpawnChanceFn, spawnPlaneFn } =
     arg;
   const flightObj = { time: 10 * 60 };
@@ -70,6 +73,9 @@ export const level1 = (arg) => {
   spawnPlaneFn(getSpawnChanceFn(highChance), guaranteedChance, flightObj);
 };
 
+////////////////////////////////////////////////////////////////////////
+// LEVEL 2
+////////////////////////////////////////////////////////////////////////
 /**
  * @param {Object} arg
  * @param {Array} arg.entityManagerArr
@@ -79,7 +85,7 @@ export const level1 = (arg) => {
  * @param {SpawnPlane} arg.spawnPlaneFn
  * @returns none
  */
-export const level2 = (arg) => {
+export const spawnPlaneLevel2 = (arg) => {
   const { entityManagerArr, goals, score, getSpawnChanceFn, spawnPlaneFn } =
     arg;
   const flightObj = { time: 18 * 60 };
@@ -95,6 +101,9 @@ export const level2 = (arg) => {
   return spawnPlaneFn(getSpawnChanceFn(baseChance), noChance, flightObj);
 };
 
+////////////////////////////////////////////////////////////////////////
+// LEVEL 3
+////////////////////////////////////////////////////////////////////////
 /**
  * @param {Object} arg
  * @param {Array} arg.entityManagerArr
@@ -104,7 +113,7 @@ export const level2 = (arg) => {
  * @param {SpawnPlane} arg.spawnPlaneFn
  * @returns none
  */
-export const level3 = (arg) => {
+export const spawnPlaneLevel3 = (arg) => {
   const { entityManagerArr, goals, score, getSpawnChanceFn, spawnPlaneFn } =
     arg;
   const count = entityManagerArr.filter(isSquare).length;
@@ -150,7 +159,9 @@ export const level3 = (arg) => {
   return spawnPlaneFn(getSpawnChanceFn(chance), chanceDepartureBase, flightObj);
 };
 
-// PRIVATE ////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+// PRIVATE
+////////////////////////////////////////////////////////////////////////
 
 const departureGoalRemaining = (goals, score) =>
   goals.Departures - score.departures;

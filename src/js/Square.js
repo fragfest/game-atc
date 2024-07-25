@@ -712,6 +712,17 @@ export default class Square {
     const timestampMs = timestamp;
     this.setShowCircle(!!showCircles);
 
+    const weather = entityManagerArr.find((x) => x.updateWeatherFn);
+    if (weather) {
+      const weatherDist = distBetweenEntities(this)({
+        x: weather.centerXY.x,
+        y: weather.centerXY.y,
+      });
+      if (weatherDist < weather.radius) {
+        console.log(this.title, weatherDist);
+      }
+    }
+
     const planeClose = entityManagerArr.find(isPlaneClose);
     if (!planeClose) {
       this.hasProximityAlert = false;

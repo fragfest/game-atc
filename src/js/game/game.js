@@ -1,5 +1,6 @@
 import Waypoint from '../Waypoint';
 import Runway from '../Runway';
+import { weatherGameLoop } from './weather';
 import {
   getTooCloseDistance,
   distBetweenEntities,
@@ -68,19 +69,22 @@ export const setup = (state) => (argObj) => {
   state.gameLoopRunning = true;
   state.gameLoopCancel = false;
 
-  spawnFirstPlane();
-
   window.requestAnimationFrame(gameTickFullGame);
+  weatherGameLoop(width, height, argObj);
+
+  spawnFirstPlane();
 };
 
 export const textLayerClearFn =
   (textLayerObj, { width, height }) =>
-  () =>
+  () => {
     textLayerObj.ctx.clearRect(0, 0, width, height);
+  };
 export const headingLayerClearFn =
   (headingLayerObj, { width, height }) =>
-  () =>
+  () => {
     headingLayerObj.ctx.clearRect(0, 0, width, height);
+  };
 
 export const setupEntities = (argObj) => {
   const entityAdd = entityManagerAdd(argObj.entityManagerArr);
@@ -239,12 +243,6 @@ export const gameTick =
       );
     }
   };
-
-export const getTaxiLength = (entityManagerArr) => {
-  const planes = entityManagerArr.filter(isSquare);
-  const departures = planes.filter(isDeparture);
-  return departures.filter((plane) => plane.isTaxiing).length;
-};
 
 // PRIVATE ////////////////////////////////////////////////////////////////////
 const isWithinDist = (distMax, obj1, obj2) => {

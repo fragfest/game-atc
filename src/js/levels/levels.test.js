@@ -1,5 +1,5 @@
 import { describe, beforeEach, test, jest, expect } from '@jest/globals';
-import { level } from './levels.js';
+import { spawnPlaneByLevel } from './levels.js';
 import * as types from '../types.js';
 import * as utils from '../utils.js';
 
@@ -18,7 +18,7 @@ describe('Level', () => {
 
     test('level 1 spawn more', () => {
       score = { arrivals: 0, departures: 0 };
-      level(1, {
+      spawnPlaneByLevel(1, {
         entityManagerArr,
         goals,
         score,
@@ -32,7 +32,7 @@ describe('Level', () => {
 
     test('level 1 only spawn departures', () => {
       score = { arrivals: 0, departures: 1 };
-      level(1, {
+      spawnPlaneByLevel(1, {
         entityManagerArr,
         goals,
         score,
@@ -46,7 +46,7 @@ describe('Level', () => {
 
     test('level 1 spawn complete', () => {
       score = { arrivals: 1, departures: 1 };
-      level(1, {
+      spawnPlaneByLevel(1, {
         entityManagerArr,
         goals,
         score,
@@ -60,7 +60,7 @@ describe('Level', () => {
 
     test('level 2 spawn more', () => {
       score = { arrivals: 0, departures: 0 };
-      level(2, {
+      spawnPlaneByLevel(2, {
         entityManagerArr,
         goals,
         score,
@@ -74,7 +74,7 @@ describe('Level', () => {
 
     test('level 2 only spawn arrivals', () => {
       score = { arrivals: 1, departures: 0 };
-      level(2, {
+      spawnPlaneByLevel(2, {
         entityManagerArr,
         goals,
         score,
@@ -88,7 +88,7 @@ describe('Level', () => {
 
     test('level 2 spawn complete', () => {
       score = { arrivals: 1, departures: 1 };
-      level(2, {
+      spawnPlaneByLevel(2, {
         entityManagerArr,
         goals,
         score,
@@ -119,7 +119,7 @@ describe('Level', () => {
 
     test('spawn complete', () => {
       score = { arrivals: 8, departures: 8 };
-      level(3, {
+      spawnPlaneByLevel(3, {
         entityManagerArr,
         goals,
         score,
@@ -134,7 +134,7 @@ describe('Level', () => {
     test('lowCount spawn departure', () => {
       jest.spyOn(utils, 'getDepartureCount').mockImplementation(() => 1);
       score = { arrivals: 2, departures: 1 };
-      level(3, {
+      spawnPlaneByLevel(3, {
         entityManagerArr,
         goals,
         score,
@@ -149,7 +149,7 @@ describe('Level', () => {
     test('lowCount spawn arrival', () => {
       jest.spyOn(utils, 'getArrivalCount').mockImplementation(() => 1);
       score = { arrivals: 1, departures: 2 };
-      level(3, {
+      spawnPlaneByLevel(3, {
         entityManagerArr,
         goals,
         score,
@@ -167,7 +167,7 @@ describe('Level', () => {
       jest.spyOn(utils, 'getArrivalCount').mockImplementation(() => 2);
       jest.spyOn(utils, 'getDepartureCount').mockImplementation(() => 3);
       score = { arrivals: 2, departures: 3 };
-      level(3, {
+      spawnPlaneByLevel(3, {
         entityManagerArr: arrLarge,
         goals,
         score,
@@ -181,7 +181,7 @@ describe('Level', () => {
 
     test('when all departures done, spawn arrivals', () => {
       score = { arrivals: 1, departures: 8 };
-      level(3, {
+      spawnPlaneByLevel(3, {
         entityManagerArr,
         goals,
         score,
@@ -195,7 +195,7 @@ describe('Level', () => {
 
     test('when all arrivals done, spawn departures', () => {
       score = { arrivals: 8, departures: 1 };
-      level(3, {
+      spawnPlaneByLevel(3, {
         entityManagerArr,
         goals,
         score,

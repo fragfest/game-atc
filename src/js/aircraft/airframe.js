@@ -208,9 +208,9 @@ const detailsByAirframe = {
   A333: { make: 'Airbus', airframe: 'A330-300' },
   A388: { make: 'Airbus', airframe: 'A380-800' },
   B763: { make: 'Boeing', airframe: '767-300' },
-  B788: { make: 'Boeing', airframe: '789-8' },
-  B789: { make: 'Boeing', airframe: '789-9' },
-  B78X: { make: 'Boeing', airframe: '789-10' },
+  B788: { make: 'Boeing', airframe: '787-8' },
+  B789: { make: 'Boeing', airframe: '787-9' },
+  B78X: { make: 'Boeing', airframe: '787-10' },
   B772: { make: 'Boeing', airframe: '777-236ER' },
   B77W: { make: 'Boeing', airframe: '777-300ER' },
 };

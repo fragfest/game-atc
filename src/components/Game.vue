@@ -5,12 +5,12 @@
       <div class="row-left">
         <div class="scope" :style="styleScope">
           <div class="entity-div layer-six" :style="styleEntityDiv" />
-          <!-- <canvas
+          <canvas
             ref="layerFive"
             class="canvas layer-five"
             :width="width"
             :height="height"
-          ></canvas> -->
+          ></canvas>
           <canvas
             ref="layerFour"
             class="canvas layer-four"
@@ -330,7 +330,7 @@ export default {
     const layerTwo = this.$refs.layerTwo;
     const layerThree = this.$refs.layerThree;
     const layerFour = this.$refs.layerFour;
-    // const layerFive = this.$refs.layerFive;
+    const layerFive = this.$refs.layerFive;
     const backgroundCtx = background.getContext('2d');
 
     const layerOneCtx = layerOne.getContext('2d');
@@ -338,7 +338,7 @@ export default {
     const layerTwoCtx = layerTwo.getContext('2d');
     const layerThreeCtx = layerThree.getContext('2d');
     const layerFourCtx = layerFour.getContext('2d');
-    // const layerFiveCtx = layerFive.getContext('2d');
+    const layerFiveCtx = layerFive.getContext('2d');
     const layerSixDiv = document.querySelector('.entity-div');
 
     const backgroundObj = { ctx: backgroundCtx };
@@ -354,6 +354,11 @@ export default {
     };
     const layerFourObj = {
       ctx: layerFourCtx,
+      width: this.width,
+      height: this.height,
+    };
+    const layerFiveObj = {
+      ctx: layerFiveCtx,
       width: this.width,
       height: this.height,
     };
@@ -394,8 +399,9 @@ export default {
       backgroundObj,
       imgLayerObj,
       entityLayerObj: layerTwoObj,
-      textLayerObj: layerThreeObj,
-      headingLayerObj: layerFourObj,
+      weatherLayerObj: layerThreeObj,
+      textLayerObj: layerFourObj,
+      headingLayerObj: layerFiveObj,
       entityDiv: layerSixDiv,
       entityManagerArr: entityManagerArr.value,
 
