@@ -336,10 +336,10 @@ export default class Square {
     if (isNonInteractive) {
       this.isNonInteractive = true;
       if (this.htmlSquareDiv) {
-        this.htmlSquareDiv.addEventListener('mouseup', () => {});
-        this.htmlSquareDiv.addEventListener(
+        this.htmlClickDiv.addEventListener('mouseup', () => {});
+        this.htmlClickDiv.addEventListener(
           'mouseenter',
-          () => (this.htmlSquareDiv.style.cursor = 'default')
+          () => (this.htmlClickDiv.style.cursor = 'default')
         );
       }
     } else {
@@ -383,18 +383,18 @@ export default class Square {
 
     if (this.isShowHtmlPulse) {
       this.isShowHtmlPulse = false;
-      if (this.htmlSquareDiv.classList.contains(getPulseClass())) return;
+      if (this.htmlClickDiv.classList.contains(getPulseClass())) return;
 
-      this.htmlSquareDiv.classList.add(getPulseClass());
+      this.htmlClickDiv.classList.add(getPulseClass());
       if (this.isSmall) {
-        if (!this.htmlSquareDiv.classList.contains('small')) {
-          this.htmlSquareDiv.classList.add('small');
+        if (!this.htmlClickDiv.classList.contains('small')) {
+          this.htmlClickDiv.classList.add('small');
         }
       }
 
       setTimeout(() => {
-        if (this.htmlSquareDiv.classList.contains(getPulseClass())) {
-          this.htmlSquareDiv.classList.remove(getPulseClass());
+        if (this.htmlClickDiv.classList.contains(getPulseClass())) {
+          this.htmlClickDiv.classList.remove(getPulseClass());
         }
       }, 6000);
     }
@@ -712,15 +712,19 @@ export default class Square {
     const timestampMs = timestamp;
     this.setShowCircle(!!showCircles);
 
-    const weather = entityManagerArr.find((x) => x.updateWeatherFn);
-    if (weather) {
-      const weatherDist = distBetweenEntities(this)({
-        x: weather.centerXY.x,
-        y: weather.centerXY.y,
+    const weatherArr = entityManagerArr.filter((x) => x.updateWeatherFn);
+    if (weatherArr.length) {
+      let inWeather = false;
+      weatherArr.forEach((weather) => {
+        const weatherDist = distBetweenEntities(this)({
+          x: weather.centerXY.x,
+          y: weather.centerXY.y,
+        });
+        if (!inWeather && weatherDist < weather.radius) {
+          inWeather = true;
+          console.log(this.title, weatherDist);
+        }
       });
-      if (weatherDist < weather.radius) {
-        console.log(this.title, weatherDist);
-      }
     }
 
     const planeClose = entityManagerArr.find(isPlaneClose);
@@ -777,28 +781,46 @@ const _htmlSquareSize = (isSmall, iconSize) => ({
 });
 
 const _createHtmlEl = (self) => {
+  const htmlSquareWidth = 0;
   const squareSize = _htmlSquareSize(self.isSmall, self.iconSize).side;
   const squareTop = _htmlSquareSize(self.isSmall, self.iconSize).top;
 
   self.htmlSquareDiv = document.createElement('div');
   self.htmlDiv.appendChild(self.htmlSquareDiv);
-  self.htmlSquareDiv.id = self.title;
-  self.htmlSquareDiv.classList.add(getPlaneClass());
+  self.htmlSquareDiv.id = self.title + '-plane';
   self.htmlSquareDiv.style.position = 'absolute';
-  _setDivMouseEvents(self);
-  self.htmlSquareDiv.addEventListener(
-    'mouseleave',
-    () => (self.htmlSquareDiv.style.cursor = 'none')
-  );
+  self.htmlSquareDiv.style.display = 'flex';
+  self.htmlSquareDiv.style.gap = '4px';
+  self.htmlSquareDiv.style['justify-content'] = 'space-between';
+  self.htmlSquareDiv.style['pointer-events'] = 'none';
+
   self.htmlSquareDiv.style.left = self.x - squareSize / 2 + 'px';
   self.htmlSquareDiv.style.top = self.y - squareTop - squareSize / 2 + 'px';
-  self.htmlSquareDiv.style.width = squareSize + 'px';
+  self.htmlSquareDiv.style['min-width'] = squareSize + htmlSquareWidth + 'px';
   self.htmlSquareDiv.style.height = squareSize + 'px';
+
+  self.htmlClickDiv = document.createElement('div');
+  self.htmlSquareDiv.appendChild(self.htmlClickDiv);
+
+  self.htmlClickDiv.id = self.title;
+  self.htmlClickDiv.classList.add(getPlaneClass());
+  self.htmlClickDiv.style.position = 'relative';
+  self.htmlClickDiv.style['pointer-events'] = 'auto';
+
+  _setDivMouseEvents(self);
+  self.htmlClickDiv.addEventListener(
+    'mouseleave',
+    () => (self.htmlClickDiv.style.cursor = 'none')
+  );
+  // self.htmlClickDiv.style.left = self.x - squareSize / 2 + 'px';
+  // self.htmlClickDiv.style.top = self.y - squareTop - squareSize / 2 + 'px';
+  self.htmlClickDiv.style.width = squareSize + 'px';
+  self.htmlClickDiv.style.height = squareSize + 'px';
 
   // self.htmlSquareDiv.style.border = '1px solid yellow';
 
   self.htmlImgEl = new Image();
-  self.htmlSquareDiv.appendChild(self.htmlImgEl);
+  self.htmlClickDiv.appendChild(self.htmlImgEl);
   self.htmlImgEl.style.transform = 'rotate(' + self.heading + 'deg)';
   self.htmlImgEl.id = self.title + '-icon';
   self.htmlImgEl.src = self.iconDefault;
@@ -807,20 +829,54 @@ const _createHtmlEl = (self) => {
 
   // self.htmlImgEl.hidden = true;
   // self.htmlImgEl.style.border = '1px solid orange';
+
+  const titleDisplay = self.title;
+  const degreesDisplay = self.heading;
+  const speedDisplay = leftPadZeros(Math.round(self.speed));
+  const altDisplay = altitudeDisplay(self.altitude);
+
+  self.htmlTextEl = document.createElement('div');
+  self.htmlTextEl.style.display = 'none';
+  self.htmlTextEl.style.gap = '8px';
+  self.htmlSquareDiv.appendChild(self.htmlTextEl);
+  self.htmlTextEl.classList.add('plane-text');
+  self.htmlTextEl.style.cursor = 'default';
+  self.htmlTextEl.style['justify-content'] = 'space-between';
+  self.htmlCol1 = document.createElement('div');
+  self.htmlCol2 = document.createElement('div');
+  self.htmlCol2.style.width = '60px';
+  self.htmlTextEl.appendChild(self.htmlCol1);
+  self.htmlTextEl.appendChild(self.htmlCol2);
+
+  const textDivLine0 = document.createElement('div');
+  self.htmlCol1.appendChild(textDivLine0);
+  textDivLine0.innerText = titleDisplay;
+
+  self.textDivLine1 = document.createElement('div');
+  self.textDivLine2 = document.createElement('div');
+  self.textDivLine3 = document.createElement('div');
+  self.textDivLine1.innerText = degreesDisplay + '\u00B0';
+  self.textDivLine2.innerText = altDisplay + ' ft';
+  self.textDivLine3.innerText = speedDisplay + ' kts';
+  self.htmlCol2.appendChild(self.textDivLine1);
+  self.htmlCol2.appendChild(self.textDivLine2);
+  self.htmlCol2.appendChild(self.textDivLine3);
+
+  self.htmlCol1.style.color = 'white';
+  self.htmlCol1.style.font = '10px Arial';
+  self.htmlCol2.style.color = 'white';
+  self.htmlCol2.style.font = '10px Arial';
 };
 
 const _setDivMouseEvents = (self) => {
-  self.htmlSquareDiv.addEventListener('mouseup', () => self.clickEventCB());
-  self.htmlSquareDiv.addEventListener(
+  self.htmlClickDiv.addEventListener('mouseup', () => self.clickEventCB());
+  self.htmlClickDiv.addEventListener(
     'mouseenter',
-    () => (self.htmlSquareDiv.style.cursor = 'pointer')
+    () => (self.htmlClickDiv.style.cursor = 'pointer')
   );
 };
 
 const _draw = (self, color) => {
-  // self.textLayerObj.ctx.fillStyle = 'red';
-  // self.textLayerObj.ctx.fillRect(self.x - 2, self.y - 2, 4, 4);
-
   const proximityDist = self.isSmall
     ? getTooCloseDistance(ScreenSizes.Small)
     : getTooCloseDistance(ScreenSizes.Large);
@@ -838,29 +894,20 @@ const _draw = (self, color) => {
     self.textLayerObj.ctx.stroke();
   }
 
-  if (self.takeoff || self.isTouchedDown) return;
+  if (self.takeoff || self.isTouchedDown) {
+    self.htmlTextEl.style.display = 'none';
+    return;
+  }
+  self.htmlTextEl.style.display = 'flex';
 
   const degreesDisplay = self.heading;
   const speedDisplay = leftPadZeros(Math.round(self.speed));
   const altDisplay = altitudeDisplay(self.altitude);
 
-  self.textLayerObj.ctx.fillStyle = color;
-  self.textLayerObj.ctx.font = '10px Arial';
-  self.textLayerObj.ctx.fillText(self.title, self.x + 10, self.y - 8);
-  self.textLayerObj.ctx.fillStyle = color;
-  self.textLayerObj.ctx.fillText(
-    '                ' + degreesDisplay + '\u00B0',
-    self.x,
-    self.y - 8
-  );
-  self.textLayerObj.ctx.fillText(
-    '                ' + altDisplay + ' ft',
-    self.x,
-    self.y + 2
-  );
-  self.textLayerObj.ctx.fillText(
-    '                ' + speedDisplay + ' kts',
-    self.x,
-    self.y + 12
-  );
+  self.htmlCol1.style.color = color;
+  self.htmlCol2.style.color = color;
+
+  self.textDivLine1.innerText = degreesDisplay + '\u00B0';
+  self.textDivLine2.innerText = altDisplay + ' ft';
+  self.textDivLine3.innerText = speedDisplay + ' kts';
 };

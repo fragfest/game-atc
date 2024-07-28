@@ -19,6 +19,7 @@ ATCv0.1.3:
     
     Minor:
     ✔ More flights/airframes @started(24-07-23 22:44) @done(24-07-23 23:40) @lasted(56m29s)
+    ☐ Failed landing plane pulse and sound (consider dropping as failure)
     ☐ Warn with message on mobile
     ☐ Sound for popups
     ☐ Slower landing rollouts (takeoffs too)

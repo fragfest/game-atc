@@ -181,12 +181,12 @@ const addCloud = (div, x, y, height, cloudType) => {
   if (cloudType === CloudType.LargeRain) {
     src = 'cloud-five.png';
     filter = 'brightness(0.8)';
-    opacity = 1;
+    opacity = 0.8;
   }
   if (cloudType === CloudType.ExtraLargeRain) {
     src = 'cloud-six.png';
     filter = '';
-    opacity = 1;
+    opacity = 0.8;
   }
 
   const imgEl = new Image();
@@ -208,7 +208,7 @@ const addIcon = (div, width, iconSize) => {
   imgIconEl.src = '/img/weather/rain.gif';
   imgIconEl.height = iconSize;
   imgIconEl.draggable = false;
-  imgIconEl.style.opacity = 0.7;
+  imgIconEl.style.opacity = 0.5;
   imgIconEl.style.position = 'absolute';
   imgIconEl.style.left = width / 2 - iconSize / 2 + 'px';
   imgIconEl.style.top = width / 2 - iconSize / 2 + 'px';
