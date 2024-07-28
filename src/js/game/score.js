@@ -25,7 +25,16 @@ export const resetScore = () => {
   score.failed = 0;
   score.conflict = 0;
   score.delayed = 0;
+  score.turbulence = 0;
   setScore(score);
+};
+
+export const turbulencePenalty = (timeDiffMs) => {
+  const score = getScore();
+  const turbulenceNew = score.turbulence + timeDiffMs / 1000;
+  score.turbulence = Number(turbulenceNew.toFixed(3));
+  setScore(score);
+  publishScore(score);
 };
 
 export const planeDelayFail = () => {
@@ -209,6 +218,7 @@ const setScore = (score) => {
  * @property {number} failed
  * @property {number} conflict
  * @property {number} delayed
+ * @property {number} turbulence
  */
 const Score = {
   level: 0,
@@ -217,6 +227,7 @@ const Score = {
   failed: 0,
   conflict: 0,
   delayed: 0,
+  turbulence: 0,
 };
 
 /**

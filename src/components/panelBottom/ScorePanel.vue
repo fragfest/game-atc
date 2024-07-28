@@ -25,6 +25,12 @@
         </span>
         <span>{{ conflictDisplay }}/{{ goals.Conflict }}</span>
       </div>
+      <div v-if="turbulenceDisplay" class="score-row" :class="sizeClass">
+        <span class="margin-top badge white">
+          turbulence <small>seconds</small>
+        </span>
+        <span>{{ turbulenceDisplay }}</span>
+      </div>
 
       <!-- <hr />
       <h3>Bonus</h3>
@@ -66,6 +72,7 @@ export default {
         failed: 0,
         conflict: 0,
         delayed: 0,
+        turbulence: 0,
       },
       goals: getGoals(),
     };
@@ -82,6 +89,11 @@ export default {
   computed: {
     sizeClass: function () {
       return getClassSize(this.screenSize);
+    },
+
+    turbulenceDisplay: function () {
+      if (this.score.turbulence > 999) return '999+';
+      return Math.floor(this.score.turbulence);
     },
 
     conflictDisplay: function () {
@@ -134,6 +146,10 @@ export default {
   border-radius: 8px;
   padding: 8px 14px;
   color: white;
+
+  .white {
+    color: black;
+  }
 }
 
 .score-info hr {
@@ -178,6 +194,9 @@ export default {
   }
   .blue {
     background-color: #122534;
+  }
+  .white {
+    background-color: white;
   }
 }
 

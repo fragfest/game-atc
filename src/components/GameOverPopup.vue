@@ -45,6 +45,19 @@
         <div class="item score" :class="conflictScoreClass">
           {{ conflictScore }}
         </div>
+        <div v-if="turbulence" class="item" :class="turbulenceClass">
+          turbulence (seconds)
+        </div>
+        <div
+          v-if="turbulence"
+          class="item points"
+          :class="turbulencePointsClass"
+        >
+          {{ turbulence }}
+        </div>
+        <div v-if="turbulence" class="item score" :class="turbulenceScoreClass">
+          {{ turbulenceScore }}
+        </div>
         <!-- <div class="item">BONUS hot runway</div>
         <div class="item"></div>
         <div class="item score">{{ hotRunway }}</div> -->
@@ -119,6 +132,11 @@ export default {
       conflictClass: 'border-red',
       conflictPointsClass: 'silver',
       conflictScoreClass: 'silver',
+      turbulence: 0,
+      turbulenceScore: 0,
+      turbulenceClass: 'border-white',
+      turbulencePointsClass: 'silver',
+      turbulenceScoreClass: 'silver',
       scoreTotalClass: 'silver',
       hotRunway: 0,
       tinPusher: 0,
@@ -137,6 +155,8 @@ export default {
       this.delayScoreClass = 'white';
       this.conflictPointsClass = 'white';
       this.conflictScoreClass = 'white';
+      this.turbulenceScoreClass = 'white';
+
       this.scoreTotalClass = 'white';
       this.isSuccess = true;
     }
@@ -159,6 +179,9 @@ export default {
       this.conflictClass = 'bckgrnd-red';
       this.conflictPointsClass = 'bckgrnd-red';
     }
+    if (score.turbulence) {
+      this.turbulencePointsClass = 'white';
+    }
 
     const baseScorePass = getBaseScore();
     const failedScoreMax = getGoals().Failed;
@@ -168,6 +191,7 @@ export default {
     const conflictScore =
       (conflictScoreMax - Math.floor(score.conflict)) *
       (baseScorePass / conflictScoreMax);
+    const turbulenceScore = -1 * Math.floor(score.turbulence);
 
     this.level = score.level;
     this.departures = '' + score.departures + '/' + getGoals().Departures;
@@ -177,18 +201,21 @@ export default {
     const conflict =
       score.conflict < conflictScoreMax ? score.conflict : conflictScoreMax;
     this.conflict = '' + Math.floor(conflict) + '/' + getGoals().Conflict;
+    this.turbulence = Math.floor(score.turbulence);
 
     this.departureScore = isVictory(score) ? baseScorePass : 0;
     this.arrivalScore = isVictory(score) ? baseScorePass : 0;
     this.failedScore = isVictory(score) ? Math.round(failedScore) : 0;
     this.delayScore = isVictory(score) ? baseScorePass : 0;
     this.conflictScore = isVictory(score) ? Math.round(conflictScore) : 0;
+    this.turbulenceScore = isVictory(score) ? turbulenceScore : 0;
     this.total =
       this.departureScore +
       this.arrivalScore +
       this.failedScore +
       this.delayScore +
-      this.conflictScore;
+      this.conflictScore +
+      this.turbulenceScore;
 
     if (isVictory(score)) levelComplete(this.total);
     resetScore();
@@ -217,6 +244,11 @@ export default {
 
   .bckgrnd-blue {
     background-color: #122534;
+    border-radius: 6px;
+  }
+
+  .border-white {
+    border: 1px solid white;
     border-radius: 6px;
   }
 
@@ -255,7 +287,7 @@ export default {
   justify-content: space-around;
 
   width: 46%;
-  height: 600px;
+  height: 640px;
   min-width: 800px;
   max-width: 1200px;
 

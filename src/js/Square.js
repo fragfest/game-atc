@@ -16,6 +16,7 @@ import {
 } from './entity';
 import { MessageEvents, publishMessage as publish } from './events/messages';
 import {
+  turbulencePenalty,
   resetProximity,
   uniqueProximityPair,
   planeProximityPenalty,
@@ -85,6 +86,8 @@ export default class Square {
 
     // states
     this.isInWeather = false;
+    this.turbulenceStartMs = 0;
+    this.turbulenceMs = 0;
     this.isDelayed = false;
     this.isSelected = false;
     this.isHandoff = false;
@@ -716,16 +719,31 @@ export default class Square {
     // weather proximity //////////////////////////////////////////
     const weatherArr = entityManagerArr.filter((x) => x.updateWeatherFn);
     if (weatherArr.length) {
-      this.isInWeather = false;
       weatherArr.forEach((weather) => {
         const weatherDist = distBetweenEntities(this)({
           x: weather.centerXY.x,
           y: weather.centerXY.y,
         });
-        if (!this.isInWeather && weatherDist < weather.radius) {
+
+        if (weatherDist > weather.radius) {
+          this.isInWeather = false;
+          return;
+        }
+        if (!this.isInWeather && weatherDist <= weather.radius) {
           this.isInWeather = true;
+          this.turbulenceStartMs = timestampMs;
+          return;
+        }
+        if (this.isInWeather) {
+          const turbulenceDiff = timestampMs - this.turbulenceStartMs;
+          this.turbulenceStartMs = timestampMs;
+          this.turbulenceMs += turbulenceDiff;
+          turbulencePenalty(turbulenceDiff);
+          return;
         }
       });
+    } else {
+      this.isInWeather = false;
     }
 
     // plane proximity //////////////////////////////////////////
