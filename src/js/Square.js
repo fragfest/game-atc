@@ -84,6 +84,7 @@ export default class Square {
     this.isShowHtmlPulse = true;
 
     // states
+    this.isInWeather = false;
     this.isDelayed = false;
     this.isSelected = false;
     this.isHandoff = false;
@@ -712,21 +713,22 @@ export default class Square {
     const timestampMs = timestamp;
     this.setShowCircle(!!showCircles);
 
+    // weather proximity //////////////////////////////////////////
     const weatherArr = entityManagerArr.filter((x) => x.updateWeatherFn);
     if (weatherArr.length) {
-      let inWeather = false;
+      this.isInWeather = false;
       weatherArr.forEach((weather) => {
         const weatherDist = distBetweenEntities(this)({
           x: weather.centerXY.x,
           y: weather.centerXY.y,
         });
-        if (!inWeather && weatherDist < weather.radius) {
-          inWeather = true;
-          console.log(this.title, weatherDist);
+        if (!this.isInWeather && weatherDist < weather.radius) {
+          this.isInWeather = true;
         }
       });
     }
 
+    // plane proximity //////////////////////////////////////////
     const planeClose = entityManagerArr.find(isPlaneClose);
     if (!planeClose) {
       this.hasProximityAlert = false;

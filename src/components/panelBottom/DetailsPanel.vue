@@ -11,7 +11,6 @@
     </div>
     <InfoPanel
       v-if="tabIndex === 0"
-      :screenSize="screenSize"
       :planeSelected="planeSelected"
       :planes="planes"
     >

@@ -7,23 +7,31 @@
       <h2 class="white">
         {{ airframeDetails.make }} {{ airframeDetails.airframe }}
       </h2>
+      <div v-if="plane.isInWeather" class="weather" :class="sizeClass">
+        <div>
+          <img src="/img/weather/rain.gif" />
+        </div>
+        <div>
+          <p>turbulence</p>
+        </div>
+      </div>
     </div>
     <div class="plane-info">
       <p>
         <b>
-          <span class="green">Min. cruising speed</span>
+          <span class="green">speed (min)</span>
         </b>
         {{ plane.speedMin }} kts
       </p>
       <p>
         <b>
-          <span class="green">Min. approach speed</span>
+          <span class="green">speed (landing)</span>
         </b>
         {{ plane.speedLanding }} kts
       </p>
       <p>
         <b>
-          <span class="green">Min. take off speed</span>
+          <span class="green">speed (take off)</span>
         </b>
         {{ plane.speedTakeoff }} kts
       </p>
@@ -37,7 +45,7 @@
       </p>
       <p>
         <b>
-          <span class="green">Airline</span>
+          <span class="green">airline</span>
         </b>
         {{ plane.airline }}
       </p>
@@ -50,19 +58,24 @@
 
 <script>
 import { DestinationType } from '../../js/types';
-import { getClassSize } from '../../js/utils';
+import { getClassSize, getScreenSize } from '../../js/utils';
 import { getAirframe, getPerformance } from '../../js/aircraft/airframe';
 
 export default {
   name: 'InfoPanel',
   props: {
-    screenSize: { type: String },
     planeSelected: { type: Object },
     planes: { type: Object },
   },
 
   data() {
-    return {};
+    return {
+      screenSize: '',
+    };
+  },
+
+  mounted() {
+    this.screenSize = getScreenSize();
   },
 
   computed: {
@@ -80,10 +93,10 @@ export default {
       const plane = this.plane;
       if (!plane) return '';
       if (plane.destinationType === DestinationType.Departure) {
-        return 'Destination';
+        return 'destination';
       }
       if (plane.destinationType === DestinationType.Arrival) {
-        return 'Arriving';
+        return 'arriving';
       }
       return '';
     },
@@ -199,10 +212,35 @@ export default {
   h1,
   h2 {
     align-self: center;
-    margin-left: 6%;
+    margin-left: 3%;
   }
   img {
     max-width: 16%;
+  }
+}
+
+.info-panel .header .weather {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: 4%;
+
+  img {
+    max-width: 40px;
+    border-radius: 8px;
+  }
+
+  p {
+    max-width: 90px;
+    line-height: 1;
+  }
+
+  &.small {
+    img {
+      max-width: 22px;
+      margin-top: 6px;
+      border-radius: 6px;
+    }
   }
 }
 

@@ -42,10 +42,9 @@ const updateWeather = (entityManagerArr) => {
 
 const level4 = (weatherArgs) => {
   const { width, height } = weatherArgs;
-
   const x = 0.08 * width;
   const y = 0.45 * height;
-  const radius = 120;
+  const radius = width / 11;
   addLargeRainHover(weatherArgs)({ x, y, radius });
 };
 
@@ -82,7 +81,7 @@ const createWeatherEntity = (centerXY, radius, updateWeatherFn) => ({
 ////////////////////////////////////////////////////////////////////////
 
 const createLargeRain = (ctx, div, x, y, width) => {
-  const iconSize = 40;
+  const iconSize = width / 6;
   const cloudSize = 0.35 * width;
 
   const weatherDiv = document.createElement('div');

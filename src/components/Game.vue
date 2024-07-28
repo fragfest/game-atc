@@ -408,7 +408,7 @@ export default {
       squareClickEventCB: (squareObj) => {
         squareClicked.value = squareObj;
         controlPanel.setFocus();
-        setPlaneSelected(gameState)(setupArg, squareObj);
+        setPlaneSelected(setupArg, squareObj);
         tutorialEventArg.setPlaneTutorial();
       },
 
@@ -438,7 +438,7 @@ export default {
       squareClicked,
       () => controlPanel.setFocus(),
       () => {
-        setPlaneSelected(gameState)(setupArg, squareClicked.value);
+        setPlaneSelected(setupArg, squareClicked.value);
         tutorialEventArg.setPlaneTutorial();
       },
       () => {

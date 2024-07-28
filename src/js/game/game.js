@@ -159,10 +159,7 @@ export const setShowCircles = (state) => (isShowCircles) => {
   state.showCircles = !!isShowCircles;
 };
 
-export const setPlaneSelected = (state) => (argObj, square) => {
-  const showCircles = state.showCircles;
-
-  const screenSize = argObj.screenSize;
+export const setPlaneSelected = (argObj, square) => {
   const width = getGameSize(argObj.screenSize).width;
   const height = getGameSize(argObj.screenSize).height;
   const entityManagerArr = argObj.entityManagerArr;
@@ -171,9 +168,6 @@ export const setPlaneSelected = (state) => (argObj, square) => {
   argObj.headingLayerObj.ctx.clearRect(0, 0, width, height);
   entityManagerArr.forEach(callFn('setSelected', false));
   square.setSelected(true);
-  entityManagerArr.forEach(
-    callFn('setProximity', { entityManagerArr, screenSize, showCircles })
-  );
   entityManagerArr.forEach(callFn('draw'));
 };
 
