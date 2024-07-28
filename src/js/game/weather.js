@@ -18,7 +18,7 @@ export const weatherGameLoop = (width, height, args) => {
   };
 
   const level = getScore().level;
-  if (level === 4) level4(weatherArgs);
+  if (level === 5) level5(weatherArgs);
 
   window.requestAnimationFrame(tick(width, height, args));
 };
@@ -40,7 +40,7 @@ const updateWeather = (entityManagerArr) => {
 // LEVELS
 ////////////////////////////////////////////////////////////////////////
 
-const level4 = (weatherArgs) => {
+const level5 = (weatherArgs) => {
   const { width, height } = weatherArgs;
   const x = 0.08 * width;
   const y = 0.45 * height;

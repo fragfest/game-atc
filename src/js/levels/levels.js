@@ -42,6 +42,7 @@ export const spawnPlaneByLevel = (level, arg) => {
   if (level === 2) return spawnPlaneLevel2(arg);
   if (level === 3) return spawnPlaneLevel3(arg);
   if (level === 4) return spawnPlaneLevel3(arg);
+  if (level === 5) return spawnPlaneLevel3(arg);
   spawnPlaneLevel1(arg);
 };
 
