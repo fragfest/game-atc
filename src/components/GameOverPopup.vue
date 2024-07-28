@@ -191,7 +191,8 @@ export default {
     const conflictScore =
       (conflictScoreMax - Math.floor(score.conflict)) *
       (baseScorePass / conflictScoreMax);
-    const turbulenceScore = -1 * Math.floor(score.turbulence);
+    const turbulence = Math.floor(score.turbulence);
+    const turbulenceScore = turbulence <= 100 ? -1 * turbulence : -100;
 
     this.level = score.level;
     this.departures = '' + score.departures + '/' + getGoals().Departures;
@@ -209,13 +210,16 @@ export default {
     this.delayScore = isVictory(score) ? baseScorePass : 0;
     this.conflictScore = isVictory(score) ? Math.round(conflictScore) : 0;
     this.turbulenceScore = isVictory(score) ? turbulenceScore : 0;
-    this.total =
+    const total =
       this.departureScore +
       this.arrivalScore +
       this.failedScore +
       this.delayScore +
       this.conflictScore +
       this.turbulenceScore;
+
+    if (total < 0) this.total = 0;
+    else this.total = total;
 
     if (isVictory(score)) levelComplete(this.total);
     resetScore();

@@ -50,6 +50,14 @@
           <div class="font-large"><b>Traffic</b></div>
           <div>TCAS conflict</div>
         </div>
+        <div v-else-if="isInWeather" class="weather">
+          <div>
+            <img src="/img/weather/rain.gif" />
+          </div>
+          <div>
+            <p>turbulence</p>
+          </div>
+        </div>
         <div v-else-if="isLanding" class="takeoff-landing">
           <div class="font-large"><b>Landing</b></div>
           <div>ILS approach</div>
@@ -303,6 +311,12 @@ export default {
       return minutesStr + ':' + secondsStr;
     },
 
+    isInWeather: function () {
+      const plane = getPlane(this.plane, this.planes);
+      if (!plane) return false;
+      return plane.isInWeather;
+    },
+
     isNavToHandoff: function () {
       const plane = getPlane(this.plane, this.planes);
       if (!plane) return false;
@@ -449,7 +463,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 // strip small
 .strip.small {
   width: 280px;
@@ -471,6 +485,15 @@ export default {
       padding-top: 1px;
       padding-bottom: 1px;
       box-shadow: 1px 1px rgb(0, 84, 84);
+    }
+
+    .weather {
+      img {
+        max-width: 22px;
+      }
+      p {
+        margin-left: 6px;
+      }
     }
 
     .col {
@@ -594,6 +617,20 @@ export default {
     .title {
       color: lightgreen;
       text-shadow: 2px 2px black;
+    }
+
+    .weather {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      img {
+        max-width: 30px;
+        border-radius: 6px;
+      }
+      p {
+        margin-left: 12px;
+      }
     }
 
     .holding-handoff {
