@@ -719,29 +719,29 @@ export default class Square {
     // weather proximity //////////////////////////////////////////
     const weatherArr = entityManagerArr.filter((x) => x.updateWeatherFn);
     if (weatherArr.length) {
+      let isInWeather = false;
+
       weatherArr.forEach((weather) => {
         const weatherDist = distBetweenEntities(this)({
           x: weather.centerXY.x,
           y: weather.centerXY.y,
         });
-
-        if (weatherDist > weather.radius) {
-          this.isInWeather = false;
-          return;
-        }
-        if (!this.isInWeather && weatherDist <= weather.radius) {
-          this.isInWeather = true;
-          this.turbulenceStartMs = timestampMs;
-          return;
-        }
-        if (this.isInWeather) {
-          const turbulenceDiff = timestampMs - this.turbulenceStartMs;
-          this.turbulenceStartMs = timestampMs;
-          this.turbulenceMs += turbulenceDiff;
-          turbulencePenalty(turbulenceDiff);
-          return;
+        if (weatherDist <= weather.radius) {
+          isInWeather = true;
         }
       });
+
+      if (!isInWeather) {
+        this.isInWeather = false;
+      } else if (!this.isInWeather && isInWeather) {
+        this.turbulenceStartMs = timestampMs;
+        this.isInWeather = true;
+      } else if (isInWeather) {
+        const turbulenceDiff = timestampMs - this.turbulenceStartMs;
+        this.turbulenceStartMs = timestampMs;
+        this.turbulenceMs += turbulenceDiff;
+        turbulencePenalty(turbulenceDiff);
+      }
     } else {
       this.isInWeather = false;
     }
