@@ -1,4 +1,10 @@
+import { getScreenSize, ScreenSizes } from '../utils';
 import { getScore } from './score';
+
+export const WeatherType = Object.freeze({
+  Inert: 'Inert',
+  Turbulence: 'Turbulence',
+});
 
 /**
  * @param {Number} width
@@ -18,6 +24,10 @@ export const weatherGameLoop = (width, height, args) => {
   };
 
   const level = getScore().level;
+  if (level === 1) level1(weatherArgs);
+  if (level === 2) level2(weatherArgs);
+  if (level === 3) level3(weatherArgs);
+  if (level === 4) level4(weatherArgs);
   if (level === 5) level5(weatherArgs);
 
   window.requestAnimationFrame(tick(width, height, args));
@@ -40,60 +50,241 @@ const updateWeather = (entityManagerArr) => {
 // LEVELS
 ////////////////////////////////////////////////////////////////////////
 
+const level1 = (weatherArgs) => {
+  const { width, height } = weatherArgs;
+  const create = createOneSmallCloud;
+
+  const cloud1 = addInert(weatherArgs, createTwoSmallClouds, driftESE);
+  const cloud2 = addInert(weatherArgs, create(CloudType.LightHazeOne), hover);
+  const cloud3 = addInert(weatherArgs, create(CloudType.LightHazeTwo), hover);
+  const cloud4 = addInert(weatherArgs, create(CloudType.LargeHaze), hover);
+  const cloud5 = addInert(weatherArgs, create(CloudType.MediumRain), hover);
+  cloud1({ x: 0.05 * width, y: 0.05 * height, radius: width / 14 });
+  cloud2({ x: 0.2 * width, y: 0.4 * height, radius: width / 14 });
+  cloud3({ x: 0.1 * width, y: 0.7 * height, radius: width / 14 });
+  cloud4({ x: 0.8 * width, y: 0.5 * height, radius: width / 14 });
+  cloud5({ x: 0.7 * width, y: 0.1 * height, radius: width / 14 });
+};
+
+const level2 = (weatherArgs) => {
+  const { width, height } = weatherArgs;
+  const create = createOneSmallCloud;
+
+  const cloud1 = addInert(
+    weatherArgs,
+    create(CloudType.LightHazeOne),
+    driftESE
+  );
+  const cloud2 = addInert(
+    weatherArgs,
+    create(CloudType.LightHazeOne),
+    driftESE
+  );
+  const cloud3 = addInert(weatherArgs, create(CloudType.LightHazeOne), hover);
+  const cloud4 = addInert(weatherArgs, create(CloudType.LightHazeOne), hover);
+  const cloud5 = addInert(weatherArgs, create(CloudType.MediumHaze), hover);
+  const cloud6 = addInert(weatherArgs, create(CloudType.MediumHaze), hover);
+  const cloud7 = addInert(weatherArgs, create(CloudType.LightHazeOne), hover);
+  const cloud8 = addInert(weatherArgs, create(CloudType.LightHazeOne), hover);
+
+  cloud1({ x: 0.1 * width, y: 0.1 * height, radius: width / 14 });
+  cloud2({ x: 0.5 * width, y: 0.02 * height, radius: width / 14 });
+  cloud3({ x: 0.7 * width, y: 0.8 * height, radius: width / 14 });
+  cloud4({ x: 0.75 * width, y: 0.83 * height, radius: width / 14 });
+  cloud5({ x: 0.78 * width, y: 0.4 * height, radius: width / 14 });
+  cloud6({ x: 0.72 * width, y: 0.35 * height, radius: width / 14 });
+  cloud7({ x: 0.75 * width, y: 0.36 * height, radius: width / 14 });
+  cloud8({ x: 0.73 * width, y: 0.45 * height, radius: width / 14 });
+};
+
+const level3 = (weatherArgs) => {
+  const { width, height } = weatherArgs;
+  const create = createOneSmallCloud;
+
+  const cloud1 = addInert(weatherArgs, create(CloudType.LargeRain), driftESE);
+  const cloud2 = addInert(
+    weatherArgs,
+    create(CloudType.LargeScattered),
+    driftE
+  );
+  const cloud3 = addInert(weatherArgs, create(CloudType.LightHazeOne), hover);
+  const cloud4 = addInert(weatherArgs, create(CloudType.LightHazeOne), hover);
+  const cloud5 = addInert(weatherArgs, create(CloudType.LightHazeOne), hover);
+  const cloud6 = addInert(weatherArgs, create(CloudType.LightHazeOne), hover);
+  const cloud7 = addInert(weatherArgs, create(CloudType.MediumHaze), hover);
+  cloud1({ x: 0.05 * width, y: 0.2 * height, radius: width / 14 });
+  cloud2({ x: -0.1 * width, y: 0.5 * height, radius: width / 14 });
+  cloud3({ x: 0.55 * width, y: 0.1 * height, radius: width / 14 });
+  cloud4({ x: 0.65 * width, y: 0.02 * height, radius: width / 14 });
+  cloud5({ x: 0.7 * width, y: -0.01 * height, radius: width / 14 });
+  cloud6({ x: 0.8 * width, y: 0.07 * height, radius: width / 14 });
+  cloud7({ x: 0.7 * width, y: 0.8 * height, radius: width / 14 });
+};
+
+const level4 = (weatherArgs) => {
+  const { width, height } = weatherArgs;
+  const create = createOneSmallCloud;
+
+  const cloud1 = addInert(weatherArgs, create(CloudType.LightHazeOne), driftE);
+  const cloud2 = addInert(weatherArgs, create(CloudType.LightHazeOne), driftE);
+  const cloud3 = addInert(weatherArgs, create(CloudType.LightHazeOne), driftE);
+  const cloud4 = addInert(weatherArgs, create(CloudType.LightHazeTwo), hover);
+  const cloud5 = addInert(weatherArgs, create(CloudType.MediumHaze), hover);
+  const cloud6 = addInert(weatherArgs, create(CloudType.LargeHaze), hover);
+  const cloud7 = addInert(weatherArgs, create(CloudType.MediumHaze), hover);
+
+  cloud1({ x: 0.05 * width, y: 0.4 * height, radius: width / 14 });
+  cloud2({ x: 0.1 * width, y: 0.43 * height, radius: width / 14 });
+  cloud3({ x: 0.05 * width, y: 0.48 * height, radius: width / 14 });
+  cloud4({ x: 0.5 * width, y: 0.1 * height, radius: width / 14 });
+  cloud5({ x: 0.55 * width, y: 0.12 * height, radius: width / 14 });
+  cloud6({ x: 0.6 * width, y: 0.08 * height, radius: width / 14 });
+  cloud7({ x: 0.8 * width, y: 0.75 * height, radius: width / 14 });
+};
+
 const level5 = (weatherArgs) => {
   const { width, height } = weatherArgs;
+  const create = createOneSmallCloud;
+  weatherArgs.hasIcon = true;
 
-  const rainOnDeparture = addLargeRain(weatherArgs, hover);
+  const rainOnDeparture = addTurbulence(weatherArgs, createLargeRain, hover);
   rainOnDeparture({
     x: 0.08 * width,
     y: 0.45 * height,
     radius: width / 11,
   });
-  const rainOverWaypointBIG = addLargeRain(weatherArgs, driftESE);
+  const rainOverWaypointBIG = addTurbulence(
+    weatherArgs,
+    createLargeRain,
+    driftESE
+  );
   rainOverWaypointBIG({
     x: 0.6 * width,
     y: 0.4 * height,
     radius: width / 16,
   });
+
+  const cloud1 = addInert(weatherArgs, create(CloudType.LightHazeOne), hover);
+  const cloud2 = addInert(weatherArgs, create(CloudType.LightHazeOne), hover);
+  const cloud3 = addInert(weatherArgs, create(CloudType.LightHazeOne), hover);
+  const cloud4 = addInert(weatherArgs, create(CloudType.LightHazeOne), hover);
+  const cloud5 = addInert(weatherArgs, create(CloudType.LightHazeTwo), hover);
+  const cloud6 = addInert(weatherArgs, create(CloudType.MediumHaze), hover);
+
+  cloud1({ x: 0.6 * width, y: 0.8 * height, radius: width / 14 });
+  cloud2({ x: 0.65 * width, y: 0.83 * height, radius: width / 14 });
+  cloud3({ x: 0.75 * width, y: 0.1 * height, radius: width / 14 });
+  cloud4({ x: 0.8 * width, y: 0.1 * height, radius: width / 14 });
+  cloud5({ x: 0.2 * width, y: 0 * height, radius: width / 14 });
+  cloud6({ x: -0.1 * width, y: 0.1 * height, radius: width / 14 });
 };
 
 ////////////////////////////////////////////////////////////////////////
 // add weather systems
 ////////////////////////////////////////////////////////////////////////
 
-const addLargeRain =
-  ({ ctx, entityDiv, entityManagerArr }, moveFn) =>
+const addInert =
+  ({ ctx, entityDiv, entityManagerArr }, createWeatherFn, moveFn) =>
   ({ x, y, radius }) => {
+    const XY = { x, y };
     const centerXY = { x: x + radius, y: y + radius };
 
-    const obj = createLargeRain(ctx, entityDiv, x, y, radius * 2);
+    const obj = createWeatherFn(ctx, entityDiv, x, y, radius * 2);
     const updateMoveFn = moveFn(centerXY.x, centerXY.y);
 
     const updateWeatherFn = () => {
       const diffXY = updateMoveFn(centerXY.x, centerXY.y);
-      x += diffXY.x;
-      y += diffXY.y;
-      centerXY.x += diffXY.x;
-      centerXY.y += diffXY.y;
-
-      obj.weatherDiv.style.left = x + 'px';
-      obj.weatherDiv.style.top = y + 'px';
-      obj.drawFn(x, y);
+      updateXY(diffXY, XY, centerXY, obj);
     };
     entityManagerArr.push(
-      createWeatherEntity(centerXY, radius, updateWeatherFn)
+      createWeatherEntity(WeatherType.Inert, centerXY, radius, updateWeatherFn)
     );
   };
 
-const createWeatherEntity = (centerXY, radius, updateWeatherFn) => ({
+const addTurbulence =
+  ({ ctx, entityDiv, entityManagerArr }, createWeatherFn, moveFn) =>
+  ({ x, y, radius }) => {
+    const XY = { x, y };
+    const centerXY = { x: x + radius, y: y + radius };
+
+    const obj = createWeatherFn(ctx, entityDiv, x, y, radius * 2);
+    const updateMoveFn = moveFn(centerXY.x, centerXY.y);
+
+    const updateWeatherFn = () => {
+      const diffXY = updateMoveFn(centerXY.x, centerXY.y);
+      updateXY(diffXY, XY, centerXY, obj);
+      obj.drawCircleFn(XY.x, XY.y);
+    };
+    entityManagerArr.push(
+      createWeatherEntity(
+        WeatherType.Turbulence,
+        centerXY,
+        radius,
+        updateWeatherFn
+      )
+    );
+  };
+
+const createWeatherEntity = (
+  weatherType,
+  centerXY,
+  radius,
+  updateWeatherFn
+) => ({
+  weatherType,
   updateWeatherFn,
   centerXY,
   radius,
 });
 
+const updateXY = (diffXY, XY, centerXY, obj) => {
+  XY.x += diffXY.x;
+  XY.y += diffXY.y;
+  obj.weatherDiv.style.left = XY.x + 'px';
+  obj.weatherDiv.style.top = XY.y + 'px';
+  centerXY.x += diffXY.x;
+  centerXY.y += diffXY.y;
+};
+
 ////////////////////////////////////////////////////////////////////////
 // create weather systems
 ////////////////////////////////////////////////////////////////////////
+
+const createOneSmallCloud = (cloudType) => (ctx, div, x, y, width) => {
+  const cloudSize = 0.35 * width;
+
+  const weatherDiv = document.createElement('div');
+  div.appendChild(weatherDiv);
+  weatherDiv.style.position = 'absolute';
+  weatherDiv.style.left = x + 'px';
+  weatherDiv.style.top = y + 'px';
+  weatherDiv.style.width = width + 'px';
+  weatherDiv.style.height = width + 'px';
+  addCloud(weatherDiv, 0.6 * width, 0.25 * width, cloudSize, cloudType);
+  return { weatherDiv };
+};
+
+const createTwoSmallClouds = (ctx, div, x, y, width) => {
+  const cloudSize = 0.35 * width;
+
+  const weatherDiv = document.createElement('div');
+  div.appendChild(weatherDiv);
+  weatherDiv.style.position = 'absolute';
+  weatherDiv.style.left = x + 'px';
+  weatherDiv.style.top = y + 'px';
+  weatherDiv.style.width = width + 'px';
+  weatherDiv.style.height = width + 'px';
+
+  addCloud(weatherDiv, 0 * width, 0 * width, cloudSize, CloudType.MediumHaze);
+  addCloud(
+    weatherDiv,
+    0.6 * width,
+    0.25 * width,
+    cloudSize,
+    CloudType.LightHazeOne
+  );
+  return { weatherDiv };
+};
 
 const createLargeRain = (ctx, div, x, y, width) => {
   const iconSize = width / 6;
@@ -106,7 +297,6 @@ const createLargeRain = (ctx, div, x, y, width) => {
   weatherDiv.style.top = y + 'px';
   weatherDiv.style.width = width + 'px';
   weatherDiv.style.height = width + 'px';
-  // weatherDiv.style.border = '1px solid white';
 
   addIcon(weatherDiv, width, iconSize);
   addCloud(weatherDiv, 0.11 * width, 0, cloudSize, CloudType.MediumHaze);
@@ -133,15 +323,12 @@ const createLargeRain = (ctx, div, x, y, width) => {
     CloudType.LightHazeOne
   );
 
-  const drawFn = (circleX, circleY) =>
+  const drawCircleFn = (circleX, circleY) =>
     addRainCircle(ctx, circleX, circleY, width);
 
-  drawFn(x, y);
+  drawCircleFn(x, y);
 
-  return {
-    weatherDiv,
-    drawFn,
-  };
+  return { weatherDiv, drawCircleFn };
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -153,7 +340,14 @@ const createLargeRain = (ctx, div, x, y, width) => {
 const hover = (xInitial, yInitial) => (x, y) => ({ x: 0, y: 0 });
 // eslint-disable-next-line
 const driftESE = (xInitial, yInitial) => (x, y) => {
-  return { x: 0.01, y: 0.005 };
+  if (getScreenSize() === ScreenSizes.Large) return { x: 0.01, y: 0.005 };
+  if (getScreenSize() === ScreenSizes.Small) return { x: 0.007, y: 0.0035 };
+};
+// eslint-disable-next-line
+const driftE = (xInitial, yInitial) => (x, y) => {
+  // 1.4 : 2
+  if (getScreenSize() === ScreenSizes.Large) return { x: 0.01, y: 0 };
+  if (getScreenSize() === ScreenSizes.Small) return { x: 0.007, y: 0 };
 };
 
 ////////////////////////////////////////////////////////////////////////

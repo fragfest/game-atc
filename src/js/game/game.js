@@ -14,7 +14,7 @@ import {
   getWaypointArrivalsAll,
 } from '../airports/LHR';
 
-import { getGameSize, isWeather, minWeatherDist } from '../utils';
+import { getGameSize, isTurbulence, minWeatherDist } from '../utils';
 import { draw as drawScale } from '../canvas/scale';
 import { isArrival, isSquare } from '../types';
 import { createPlane, spawnRndPlane } from '../Plane';
@@ -278,7 +278,9 @@ const createSquare =
         newObj,
         weatherObjXY
       );
-      return isWeather(weatherObj) && isArrival(newObj) && isWithinWeatherDist;
+      return (
+        isTurbulence(weatherObj) && isArrival(newObj) && isWithinWeatherDist
+      );
     };
 
     if (Math.random() < chanceOfSquare) {

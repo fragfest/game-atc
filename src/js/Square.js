@@ -1,5 +1,6 @@
 import { DestinationType, Direction, isSquare } from './types';
 import {
+  isTurbulence,
   ScreenSizes,
   inputHeadingToRad,
   convertToSmallRad,
@@ -717,7 +718,7 @@ export default class Square {
     this.setShowCircle(!!showCircles);
 
     // weather proximity //////////////////////////////////////////
-    const weatherArr = entityManagerArr.filter((x) => x.updateWeatherFn);
+    const weatherArr = entityManagerArr.filter(isTurbulence);
     if (weatherArr.length) {
       let isInWeather = false;
 

@@ -1,7 +1,8 @@
 import { isDeparture, isArrival } from './types';
+import { WeatherType } from './game/weather';
 
 // WEATHER ////////////////////////////////////////////////////////////
-export const isWeather = (obj) => !!obj.updateWeatherFn;
+export const isTurbulence = (obj) => obj.weatherType === WeatherType.Turbulence;
 export const minWeatherDist = (obj) => (obj?.radius || 0) * 2;
 
 // PLANES /////////////////////////////////////////////////////////////////
