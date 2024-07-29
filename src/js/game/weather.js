@@ -42,25 +42,40 @@ const updateWeather = (entityManagerArr) => {
 
 const level5 = (weatherArgs) => {
   const { width, height } = weatherArgs;
-  const x = 0.08 * width;
-  const y = 0.45 * height;
-  const radius = width / 11;
-  addLargeRainHover(weatherArgs)({ x, y, radius });
+
+  const rainOnDeparture = addLargeRain(weatherArgs, hover);
+  rainOnDeparture({
+    x: 0.08 * width,
+    y: 0.45 * height,
+    radius: width / 11,
+  });
+  const rainOverWaypointBIG = addLargeRain(weatherArgs, driftESE);
+  rainOverWaypointBIG({
+    x: 0.6 * width,
+    y: 0.4 * height,
+    radius: width / 16,
+  });
 };
 
 ////////////////////////////////////////////////////////////////////////
 // add weather systems
 ////////////////////////////////////////////////////////////////////////
 
-const addLargeRainHover =
-  ({ ctx, entityDiv, entityManagerArr }) =>
+const addLargeRain =
+  ({ ctx, entityDiv, entityManagerArr }, moveFn) =>
   ({ x, y, radius }) => {
     const centerXY = { x: x + radius, y: y + radius };
 
     const obj = createLargeRain(ctx, entityDiv, x, y, radius * 2);
+    const updateMoveFn = moveFn(centerXY.x, centerXY.y);
+
     const updateWeatherFn = () => {
-      // centerXY.x += 0.05;
-      // x += 0.05;
+      const diffXY = updateMoveFn(centerXY.x, centerXY.y);
+      x += diffXY.x;
+      y += diffXY.y;
+      centerXY.x += diffXY.x;
+      centerXY.y += diffXY.y;
+
       obj.weatherDiv.style.left = x + 'px';
       obj.weatherDiv.style.top = y + 'px';
       obj.drawFn(x, y);
@@ -127,6 +142,16 @@ const createLargeRain = (ctx, div, x, y, width) => {
     weatherDiv,
     drawFn,
   };
+};
+
+////////////////////////////////////////////////////////////////////////
+// cloud movement
+////////////////////////////////////////////////////////////////////////
+// drift function names reference compass points
+
+const hover = (xInitial, yInitial) => (x, y) => ({ x: 0, y: 0 });
+const driftESE = (xInitial, yInitial) => (x, y) => {
+  return { x: 0.02, y: 0.01 };
 };
 
 ////////////////////////////////////////////////////////////////////////

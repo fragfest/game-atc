@@ -1,5 +1,9 @@
 import { isDeparture, isArrival } from './types';
 
+// WEATHER ////////////////////////////////////////////////////////////
+export const isWeather = (obj) => !!obj.updateWeatherFn;
+export const minWeatherDist = (obj) => (obj?.radius || 0) * 2;
+
 // PLANES /////////////////////////////////////////////////////////////////
 export const getDepartureCount = (arr) => arr.filter(isDeparture).length;
 export const getArrivalCount = (arr) => arr.filter(isArrival).length;
