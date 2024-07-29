@@ -149,9 +149,11 @@ const createLargeRain = (ctx, div, x, y, width) => {
 ////////////////////////////////////////////////////////////////////////
 // drift function names reference compass points
 
+// eslint-disable-next-line
 const hover = (xInitial, yInitial) => (x, y) => ({ x: 0, y: 0 });
+// eslint-disable-next-line
 const driftESE = (xInitial, yInitial) => (x, y) => {
-  return { x: 0.02, y: 0.01 };
+  return { x: 0.01, y: 0.005 };
 };
 
 ////////////////////////////////////////////////////////////////////////

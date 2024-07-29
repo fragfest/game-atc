@@ -13,9 +13,10 @@ import {
   getWaypointDestinationsAll,
   getWaypointArrivalsAll,
 } from '../airports/LHR';
-import { getGameSize } from '../utils';
+
+import { getGameSize, isWeather, minWeatherDist } from '../utils';
 import { draw as drawScale } from '../canvas/scale';
-import { isDeparture, isSquare } from '../types';
+import { isArrival, isSquare } from '../types';
 import { createPlane, spawnRndPlane } from '../Plane';
 import { SoundType, play, playLoop, stop } from './sound';
 
@@ -263,15 +264,31 @@ const createSquare =
 
     const isCloseToPlane = (newObj) => (otherObj) =>
       isSquare(otherObj) &&
-      !isDeparture(newObj) &&
+      isArrival(newObj) &&
       isWithinDist(minSpawnDist, newObj, otherObj);
+
+    const isCloseToWeather = (newObj) => (weatherObj) => {
+      const weatherObjXY = {
+        x: weatherObj?.centerXY?.x,
+        y: weatherObj?.centerXY?.y,
+      };
+
+      const isWithinWeatherDist = isWithinDist(
+        minWeatherDist(weatherObj),
+        newObj,
+        weatherObjXY
+      );
+      return isWeather(weatherObj) && isArrival(newObj) && isWithinWeatherDist;
+    };
 
     if (Math.random() < chanceOfSquare) {
       const newEntity = createEntityFn();
       if (!newEntity) return;
 
-      const entityClose = entityManagerArr.find(isCloseToPlane(newEntity));
-      if (entityClose) {
+      const planeClose = entityManagerArr.find(isCloseToPlane(newEntity));
+      const weatherClose = entityManagerArr.find(isCloseToWeather(newEntity));
+
+      if (planeClose || weatherClose) {
         newEntity.destroy();
         return;
       }
