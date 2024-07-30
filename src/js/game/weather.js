@@ -59,6 +59,7 @@ const level1 = (weatherArgs) => {
   const cloud3 = addInert(weatherArgs, create(CloudType.LightHazeTwo), hover);
   const cloud4 = addInert(weatherArgs, create(CloudType.LargeHaze), hover);
   const cloud5 = addInert(weatherArgs, create(CloudType.MediumRain), hover);
+
   cloud1({ x: 0.05 * width, y: 0.05 * height, radius: width / 14 });
   cloud2({ x: 0.2 * width, y: 0.4 * height, radius: width / 14 });
   cloud3({ x: 0.1 * width, y: 0.7 * height, radius: width / 14 });
@@ -112,6 +113,7 @@ const level3 = (weatherArgs) => {
   const cloud5 = addInert(weatherArgs, create(CloudType.LightHazeOne), hover);
   const cloud6 = addInert(weatherArgs, create(CloudType.LightHazeOne), hover);
   const cloud7 = addInert(weatherArgs, create(CloudType.MediumHaze), hover);
+
   cloud1({ x: 0.05 * width, y: 0.2 * height, radius: width / 14 });
   cloud2({ x: -0.1 * width, y: 0.5 * height, radius: width / 14 });
   cloud3({ x: 0.55 * width, y: 0.1 * height, radius: width / 14 });
@@ -184,13 +186,17 @@ const level5 = (weatherArgs) => {
 ////////////////////////////////////////////////////////////////////////
 
 const addInert =
-  ({ ctx, entityDiv, entityManagerArr }, createWeatherFn, moveFn) =>
+  (
+    { ctx, entityDiv, entityManagerArr, width, height },
+    createWeatherFn,
+    moveFn
+  ) =>
   ({ x, y, radius }) => {
     const XY = { x, y };
     const centerXY = { x: x + radius, y: y + radius };
 
     const obj = createWeatherFn(ctx, entityDiv, x, y, radius * 2);
-    const updateMoveFn = moveFn(centerXY.x, centerXY.y);
+    const updateMoveFn = moveFn(width, height);
 
     const updateWeatherFn = () => {
       const diffXY = updateMoveFn(centerXY.x, centerXY.y);
@@ -202,13 +208,17 @@ const addInert =
   };
 
 const addTurbulence =
-  ({ ctx, entityDiv, entityManagerArr }, createWeatherFn, moveFn) =>
+  (
+    { ctx, entityDiv, entityManagerArr, width, height },
+    createWeatherFn,
+    moveFn
+  ) =>
   ({ x, y, radius }) => {
     const XY = { x, y };
     const centerXY = { x: x + radius, y: y + radius };
 
     const obj = createWeatherFn(ctx, entityDiv, x, y, radius * 2);
-    const updateMoveFn = moveFn(centerXY.x, centerXY.y);
+    const updateMoveFn = moveFn(width, height);
 
     const updateWeatherFn = () => {
       const diffXY = updateMoveFn(centerXY.x, centerXY.y);
@@ -337,15 +347,20 @@ const createLargeRain = (ctx, div, x, y, width) => {
 // drift function names reference compass points
 
 // eslint-disable-next-line
-const hover = (xInitial, yInitial) => (x, y) => ({ x: 0, y: 0 });
-// eslint-disable-next-line
-const driftESE = (xInitial, yInitial) => (x, y) => {
+const hover = (width, height) => (x, y) => ({ x: 0, y: 0 });
+
+const driftESE = (width, height) => (x, y) => {
+  if (x > width + 100 || x < -100 || y > height + 100 || y < -100) {
+    return { x: 0, y: 0 };
+  }
   if (getScreenSize() === ScreenSizes.Large) return { x: 0.01, y: 0.005 };
   if (getScreenSize() === ScreenSizes.Small) return { x: 0.007, y: 0.0035 };
 };
-// eslint-disable-next-line
-const driftE = (xInitial, yInitial) => (x, y) => {
-  // 1.4 : 2
+
+const driftE = (width, height) => (x, y) => {
+  if (x > width + 100 || x < -100 || y > height + 100 || y < -100) {
+    return { x: 0, y: 0 };
+  }
   if (getScreenSize() === ScreenSizes.Large) return { x: 0.01, y: 0 };
   if (getScreenSize() === ScreenSizes.Small) return { x: 0.007, y: 0 };
 };

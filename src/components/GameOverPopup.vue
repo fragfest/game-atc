@@ -192,7 +192,7 @@ export default {
       (conflictScoreMax - Math.floor(score.conflict)) *
       (baseScorePass / conflictScoreMax);
     const turbulence = Math.floor(score.turbulence);
-    const turbulenceScore = turbulence <= 100 ? -1 * turbulence : -100;
+    const turbulenceScore = turbulence <= 300 ? -1 * turbulence : -300;
 
     this.level = score.level;
     this.departures = '' + score.departures + '/' + getGoals().Departures;

@@ -16,6 +16,7 @@
         </div>
       </div>
     </div>
+
     <div class="plane-info">
       <p>
         <b>
@@ -117,7 +118,7 @@ export default {
 </script>
 
 <style lang="scss">
-// small
+// info-panel small
 .info-panel.small {
   min-height: 210px;
   padding: 2px 8px;
@@ -136,6 +137,7 @@ export default {
 
 .info-panel.small .header {
   padding: 6px 0;
+  height: 30px;
 
   h1 {
     font-size: 14px;
@@ -159,7 +161,7 @@ export default {
 .info-panel.small .img-profile {
   margin-top: 75px;
 }
-// END small
+// END info-panel small
 
 .info-panel {
   min-height: 400px;
@@ -207,6 +209,7 @@ export default {
 .info-panel .header {
   display: flex;
   padding: 12px 0;
+  height: 80px;
   border-bottom: 1px solid lightgreen;
 
   h1,
