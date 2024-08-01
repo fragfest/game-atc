@@ -11,8 +11,9 @@ ATCv0.1.3:
     ✔ Timeslots/delay mechanic @started(24-02-19 16:29) @done(24-07-22 22:04) @lasted(22w4h35m54s)
     ✔ More levels (level 4) @started(24-07-23 16:44) @done(24-07-23 18:56) @lasted(2h12m29s)
     ✔ Weather turbulence mechanic @started(24-07-24 15:27) @done(24-07-29 19:25) @lasted(5d3h58m4s)
+    ☐ InfoPanel flight experience indicator (bonus too?) @started(24-07-30 19:39)
     ☐ Weather dangerous mechanic
-    ☐ Fuel mechanic
+    ☐ Fuel/Crash mechanic
     ☐ Wake turbulence
     ☐ Engine contrails
     ☐ Achievements/bonus badges/scores
@@ -22,6 +23,7 @@ ATCv0.1.3:
     
     Minor:
     ✔ More flights/airframes @started(24-07-23 22:44) @done(24-07-23 23:40) @lasted(56m29s)
+    ☐ ScorePanel icons instead of text
     ☐ Failed landing plane pulse and sound (consider dropping as failure)
     ☐ Warn with message on mobile
     ☐ Sound for popups

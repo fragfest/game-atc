@@ -161,8 +161,8 @@ const level5 = (weatherArgs) => {
     driftESE
   );
   rainOverWaypointBIG({
-    x: 0.6 * width,
-    y: 0.4 * height,
+    x: 0.5 * width,
+    y: 0.3 * height,
     radius: width / 16,
   });
 

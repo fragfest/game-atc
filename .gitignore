@@ -22,4 +22,6 @@ pnpm-debug.log*
 *.sw?
 
 # media files
+*.gif
+*.png
 *.mp3
