@@ -43,7 +43,7 @@
         <div class="info-center-experience">
           <div class="experience-row">
             <div>
-              <h2 class="green">comfort</h2>
+              <h2 class="green">flight quality</h2>
             </div>
             <div class="progress-slices" :class="sizeClass">
               <div class="slice" :class="empty0"><ProgressSliceEmpty /></div>
@@ -67,12 +67,18 @@
             </div>
           </div>
 
-          <div class="experience-row">
+          <div v-if="flightQualityMessage" class="experience-row justify-end">
+            <div class="flight-quality-message" :class="sizeClass">
+              <h2 class="white">{{ flightQualityMessage }}</h2>
+            </div>
+          </div>
+
+          <!-- <div class="experience-row">
             <div><h2 class="green">fuel</h2></div>
             <div class="progress-bar-container" :class="sizeClass">
               <div class="progress-bar" :style="progressBarStyle"></div>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
 
@@ -232,6 +238,13 @@ export default {
       const fraction = 0.3;
       if (fraction >= 1) return 'width: 100%';
       return 'width:' + fraction * 100 + '%';
+    },
+
+    flightQualityMessage: function () {
+      if (!this.plane) return '';
+      const isTurbulence = this.plane.isInWeather;
+      if (isTurbulence) return 'turbulence';
+      return '';
     },
   },
 };
@@ -397,6 +410,10 @@ export default {
     align-items: center;
     flex-wrap: wrap;
 
+    &.justify-end {
+      justify-content: flex-end;
+    }
+
     h1,
     h2 {
       margin-left: 6px;
@@ -445,32 +462,48 @@ export default {
   }
   // END progress-slices //////////////////
 
-  // progress-bar-container //////////////////
-  .progress-bar-container {
-    display: flex;
-    align-items: center;
-
-    width: 154px;
-    height: 22px;
-
+  .flight-quality-message {
+    width: 140px;
+    padding: 0 8px;
     border: 1px solid white;
     border-radius: 6px;
+    text-align: center;
 
-    .progress-bar {
-      height: 22px;
-      border-radius: 6px;
-      background-color: lightgreen;
+    h2 {
+      margin: 0;
     }
   }
 
-  .progress-bar-container.small {
-    height: 14px;
-    width: 96px;
-
-    .progress-bar {
-      height: 14px;
-    }
+  .flight-quality-message.small {
+    width: 84px;
   }
+
+  // progress-bar-container //////////////////
+  // .progress-bar-container {
+  //   display: flex;
+  //   align-items: center;
+
+  //   width: 154px;
+  //   height: 22px;
+
+  //   border: 1px solid white;
+  //   border-radius: 6px;
+
+  //   .progress-bar {
+  //     height: 22px;
+  //     border-radius: 6px;
+  //     background-color: lightgreen;
+  //   }
+  // }
+
+  // .progress-bar-container.small {
+  //   height: 14px;
+  //   width: 96px;
+
+  //   .progress-bar {
+  //     height: 14px;
+  //   }
+  // }
 
   // END progress-bar-container //////////////////
 }
