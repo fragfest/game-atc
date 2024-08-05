@@ -1,11 +1,7 @@
 import Waypoint from '../Waypoint';
 import Runway from '../Runway';
-import { weatherGameLoop } from './weather';
-import {
-  getTooCloseDistance,
-  distBetweenEntities,
-  hasEntityFuncs,
-} from '../entity';
+import { isCloseToWeather, weatherGameLoop } from './weather';
+import { getTooCloseDistance, hasEntityFuncs } from '../entity';
 import {
   getRunway,
   Runways,
@@ -14,7 +10,7 @@ import {
   getWaypointArrivalsAll,
 } from '../airports/LHR';
 
-import { getGameSize, isTurbulence, minWeatherDist } from '../utils';
+import { getGameSize, isWithinDist } from '../utils';
 import { draw as drawScale } from '../canvas/scale';
 import { isArrival, isSquare } from '../types';
 import { createPlane, spawnRndPlane } from '../Plane';
@@ -240,9 +236,6 @@ export const gameTick =
   };
 
 // PRIVATE ////////////////////////////////////////////////////////////////////
-const isWithinDist = (distMax, obj1, obj2) => {
-  return distBetweenEntities(obj1)(obj2) < distMax;
-};
 
 const setProximityAlarm = (state, entityManagerArr) => {
   const planes = entityManagerArr.filter(isSquare);
@@ -263,25 +256,7 @@ const createSquare =
     const minSpawnDist = getTooCloseDistance(screenSize) * 2.5;
 
     const isCloseToPlane = (newObj) => (otherObj) =>
-      isSquare(otherObj) &&
-      isArrival(newObj) &&
       isWithinDist(minSpawnDist, newObj, otherObj);
-
-    const isCloseToWeather = (newObj) => (weatherObj) => {
-      const weatherObjXY = {
-        x: weatherObj?.centerXY?.x,
-        y: weatherObj?.centerXY?.y,
-      };
-
-      const isWithinWeatherDist = isWithinDist(
-        minWeatherDist(weatherObj),
-        newObj,
-        weatherObjXY
-      );
-      return (
-        isTurbulence(weatherObj) && isArrival(newObj) && isWithinWeatherDist
-      );
-    };
 
     if (Math.random() < chanceOfSquare) {
       const newEntity = createEntityFn();
@@ -289,8 +264,7 @@ const createSquare =
 
       const planeClose = entityManagerArr.find(isCloseToPlane(newEntity));
       const weatherClose = entityManagerArr.find(isCloseToWeather(newEntity));
-
-      if (planeClose || weatherClose) {
+      if (isArrival(newEntity) && (planeClose || weatherClose)) {
         newEntity.destroy();
         return;
       }

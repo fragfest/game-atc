@@ -1,6 +1,5 @@
 import { DestinationType, Direction, isSquare } from './types';
 import {
-  isTurbulence,
   ScreenSizes,
   inputHeadingToRad,
   convertToSmallRad,
@@ -27,6 +26,7 @@ import {
   planeDelayFail,
 } from './game/score';
 import { play, SoundType } from './game/sound';
+import { isInWeather, isTurbulence } from './game/weather';
 
 ////////////////////////////////////////////////////////////
 // class Square
@@ -86,8 +86,8 @@ export default class Square {
     this.isShowHtmlPulse = true;
 
     // states
-    this.isInWeather = false;
-    this.turbulenceStartMs = 0;
+    this.isWeatherTurbulence = false;
+    this.turbulenceTimestampMs = 0;
     this.turbulenceMs = 0;
     this.isDelayed = false;
     this.isSelected = false;
@@ -718,33 +718,23 @@ export default class Square {
     this.setShowCircle(!!showCircles);
 
     // weather proximity //////////////////////////////////////////
-    const weatherArr = entityManagerArr.filter(isTurbulence);
-    if (weatherArr.length) {
-      let isInWeather = false;
+    const turbulenceArr = entityManagerArr.filter(isTurbulence);
+    if (turbulenceArr.length) {
+      const isWeatherTurbulence = !!turbulenceArr.find(isInWeather(this));
 
-      weatherArr.forEach((weather) => {
-        const weatherDist = distBetweenEntities(this)({
-          x: weather.centerXY.x,
-          y: weather.centerXY.y,
-        });
-        if (weatherDist <= weather.radius) {
-          isInWeather = true;
-        }
-      });
-
-      if (!isInWeather) {
-        this.isInWeather = false;
-      } else if (!this.isInWeather && isInWeather) {
-        this.turbulenceStartMs = timestampMs;
-        this.isInWeather = true;
-      } else if (isInWeather) {
-        const turbulenceDiff = timestampMs - this.turbulenceStartMs;
-        this.turbulenceStartMs = timestampMs;
+      if (!isWeatherTurbulence) {
+        this.isWeatherTurbulence = false;
+      } else if (!this.isWeatherTurbulence && isWeatherTurbulence) {
+        this.turbulenceTimestampMs = timestampMs;
+        this.isWeatherTurbulence = true;
+      } else if (isWeatherTurbulence) {
+        const turbulenceDiff = timestampMs - this.turbulenceTimestampMs;
+        this.turbulenceTimestampMs = timestampMs;
         this.turbulenceMs += turbulenceDiff;
         turbulencePenalty(turbulenceDiff);
       }
     } else {
-      this.isInWeather = false;
+      this.isWeatherTurbulence = false;
     }
 
     // plane proximity //////////////////////////////////////////
@@ -833,8 +823,6 @@ const _createHtmlEl = (self) => {
     'mouseleave',
     () => (self.htmlClickDiv.style.cursor = 'none')
   );
-  // self.htmlClickDiv.style.left = self.x - squareSize / 2 + 'px';
-  // self.htmlClickDiv.style.top = self.y - squareTop - squareSize / 2 + 'px';
   self.htmlClickDiv.style.width = squareSize + 'px';
   self.htmlClickDiv.style.height = squareSize + 'px';
 
@@ -848,7 +836,6 @@ const _createHtmlEl = (self) => {
   self.htmlImgEl.width = squareSize;
   self.htmlImgEl.draggable = false;
 
-  // self.htmlImgEl.hidden = true;
   // self.htmlImgEl.style.border = '1px solid orange';
 
   const titleDisplay = self.title;

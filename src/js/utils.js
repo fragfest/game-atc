@@ -1,9 +1,5 @@
 import { isDeparture, isArrival } from './types';
-import { WeatherType } from './game/weather';
-
-// WEATHER ////////////////////////////////////////////////////////////
-export const isTurbulence = (obj) => obj.weatherType === WeatherType.Turbulence;
-export const minWeatherDist = (obj) => (obj?.radius || 0) * 2;
+import { distBetweenEntities } from './entity';
 
 // PLANES /////////////////////////////////////////////////////////////////
 export const getDepartureCount = (arr) => arr.filter(isDeparture).length;
@@ -42,6 +38,9 @@ export const convHdgRadToThreeDigits = (rad) => {
 };
 
 // UTIL /////////////////////////////////////////////////////////////////
+export const isWithinDist = (distMax, obj1, obj2) => {
+  return distBetweenEntities(obj1)(obj2) < distMax;
+};
 export const randMinMax = (min, max) => min + Math.random() * (max - min);
 export const leftPadZeros = (str) => ('000' + str).slice(-3);
 

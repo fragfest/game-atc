@@ -7,7 +7,7 @@
       <h2 class="white">
         {{ airframeDetails.make }} {{ airframeDetails.airframe }}
       </h2>
-      <div v-if="plane.isInWeather" class="weather" :class="sizeClass">
+      <div v-if="plane.isWeatherTurbulence" class="weather" :class="sizeClass">
         <div>
           <img src="/img/weather/rain.gif" />
         </div>
@@ -109,15 +109,14 @@ import { getClassSize, getScreenSize } from '../../js/utils';
 import { getAirframe, getPerformance } from '../../js/aircraft/airframe';
 import ProgressSliceEmpty from '../common/ProgressSliceEmpty';
 import ProgressSliceFull from '../common/ProgressSliceFull';
+import { flightQuality } from '../../js/game/score/flight';
 
 const showFullSlice = (plane, index) => {
   if (!plane) return false;
-
   const totalSlices = 9;
-  const turbulenceMsMax = 60 * 1000;
-  const turbulenceMsSlice = turbulenceMsMax / totalSlices;
-  const turbulenceThreshold = (index + 1) * turbulenceMsSlice;
-  return plane.turbulenceMs <= turbulenceMsMax - turbulenceThreshold;
+  const score = flightQuality(plane);
+  const threshold = (index + 1) / totalSlices;
+  return score >= threshold;
 };
 
 export default {
@@ -242,7 +241,7 @@ export default {
 
     flightQualityMessage: function () {
       if (!this.plane) return '';
-      const isTurbulence = this.plane.isInWeather;
+      const isTurbulence = this.plane.isWeatherTurbulence;
       if (isTurbulence) return 'turbulence';
       return '';
     },

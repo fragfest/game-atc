@@ -1,10 +1,11 @@
-import { getScreenSize, ScreenSizes } from '../utils';
+import { getScreenSize, ScreenSizes, isWithinDist } from '../utils';
 import { getScore } from './score';
 
 export const WeatherType = Object.freeze({
   Inert: 'Inert',
   Turbulence: 'Turbulence',
 });
+export const isTurbulence = (obj) => obj.weatherType === WeatherType.Turbulence;
 
 /**
  * @param {Number} width
@@ -44,6 +45,35 @@ const updateWeather = (entityManagerArr) => {
   weatherArr.forEach((weather) => {
     weather.updateWeatherFn();
   });
+};
+
+////////////////////////////////////////////////////////////////////////
+// HELPER FUNCS
+////////////////////////////////////////////////////////////////////////
+
+export const isCloseToWeather = (entityObj) => (weatherEntity) => {
+  const weatherObjXY = {
+    x: weatherEntity?.centerXY?.x,
+    y: weatherEntity?.centerXY?.y,
+  };
+
+  const isWithinWeatherDist = isWithinDist(
+    (weatherEntity?.radius || 0) * 2,
+    entityObj,
+    weatherObjXY
+  );
+  return isTurbulence(weatherEntity) && isWithinWeatherDist;
+};
+
+export const isInWeather = (entityObj) => (weatherEntity) => {
+  const weatherObjXY = {
+    x: weatherEntity?.centerXY?.x,
+    y: weatherEntity?.centerXY?.y,
+  };
+  return (
+    isTurbulence(weatherEntity) &&
+    isWithinDist(weatherEntity.radius, entityObj, weatherObjXY)
+  );
 };
 
 ////////////////////////////////////////////////////////////////////////
