@@ -179,7 +179,7 @@ export default {
       this.conflictClass = 'bckgrnd-red';
       this.conflictPointsClass = 'bckgrnd-red';
     }
-    if (score.turbulence) {
+    if (score.turbulence && isVictory(score)) {
       this.turbulencePointsClass = 'white';
     }
 

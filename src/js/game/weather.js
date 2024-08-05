@@ -179,7 +179,7 @@ const level5 = (weatherArgs) => {
   const create = createOneSmallCloud;
   weatherArgs.hasIcon = true;
 
-  const rainOnDeparture = addTurbulence(weatherArgs, createLargeRain, hover);
+  const rainOnDeparture = addTurbulence(weatherArgs, createLargeRain1, hover);
   rainOnDeparture({
     x: 0.08 * width,
     y: 0.45 * height,
@@ -187,7 +187,7 @@ const level5 = (weatherArgs) => {
   });
   const rainOverWaypointBIG = addTurbulence(
     weatherArgs,
-    createLargeRain,
+    createLargeRain2,
     driftESE
   );
   rainOverWaypointBIG({
@@ -326,7 +326,52 @@ const createTwoSmallClouds = (ctx, div, x, y, width) => {
   return { weatherDiv };
 };
 
-const createLargeRain = (ctx, div, x, y, width) => {
+const createLargeRain2 = (ctx, div, x, y, width) => {
+  const iconSize = width / 6;
+  const cloudSize = 0.35 * width;
+
+  const weatherDiv = document.createElement('div');
+  div.appendChild(weatherDiv);
+  weatherDiv.style.position = 'absolute';
+  weatherDiv.style.left = x + 'px';
+  weatherDiv.style.top = y + 'px';
+  weatherDiv.style.width = width + 'px';
+  weatherDiv.style.height = width + 'px';
+
+  addIcon(weatherDiv, width, iconSize);
+  addCloud(weatherDiv, 0.3 * width, 0 * width, cloudSize, CloudType.MediumHaze);
+  addCloud(
+    weatherDiv,
+    0.25 * width,
+    0.6 * width,
+    cloudSize,
+    CloudType.MediumHaze
+  );
+  addCloud(
+    weatherDiv,
+    0.4 * width,
+    0.25 * width,
+    cloudSize,
+    CloudType.MediumRain
+  );
+  addCloud(
+    weatherDiv,
+    0 * width,
+    0.15 * width,
+    cloudSize,
+    CloudType.MediumRain
+  );
+  addCloud(weatherDiv, 0 * width, 0.45 * width, cloudSize, CloudType.LargeRain);
+
+  const drawCircleFn = (circleX, circleY) =>
+    addRainCircle(ctx, circleX, circleY, width);
+
+  drawCircleFn(x, y);
+
+  return { weatherDiv, drawCircleFn };
+};
+
+const createLargeRain1 = (ctx, div, x, y, width) => {
   const iconSize = width / 6;
   const cloudSize = 0.35 * width;
 

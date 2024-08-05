@@ -91,7 +91,7 @@ const PerformanceModifiers = Object.freeze({
   },
   B77W: {
     speedTakeoff: 160,
-    speedMin: 200,
+    speedMin: 210,
     speedLanding: 140,
     speedDeltaPerMs: 1.8,
     altitudeRatePerMs: 0.038,
