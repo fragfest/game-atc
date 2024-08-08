@@ -1,4 +1,4 @@
-import { Direction } from './types';
+import { isAircraft, Direction } from './types';
 import {
   convertToSmallDegrees,
   convHdgRadToThreeDigits,
@@ -6,7 +6,6 @@ import {
   radToDegrees,
   ScreenSizes,
 } from './utils';
-import Square from './Square';
 import { MessageEvents, publishMessage as publish } from './events/messages';
 import { play, SoundType } from './game/sound';
 import { planeLandFail } from './game/score';
@@ -82,11 +81,10 @@ export default class Runway {
   }
 
   update({ entityManagerArr }) {
-    const isSquare = (entity) => entity instanceof Square;
     const isEntityOnRunway = isOnRunway(this.landingEntities);
 
     entityManagerArr.forEach((entity) => {
-      if (!isSquare(entity)) return;
+      if (!isAircraft(entity)) return;
 
       const distObj = distToRunwayObj(this, entity);
       const distToRunway = distToRunwayObj(this, entity.prevPosition).dist;
@@ -169,10 +167,9 @@ export default class Runway {
     const isEntityOnRunway = isOnRunway(this.landingEntities);
 
     entityManagerArr.forEach((entity) => {
-      const isSquare = entity instanceof Square;
       const placeOnRunway = (entity) => this.landingEntities.push(entity);
 
-      if (!isSquare) return;
+      if (!isAircraft) return;
       if (!entity.landing) return;
       if (isEntityOnRunway(entity)) {
         landingRollout(this, entity);
@@ -250,12 +247,12 @@ const isTurnAngleSmall = (self, entity, distToRunway) => {
 };
 
 /**
- * @description update Square speed & altitude based on distance to Runway
+ * @description update speed & altitude based on distance to Runway
  * @param {Object} self
- * @param {Square} square
+ * @param {Aircraft} aircraft
  */
-const updateSpeedAlt = (self, square, distToRunway) => {
-  let speedTarget = square.speedLanding;
+const updateSpeedAlt = (self, aircraft, distToRunway) => {
+  let speedTarget = aircraft.speedLanding;
   let altitudeTarget = self.altitudeLanding;
   if (60 < distToRunway && distToRunway <= 120) {
     speedTarget += 5;
@@ -270,9 +267,9 @@ const updateSpeedAlt = (self, square, distToRunway) => {
     altitudeTarget += 600;
   }
 
-  if (square.speedTarget > speedTarget) square.setSpeed(speedTarget, true);
-  if (square.altitudeTarget > altitudeTarget)
-    square.setAltitude(altitudeTarget, true);
+  if (aircraft.speedTarget > speedTarget) aircraft.setSpeed(speedTarget, true);
+  if (aircraft.altitudeTarget > altitudeTarget)
+    aircraft.setAltitude(altitudeTarget, true);
 };
 
 const landingRollout = (self, entity) => {

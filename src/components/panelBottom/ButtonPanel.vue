@@ -3,7 +3,7 @@
     <!-- muted -->
     <ToolTip v-if="isMuted" :size="screenSize">
       <button
-        class="button-square"
+        class="button-aircraft"
         :class="showMutedClass"
         @click="onMuteToggle"
       >
@@ -28,7 +28,7 @@
     <!-- unmute -->
     <ToolTip v-if="!isMuted" :size="screenSize">
       <button
-        class="button-square"
+        class="button-aircraft"
         :class="showMutedClass"
         @click="onMuteToggle"
       >
@@ -62,7 +62,7 @@
     <ToolTip :size="screenSize">
       <button
         id="button-tcas-circle"
-        class="button-square"
+        class="button-aircraft"
         :class="showCircleClass"
         @click="onShowCircles"
       >
@@ -140,7 +140,7 @@ export default {
 .button-panel.small {
   padding-top: 4px;
 
-  button.button-square {
+  button.button-aircraft {
     height: 24px;
     width: 24px;
   }
@@ -178,7 +178,7 @@ export default {
     }
   }
 
-  button.button-square {
+  button.button-aircraft {
     height: 34px;
     width: 34px;
   }

@@ -1,4 +1,4 @@
-import { isSquare } from '../types.js';
+import { isAircraft } from '../types.js';
 import { getDepartureCount, getArrivalCount } from '../utils.js';
 
 /**
@@ -33,11 +33,11 @@ const chanceDepartureBase = 0.4;
  * @param {Array} arg.entityManagerArr
  * @param {Goals} arg.goals
  * @param {Score} arg.score
- * @param {GetSpawnChance} arg.getSpawnChanceFn
- * @param {SpawnPlane} arg.spawnPlaneFn
+ * @param {GetSpawnChance} arg.getChanceFn
+ * @param {SpawnPlane} arg.aircraftFn
  * @returns none
  */
-export const spawnPlaneByLevel = (level, arg) => {
+export const callAircraftFnByLevel = (level, arg) => {
   if (level === 1) return spawnPlaneLevel1(arg);
   if (level === 2) return spawnPlaneLevel2(arg);
   if (level === 3) return spawnPlaneLevel3(arg);
@@ -54,13 +54,12 @@ export const spawnPlaneByLevel = (level, arg) => {
  * @param {Array} arg.entityManagerArr
  * @param {Goals} arg.goals
  * @param {Score} arg.score
- * @param {GetSpawnChance} arg.getSpawnChanceFn
- * @param {SpawnPlane} arg.spawnPlaneFn
+ * @param {GetSpawnChance} arg.getChanceFn
+ * @param {SpawnPlane} arg.aircraftFn
  * @returns none
  */
 export const spawnPlaneLevel1 = (arg) => {
-  const { entityManagerArr, goals, score, getSpawnChanceFn, spawnPlaneFn } =
-    arg;
+  const { entityManagerArr, goals, score, getChanceFn, aircraftFn } = arg;
   const flightObj = { time: 10 * 60 };
   const areDeparturesSpawned = noMoreDepartures(entityManagerArr, goals, score);
   const areAllSpawned = noMoreDeparturesArrivals(
@@ -71,7 +70,7 @@ export const spawnPlaneLevel1 = (arg) => {
   if (areAllSpawned) return;
 
   if (areDeparturesSpawned) return;
-  spawnPlaneFn(getSpawnChanceFn(highChance), guaranteedChance, flightObj);
+  aircraftFn(getChanceFn(highChance), guaranteedChance, flightObj);
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -82,13 +81,12 @@ export const spawnPlaneLevel1 = (arg) => {
  * @param {Array} arg.entityManagerArr
  * @param {Goals} arg.goals
  * @param {Score} arg.score
- * @param {GetSpawnChance} arg.getSpawnChanceFn
- * @param {SpawnPlane} arg.spawnPlaneFn
+ * @param {GetSpawnChance} arg.getChanceFn
+ * @param {SpawnPlane} arg.aircraftFn
  * @returns none
  */
 export const spawnPlaneLevel2 = (arg) => {
-  const { entityManagerArr, goals, score, getSpawnChanceFn, spawnPlaneFn } =
-    arg;
+  const { entityManagerArr, goals, score, getChanceFn, aircraftFn } = arg;
   const flightObj = { time: 18 * 60 };
   const areArrivalsSpawned = noMoreArrivals(entityManagerArr, goals, score);
   const areAllSpawned = noMoreDeparturesArrivals(
@@ -99,7 +97,7 @@ export const spawnPlaneLevel2 = (arg) => {
   if (areAllSpawned) return;
 
   if (areArrivalsSpawned) return;
-  return spawnPlaneFn(getSpawnChanceFn(baseChance), noChance, flightObj);
+  return aircraftFn(getChanceFn(baseChance), noChance, flightObj);
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -110,14 +108,13 @@ export const spawnPlaneLevel2 = (arg) => {
  * @param {Array} arg.entityManagerArr
  * @param {Goals} arg.goals
  * @param {Score} arg.score
- * @param {GetSpawnChance} arg.getSpawnChanceFn
- * @param {SpawnPlane} arg.spawnPlaneFn
+ * @param {GetSpawnChance} arg.getChanceFn
+ * @param {SpawnPlane} arg.aircraftFn
  * @returns none
  */
 export const spawnPlaneLevel3 = (arg) => {
-  const { entityManagerArr, goals, score, getSpawnChanceFn, spawnPlaneFn } =
-    arg;
-  const count = entityManagerArr.filter(isSquare).length;
+  const { entityManagerArr, goals, score, getChanceFn, aircraftFn } = arg;
+  const count = entityManagerArr.filter(isAircraft).length;
   const departureCount = getDepartureCount(entityManagerArr);
   const arrivalCount = getArrivalCount(entityManagerArr);
   const areDeparturesSpawned = noMoreDepartures(entityManagerArr, goals, score);
@@ -138,26 +135,22 @@ export const spawnPlaneLevel3 = (arg) => {
   }
 
   if (areDeparturesSpawned) {
-    return spawnPlaneFn(getSpawnChanceFn(chance), noChance, flightObj);
+    return aircraftFn(getChanceFn(chance), noChance, flightObj);
   }
   if (areArrivalsSpawned) {
-    return spawnPlaneFn(getSpawnChanceFn(chance), guaranteedChance, flightObj);
+    return aircraftFn(getChanceFn(chance), guaranteedChance, flightObj);
   }
 
   if (count <= lowCount) {
     if (departureCount > arrivalCount) {
-      return spawnPlaneFn(getSpawnChanceFn(chance), noChance, flightObj);
+      return aircraftFn(getChanceFn(chance), noChance, flightObj);
     } else {
-      return spawnPlaneFn(
-        getSpawnChanceFn(chance),
-        guaranteedChance,
-        flightObj
-      );
+      return aircraftFn(getChanceFn(chance), guaranteedChance, flightObj);
     }
   }
 
   // not a lowCount && both Arrivals + Departures remaining
-  return spawnPlaneFn(getSpawnChanceFn(chance), chanceDepartureBase, flightObj);
+  return aircraftFn(getChanceFn(chance), chanceDepartureBase, flightObj);
 };
 
 ////////////////////////////////////////////////////////////////////////

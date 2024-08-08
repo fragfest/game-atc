@@ -75,7 +75,7 @@
           <div class="row-bottom-left">
             <DetailsPanel
               :screenSize="screenSize"
-              :planeSelected="squareClicked"
+              :planeSelected="aircraftClicked"
               :planes="planesSorted"
             ></DetailsPanel>
             <div class="col">
@@ -89,7 +89,7 @@
           <div class="row-bottom-right">
             <ControlPanel
               ref="controlPanel"
-              :planeSelected="squareClicked"
+              :planeSelected="aircraftClicked"
               :planes="planesSorted"
               :screenSize="screenSize"
               @updatedAltitudeEv="updatedAltitudeEv"
@@ -101,7 +101,7 @@
 
       <div class="panel-right layer-seven" :style="stylePanelRight">
         <FlightStripDeparture
-          :planeSelected="squareClicked"
+          :planeSelected="aircraftClicked"
           :planes="planesDeparture"
           :screenSize="screenSize"
         ></FlightStripDeparture>
@@ -109,7 +109,7 @@
           <li v-for="(plane, index) in planesArrival" :key="index">
             <FlightStrip
               :plane="plane"
-              :planeSelected="squareClicked"
+              :planeSelected="aircraftClicked"
               :planes="planesSorted"
               :screenSize="screenSize"
             ></FlightStrip>
@@ -148,7 +148,7 @@ import {
   cancelGameLoop,
 } from '../js/game/game';
 import { setup as setupTutorial } from '../js/tutorial/gameTutorial';
-import { isArrival, isDeparture, isSquare } from '../js/types';
+import { isArrival, isDeparture, isAircraft } from '../js/types';
 import {
   setupGameLoadAndExit,
   ScreenSizes,
@@ -190,7 +190,7 @@ let height = getGameSize(ScreenSizes.Large).height;
 
 let gameState = {};
 let entityManagerArr = ref([]);
-let squareClicked = ref({});
+let aircraftClicked = ref({});
 
 let tutorialBoxTop = ref(0.4);
 let tutorialBoxLeft = ref(0.4);
@@ -224,7 +224,7 @@ export default {
       inputAltitude: '',
       inputHeading: '',
       inputSpeed: '',
-      squareClicked,
+      aircraftClicked,
       hasPopup: false,
       // tutorial
       tutorialBoxHtml: '',
@@ -235,7 +235,7 @@ export default {
 
   computed: {
     planesSorted: () => {
-      const planes = entityManagerArr.value.filter(isSquare);
+      const planes = entityManagerArr.value.filter(isAircraft);
       const departures = planes.filter(isDeparture);
       const notTaxiing = departures
         .filter((plane) => !plane.isTaxiing)
@@ -247,12 +247,12 @@ export default {
     },
 
     planesDeparture: () => {
-      const planes = entityManagerArr.value.filter(isSquare);
+      const planes = entityManagerArr.value.filter(isAircraft);
       return planes.filter(isDeparture);
     },
 
     planesArrival: () => {
-      const planes = entityManagerArr.value.filter(isSquare);
+      const planes = entityManagerArr.value.filter(isAircraft);
       return planes.filter(isArrival);
     },
 
@@ -365,7 +365,7 @@ export default {
 
     gameState = {};
     entityManagerArr.value = [];
-    squareClicked.value = {};
+    aircraftClicked.value = {};
 
     const width = getGameSize(screenSize).width;
     const height = getGameSize(screenSize).height;
@@ -405,15 +405,15 @@ export default {
       entityDiv: layerSixDiv,
       entityManagerArr: entityManagerArr.value,
 
-      squareClickEventCB: (squareObj) => {
-        squareClicked.value = squareObj;
+      aircraftClickEventCB: (Aircraft) => {
+        aircraftClicked.value = Aircraft;
         controlPanel.setFocus();
-        setPlaneSelected(setupArg, squareObj);
+        setPlaneSelected(setupArg, Aircraft);
         tutorialEventArg.setPlaneTutorial();
       },
 
       gameUpdateCB: () => {
-        gameUpdateEventCB(squareClicked, entityManagerArr);
+        gameUpdateEventCB(aircraftClicked, entityManagerArr);
         if (isTutorial) {
           tutorialUpdateEventCB(
             this,
@@ -421,7 +421,7 @@ export default {
             tutorialBox,
             this.focusCircle,
             tutorialEventArg,
-            squareClicked,
+            aircraftClicked,
             gameState
           );
         }
@@ -435,10 +435,10 @@ export default {
     setupEvents(
       this,
       getWaypointArrivalsAll(),
-      squareClicked,
+      aircraftClicked,
       () => controlPanel.setFocus(),
       () => {
-        setPlaneSelected(setupArg, squareClicked.value);
+        setPlaneSelected(setupArg, aircraftClicked.value);
         tutorialEventArg.setPlaneTutorial();
       },
       () => {

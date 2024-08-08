@@ -1,4 +1,4 @@
-import { ScreenSizes } from './utils';
+import { ScreenSizes, isWithinDist } from './utils';
 
 const hasEntityState = (state) => {
   return 'id' in state && 'x' in state && 'y' in state && 'altitude' in state;
@@ -24,8 +24,11 @@ export const distBetweenEntities = (entityOne) => (entityTwo) => {
  */
 export const isEntityGettingCloser = (entityDestination, entity, distPrev) => {
   if (entityDestination.id === entity.id) return false;
-  const dist = distBetweenEntities(entityDestination)(entity);
-  return dist < distPrev;
+  return isWithinDist(distPrev, entityDestination, entity);
+};
+
+export const isCloseToPlane = (screenSize) => (newObj) => (otherObj) => {
+  return isWithinDist(2.5 * getTooCloseDistance(screenSize), newObj, otherObj);
 };
 
 export const isCloseToWaypoint = (waypoint) => (entity) => {
@@ -35,7 +38,7 @@ export const isCloseToWaypoint = (waypoint) => (entity) => {
   }
   if (waypoint.id === entity.id) return false;
 
-  const isCloseHorizontal = distBetweenEntities(waypoint)(entity) < 10;
+  const isCloseHorizontal = isWithinDist(10, waypoint, entity);
   const distVert = entity.altitude - waypoint.altitude;
   const isAboveWaypoint = distVert >= 0;
 
@@ -56,7 +59,7 @@ export const isCloseToEntity = (screenSize) => (entity) => (entityOther) => {
   if (entityOther.id === entity.id) return false;
 
   const distMax = getTooCloseDistance(screenSize);
-  const isCloseHorizontal = distBetweenEntities(entity)(entityOther) < distMax;
+  const isCloseHorizontal = isWithinDist(distMax, entity, entityOther);
 
   const distVert = Math.abs(entity.altitude - entityOther.altitude);
   const isCloseVertical = distVert < 1000;

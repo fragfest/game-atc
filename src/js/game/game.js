@@ -1,7 +1,7 @@
 import Waypoint from '../Waypoint';
 import Runway from '../Runway';
 import { isCloseToWeather, weatherGameLoop } from './weather';
-import { getTooCloseDistance, hasEntityFuncs } from '../entity';
+import { isCloseToPlane, hasEntityFuncs } from '../entity';
 import {
   getRunway,
   Runways,
@@ -10,10 +10,10 @@ import {
   getWaypointArrivalsAll,
 } from '../airports/LHR';
 
-import { getGameSize, isWithinDist } from '../utils';
+import { getGameSize } from '../utils';
 import { draw as drawScale } from '../canvas/scale';
-import { isArrival, isSquare } from '../types';
-import { createPlane, spawnRndPlane } from '../Plane';
+import { isArrival, isAircraft } from '../types';
+import { createAircraftRndDestinationType, spawnPlaneGameTick } from '../Plane';
 import { SoundType, play, playLoop, stop } from './sound';
 
 /**
@@ -40,15 +40,15 @@ export const setup = (state) => (argObj) => {
 
   const firstPlaneCanvasObj = { ...canvasObj, flightObj: { time: 10 * 60 } };
   const spawnFirstPlane = () =>
-    createSquare(screenSize, entityManagerArr)(
-      () => createPlane(firstPlaneCanvasObj, 1).square,
+    spawnAircraftRnd(screenSize, entityManagerArr)(
+      () => createAircraftRndDestinationType(firstPlaneCanvasObj, 1),
       1
     );
 
-  const spawnPlaneFullGame_timestampArg = spawnRndPlane(
+  const spawnPlaneUpdateFn = spawnPlaneGameTick(
     canvasObj,
     entityManagerArr,
-    createSquare(screenSize, entityManagerArr)
+    spawnAircraftRnd(screenSize, entityManagerArr)
   );
 
   const gameTickFullGame = gameTick(
@@ -56,7 +56,7 @@ export const setup = (state) => (argObj) => {
     screenSize,
     entityManagerArr,
     -500,
-    spawnPlaneFullGame_timestampArg,
+    spawnPlaneUpdateFn,
     textLayerClearFn(argObj.textLayerObj, { width, height }),
     headingLayerClearFn(argObj.headingLayerObj, { width, height }),
     () => argObj.gameUpdateCB()
@@ -137,7 +137,7 @@ export const getCanvasObj = (argObj) => ({
   canvasObjText: argObj.textLayerObj,
   canvasObjHeading: argObj.headingLayerObj,
   canvasEntityEl: argObj.entityDiv,
-  clickCB: argObj.squareClickEventCB,
+  clickCB: argObj.aircraftClickEventCB,
 });
 
 export const drawInertElements = (layerObj, { screenSize, width, height }) => {
@@ -156,7 +156,7 @@ export const setShowCircles = (state) => (isShowCircles) => {
   state.showCircles = !!isShowCircles;
 };
 
-export const setPlaneSelected = (argObj, square) => {
+export const setPlaneSelected = (argObj, aircraft) => {
   const width = getGameSize(argObj.screenSize).width;
   const height = getGameSize(argObj.screenSize).height;
   const entityManagerArr = argObj.entityManagerArr;
@@ -164,7 +164,7 @@ export const setPlaneSelected = (argObj, square) => {
   argObj.textLayerObj.ctx.clearRect(0, 0, width, height);
   argObj.headingLayerObj.ctx.clearRect(0, 0, width, height);
   entityManagerArr.forEach(callFn('setSelected', false));
-  square.setSelected(true);
+  aircraft.setSelected(true);
   entityManagerArr.forEach(callFn('draw'));
 };
 
@@ -179,7 +179,7 @@ export const gameTick =
     screenSize,
     entityManagerArr,
     timestampPrev,
-    spawnPlaneFn_timestampArg,
+    spawnPlaneUpdateFn,
     textLayerClearFn,
     headingLayerClearFn,
     gameUpdateFn
@@ -198,7 +198,7 @@ export const gameTick =
       textLayerClearFn();
       headingLayerClearFn();
       // update
-      spawnPlaneFn_timestampArg(updateIntervalMs);
+      spawnPlaneUpdateFn(updateIntervalMs);
       entityManagerArr.forEach(callFn('hide'));
       entityManagerArr.forEach(
         callFn('update', { deltaTimeMs: updateIntervalMs, entityManagerArr })
@@ -226,7 +226,7 @@ export const gameTick =
           screenSize,
           entityManagerArr,
           timestampPrev,
-          spawnPlaneFn_timestampArg,
+          spawnPlaneUpdateFn,
           textLayerClearFn,
           headingLayerClearFn,
           gameUpdateFn
@@ -238,7 +238,7 @@ export const gameTick =
 // PRIVATE ////////////////////////////////////////////////////////////////////
 
 const setProximityAlarm = (state, entityManagerArr) => {
-  const planes = entityManagerArr.filter(isSquare);
+  const planes = entityManagerArr.filter(isAircraft);
   const isAlarmOn = !!planes.find((x) => x.hasProximityAlert);
 
   if (!state.playProximitySound && isAlarmOn) {
@@ -250,28 +250,25 @@ const setProximityAlarm = (state, entityManagerArr) => {
   state.playProximitySound = isAlarmOn;
 };
 
-const createSquare =
-  (screenSize, entityManagerArr) => (createEntityFn, chanceOfSquare) => {
+const spawnAircraftRnd =
+  (screenSize, entityManagerArr) => (createAircraftFn, chanceOfAircraft) => {
     const addPlaneToGame = entityManagerAdd(entityManagerArr);
-    const minSpawnDist = getTooCloseDistance(screenSize) * 2.5;
+    const isCloseToNewPlane = isCloseToPlane(screenSize);
 
-    const isCloseToPlane = (newObj) => (otherObj) =>
-      isWithinDist(minSpawnDist, newObj, otherObj);
+    if (Math.random() > chanceOfAircraft) return;
 
-    if (Math.random() < chanceOfSquare) {
-      const newEntity = createEntityFn();
-      if (!newEntity) return;
+    const plane = createAircraftFn();
+    if (!plane) return;
 
-      const planeClose = entityManagerArr.find(isCloseToPlane(newEntity));
-      const weatherClose = entityManagerArr.find(isCloseToWeather(newEntity));
-      if (isArrival(newEntity) && (planeClose || weatherClose)) {
-        newEntity.destroy();
-        return;
-      }
-
-      play(SoundType.Spawn);
-      addPlaneToGame(newEntity);
+    const planeClose = entityManagerArr.find(isCloseToNewPlane(plane));
+    const weatherClose = entityManagerArr.find(isCloseToWeather(plane));
+    if (isArrival(plane) && (planeClose || weatherClose)) {
+      plane.destroy();
+      return;
     }
+
+    play(SoundType.Spawn);
+    addPlaneToGame(plane);
   };
 
 const callFn = (fnStr, argsObj) => (entity) => {

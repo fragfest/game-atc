@@ -8,7 +8,7 @@ import {
 } from '@jest/globals';
 import * as jestExtended from 'jest-extended';
 import Waypoint from './Waypoint';
-import Square from './Square';
+import Aircraft from './Aircraft';
 import * as sound from './game/sound';
 
 import { DestinationType, Direction } from './types';
@@ -93,7 +93,7 @@ describe('Waypoint', () => {
           y: waypoint.y + 5,
           altitude: 6000,
         };
-        plane = new Square(
+        plane = new Aircraft(
           flightObj,
           entityLayerObj,
           textLayerObj,
@@ -176,7 +176,7 @@ describe('Waypoint', () => {
           y: waypoint.y + 100,
           altitude: 6000,
         };
-        plane = new Square(
+        plane = new Aircraft(
           flightObj,
           entityLayerObj,
           textLayerObj,

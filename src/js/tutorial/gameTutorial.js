@@ -7,7 +7,7 @@ import {
   textLayerClearFn,
   headingLayerClearFn,
 } from '../game/game';
-import Square from '../Square';
+import Aircraft from '../Aircraft';
 import { getFlightArrival, getFlightDeparture } from '../flights/LHR';
 import { Waypoints, Runways } from '../airports/LHR';
 import { getPerformance } from '../aircraft/airframe';
@@ -106,7 +106,7 @@ const createPlaneDepartureStage = ({
   const flight = getFlightDeparture([]);
   const airframeObj = getPerformance(flight.airframe, screenSize);
 
-  const square = new Square(
+  const aircraft = new Aircraft(
     flight,
     canvasObjEntity,
     canvasObjText,
@@ -126,9 +126,9 @@ const createPlaneDepartureStage = ({
       runway: runway.title,
     }
   );
-  square.clickEventCB = () => clickCB(square);
+  aircraft.clickEventCB = () => clickCB(aircraft);
 
-  return square;
+  return aircraft;
 };
 
 const createPlaneArrivalStage = ({
@@ -147,7 +147,7 @@ const createPlaneArrivalStage = ({
   const waypoint = Waypoints.LAM;
   const runway = Runways.TwoSevenLeft;
 
-  const square = new Square(
+  const aircraft = new Aircraft(
     flight,
     canvasObjEntity,
     canvasObjText,
@@ -156,9 +156,9 @@ const createPlaneArrivalStage = ({
     positionObj,
     { destinationType, airframeObj, waypoint, runway }
   );
-  square.clickEventCB = () => clickCB(square);
+  aircraft.clickEventCB = () => clickCB(aircraft);
 
-  return square;
+  return aircraft;
 };
 
 let stage = '';

@@ -1,8 +1,8 @@
 // eslint-disable-next-line
-import Square from '../../Square';
+import Aircraft from '../../Aircraft';
 
 /**
- * @param {Square} plane
+ * @param {Aircraft} plane
  * @returns {Number} score 0 to 1
  */
 export const flightQuality = (plane) => {

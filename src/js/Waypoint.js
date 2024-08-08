@@ -1,4 +1,4 @@
-import Square from './Square';
+import Aircraft from './Aircraft';
 import {
   DestinationType,
   Direction,
@@ -44,7 +44,7 @@ export default class Waypoint {
 
   update({ entityManagerArr }) {
     const planeHoldingHoldoff = (entity) => {
-      if (!(entity instanceof Square)) return false;
+      if (!(entity instanceof Aircraft)) return false;
       if (!entity.isHolding && !entity.isHandoff) return false;
       if (entity.waypoint === this.title) return true;
       return false;

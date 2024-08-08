@@ -1,4 +1,4 @@
-import Square from '../Square';
+import Aircraft from '../Aircraft';
 import { ElapsedTimes } from './typesTutorial';
 
 let event = '';
@@ -28,7 +28,7 @@ export const stageConflict = (
     }, 1000);
   }
 
-  const planes = entityManagerArr.filter((x) => x instanceof Square);
+  const planes = entityManagerArr.filter((x) => x instanceof Aircraft);
   const planesWithProximityAlert = planes.filter((x) => x.hasProximityAlert);
   const isConflictFree = planes.length >= 2 && !planesWithProximityAlert.length;
   const isCircleShowing = planes.find((x) => x.isShowCircle);

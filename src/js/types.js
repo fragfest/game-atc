@@ -1,4 +1,4 @@
-import Square from './Square';
+import Aircraft from './Aircraft';
 
 export const FocusCircleType = Object.freeze({
   Rectangle: 'Rectangle',
@@ -26,8 +26,8 @@ export const Direction = Object.freeze({
   Right: 'right',
 });
 
-export const isSquare = (obj) => obj instanceof Square;
+export const isAircraft = (obj) => obj instanceof Aircraft;
 export const isDeparture = (obj) =>
-  isSquare(obj) && obj.destinationType === DestinationType.Departure;
+  isAircraft(obj) && obj.destinationType === DestinationType.Departure;
 export const isArrival = (obj) =>
-  isSquare(obj) && obj.destinationType === DestinationType.Arrival;
+  isAircraft(obj) && obj.destinationType === DestinationType.Arrival;

@@ -1,4 +1,4 @@
-import Square from './Square';
+import Aircraft from './Aircraft';
 import { DestinationType } from './types';
 import {
   getScreenSize,
@@ -15,9 +15,9 @@ import {
 } from './airports/LHR';
 import { getGoals } from './game/victory';
 import { getScore } from './game/score';
-import { spawnPlaneByLevel } from './levels/levels';
+import { callAircraftFnByLevel } from './levels/levels';
 
-export const createPlane = (
+export const createAircraftRndDestinationType = (
   {
     entityManagerArr,
     width,
@@ -46,61 +46,66 @@ export const createPlane = (
   };
 
   if (destinationType === DestinationType.Arrival) {
-    const square = createArrival(
+    const aircraft = createAircraftArrival(
       entityManagerArr,
       canvasObjs,
       flightObj || {},
       clickCB
     );
-    return { square };
+    return aircraft;
   }
 
   if (destinationType === DestinationType.Departure) {
-    const square = createDeparture(
+    const aircraft = createAircraftDeparture(
       entityManagerArr,
       canvasObjs,
       flightObj || {},
       clickCB
     );
-    return { square };
+    return aircraft;
   }
 };
 
-export const spawnRndPlane =
-  (canvasObj, entityManagerArr, createSquare_entityFnArgChanceArg) =>
-  (deltaTimeMs) => {
+export const spawnPlaneGameTick =
+  (canvasObj, entityManagerArr, createAircraftRndFn) => (deltaTimeMs) => {
     const goals = getGoals();
     const score = getScore();
     const spawnRate = goals.SpawnRate || 1;
 
-    const spawnPlaneFn = (chanceOfPlane, chanceOfDeparture, flightObj) =>
-      createSquare_entityFnArgChanceArg(
+    const aircraftFn = (chanceOfPlane, chanceOfDeparture, flightObj) => {
+      return createAircraftRndFn(
         () =>
-          createPlane(
+          createAircraftRndDestinationType(
             { ...canvasObj, flightObj: { ...flightObj } },
             chanceOfDeparture
-          ).square,
+          ),
         chanceOfPlane
       );
+    };
 
-    const getSpawnChanceFn = (chanceOfPlanePerSec) => {
+    const getChanceFn = (chanceOfPlanePerSec) => {
       const spawnRateModifier = 0.7;
       const chanceOfPlaneBase = (chanceOfPlanePerSec * deltaTimeMs) / 1000;
       return chanceOfPlaneBase * (spawnRate * spawnRateModifier);
     };
 
-    spawnPlaneByLevel(score.level, {
+    callAircraftFnByLevel(score.level, {
       entityManagerArr,
       goals,
       score,
-      getSpawnChanceFn,
-      spawnPlaneFn,
+      getChanceFn,
+      aircraftFn,
     });
   };
 
 // PRIVATE /////////////////////////////////////////////////////////////////
 
-const createArrival = (entityManagerArr, canvasObjs, flightObjArg, clickCB) => {
+const createAircraftArrival = (
+  entityManagerArr,
+  canvasObjs,
+  flightObjArg,
+  clickCB
+) => {
   const {
     canvasObjEntity,
     canvasObjText,
@@ -124,7 +129,7 @@ const createArrival = (entityManagerArr, canvasObjs, flightObjArg, clickCB) => {
   const flightObj = { ...flight, ...flightObjArg };
   const airframeObj = getPerformance(flight.airframe, getScreenSize());
 
-  const square = new Square(
+  const aircraft = new Aircraft(
     flightObj,
     canvasObjEntity,
     canvasObjText,
@@ -151,11 +156,11 @@ const createArrival = (entityManagerArr, canvasObjs, flightObjArg, clickCB) => {
       runway: runway.title,
     }
   );
-  square.clickEventCB = () => clickCB(square);
-  return square;
+  aircraft.clickEventCB = () => clickCB(aircraft);
+  return aircraft;
 };
 
-const createDeparture = (
+const createAircraftDeparture = (
   entityManagerArr,
   canvasObjs,
   flightObjArg,
@@ -179,7 +184,7 @@ const createDeparture = (
   const flightObj = { ...flight, ...flightObjArg };
   const airframeObj = getPerformance(flight.airframe, getScreenSize());
 
-  const square = new Square(
+  const aircraft = new Aircraft(
     flightObj,
     canvasObjEntity,
     canvasObjText,
@@ -199,8 +204,8 @@ const createDeparture = (
       runway: runway.title,
     }
   );
-  square.clickEventCB = () => clickCB(square);
-  return square;
+  aircraft.clickEventCB = () => clickCB(aircraft);
+  return aircraft;
 };
 
 let spawned = [];

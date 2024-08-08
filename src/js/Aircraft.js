@@ -1,4 +1,4 @@
-import { DestinationType, Direction, isSquare } from './types';
+import { DestinationType, Direction, isAircraft } from './types';
 import {
   ScreenSizes,
   inputHeadingToRad,
@@ -7,9 +7,9 @@ import {
   convHdgRadToThreeDigits,
   leftPadZeros,
   altitudeDisplay,
+  isWithinDist,
 } from './utils';
 import {
-  distBetweenEntities,
   getTooCloseDistance,
   isCloseToEntity,
   isCloseToWaypoint,
@@ -28,10 +28,7 @@ import {
 import { play, SoundType } from './game/sound';
 import { isInWeather, isTurbulence } from './game/weather';
 
-////////////////////////////////////////////////////////////
-// class Square
-////////////////////////////////////////////////////////////
-export default class Square {
+export default class Aircraft {
   constructor(
     flightObj,
     entityLayerObj,
@@ -73,7 +70,7 @@ export default class Square {
 
     // html div
     this.htmlDiv = htmlDiv;
-    this.htmlSquareDiv = null;
+    this.htmlAircraftDiv = null;
     this.htmlImgEl = { src: null };
     this.width = 5;
     this.height = 5;
@@ -183,7 +180,7 @@ export default class Square {
 
   cancelTaxiing() {
     this.isTaxiing = false;
-    if (!this.htmlSquareDiv) {
+    if (!this.htmlAircraftDiv) {
       _createHtmlEl(this);
     }
   }
@@ -340,7 +337,7 @@ export default class Square {
   setNonInteractive(isNonInteractive) {
     if (isNonInteractive) {
       this.isNonInteractive = true;
-      if (this.htmlSquareDiv) {
+      if (this.htmlAircraftDiv) {
         this.htmlClickDiv.addEventListener('mouseup', () => {});
         this.htmlClickDiv.addEventListener(
           'mouseenter',
@@ -349,7 +346,7 @@ export default class Square {
       }
     } else {
       this.isNonInteractive = false;
-      if (this.htmlSquareDiv) {
+      if (this.htmlAircraftDiv) {
         _setDivMouseEvents(this);
       }
     }
@@ -362,7 +359,7 @@ export default class Square {
   destroy() {
     this.hide();
     _clearTrailPixelsAll(this);
-    if (this.htmlSquareDiv) this.htmlSquareDiv.remove();
+    if (this.htmlAircraftDiv) this.htmlAircraftDiv.remove();
     if (this.isFlyingOutOfArea) {
       planeLeaveFail();
       publish(MessageEvents.MessageAllEV, this.title + ' handoff failed');
@@ -384,7 +381,7 @@ export default class Square {
   }
 
   updateHtmlClass() {
-    if (!this.htmlSquareDiv) return;
+    if (!this.htmlAircraftDiv) return;
 
     if (this.isShowHtmlPulse) {
       this.isShowHtmlPulse = false;
@@ -415,7 +412,7 @@ export default class Square {
     if (!waypointObj) return;
 
     const distToWaypoint = this.isSmall ? 18 : 28;
-    if (distBetweenEntities(waypointObj)(this) < distToWaypoint) {
+    if (isWithinDist(distToWaypoint, waypointObj, this)) {
       this.isShowHtmlPulse = true;
     }
     if (isCloseToWaypoint(waypointObj)(this)) {
@@ -587,11 +584,12 @@ export default class Square {
     this.x += pixelsInX;
     this.y += pixelsInY;
 
-    if (this.htmlSquareDiv) {
-      const squareSize = _htmlSquareSize(this.isSmall, this.iconSize).side;
-      const squareTop = _htmlSquareSize(this.isSmall, this.iconSize).top;
-      this.htmlSquareDiv.style.left = this.x - squareSize / 2 + 'px';
-      this.htmlSquareDiv.style.top = this.y - squareTop - squareSize / 2 + 'px';
+    if (this.htmlAircraftDiv) {
+      const aircraftSize = _htmlAircraftSize(this.isSmall, this.iconSize).side;
+      const aircraftTop = _htmlAircraftSize(this.isSmall, this.iconSize).top;
+      this.htmlAircraftDiv.style.left = this.x - aircraftSize / 2 + 'px';
+      this.htmlAircraftDiv.style.top =
+        this.y - aircraftTop - aircraftSize / 2 + 'px';
       this.updateHtmlClass();
     }
 
@@ -605,7 +603,7 @@ export default class Square {
       this.time -= deltaTimeMs / 1000;
     }
 
-    // square returning to canvas
+    // returning to canvas
     if (
       this.isNonInteractive &&
       !this.isTouchedDown &&
@@ -619,7 +617,7 @@ export default class Square {
       this.setNonInteractive(false);
     }
 
-    // square leaving canvas
+    // leaving canvas
     const outsideCanvasWidth = (x, offset) =>
       x > this.canvasWidth + offset || x < 0 - offset;
     const outsideCanvasHeight = (y, offset) =>
@@ -710,7 +708,7 @@ export default class Square {
     const isCloseRunway = (plane) =>
       isOnRunway(plane) && isOnRunway(this) && isSameRunway(plane);
     const isPlaneClose = (plane) =>
-      isSquare(plane) &&
+      isAircraft(plane) &&
       isEntityCloseTo(plane) &&
       (isCloseAirborne(plane) || isCloseRunway(plane));
 
@@ -765,7 +763,7 @@ export default class Square {
   }
 }
 ////////////////////////////////////////////////////////////
-// end class Square
+// end class
 ////////////////////////////////////////////////////////////
 
 // should match css class names in canvas/Plane.vue <style>
@@ -786,32 +784,34 @@ const _drawTrailPixel = (self, pixel, opacity) => {
   self.ctx.globalAlpha = 1;
 };
 
-const _htmlSquareSize = (isSmall, iconSize) => ({
+const _htmlAircraftSize = (isSmall, iconSize) => ({
   side: isSmall ? 0.68 * iconSize.side : iconSize.side,
   top: isSmall ? 0 : iconSize.top,
 });
 
 const _createHtmlEl = (self) => {
-  const htmlSquareWidth = 0;
-  const squareSize = _htmlSquareSize(self.isSmall, self.iconSize).side;
-  const squareTop = _htmlSquareSize(self.isSmall, self.iconSize).top;
+  const htmlAircraftWidth = 0;
+  const aircraftSize = _htmlAircraftSize(self.isSmall, self.iconSize).side;
+  const aircraftTop = _htmlAircraftSize(self.isSmall, self.iconSize).top;
 
-  self.htmlSquareDiv = document.createElement('div');
-  self.htmlDiv.appendChild(self.htmlSquareDiv);
-  self.htmlSquareDiv.id = self.title + '-plane';
-  self.htmlSquareDiv.style.position = 'absolute';
-  self.htmlSquareDiv.style.display = 'flex';
-  self.htmlSquareDiv.style.gap = '4px';
-  self.htmlSquareDiv.style['justify-content'] = 'space-between';
-  self.htmlSquareDiv.style['pointer-events'] = 'none';
+  self.htmlAircraftDiv = document.createElement('div');
+  self.htmlDiv.appendChild(self.htmlAircraftDiv);
+  self.htmlAircraftDiv.id = self.title + '-plane';
+  self.htmlAircraftDiv.style.position = 'absolute';
+  self.htmlAircraftDiv.style.display = 'flex';
+  self.htmlAircraftDiv.style.gap = '4px';
+  self.htmlAircraftDiv.style['justify-content'] = 'space-between';
+  self.htmlAircraftDiv.style['pointer-events'] = 'none';
 
-  self.htmlSquareDiv.style.left = self.x - squareSize / 2 + 'px';
-  self.htmlSquareDiv.style.top = self.y - squareTop - squareSize / 2 + 'px';
-  self.htmlSquareDiv.style['min-width'] = squareSize + htmlSquareWidth + 'px';
-  self.htmlSquareDiv.style.height = squareSize + 'px';
+  self.htmlAircraftDiv.style.left = self.x - aircraftSize / 2 + 'px';
+  self.htmlAircraftDiv.style.top =
+    self.y - aircraftTop - aircraftSize / 2 + 'px';
+  self.htmlAircraftDiv.style['min-width'] =
+    aircraftSize + htmlAircraftWidth + 'px';
+  self.htmlAircraftDiv.style.height = aircraftSize + 'px';
 
   self.htmlClickDiv = document.createElement('div');
-  self.htmlSquareDiv.appendChild(self.htmlClickDiv);
+  self.htmlAircraftDiv.appendChild(self.htmlClickDiv);
 
   self.htmlClickDiv.id = self.title;
   self.htmlClickDiv.classList.add(getPlaneClass());
@@ -823,17 +823,17 @@ const _createHtmlEl = (self) => {
     'mouseleave',
     () => (self.htmlClickDiv.style.cursor = 'none')
   );
-  self.htmlClickDiv.style.width = squareSize + 'px';
-  self.htmlClickDiv.style.height = squareSize + 'px';
+  self.htmlClickDiv.style.width = aircraftSize + 'px';
+  self.htmlClickDiv.style.height = aircraftSize + 'px';
 
-  // self.htmlSquareDiv.style.border = '1px solid yellow';
+  // self.htmlAircraftDiv.style.border = '1px solid yellow';
 
   self.htmlImgEl = new Image();
   self.htmlClickDiv.appendChild(self.htmlImgEl);
   self.htmlImgEl.style.transform = 'rotate(' + self.heading + 'deg)';
   self.htmlImgEl.id = self.title + '-icon';
   self.htmlImgEl.src = self.iconDefault;
-  self.htmlImgEl.width = squareSize;
+  self.htmlImgEl.width = aircraftSize;
   self.htmlImgEl.draggable = false;
 
   // self.htmlImgEl.style.border = '1px solid orange';
@@ -846,7 +846,7 @@ const _createHtmlEl = (self) => {
   self.htmlTextEl = document.createElement('div');
   self.htmlTextEl.style.display = 'none';
   self.htmlTextEl.style.gap = '8px';
-  self.htmlSquareDiv.appendChild(self.htmlTextEl);
+  self.htmlAircraftDiv.appendChild(self.htmlTextEl);
   self.htmlTextEl.classList.add('plane-text');
   self.htmlTextEl.style.cursor = 'default';
   self.htmlTextEl.style['justify-content'] = 'space-between';
