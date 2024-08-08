@@ -17,6 +17,58 @@ import { getGoals } from './game/victory';
 import { getScore } from './game/score';
 import { callAircraftFnByLevel } from './levels/levels';
 
+/**
+ * @callback CreateAircraft
+ * @returns {Aircraft}
+ */
+/**
+ * @callback CreateAircraftRnd
+ * @param {CreateAircraft} createAircraft
+ * @param {Number} chanceOfPlane
+ */
+
+/**
+ * @callback gameTickCB
+ * @param {Number} deltaTimeMs
+ */
+/**
+ * @param {Object} canvasObj
+ * @param {Array} entityManagerArr
+ * @param {CreateAircraftRnd} createAircraftRndFn
+ * @returns {gameTickCB}
+ */
+export const spawnPlaneGameTick =
+  (canvasObj, entityManagerArr, createAircraftRndFn) => (deltaTimeMs) => {
+    const goals = getGoals();
+    const score = getScore();
+    const spawnRate = goals.SpawnRate || 1;
+
+    const aircraftFn = (chanceOfPlane, chanceOfDeparture, flightObj) => {
+      createAircraftRndFn(
+        () =>
+          createAircraftRndDestinationType(
+            { ...canvasObj, flightObj: { ...flightObj } },
+            chanceOfDeparture
+          ),
+        chanceOfPlane
+      );
+    };
+
+    const getChanceFn = (chanceOfPlanePerSec) => {
+      const spawnRateModifier = 0.7;
+      const chanceOfPlaneBase = (chanceOfPlanePerSec * deltaTimeMs) / 1000;
+      return chanceOfPlaneBase * (spawnRate * spawnRateModifier);
+    };
+
+    callAircraftFnByLevel(score.level, {
+      entityManagerArr,
+      goals,
+      score,
+      getChanceFn,
+      aircraftFn,
+    });
+  };
+
 export const createAircraftRndDestinationType = (
   {
     entityManagerArr,
@@ -65,38 +117,6 @@ export const createAircraftRndDestinationType = (
     return aircraft;
   }
 };
-
-export const spawnPlaneGameTick =
-  (canvasObj, entityManagerArr, createAircraftRndFn) => (deltaTimeMs) => {
-    const goals = getGoals();
-    const score = getScore();
-    const spawnRate = goals.SpawnRate || 1;
-
-    const aircraftFn = (chanceOfPlane, chanceOfDeparture, flightObj) => {
-      return createAircraftRndFn(
-        () =>
-          createAircraftRndDestinationType(
-            { ...canvasObj, flightObj: { ...flightObj } },
-            chanceOfDeparture
-          ),
-        chanceOfPlane
-      );
-    };
-
-    const getChanceFn = (chanceOfPlanePerSec) => {
-      const spawnRateModifier = 0.7;
-      const chanceOfPlaneBase = (chanceOfPlanePerSec * deltaTimeMs) / 1000;
-      return chanceOfPlaneBase * (spawnRate * spawnRateModifier);
-    };
-
-    callAircraftFnByLevel(score.level, {
-      entityManagerArr,
-      goals,
-      score,
-      getChanceFn,
-      aircraftFn,
-    });
-  };
 
 // PRIVATE /////////////////////////////////////////////////////////////////
 

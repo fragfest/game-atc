@@ -250,6 +250,14 @@ const setProximityAlarm = (state, entityManagerArr) => {
   state.playProximitySound = isAlarmOn;
 };
 
+/**
+ * @typedef {import('../Plane.js').CreateAircraftRnd} CreateAircraftRnd
+ */
+/**
+ * @param {String} screenSize
+ * @param {Array} entityManagerArr
+ * @returns {CreateAircraftRnd}
+ */
 const spawnAircraftRnd =
   (screenSize, entityManagerArr) => (createAircraftFn, chanceOfAircraft) => {
     const addPlaneToGame = entityManagerAdd(entityManagerArr);

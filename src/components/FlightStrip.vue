@@ -80,7 +80,7 @@
         </div>
         <div v-else-if="isAtHolding" class="holding-handoff">
           <div class="font-large"><b>Hold</b></div>
-          <div>orbiting</div>
+          <div>orbit</div>
         </div>
         <div v-else-if="isNavToHolding" class="holding-handoff">
           <div class="font-large"><b>Hold</b></div>
@@ -88,7 +88,7 @@
         </div>
         <div v-else-if="isNavToHandoff" class="holding-handoff">
           <div class="font-large"><b>Handoff</b></div>
-          <div>enroute</div>
+          <div>en route</div>
         </div>
         <div v-else></div>
       </div>
