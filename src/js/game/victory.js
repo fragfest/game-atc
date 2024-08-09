@@ -81,8 +81,7 @@ export const publishFailed = () => {
 
 // PRIVATE //////////////////////////////////////////////////
 
-const FinalLevel = 5;
-
+const FinalLevel = 6;
 const GoalsLevels = {
   0: {
     Arrivals: 1,
@@ -132,12 +131,20 @@ const GoalsLevels = {
     SpawnRate: 1.5,
     Delayed: 3,
   },
+  6: {
+    Arrivals: 12,
+    Departures: 12,
+    Failed: 2,
+    Conflict: 30,
+    SpawnRate: 1.5,
+    Delayed: 3,
+  },
 };
 
 /**
  * @typedef {object} Goals
- * @property {number} Departures
  * @property {number} Arrivals
+ * @property {number} Departures
  * @property {number} Failed
  * @property {number} Conflict
  * @property {number} SpawnRate

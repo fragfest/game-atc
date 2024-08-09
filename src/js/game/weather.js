@@ -30,6 +30,7 @@ export const weatherGameLoop = (width, height, args) => {
   if (level === 3) level3(weatherArgs);
   if (level === 4) level4(weatherArgs);
   if (level === 5) level5(weatherArgs);
+  if (level === 6) level6(weatherArgs);
 
   window.requestAnimationFrame(tick(width, height, args));
 };
@@ -177,7 +178,6 @@ const level4 = (weatherArgs) => {
 const level5 = (weatherArgs) => {
   const { width, height } = weatherArgs;
   const create = createOneSmallCloud;
-  weatherArgs.hasIcon = true;
 
   const rainOnDeparture = addTurbulence(weatherArgs, createLargeRain1, hover);
   rainOnDeparture({
@@ -185,12 +185,12 @@ const level5 = (weatherArgs) => {
     y: 0.45 * height,
     radius: width / 11,
   });
-  const rainOverWaypointBIG = addTurbulence(
+  const rainDriftOnApproach = addTurbulence(
     weatherArgs,
     createLargeRain2,
     driftESE
   );
-  rainOverWaypointBIG({
+  rainDriftOnApproach({
     x: 0.5 * width,
     y: 0.3 * height,
     radius: width / 16,
@@ -209,6 +209,52 @@ const level5 = (weatherArgs) => {
   cloud4({ x: 0.8 * width, y: 0.1 * height, radius: width / 14 });
   cloud5({ x: 0.2 * width, y: 0 * height, radius: width / 14 });
   cloud6({ x: -0.1 * width, y: 0.1 * height, radius: width / 14 });
+};
+
+const level6 = (weatherArgs) => {
+  const { width, height } = weatherArgs;
+  const create = createOneSmallCloud;
+
+  const rainNorth1 = addTurbulence(weatherArgs, createLargeRain1, driftE);
+  rainNorth1({
+    x: 0.35 * width,
+    y: 0 * height,
+    radius: width / 12,
+  });
+  const rainNorth2 = addTurbulence(weatherArgs, createLargeRain2, driftE);
+  rainNorth2({
+    x: 0.38 * width,
+    y: 0.22 * height,
+    radius: width / 12,
+  });
+  const rainSouth1 = addTurbulence(weatherArgs, createLargeRain1, hover);
+  rainSouth1({
+    x: 0.4 * width,
+    y: 0.75 * height,
+    radius: width / 14,
+  });
+  const rainSouth2 = addTurbulence(weatherArgs, createLargeRain2, hover);
+  rainSouth2({
+    x: 0.5 * width,
+    y: 0.6 * height,
+    radius: width / 14,
+  });
+
+  const cloud1 = addInert(weatherArgs, create(CloudType.LightHazeOne), hover);
+  const cloud2 = addInert(weatherArgs, create(CloudType.LightHazeOne), hover);
+  const cloud3 = addInert(weatherArgs, create(CloudType.LightHazeOne), hover);
+  const cloud4 = addInert(weatherArgs, create(CloudType.LightHazeOne), hover);
+  const cloud5 = addInert(weatherArgs, create(CloudType.LightHazeTwo), hover);
+  const cloud6 = addInert(weatherArgs, create(CloudType.MediumHaze), hover);
+  const cloud7 = addInert(weatherArgs, create(CloudType.MediumHaze), hover);
+
+  cloud1({ x: -0.05 * width, y: 0.55 * height, radius: width / 10 });
+  cloud2({ x: 0.1 * width, y: 0.5 * height, radius: width / 11 });
+  cloud3({ x: 0.14 * width, y: 0.62 * height, radius: width / 10.5 });
+  cloud4({ x: 0.08 * width, y: 0.66 * height, radius: width / 10.5 });
+  cloud5({ x: 0.15 * width, y: 0.05 * height, radius: width / 15 });
+  cloud6({ x: 0.22 * width, y: 0.021 * height, radius: width / 15 });
+  cloud7({ x: 0.75 * width, y: 0.8 * height, radius: width / 18 });
 };
 
 ////////////////////////////////////////////////////////////////////////

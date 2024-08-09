@@ -43,7 +43,8 @@ export const callAircraftFnByLevel = (level, arg) => {
   if (level === 3) return spawnPlaneLevel3(arg);
   if (level === 4) return spawnPlaneLevel3(arg);
   if (level === 5) return spawnPlaneLevel3(arg);
-  return spawnPlaneLevel1(arg);
+  if (level === 6) return spawnPlaneLevel3(arg);
+  return spawnPlaneLevel3(arg);
 };
 
 ////////////////////////////////////////////////////////////////////////
