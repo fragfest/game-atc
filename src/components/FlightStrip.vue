@@ -84,7 +84,7 @@
         </div>
         <div v-else-if="isNavToHolding" class="holding-handoff">
           <div class="font-large"><b>Hold</b></div>
-          <div>enroute</div>
+          <div>en route</div>
         </div>
         <div v-else-if="isNavToHandoff" class="holding-handoff">
           <div class="font-large"><b>Handoff</b></div>

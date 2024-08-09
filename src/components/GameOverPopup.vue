@@ -187,6 +187,10 @@ export default {
     const failedScoreMax = getGoals().Failed;
     const failedScore =
       (failedScoreMax - score.failed) * (baseScorePass / failedScoreMax);
+    const delayedMax = getGoals().Delayed;
+    const delayScore =
+      (delayedMax - score.delayed) * (baseScorePass / delayedMax);
+
     const conflictScoreMax = getGoals().Conflict;
     const conflictScore =
       (conflictScoreMax - Math.floor(score.conflict)) *
@@ -207,7 +211,7 @@ export default {
     this.departureScore = isVictory(score) ? baseScorePass : 0;
     this.arrivalScore = isVictory(score) ? baseScorePass : 0;
     this.failedScore = isVictory(score) ? Math.round(failedScore) : 0;
-    this.delayScore = isVictory(score) ? baseScorePass : 0;
+    this.delayScore = isVictory(score) ? Math.round(delayScore) : 0;
     this.conflictScore = isVictory(score) ? Math.round(conflictScore) : 0;
     this.turbulenceScore = isVictory(score) ? turbulenceScore : 0;
     const total =
