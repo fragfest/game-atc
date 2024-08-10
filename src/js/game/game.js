@@ -1,5 +1,5 @@
-import Waypoint from '../Waypoint';
-import Runway from '../Runway';
+import Waypoint from '../canvas/Waypoint';
+import Runway from '../airports/Runway';
 import { isCloseToWeather, weatherGameLoop } from './weather';
 import { isCloseToPlane, hasEntityFuncs } from '../entity';
 import {
@@ -13,7 +13,10 @@ import {
 import { getGameSize } from '../utils';
 import { draw as drawScale } from '../canvas/scale';
 import { isArrival, isAircraft } from '../types';
-import { createAircraftRndDestinationType, spawnPlaneGameTick } from '../Plane';
+import {
+  createAircraftRndDestinationType,
+  spawnPlaneGameTick,
+} from '../aircraft/aircraftGame.js';
 import { SoundType, play, playLoop, stop } from './sound';
 
 /**

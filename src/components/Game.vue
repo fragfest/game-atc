@@ -178,7 +178,7 @@ import {
   getScore,
   subscribeScore,
   ScoreEvents,
-} from '../js/game/score';
+} from '../js/game/score/score';
 import {
   setup as setupMessages,
   destroy as destroyMessages,

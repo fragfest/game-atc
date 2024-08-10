@@ -1,5 +1,5 @@
 import { VictoryEvents, subscribeVictory } from './victory';
-import { subscribeScore, ScoreEvents } from './score';
+import { subscribeScore, ScoreEvents } from './score/score';
 
 let background;
 let collision;

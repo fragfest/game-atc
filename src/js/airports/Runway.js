@@ -1,14 +1,14 @@
-import { isAircraft, Direction } from './types';
+import { isAircraft, Direction } from '../types';
 import {
   convertToSmallDegrees,
   convHdgRadToThreeDigits,
   inputHeadingToRad,
   radToDegrees,
   ScreenSizes,
-} from './utils';
-import { MessageEvents, publishMessage as publish } from './events/messages';
-import { play, SoundType } from './game/sound';
-import { planeLandFail } from './game/score';
+} from '../utils';
+import { MessageEvents, publishMessage as publish } from '../events/messages';
+import { play, SoundType } from '../game/sound';
+import { planeLandFail } from '../game/score/score';
 
 ////////////////////////////////////////////////////////////
 // class Runway

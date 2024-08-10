@@ -1,16 +1,16 @@
-import Aircraft from './Aircraft';
+import Aircraft from '../aircraft/Aircraft';
 import {
   DestinationType,
   Direction,
   WaypointType,
   HoldingPosition,
-} from './types';
+} from '../types';
 import {
   isCloseToWaypoint,
   isEntityGettingCloser,
   distBetweenEntities,
-} from './entity';
-import { convertToSmallDegrees, radToDegrees, ScreenSizes } from './utils';
+} from '../entity';
+import { convertToSmallDegrees, radToDegrees, ScreenSizes } from '../utils';
 
 ////////////////////////////////////////////////////////////
 // class Waypoint

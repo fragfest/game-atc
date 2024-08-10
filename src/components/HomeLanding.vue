@@ -87,8 +87,8 @@ import {
   setup as setupScore,
   levelRetry,
   getScoreHistory,
-} from '../js/game/score';
-import { getHighestLevelCompleted } from '../js/game/score';
+} from '../js/game/score/score';
+import { getHighestLevelCompleted } from '../js/game/score/score';
 import { calculateScreenSize, setScreenSize } from '../js/utils';
 
 import CyberBox from './common/CyberBox';

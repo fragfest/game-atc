@@ -8,12 +8,12 @@ import {
 } from '@jest/globals';
 import * as jestExtended from 'jest-extended';
 import Waypoint from './Waypoint';
-import Aircraft from './Aircraft';
-import * as sound from './game/sound';
+import Aircraft from '../aircraft/Aircraft';
+import * as sound from '../game/sound';
 
-import { DestinationType, Direction } from './types';
-import { ScreenSizes } from './utils';
-import { getWaypoint } from '../js/airports/LHR';
+import { DestinationType, Direction } from '../types';
+import { ScreenSizes } from '../utils';
+import { getWaypoint } from '../airports/LHR';
 import { JSDOM } from 'jsdom';
 
 expect.extend(jestExtended);

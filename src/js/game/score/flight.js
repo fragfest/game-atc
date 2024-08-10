@@ -1,5 +1,5 @@
 // eslint-disable-next-line
-import Aircraft from '../../Aircraft';
+import Aircraft from '../../aircraft/Aircraft';
 
 /**
  * @param {Aircraft} plane

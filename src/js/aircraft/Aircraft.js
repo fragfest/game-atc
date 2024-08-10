@@ -1,4 +1,4 @@
-import { DestinationType, Direction, isAircraft } from './types';
+import { DestinationType, Direction, isAircraft } from '../types';
 import {
   ScreenSizes,
   inputHeadingToRad,
@@ -8,13 +8,13 @@ import {
   leftPadZeros,
   altitudeDisplay,
   isWithinDist,
-} from './utils';
+} from '../utils';
 import {
   getTooCloseDistance,
   isCloseToEntity,
   isCloseToWaypoint,
-} from './entity';
-import { MessageEvents, publishMessage as publish } from './events/messages';
+} from '../entity';
+import { MessageEvents, publishMessage as publish } from '../events/messages';
 import {
   turbulencePenalty,
   resetProximity,
@@ -24,9 +24,9 @@ import {
   planeLeaveFail,
   planeHandoffSuccess,
   planeDelayFail,
-} from './game/score';
-import { play, SoundType } from './game/sound';
-import { isInWeather, isTurbulence } from './game/weather';
+} from '../game/score/score';
+import { play, SoundType } from '../game/sound';
+import { isInWeather, isTurbulence } from '../game/weather';
 
 export default class Aircraft {
   constructor(

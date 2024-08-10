@@ -1,4 +1,4 @@
-import Aircraft from '../Aircraft';
+import Aircraft from '../aircraft/Aircraft';
 import { ElapsedTimes } from './typesTutorial';
 
 let event = '';

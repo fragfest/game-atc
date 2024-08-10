@@ -2,7 +2,7 @@ import { isAircraft } from '../types.js';
 import { getDepartureCount, getArrivalCount } from '../utils.js';
 
 /**
- * @typedef {import('../game/score.js').Score} Score
+ * @typedef {import('../game/score/score.js').Score} Score
  */
 /**
  * @typedef {import('../game/victory.js').Goals} Goals

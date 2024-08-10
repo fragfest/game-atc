@@ -91,7 +91,7 @@ import {
   getBaseScore,
   resetScore,
   levelComplete,
-} from '../js/game/score';
+} from '../js/game/score/score';
 import {
   isDelayed,
   isDeparturesSuccess,

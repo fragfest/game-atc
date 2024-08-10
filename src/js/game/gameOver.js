@@ -1,5 +1,5 @@
 import { fillHtmlQueue } from './gameEvents';
-import { getScore } from './score';
+import { getScore } from './score/score';
 import { isFailedCondition, isConflictCondition, isDelayed } from './victory';
 
 /**

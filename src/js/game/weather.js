@@ -1,5 +1,5 @@
 import { getScreenSize, ScreenSizes, isWithinDist } from '../utils';
-import { getScore } from './score';
+import { getScore } from './score/score';
 
 export const WeatherType = Object.freeze({
   Inert: 'Inert',

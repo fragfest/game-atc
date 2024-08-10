@@ -1,21 +1,21 @@
 import Aircraft from './Aircraft';
-import { DestinationType } from './types';
+import { DestinationType } from '../types';
 import {
   getScreenSize,
   convHdgDegToThreeDigits,
   convHdgRadToThreeDigits,
   randMinMax,
-} from './utils';
-import { getFlightArrival, getFlightDeparture } from './flights/LHR';
-import { getPerformance } from './aircraft/airframe';
+} from '../utils';
+import { getFlightArrival, getFlightDeparture } from '../flights/LHR';
+import { getPerformance } from './airframe';
 import {
   Waypoints,
   getWaypointDepartureRnd,
   getRunwayRnd,
-} from './airports/LHR';
-import { getGoals } from './game/victory';
-import { getScore } from './game/score';
-import { callAircraftFnByLevel } from './levels/levels';
+} from '../airports/LHR';
+import { getGoals } from '../game/victory';
+import { getScore } from '../game/score/score';
+import { callAircraftFnByLevel } from '../levels/levels';
 
 /**
  * @callback CreateAircraft

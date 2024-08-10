@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { ScoreEvents, subscribeScore } from '../../js/game/score';
+import { ScoreEvents, subscribeScore } from '../../js/game/score/score';
 import { getClassSize, getScreenSize } from '../../js/utils';
 import { getGoals } from '../../js/game/victory';
 

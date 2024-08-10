@@ -1,7 +1,7 @@
-import { ScoreEvents, subscribeScore } from './score';
+import { ScoreEvents, subscribeScore } from './score/score.js';
 
 /**
- * @typedef {import('./score.js').Score} Score
+ * @typedef {import('./score/score.js').Score} Score
  */
 
 // NOTE: key & values must match

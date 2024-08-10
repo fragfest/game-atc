@@ -1,4 +1,4 @@
-import Aircraft from './Aircraft';
+import Aircraft from './aircraft/Aircraft';
 
 export const FocusCircleType = Object.freeze({
   Rectangle: 'Rectangle',

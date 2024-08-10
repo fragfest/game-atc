@@ -7,7 +7,7 @@ import {
   textLayerClearFn,
   headingLayerClearFn,
 } from '../game/game';
-import Aircraft from '../Aircraft';
+import Aircraft from '../aircraft/Aircraft';
 import { getFlightArrival, getFlightDeparture } from '../flights/LHR';
 import { Waypoints, Runways } from '../airports/LHR';
 import { getPerformance } from '../aircraft/airframe';
@@ -18,7 +18,7 @@ import { stageWaypoint } from './stageWaypoint';
 import { stageConflict } from './stageConflict';
 import { DestinationType, FocusCircleType } from '../types';
 import { scorePanel } from './focusCircleTutorial';
-import { ScoreEvents, subscribeScore } from '../game/score';
+import { ScoreEvents, subscribeScore } from '../game/score/score.js';
 import { isVictory, publishSuccess } from '../game/victory';
 
 /**
