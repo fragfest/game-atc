@@ -673,7 +673,7 @@ export default class Aircraft {
       const y = this.y;
       const pixel = { x, y };
       _drawTrailPixel(this, pixel, 1);
-      this.trailPixelArr.unshift({ x, y });
+      this.trailPixelArr.unshift(pixel);
     }
   }
 
@@ -826,16 +826,16 @@ const _createHtmlEl = (self) => {
   self.htmlClickDiv.style.width = aircraftSize + 'px';
   self.htmlClickDiv.style.height = aircraftSize + 'px';
 
-  // self.htmlAircraftDiv.style.border = '1px solid yellow';
-
   self.htmlImgEl = new Image();
   self.htmlClickDiv.appendChild(self.htmlImgEl);
   self.htmlImgEl.style.transform = 'rotate(' + self.heading + 'deg)';
   self.htmlImgEl.id = self.title + '-icon';
   self.htmlImgEl.src = self.iconDefault;
-  self.htmlImgEl.width = aircraftSize;
+  self.htmlImgEl.style.width = 'inherit';
+  self.htmlImgEl.style.height = 'inherit';
   self.htmlImgEl.draggable = false;
 
+  // self.htmlClickDiv.style.border = '1px solid yellow';
   // self.htmlImgEl.style.border = '1px solid orange';
 
   const titleDisplay = self.title;

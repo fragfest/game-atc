@@ -112,15 +112,15 @@ const PerformanceModifiers = Object.freeze({
 const IconSizes = Object.freeze({
   A319: { top: 0, side: 22 },
   A320: { top: 0, side: 22 },
-  A333: { top: 2, side: 26 },
-  A388: { top: -2, side: 32 },
+  A333: { top: 0, side: 26 },
+  A388: { top: 0, side: 32 },
   B738: { top: 0, side: 22 },
-  B763: { top: -2, side: 24 },
-  B788: { top: -2, side: 24 },
-  B789: { top: -2, side: 24 },
-  B78X: { top: -2, side: 24 },
-  B772: { top: 2, side: 26 },
-  B77W: { top: 2, side: 26 },
+  B763: { top: 0, side: 24 },
+  B788: { top: 0, side: 24 },
+  B789: { top: 0, side: 24 },
+  B78X: { top: 0, side: 24 },
+  B772: { top: 0, side: 26 },
+  B77W: { top: 0, side: 26 },
 });
 
 const imagesObj = (type) => ({
