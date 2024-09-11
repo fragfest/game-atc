@@ -130,6 +130,12 @@ export const setupGameLoadAndExit = () => {
   }
 };
 
+export const destroyGameLoadAndExit = () => {
+  // remove browser prompts on reload and close
+  window.onbeforeunload = null;
+  window.close = null;
+};
+
 ////////////////////////////////////////////////////////////////////////////
 // PRIVATE
 ///////////////////////////////////////////////////////////////////////////

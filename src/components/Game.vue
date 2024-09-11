@@ -151,6 +151,7 @@ import { setup as setupTutorial } from '../js/tutorial/gameTutorial';
 import { isArrival, isDeparture, isAircraft } from '../js/types';
 import {
   setupGameLoadAndExit,
+  destroyGameLoadAndExit,
   ScreenSizes,
   getGameSize,
   setScreenSize,
@@ -317,6 +318,7 @@ export default {
 
   beforeUnmount() {
     cancelGameLoop(gameState);
+    destroyGameLoadAndExit();
     destroyKeyboard();
     destroySound();
     destroyMessages();
