@@ -1,5 +1,5 @@
 <template>
-  <div class="popup">
+  <div class="popup" :class="sizeClass">
     <div class="modal">
       <h1 class="title">
         <div>
@@ -86,6 +86,7 @@
 </template>
 
 <script>
+import { getClassSize, getScreenSize } from '../js/utils';
 import {
   getScore,
   getBaseScore,
@@ -105,6 +106,7 @@ import {
 export default {
   data() {
     return {
+      screenSize: '',
       isSuccess: false,
       btnRouteObj: { name: 'homeLanding' },
 
@@ -144,7 +146,14 @@ export default {
     };
   },
 
+  computed: {
+    sizeClass: function () {
+      return getClassSize(this.screenSize);
+    },
+  },
+
   mounted() {
+    this.screenSize = getScreenSize();
     this.$refs.okBtn.focus();
     const score = getScore();
 
@@ -314,6 +323,10 @@ export default {
   cursor: default;
 }
 
+.popup.small .modal {
+  height: 560px;
+}
+
 .popup .modal .item {
   // background-color: black;
   padding: 8px 4px;
@@ -343,6 +356,10 @@ export default {
   text-shadow: 2px 2px black;
 }
 
+.popup.small .modal .title {
+  font-size: 24px;
+}
+
 .popup .modal .content {
   display: grid;
   grid-template-columns: 6fr 1fr 1fr;
@@ -353,6 +370,10 @@ export default {
   padding: 3% 12%;
   font-size: 22px;
   background-color: darkslategrey;
+}
+
+.popup.small .modal .content {
+  font-size: 18px;
 }
 
 .popup .modal .btn {
@@ -383,6 +404,13 @@ export default {
     outline-style: solid;
     outline-color: limegreen;
     outline-width: 1px;
+  }
+}
+
+.popup.small .modal .btn {
+  a h1 {
+    padding: 10px 0px;
+    font-size: 22px;
   }
 }
 </style>

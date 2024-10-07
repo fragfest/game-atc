@@ -12,9 +12,9 @@
             <p v-if="isGameComplete">more to come!</p>
             <h3 v-else-if="levelComplete">
               <span>levels complete &nbsp;&nbsp;</span>
-              <span class="font-mono white"
-                >{{ levelComplete }} / {{ finalLevel }}</span
-              >
+              <span class="font-mono white">
+                {{ levelComplete }} / {{ finalLevel }}
+              </span>
             </h3>
             <!-- <h3>
               difficulty &nbsp;&nbsp;
