@@ -1,5 +1,22 @@
 <template>
   <div class="popup" :class="sizeClass">
+    <CyberBox
+      v-if="bluesky"
+      :width="badgeTextWidth"
+      type="button"
+      class="badge-box"
+    >
+      <div class="badge-text">
+        <div class="title">
+          <div class="checkmark">&check;</div>
+          <h1 class="light-green">Blue Sky</h1>
+        </div>
+        <h3>
+          <span class="green mr-6">COMPLETED</span> avoid all turbulent weather
+        </h3>
+      </div>
+    </CyberBox>
+
     <div class="modal">
       <h1 class="title">
         <div>
@@ -8,7 +25,6 @@
           <span v-if="level"> level {{ level }}</span>
           <span v-else> training level</span>
         </div>
-        <!-- <div>ATC difficulty: easy</div> -->
       </h1>
 
       <div class="content">
@@ -58,12 +74,6 @@
         <div v-if="turbulence" class="item score" :class="turbulenceScoreClass">
           {{ turbulenceScore }}
         </div>
-        <!-- <div class="item">BONUS hot runway</div>
-        <div class="item"></div>
-        <div class="item score">{{ hotRunway }}</div> -->
-        <!-- <div class="item">BONUS tin pusher</div>
-        <div class="item"></div>
-        <div class="item score">{{ tinPusher }}</div> -->
         <div class="item margin-top border-top">SCORE</div>
         <div class="item margin-top"></div>
         <div class="item score margin-top border-top" :class="scoreTotalClass">
@@ -71,7 +81,13 @@
         </div>
       </div>
 
+      <div class="badges">
+        <BlueSky v-if="bluesky" class="blue-sky" />
+        <!-- <BlueSky v-if="bluesky" class="blue-sky" /> -->
+      </div>
+
       <div
+        v-if="isShowOkBtn"
         class="btn"
         tabindex="1"
         ref="okBtn"
@@ -81,12 +97,15 @@
           <h1>OK</h1>
         </router-link>
       </div>
+      <div v-if="!isShowOkBtn" class="btn btn-disabled">
+        <h1>OK</h1>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { getClassSize, getScreenSize } from '../js/utils';
+import { getClassSize, getScreenSize, ScreenSizes } from '../js/utils';
 import {
   getScore,
   getBaseScore,
@@ -103,12 +122,25 @@ import {
   getGoals,
 } from '../js/game/victory';
 
+import BlueSky from './badges/BlueSky';
+import CyberBox from './common/CyberBox.vue';
+
 export default {
+  components: {
+    BlueSky,
+    CyberBox,
+  },
+
   data() {
     return {
       screenSize: '',
       isSuccess: false,
       btnRouteObj: { name: 'homeLanding' },
+      isShowOkBtn: false,
+
+      badgeTextWidth: '700',
+      badgeDispTimeSec: 8,
+      okBtnDispTimeSec: 2,
 
       level: 0,
       departures: '0/' + getGoals().Departures,
@@ -140,9 +172,9 @@ export default {
       turbulencePointsClass: 'silver',
       turbulenceScoreClass: 'silver',
       scoreTotalClass: 'silver',
-      hotRunway: 0,
-      tinPusher: 0,
       total: 0,
+
+      bluesky: false,
     };
   },
 
@@ -154,7 +186,24 @@ export default {
 
   mounted() {
     this.screenSize = getScreenSize();
-    this.$refs.okBtn.focus();
+    if (this.screenSize == ScreenSizes.Small) this.badgeTextWidth = '500';
+
+    this.isShowOkBtn = false;
+
+    this.bluesky = true;
+
+    if (this.bluesky) {
+      setTimeout(() => {
+        this.isShowOkBtn = true;
+        this.$refs?.okBtn?.focus();
+      }, this.badgeDispTimeSec * 1000);
+    } else {
+      setTimeout(() => {
+        this.isShowOkBtn = true;
+        this.$refs?.okBtn?.focus();
+      }, this.okBtnDispTimeSec * 1000);
+    }
+
     const score = getScore();
 
     if (isVictory(score)) {
@@ -246,7 +295,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .popup {
   display: flex;
   flex-direction: column;
@@ -290,11 +339,18 @@ export default {
   .silver {
     color: silver;
   }
+  .light-green {
+    color: lightgreen;
+  }
   .green {
     color: limegreen;
   }
   .red {
     color: orangered;
+  }
+
+  .mr-6 {
+    margin-right: 6px;
   }
 }
 
@@ -304,7 +360,7 @@ export default {
   justify-content: space-around;
 
   width: 46%;
-  height: 640px;
+  height: 680px;
   min-width: 800px;
   max-width: 1200px;
 
@@ -324,7 +380,7 @@ export default {
 }
 
 .popup.small .modal {
-  height: 560px;
+  height: 620px;
 }
 
 .popup .modal .item {
@@ -350,6 +406,7 @@ export default {
 }
 
 .popup .modal .title {
+  min-height: 36px;
   align-self: center;
   text-align: center;
   margin-bottom: 0;
@@ -406,11 +463,214 @@ export default {
     outline-width: 1px;
   }
 }
-
 .popup.small .modal .btn {
   a h1 {
     padding: 10px 0px;
     font-size: 22px;
   }
 }
+
+.popup .modal .btn.btn-disabled {
+  background-color: darkslategrey;
+  color: rgb(182, 182, 182);
+  border: solid 1px rgb(182, 182, 182);
+
+  :hover {
+    background-color: darkslategrey;
+  }
+}
+
+.popup.small .modal .btn.btn-disabled {
+  h1 {
+    margin: 0;
+    padding: 10px 0px;
+    font-size: 22px;
+  }
+}
+
+//////////////////////////////////////////////////////
+// BADGES
+//////////////////////////////////////////////////////
+
+.popup .badge-box {
+  position: absolute;
+  top: 20%;
+  left: calc(65% - 700px);
+
+  background-color: #2c5c81e0;
+  border: 1px solid #24b3c9;
+  border-radius: 6px;
+  padding: 80px 140px;
+
+  cursor: default;
+  animation: 2.2s
+      linear(
+        0 0%,
+        0.22 2.1%,
+        0.86 6.5%,
+        1.11 8.6%,
+        1.3 10.7%,
+        1.35 11.8%,
+        1.37 12.9%,
+        1.37 13.7%,
+        1.36 14.5%,
+        1.32 16.2%,
+        1.03 21.8%,
+        0.94 24%,
+        0.89 25.9%,
+        0.88 26.85%,
+        0.87 27.8%,
+        0.87 29.25%,
+        0.88 30.7%,
+        0.91 32.4%,
+        0.98 36.4%,
+        1.01 38.3%,
+        1.04 40.5%,
+        1.05 42.7%,
+        1.05 44.1%,
+        1.04 45.7%,
+        1 53.3%,
+        0.99 55.4%,
+        0.98 57.5%,
+        0.99 60.7%,
+        1 68.1%,
+        1.01 72.2%,
+        1 86.7%,
+        1 100%
+      )
+      1 slide-in,
+    hide 0s linear 8s forwards;
+
+  @keyframes slide-in {
+    0% {
+      top: 0%;
+    }
+    100% {
+      top: 20%;
+    }
+  }
+
+  @keyframes hide {
+    100% {
+      display: none;
+    }
+  }
+}
+.popup.small .badge-box {
+  padding: 40px 100px;
+}
+
+.popup .badge-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  color: lightblue;
+
+  .title {
+    display: flex;
+  }
+  h3 {
+    margin: 0;
+  }
+}
+.popup.small .badge-text {
+  .title {
+    h1 {
+      font-size: 24px;
+    }
+  }
+  h3 {
+    font-size: 14px;
+  }
+}
+
+.popup .badge-text .checkmark {
+  width: 32px;
+  height: 32px;
+  font-size: 42px;
+  font-weight: bold;
+  align-self: center;
+
+  margin-right: 24px;
+  margin-bottom: 24px;
+  color: lightgreen;
+}
+.popup.small .badge-text .checkmark {
+  width: 28px;
+  height: 28px;
+  font-size: 32px;
+  margin-right: 18px;
+  margin-bottom: 18px;
+}
+
+.popup .badges {
+  align-self: center;
+  display: flex;
+  column-gap: 12px;
+  align-items: center;
+
+  width: 25%;
+  height: 32px;
+  margin: 8px 12%;
+  padding: 12px 12px;
+
+  background-color: #2c5c81ff;
+  border: 1px solid #24b3c9;
+  border-radius: 6px;
+}
+.popup.small .badges {
+  height: 18px;
+}
+
+.popup .badges .blue-sky {
+  width: 44px;
+  animation: scale-shrink 6s
+    linear(
+      0 0%,
+      0 1.8%,
+      0.01 3.6%,
+      0.03 6.35%,
+      0.07 9.1%,
+      0.13 11.4%,
+      0.19 13.4%,
+      0.27 15%,
+      0.34 16.1%,
+      0.54 18.35%,
+      0.66 20.6%,
+      0.72 22.4%,
+      0.77 24.6%,
+      0.81 27.3%,
+      0.85 30.4%,
+      0.88 35.1%,
+      0.92 40.6%,
+      0.94 47.2%,
+      0.96 55%,
+      0.98 64%,
+      0.99 74.4%,
+      1 86.4%,
+      1 100%
+    )
+    8s 1 forwards;
+
+  @keyframes scale-shrink {
+    0% {
+      transform: scale(1);
+    }
+    20% {
+      transform: scale(12);
+    }
+    80% {
+      transform: scale(12);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+}
+.popup.small .badges .blue-sky {
+  width: 36px;
+}
+
+// END BADGES ////////////////////////////////////////
 </style>
