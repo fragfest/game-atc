@@ -82,8 +82,16 @@
       </div>
 
       <div class="badges">
-        <BlueSky v-if="bluesky" class="blue-sky" />
-        <!-- <BlueSky v-if="bluesky" class="blue-sky" /> -->
+        <BlueSky
+          v-if="bluesky"
+          class="badge badge-achieved"
+          :class="blueSkyClass"
+          @click="onClickBadgeAchieved('blueSkyClass')"
+        />
+        <BadgeEmpty v-if="!bluesky" class="badge" />
+        <BadgeEmpty class="badge" />
+        <BadgeEmpty class="badge" />
+        <BadgeEmpty class="badge" />
       </div>
 
       <div
@@ -91,7 +99,7 @@
         class="btn"
         tabindex="1"
         ref="okBtn"
-        @keyup.space.enter="btnKeyEvent"
+        @keyup.space.enter="onClickOkBtn"
       >
         <router-link tabindex="-1" :to="btnRouteObj">
           <h1>OK</h1>
@@ -122,11 +130,13 @@ import {
   getGoals,
 } from '../js/game/victory';
 
+import BadgeEmpty from './badges/BadgeEmpty.vue';
 import BlueSky from './badges/BlueSky';
 import CyberBox from './common/CyberBox.vue';
 
 export default {
   components: {
+    BadgeEmpty,
     BlueSky,
     CyberBox,
   },
@@ -174,7 +184,11 @@ export default {
       scoreTotalClass: 'silver',
       total: 0,
 
+      // BADGES /////////////////////////////////////////////
       bluesky: false,
+      // badgeClass
+      blueSkyClass: '',
+      // END BADGES /////////////////////////////////////////////
     };
   },
 
@@ -191,16 +205,21 @@ export default {
     this.isShowOkBtn = false;
 
     this.bluesky = true;
+    this.blueSkyClass = 'badge-new';
 
     if (this.bluesky) {
       setTimeout(() => {
         this.isShowOkBtn = true;
-        this.$refs?.okBtn?.focus();
+        this.$nextTick(() => {
+          this.$refs?.okBtn?.focus();
+        });
       }, this.badgeDispTimeSec * 1000);
     } else {
       setTimeout(() => {
         this.isShowOkBtn = true;
-        this.$refs?.okBtn?.focus();
+        this.$nextTick(() => {
+          this.$refs?.okBtn?.focus();
+        });
       }, this.okBtnDispTimeSec * 1000);
     }
 
@@ -288,7 +307,19 @@ export default {
   },
 
   methods: {
-    btnKeyEvent: function () {
+    onClickBadgeAchieved: function (badgeClass) {
+      if (this[badgeClass] === 'badge-expand') {
+        this[badgeClass] = 'badge-collapse';
+        return;
+      }
+      if (this[badgeClass] === 'badge-collapse') {
+        this[badgeClass] = 'badge-expand';
+        return;
+      }
+      this[badgeClass] = 'badge-expand';
+    },
+
+    onClickOkBtn: function () {
       this.$router.push(this.btnRouteObj);
     },
   },
@@ -296,6 +327,72 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+// VARS ////////////////////////////////////////////
+.popup {
+  --duration-scale: 6s;
+  --timing-scale: linear(
+    0 0%,
+    0 1.8%,
+    0.01 3.6%,
+    0.03 6.35%,
+    0.07 9.1%,
+    0.13 11.4%,
+    0.19 13.4%,
+    0.27 15%,
+    0.34 16.1%,
+    0.54 18.35%,
+    0.66 20.6%,
+    0.72 22.4%,
+    0.77 24.6%,
+    0.81 27.3%,
+    0.85 30.4%,
+    0.88 35.1%,
+    0.92 40.6%,
+    0.94 47.2%,
+    0.96 55%,
+    0.98 64%,
+    0.99 74.4%,
+    1 86.4%,
+    1 100%
+  );
+
+  --timing-bounce: linear(
+    0 0%,
+    0.22 2.1%,
+    0.86 6.5%,
+    1.11 8.6%,
+    1.3 10.7%,
+    1.35 11.8%,
+    1.37 12.9%,
+    1.37 13.7%,
+    1.36 14.5%,
+    1.32 16.2%,
+    1.03 21.8%,
+    0.94 24%,
+    0.89 25.9%,
+    0.88 26.85%,
+    0.87 27.8%,
+    0.87 29.25%,
+    0.88 30.7%,
+    0.91 32.4%,
+    0.98 36.4%,
+    1.01 38.3%,
+    1.04 40.5%,
+    1.05 42.7%,
+    1.05 44.1%,
+    1.04 45.7%,
+    1 53.3%,
+    0.99 55.4%,
+    0.98 57.5%,
+    0.99 60.7%,
+    1 68.1%,
+    1.01 72.2%,
+    1 86.7%,
+    1 100%
+  );
+}
+// END VARS ////////////////////////////////////////////
+
 .popup {
   display: flex;
   flex-direction: column;
@@ -503,43 +600,7 @@ export default {
   padding: 80px 140px;
 
   cursor: default;
-  animation: 2.2s
-      linear(
-        0 0%,
-        0.22 2.1%,
-        0.86 6.5%,
-        1.11 8.6%,
-        1.3 10.7%,
-        1.35 11.8%,
-        1.37 12.9%,
-        1.37 13.7%,
-        1.36 14.5%,
-        1.32 16.2%,
-        1.03 21.8%,
-        0.94 24%,
-        0.89 25.9%,
-        0.88 26.85%,
-        0.87 27.8%,
-        0.87 29.25%,
-        0.88 30.7%,
-        0.91 32.4%,
-        0.98 36.4%,
-        1.01 38.3%,
-        1.04 40.5%,
-        1.05 42.7%,
-        1.05 44.1%,
-        1.04 45.7%,
-        1 53.3%,
-        0.99 55.4%,
-        0.98 57.5%,
-        0.99 60.7%,
-        1 68.1%,
-        1.01 72.2%,
-        1 86.7%,
-        1 100%
-      )
-      1 slide-in,
-    hide 0s linear 8s forwards;
+  animation: 2.2s var(--timing-bounce) 1 slide-in, hide 0s linear 8s forwards;
 
   @keyframes slide-in {
     0% {
@@ -605,7 +666,6 @@ export default {
 }
 
 .popup .badges {
-  align-self: center;
   display: flex;
   column-gap: 12px;
   align-items: center;
@@ -623,53 +683,69 @@ export default {
   height: 18px;
 }
 
-.popup .badges .blue-sky {
+.popup .badge {
   width: 44px;
-  animation: scale-shrink 6s
-    linear(
-      0 0%,
-      0 1.8%,
-      0.01 3.6%,
-      0.03 6.35%,
-      0.07 9.1%,
-      0.13 11.4%,
-      0.19 13.4%,
-      0.27 15%,
-      0.34 16.1%,
-      0.54 18.35%,
-      0.66 20.6%,
-      0.72 22.4%,
-      0.77 24.6%,
-      0.81 27.3%,
-      0.85 30.4%,
-      0.88 35.1%,
-      0.92 40.6%,
-      0.94 47.2%,
-      0.96 55%,
-      0.98 64%,
-      0.99 74.4%,
-      1 86.4%,
-      1 100%
-    )
-    8s 1 forwards;
+}
+.popup.small .badge {
+  width: 36px;
+}
 
-  @keyframes scale-shrink {
-    0% {
-      transform: scale(1);
-    }
-    20% {
-      transform: scale(12);
-    }
-    80% {
-      transform: scale(12);
-    }
-    100% {
-      transform: scale(1);
-    }
+.popup .badge.badge-expand {
+  animation: scale var(--duration-scale) var(--timing-scale) 0s 1 forwards;
+}
+
+.popup .badge.badge-collapse {
+  animation: shrink var(--duration-scale) var(--timing-scale) 0s 1 forwards;
+}
+
+.popup .badge.badge-achieved {
+  :hover {
+    cursor: pointer;
   }
 }
-.popup.small .badges .blue-sky {
-  width: 36px;
+
+.popup .badge.badge-new {
+  animation: scale-shrink var(--duration-scale) var(--timing-scale) 8s 1
+    forwards;
+}
+
+@keyframes shrink {
+  0% {
+    transform: scale(12);
+  }
+  20% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes scale {
+  0% {
+    transform: scale(1);
+  }
+  20% {
+    transform: scale(12);
+  }
+  100% {
+    transform: scale(12);
+  }
+}
+
+@keyframes scale-shrink {
+  0% {
+    transform: scale(1);
+  }
+  20% {
+    transform: scale(12);
+  }
+  80% {
+    transform: scale(12);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 // END BADGES ////////////////////////////////////////

@@ -2,7 +2,7 @@
   <svg
     viewBox="0 0 168.4864 168.03956"
     version="1.1"
-    id="svg1"
+    id="blue-sky"
     xml:space="preserve"
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns="http://www.w3.org/2000/svg"
@@ -314,7 +314,7 @@
       </linearGradient>
       <linearGradient id="linearGradient13">
         <stop
-          style="stop-color: #ffffff; stop-opacity: 1"
+          style="stop-color: #ffffff; stop-opacity: 0.69999999"
           offset="0.13504823"
           id="stop12"
         />
@@ -326,19 +326,19 @@
       </linearGradient>
       <linearGradient id="linearGradient3">
         <stop
-          style="stop-color: #ffffff; stop-opacity: 1"
+          style="stop-color: #ffffff; stop-opacity: 0.79765886"
           offset="0.54688376"
           id="stop2"
         />
         <stop
-          style="stop-color: #1c8b9d; stop-opacity: 1"
+          style="stop-color: #1c8b9d; stop-opacity: 0.99665552"
           offset="0.86173636"
           id="stop3"
         />
       </linearGradient>
       <linearGradient id="linearGradient28">
         <stop
-          style="stop-color: #fefefe; stop-opacity: 1"
+          style="stop-color: #fefefe; stop-opacity: 0.80000001"
           offset="0"
           id="stop30"
         />
@@ -350,7 +350,7 @@
       </linearGradient>
       <linearGradient id="linearGradient27">
         <stop
-          style="stop-color: #ffffff; stop-opacity: 1"
+          style="stop-color: #ffffff; stop-opacity: 0.79933113"
           offset="0.49865228"
           id="stop27"
         />
@@ -10288,6 +10288,61 @@
           "
           id="path336"
         />
+        <rect
+          style="
+            font-variation-settings: normal;
+            display: inline;
+            opacity: 1;
+            vector-effect: none;
+            fill: #1c8c9d;
+            fill-opacity: 1;
+            fill-rule: evenodd;
+            stroke-width: 0.968756;
+            stroke-linecap: butt;
+            stroke-linejoin: round;
+            stroke-miterlimit: 4;
+            stroke-dasharray: none;
+            stroke-dashoffset: 0;
+            stroke-opacity: 1;
+            -inkscape-stroke: none;
+            stop-color: #000000;
+            stop-opacity: 1;
+          "
+          id="rect2"
+          width="58.138874"
+          height="9.3288746"
+          x="48.365765"
+          y="170.80724"
+          ry="0.54234558"
+        />
+        <rect
+          style="
+            font-variation-settings: normal;
+            display: inline;
+            opacity: 1;
+            vector-effect: none;
+            fill: #1c8c9d;
+            fill-opacity: 1;
+            fill-rule: evenodd;
+            stroke-width: 0.635813;
+            stroke-linecap: butt;
+            stroke-linejoin: round;
+            stroke-miterlimit: 4;
+            stroke-dasharray: none;
+            stroke-dashoffset: 0;
+            stroke-opacity: 1;
+            -inkscape-stroke: none;
+            stop-color: #000000;
+            stop-opacity: 1;
+          "
+          id="rect3"
+          width="25.043585"
+          height="9.3288746"
+          x="146.56883"
+          y="175.21587"
+          ry="0.54234558"
+          transform="rotate(90,112.55434,110.99952)"
+        />
       </g>
       <path
         id="path10"
@@ -10548,20 +10603,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// .blue-sky {
-//   width: 44px;
-//   animation: shrink 8s 1 ease;
-// }
-
-// @keyframes shrink {
-//   0% {
-//     transform: scale(12);
-//   }
-//   80% {
-//     transform: scale(12);
-//   }
-//   100% {
-//     transform: scale(1);
-//   }
-// }
 </style>
