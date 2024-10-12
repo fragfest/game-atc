@@ -46,7 +46,7 @@ export const planeDelayFail = () => {
 
 export const levelComplete = (scoreTotal) => {
   const score = getScore();
-  setScoreHistory(score.level, scoreTotal);
+  setHistoryRecord(score.level, { ...score, scoreTotal });
 
   const nextLevel = score.level + 1;
   score.level = nextLevel <= getFinalLevel() ? nextLevel : getFinalLevel();
@@ -61,7 +61,7 @@ export const levelRetry = (level) => {
 };
 
 export const getHighestLevelCompleted = () => {
-  const sorted = getScoreHistory().sort((a, b) => b.level - a.level);
+  const sorted = getHistoryRecords().sort((a, b) => b.level - a.level);
   if (!sorted.length) return null;
   return sorted[0].level;
 };
@@ -138,19 +138,11 @@ export const planeLeaveFail = () => {
 };
 
 /**
- * @returns {Array.<ScoreHistory>}
+ * @returns {Array.<HistoryRecord>}
  */
-export const getScoreHistory = () => {
-  const scoreHistory = JSON.parse(localStorage.getItem('score-history'));
-  return scoreHistory || [];
-};
-
-/**
- * @returns {Score}
- */
-export const getScore = () => {
-  const score = JSON.parse(localStorage.getItem('score'));
-  return score || { ...Score };
+export const getHistoryRecords = () => {
+  const historyRecords = JSON.parse(localStorage.getItem('history-records'));
+  return historyRecords || [];
 };
 
 /**
@@ -176,38 +168,40 @@ let proximityPairs = {};
 /**
  * @param {number} level
  */
-const removeScoreHistoryItem = (level) => {
-  const scoreHistArr = getScoreHistory();
-  const indexRemove = scoreHistArr.findIndex((x) => x.level === level);
+const removeHistoryRecord = (level) => {
+  const historyRecords = getHistoryRecords();
+  const indexRemove = historyRecords.findIndex((x) => x.level === level);
   if (indexRemove === -1) return;
 
-  scoreHistArr.splice(indexRemove, 1);
-  localStorage.setItem('score-history', JSON.stringify(scoreHistArr));
+  historyRecords.splice(indexRemove, 1);
+  localStorage.setItem('history-records', JSON.stringify(historyRecords));
 };
 
 /**
  * @param {number} level
- * @param {number} score
+ * @param {HistoryScore} historyScore
  */
-const setScoreHistory = (level, score) => {
-  removeScoreHistoryItem(level);
+const setHistoryRecord = (level, historyScore) => {
+  removeHistoryRecord(level);
 
-  const scoreHistArr = getScoreHistory();
-  scoreHistArr.push({ level, score });
-  localStorage.setItem('score-history', JSON.stringify(scoreHistArr));
+  const historyRecords = getHistoryRecords();
+  historyRecords.push({ v, level, historyScore });
+  localStorage.setItem('history-records', JSON.stringify(historyRecords));
 };
 
+const v = '0.1.3';
 /**
- * @param {Score} score
- */
-const setScore = (score) => {
-  localStorage.setItem('score', JSON.stringify(score));
-};
-
-/**
- * @typedef {object} ScoreHistory
+ * HistoryRecord schema v 0.1.3
+ * @typedef {object} HistoryRecord
+ * @property {string} v schema version
  * @property {number} level
- * @property {number} score
+ * @property {HistoryScore} historyScore
+ */
+
+/**
+ * @typedef {object} HistoryScore
+ * @property {Score} score
+ * @property {number} scoreTotal
  */
 
 /**
@@ -228,6 +222,21 @@ const Score = {
   conflict: 0,
   delayed: 0,
   turbulence: 0,
+};
+
+/**
+ * @returns {Score}
+ */
+export const getScore = () => {
+  const score = JSON.parse(localStorage.getItem('score'));
+  return score || { ...Score };
+};
+
+/**
+ * @param {Score} score
+ */
+const setScore = (score) => {
+  localStorage.setItem('score', JSON.stringify(score));
 };
 
 /**

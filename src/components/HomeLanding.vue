@@ -44,20 +44,22 @@
 
           <!-- next grid row -->
           <!-- column left -->
-          <div v-if="showHistory" class="score-history">
+          <div v-if="showHistory" class="history-record">
             <h3>completed</h3>
             <div
-              v-for="(scoreHist, index) in scoreHistoryArr"
+              v-for="(record, index) in historyRecordArr"
               :key="index"
               class="row"
             >
-              <p v-if="!scoreHist.level" class="lightgreen">training</p>
-              <p v-if="scoreHist.level" class="lightgreen">
-                level {{ scoreHist.level }}
+              <p v-if="!record.level" class="lightgreen">training</p>
+              <p v-if="record.level" class="lightgreen">
+                level {{ record.level }}
               </p>
-              <p v-if="scoreHist.level" class="gold">{{ scoreHist.score }}</p>
+              <p v-if="record.level" class="gold">
+                {{ record.historyScore.scoreTotal }}
+              </p>
               <div class="button-restart">
-                <button @click="onRetryClick(scoreHist.level)">
+                <button @click="onRetryClick(record.level)">
                   <h2>retry</h2>
                 </button>
               </div>
@@ -86,7 +88,7 @@ import { getFinalLevel } from '../js/game/victory';
 import {
   setup as setupScore,
   levelRetry,
-  getScoreHistory,
+  getHistoryRecords,
 } from '../js/game/score/score';
 import { getHighestLevelCompleted } from '../js/game/score/score';
 import { calculateScreenSize, setScreenSize } from '../js/utils';
@@ -103,7 +105,7 @@ export default {
       isTutorial: getHighestLevelCompleted() === null,
       levelComplete: getHighestLevelCompleted(),
       levelNext: getHighestLevelCompleted() + 1,
-      scoreHistoryArr: getScoreHistory().sort((a, b) => a.level - b.level),
+      historyRecordArr: getHistoryRecords().sort((a, b) => a.level - b.level),
       finalLevel: getFinalLevel(),
       isGameComplete: false,
     };
@@ -227,7 +229,7 @@ export default {
   column-gap: 10%;
 }
 
-.grid-score-buttons .score-history {
+.grid-score-buttons .history-record {
   display: flex;
   flex-direction: column;
   min-width: 280px;
@@ -239,13 +241,13 @@ export default {
   padding: 6px 18px;
 }
 
-.grid-score-buttons .score-history h3 {
+.grid-score-buttons .history-record h3 {
   margin-top: 0;
   margin-bottom: 8px;
   border-bottom: 1px solid white;
 }
 
-.grid-score-buttons .score-history .row {
+.grid-score-buttons .history-record .row {
   display: flex;
   justify-content: space-between;
 }

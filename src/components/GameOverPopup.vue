@@ -1,7 +1,7 @@
 <template>
   <div class="popup" :class="sizeClass">
     <CyberBox
-      v-if="bluesky"
+      v-if="isShowBadgeBox"
       :width="badgeTextWidth"
       type="button"
       class="badge-box"
@@ -9,11 +9,9 @@
       <div class="badge-text">
         <div class="title">
           <div class="checkmark">&check;</div>
-          <h1 class="light-green">Blue Sky</h1>
+          <h1 class="light-green">{{ badgeTitle }}</h1>
         </div>
-        <h3>
-          <span class="green mr-6">COMPLETED</span> avoid all turbulent weather
-        </h3>
+        <h3><span class="green mr-6">COMPLETED</span> {{ badgeDesc }}</h3>
       </div>
     </CyberBox>
 
@@ -81,17 +79,25 @@
         </div>
       </div>
 
-      <div class="badges">
-        <BlueSky
-          v-if="bluesky"
-          class="badge badge-achieved"
-          :class="blueSkyClass"
-          @click="onClickBadgeAchieved('blueSkyClass')"
-        />
-        <BadgeEmpty v-if="!bluesky" class="badge" />
-        <BadgeEmpty class="badge" />
-        <BadgeEmpty class="badge" />
-        <BadgeEmpty class="badge" />
+      <div class="badges-container">
+        <div class="badges">
+          <BlueSky
+            v-if="bluesky"
+            class="badge badge-achieved"
+            :class="blueSkyClass"
+            @click="onClickBadgeAchieved('blueSkyClass')"
+            @mouseenter="onMouseEnterBadgeAchieved('bluesky')"
+            @mouseleave="onMouseLeaveBadgeAchieved()"
+          />
+          <BadgeEmpty v-if="!bluesky" class="badge" />
+          <BadgeEmpty class="badge" />
+          <BadgeEmpty class="badge" />
+          <BadgeEmpty class="badge" />
+        </div>
+        <div v-if="isShowBadgeDesc" class="badges-desc">
+          <h3 class="light-green">{{ badgeTitle }}</h3>
+          <p>{{ badgeDesc }}</p>
+        </div>
       </div>
 
       <div
@@ -129,6 +135,10 @@ import {
   isVictory,
   getGoals,
 } from '../js/game/victory';
+
+const BadgeTypes = Object.freeze({
+  bluesky: { title: 'Blue Sky', desc: 'avoid all turbulent weather' },
+});
 
 import BadgeEmpty from './badges/BadgeEmpty.vue';
 import BlueSky from './badges/BlueSky';
@@ -184,9 +194,13 @@ export default {
       scoreTotalClass: 'silver',
       total: 0,
 
-      // BADGES /////////////////////////////////////////////
+      // BADGES /////////////////////////////////////////////////
+      isShowBadgeBox: false,
+      isShowBadgeDesc: false,
+      badgeTitle: '',
+      badgeDesc: '',
+
       bluesky: false,
-      // badgeClass
       blueSkyClass: '',
       // END BADGES /////////////////////////////////////////////
     };
@@ -202,13 +216,23 @@ export default {
     this.screenSize = getScreenSize();
     if (this.screenSize == ScreenSizes.Small) this.badgeTextWidth = '500';
 
-    this.isShowOkBtn = false;
+    // BADGES /////////////////////////////////////////////////
+    this.bluesky = false;
+    const newBadgeAchieved = false;
 
-    this.bluesky = true;
-    this.blueSkyClass = 'badge-new';
+    if (newBadgeAchieved) {
+      this.isShowBadgeBox = true;
+      if (this.bluesky) this.blueSkyClass = 'badge-new';
+    }
 
     if (this.bluesky) {
+      this.badgeTitle = BadgeTypes.bluesky.title;
+      this.badgeDesc = BadgeTypes.bluesky.desc;
+    }
+
+    if (newBadgeAchieved) {
       setTimeout(() => {
+        this.isShowBadgeDesc = true;
         this.isShowOkBtn = true;
         this.$nextTick(() => {
           this.$refs?.okBtn?.focus();
@@ -222,6 +246,7 @@ export default {
         });
       }, this.okBtnDispTimeSec * 1000);
     }
+    // END BADGES /////////////////////////////////////////////////
 
     const score = getScore();
 
@@ -307,6 +332,17 @@ export default {
   },
 
   methods: {
+    onMouseEnterBadgeAchieved: function (badgeType) {
+      if (badgeType === 'bluesky') {
+        this.badgeTitle = BadgeTypes[badgeType].title;
+        this.badgeDesc = BadgeTypes[badgeType].desc;
+      }
+      this.isShowBadgeDesc = true;
+    },
+    onMouseLeaveBadgeAchieved: function () {
+      this.isShowBadgeDesc = false;
+    },
+
     onClickBadgeAchieved: function (badgeClass) {
       if (this[badgeClass] === 'badge-expand') {
         this[badgeClass] = 'badge-collapse';
@@ -327,7 +363,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// VARS ////////////////////////////////////////////
+// VARS ////////////////////////////////////////////////
 .popup {
   --duration-scale: 6s;
   --timing-scale: linear(
@@ -503,14 +539,14 @@ export default {
 }
 
 .popup .modal .title {
-  min-height: 36px;
+  height: 40px;
   align-self: center;
   text-align: center;
   margin-bottom: 0;
   text-shadow: 2px 2px black;
 }
-
 .popup.small .modal .title {
+  height: 18px;
   font-size: 24px;
 }
 
@@ -525,7 +561,6 @@ export default {
   font-size: 22px;
   background-color: darkslategrey;
 }
-
 .popup.small .modal .content {
   font-size: 18px;
 }
@@ -665,6 +700,18 @@ export default {
   margin-bottom: 18px;
 }
 
+.popup .badges-container {
+  display: flex;
+}
+
+.popup .badges-desc {
+  display: flex;
+  align-items: center;
+  h3 {
+    margin-right: 8px;
+  }
+}
+
 .popup .badges {
   display: flex;
   column-gap: 12px;
@@ -687,7 +734,7 @@ export default {
   width: 44px;
 }
 .popup.small .badge {
-  width: 36px;
+  width: 34px;
 }
 
 .popup .badge.badge-expand {
