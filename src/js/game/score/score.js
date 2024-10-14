@@ -138,6 +138,19 @@ export const planeLeaveFail = () => {
 };
 
 /**
+ * @param {ScoreEvents} scoreEvent
+ * @param {scoreCB} cb
+ */
+export const subscribeScore = (scoreEvent, cb) => {
+  if (!ScoreEvents[scoreEvent]) {
+    throw new Error('unknown score event: ' + scoreEvent);
+  }
+  document.addEventListener(scoreEvent, (ev) => {
+    cb(ev.detail.score);
+  });
+};
+
+/**
  * @returns {Array.<HistoryRecord>}
  */
 export const getHistoryRecords = () => {
@@ -149,18 +162,6 @@ export const getHistoryRecords = () => {
  * @callback scoreCB
  * @param {Score}
  */
-
-/**
- * @param {ScoreEvents} scoreEvent
- * @param {scoreCB} cb
- */
-export const subscribeScore = (scoreEvent, cb) => {
-  if (!ScoreEvents[scoreEvent])
-    throw new Error('unknown score event: ' + scoreEvent);
-  document.addEventListener(scoreEvent, (ev) => {
-    cb(ev.detail.score);
-  });
-};
 
 // PRIVATE //////////////////////////////////////////////////
 let proximityPairs = {};

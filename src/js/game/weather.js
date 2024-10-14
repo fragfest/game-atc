@@ -81,6 +81,8 @@ export const isInWeather = (entityObj) => (weatherEntity) => {
 // LEVELS
 ////////////////////////////////////////////////////////////////////////
 
+export const getTurbulenceLevels = () => [5, 6];
+
 const level1 = (weatherArgs) => {
   const { width, height } = weatherArgs;
   const create = createOneSmallCloud;

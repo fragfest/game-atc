@@ -142,6 +142,11 @@ const BadgeTypes = Object.freeze({
 
 import BadgeEmpty from './badges/BadgeEmpty.vue';
 import BlueSky from './badges/BlueSky';
+import {
+  isAchievedBlueSky,
+  isNewAchievementBlueSky,
+  setBadgeBlueSky,
+} from '../js/game/score/badges';
 import CyberBox from './common/CyberBox.vue';
 
 export default {
@@ -216,38 +221,7 @@ export default {
     this.screenSize = getScreenSize();
     if (this.screenSize == ScreenSizes.Small) this.badgeTextWidth = '500';
 
-    // BADGES /////////////////////////////////////////////////
-    this.bluesky = false;
-    const newBadgeAchieved = false;
-
-    if (newBadgeAchieved) {
-      this.isShowBadgeBox = true;
-      if (this.bluesky) this.blueSkyClass = 'badge-new';
-    }
-
-    if (this.bluesky) {
-      this.badgeTitle = BadgeTypes.bluesky.title;
-      this.badgeDesc = BadgeTypes.bluesky.desc;
-    }
-
-    if (newBadgeAchieved) {
-      setTimeout(() => {
-        this.isShowBadgeDesc = true;
-        this.isShowOkBtn = true;
-        this.$nextTick(() => {
-          this.$refs?.okBtn?.focus();
-        });
-      }, this.badgeDispTimeSec * 1000);
-    } else {
-      setTimeout(() => {
-        this.isShowOkBtn = true;
-        this.$nextTick(() => {
-          this.$refs?.okBtn?.focus();
-        });
-      }, this.okBtnDispTimeSec * 1000);
-    }
-    // END BADGES /////////////////////////////////////////////////
-
+    // SCORE ////////////////////////////////////////////////////
     const score = getScore();
 
     if (isVictory(score)) {
@@ -329,6 +303,38 @@ export default {
 
     if (isVictory(score)) levelComplete(this.total);
     resetScore();
+
+    // BADGES /////////////////////////////////////////////////
+    this.bluesky = isAchievedBlueSky();
+    const newBadgeAchieved = isNewAchievementBlueSky();
+
+    if (newBadgeAchieved) {
+      setBadgeBlueSky();
+      this.isShowBadgeBox = true;
+      if (this.bluesky) this.blueSkyClass = 'badge-new';
+    }
+
+    if (this.bluesky) {
+      this.badgeTitle = BadgeTypes.bluesky.title;
+      this.badgeDesc = BadgeTypes.bluesky.desc;
+    }
+
+    if (newBadgeAchieved) {
+      setTimeout(() => {
+        this.isShowBadgeDesc = true;
+        this.isShowOkBtn = true;
+        this.$nextTick(() => {
+          this.$refs?.okBtn?.focus();
+        });
+      }, this.badgeDispTimeSec * 1000);
+    } else {
+      setTimeout(() => {
+        this.isShowOkBtn = true;
+        this.$nextTick(() => {
+          this.$refs?.okBtn?.focus();
+        });
+      }, this.okBtnDispTimeSec * 1000);
+    }
   },
 
   methods: {
