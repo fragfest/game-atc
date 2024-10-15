@@ -79,26 +79,11 @@
         </div>
       </div>
 
-      <div class="badges-container">
-        <div class="badges">
-          <BlueSky
-            v-if="bluesky"
-            class="badge badge-achieved"
-            :class="blueSkyClass"
-            @click="onClickBadgeAchieved('blueSkyClass')"
-            @mouseenter="onMouseEnterBadgeAchieved('bluesky')"
-            @mouseleave="onMouseLeaveBadgeAchieved()"
-          />
-          <BadgeEmpty v-if="!bluesky" class="badge" />
-          <BadgeEmpty class="badge" />
-          <BadgeEmpty class="badge" />
-          <BadgeEmpty class="badge" />
-        </div>
-        <div v-if="isShowBadgeDesc" class="badges-desc">
-          <h3 class="light-green">{{ badgeTitle }}</h3>
-          <p>{{ badgeDesc }}</p>
-        </div>
-      </div>
+      <BadgesDisplay
+        :bluesky="bluesky"
+        :isNewBlueSky="isNewBlueSky"
+        :isShowDescription="isShowBadgeDesc"
+      ></BadgesDisplay>
 
       <div
         v-if="isShowOkBtn"
@@ -140,8 +125,7 @@ const BadgeTypes = Object.freeze({
   bluesky: { title: 'Blue Sky', desc: 'avoid all turbulent weather' },
 });
 
-import BadgeEmpty from './badges/BadgeEmpty.vue';
-import BlueSky from './badges/BlueSky';
+import BadgesDisplay from './badges/BadgesDisplay.vue';
 import {
   isAchievedBlueSky,
   isNewAchievementBlueSky,
@@ -151,8 +135,7 @@ import CyberBox from './common/CyberBox.vue';
 
 export default {
   components: {
-    BadgeEmpty,
-    BlueSky,
+    BadgesDisplay,
     CyberBox,
   },
 
@@ -207,6 +190,7 @@ export default {
 
       bluesky: false,
       blueSkyClass: '',
+      isNewBlueSky: false,
       // END BADGES /////////////////////////////////////////////
     };
   },
@@ -311,7 +295,10 @@ export default {
     if (newBadgeAchieved) {
       setBadgeBlueSky();
       this.isShowBadgeBox = true;
-      if (this.bluesky) this.blueSkyClass = 'badge-new';
+      if (this.bluesky) {
+        this.blueSkyClass = 'badge-new';
+        this.isNewBlueSky = true;
+      }
     }
 
     if (this.bluesky) {
@@ -705,101 +692,4 @@ export default {
   margin-right: 18px;
   margin-bottom: 18px;
 }
-
-.popup .badges-container {
-  display: flex;
-}
-
-.popup .badges-desc {
-  display: flex;
-  align-items: center;
-  h3 {
-    margin-right: 8px;
-  }
-}
-
-.popup .badges {
-  display: flex;
-  column-gap: 12px;
-  align-items: center;
-
-  width: 25%;
-  height: 32px;
-  margin: 8px 12%;
-  padding: 12px 12px;
-
-  background-color: #2c5c81ff;
-  border: 1px solid #24b3c9;
-  border-radius: 6px;
-}
-.popup.small .badges {
-  height: 18px;
-}
-
-.popup .badge {
-  width: 44px;
-}
-.popup.small .badge {
-  width: 34px;
-}
-
-.popup .badge.badge-expand {
-  animation: scale var(--duration-scale) var(--timing-scale) 0s 1 forwards;
-}
-
-.popup .badge.badge-collapse {
-  animation: shrink var(--duration-scale) var(--timing-scale) 0s 1 forwards;
-}
-
-.popup .badge.badge-achieved {
-  :hover {
-    cursor: pointer;
-  }
-}
-
-.popup .badge.badge-new {
-  animation: scale-shrink var(--duration-scale) var(--timing-scale) 8s 1
-    forwards;
-}
-
-@keyframes shrink {
-  0% {
-    transform: scale(12);
-  }
-  20% {
-    transform: scale(1);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-@keyframes scale {
-  0% {
-    transform: scale(1);
-  }
-  20% {
-    transform: scale(12);
-  }
-  100% {
-    transform: scale(12);
-  }
-}
-
-@keyframes scale-shrink {
-  0% {
-    transform: scale(1);
-  }
-  20% {
-    transform: scale(12);
-  }
-  80% {
-    transform: scale(12);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-// END BADGES ////////////////////////////////////////
 </style>
