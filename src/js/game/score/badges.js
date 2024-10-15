@@ -6,6 +6,8 @@ export const Badges = Object.freeze({
 });
 
 export const isAchievedBlueSky = () => {
+  if (hasHistoryBadgeBlueSky()) return true;
+
   const isTurbulentLevel = (record) =>
     !!getTurbulenceLevels().find(
       (turbulentLevel) => turbulentLevel === record.level

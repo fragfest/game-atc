@@ -13,16 +13,16 @@
 import { ScreenSizes } from '../../js/utils';
 
 export default {
-  name: "ToolTip",
+  name: 'ToolTip',
   props: {
     disabled: { type: Boolean },
     size: { type: String },
   },
   computed: {
-    classComputed: function(){
-      let classStr = "";
+    classComputed: function () {
+      let classStr = '';
       classStr += this.disabled ? 'disabled' : '';
-      if(this.size === ScreenSizes.Small) classStr += ' small';
+      if (this.size === ScreenSizes.Small) classStr += ' small';
       return classStr;
     },
   },

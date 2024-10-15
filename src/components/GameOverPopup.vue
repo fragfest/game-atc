@@ -79,11 +79,14 @@
         </div>
       </div>
 
-      <BadgesDisplay
-        :bluesky="bluesky"
-        :isNewBlueSky="isNewBlueSky"
-        :isShowDescription="isShowBadgeDesc"
-      ></BadgesDisplay>
+      <div class="badge-display">
+        <BadgesDisplay
+          :size="badgeSize"
+          :bluesky="bluesky"
+          :isNewBlueSky="isNewBlueSky"
+          :isShowDescription="isShowBadgeDesc"
+        ></BadgesDisplay>
+      </div>
 
       <div
         v-if="isShowOkBtn"
@@ -191,11 +194,15 @@ export default {
       bluesky: false,
       blueSkyClass: '',
       isNewBlueSky: false,
-      // END BADGES /////////////////////////////////////////////
     };
   },
 
   computed: {
+    badgeSize: function () {
+      if (this.screenSize === ScreenSizes.Small) return 34;
+      return 44;
+    },
+
     sizeClass: function () {
       return getClassSize(this.screenSize);
     },
@@ -203,7 +210,7 @@ export default {
 
   mounted() {
     this.screenSize = getScreenSize();
-    if (this.screenSize == ScreenSizes.Small) this.badgeTextWidth = '500';
+    if (this.screenSize === ScreenSizes.Small) this.badgeTextWidth = '500';
 
     // SCORE ////////////////////////////////////////////////////
     const score = getScore();
@@ -358,33 +365,6 @@ export default {
 <style lang="scss" scoped>
 // VARS ////////////////////////////////////////////////
 .popup {
-  --duration-scale: 6s;
-  --timing-scale: linear(
-    0 0%,
-    0 1.8%,
-    0.01 3.6%,
-    0.03 6.35%,
-    0.07 9.1%,
-    0.13 11.4%,
-    0.19 13.4%,
-    0.27 15%,
-    0.34 16.1%,
-    0.54 18.35%,
-    0.66 20.6%,
-    0.72 22.4%,
-    0.77 24.6%,
-    0.81 27.3%,
-    0.85 30.4%,
-    0.88 35.1%,
-    0.92 40.6%,
-    0.94 47.2%,
-    0.96 55%,
-    0.98 64%,
-    0.99 74.4%,
-    1 86.4%,
-    1 100%
-  );
-
   --timing-bounce: linear(
     0 0%,
     0.22 2.1%,
@@ -616,6 +596,11 @@ export default {
 //////////////////////////////////////////////////////
 // BADGES
 //////////////////////////////////////////////////////
+
+.popup .badge-display {
+  display: flex;
+  margin: 8px 8%;
+}
 
 .popup .badge-box {
   position: absolute;

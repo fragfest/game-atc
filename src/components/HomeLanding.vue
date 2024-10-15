@@ -8,18 +8,13 @@
         <div class="grid-score-buttons">
           <!-- column left -->
           <div>
-            <h3 v-if="isGameComplete">all levels completed</h3>
-            <p v-if="isGameComplete">more to come!</p>
+            <h3 v-if="isGameComplete">all levels completed!</h3>
             <h3 v-else-if="levelComplete">
               <span>levels complete &nbsp;&nbsp;</span>
               <span class="font-mono white">
                 {{ levelComplete }} / {{ finalLevel }}
               </span>
             </h3>
-            <!-- <h3>
-              difficulty &nbsp;&nbsp;
-              <span class="white">easy</span>
-            </h3> -->
           </div>
 
           <!-- column center -->
@@ -41,9 +36,11 @@
 
           <!-- column right -->
           <div></div>
+          <!-- END next grid row -->
+        </div>
+        <!-- END grid-score-buttons -->
 
-          <!-- next grid row -->
-          <!-- column left -->
+        <div class="row-history-badges">
           <div v-if="showHistory" class="history-record">
             <h3>completed</h3>
             <div
@@ -60,21 +57,18 @@
               </p>
               <div class="button-restart">
                 <button @click="onRetryClick(record.level)">
-                  <h2>retry</h2>
+                  <h3>retry</h3>
                 </button>
               </div>
             </div>
           </div>
 
-          <!-- column center -->
-          <div></div>
-
-          <!-- column right -->
-          <div></div>
-          <!-- END next grid row -->
+          <div class="badges">
+            <BadgesDisplay :size="badgeSize" :bluesky="bluesky" />
+          </div>
         </div>
-        <!-- END grid-score-buttons -->
       </div>
+      <div></div>
     </section>
 
     <div class="version">
@@ -84,6 +78,7 @@
 </template>
 
 <script>
+import { ref } from 'vue';
 import { getFinalLevel } from '../js/game/victory';
 import {
   setup as setupScore,
@@ -91,12 +86,17 @@ import {
   getHistoryRecords,
 } from '../js/game/score/score';
 import { getHighestLevelCompleted } from '../js/game/score/score';
-import { calculateScreenSize, setScreenSize } from '../js/utils';
+import { calculateScreenSize, setScreenSize, ScreenSizes } from '../js/utils';
+import { isAchievedBlueSky } from '../js/game/score/badges';
 
+import BadgesDisplay from './badges/BadgesDisplay';
 import CyberBox from './common/CyberBox';
+
+const screenSize = ref('');
 
 export default {
   components: {
+    BadgesDisplay,
     CyberBox,
   },
 
@@ -108,10 +108,18 @@ export default {
       historyRecordArr: getHistoryRecords().sort((a, b) => a.level - b.level),
       finalLevel: getFinalLevel(),
       isGameComplete: false,
+
+      // BADGES /////////////////////////////////////////////////
+      bluesky: false,
     };
   },
 
   computed: {
+    badgeSize: function () {
+      if (screenSize.value === ScreenSizes.Small) return 34;
+      return 60;
+    },
+
     showHistory: function () {
       return this.levelComplete || this.levelComplete === 0;
     },
@@ -124,12 +132,14 @@ export default {
   beforeCreate() {
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
-    const screenSize = calculateScreenSize(windowWidth, windowHeight);
-    setScreenSize(screenSize);
+    const size = calculateScreenSize(windowWidth, windowHeight);
+    screenSize.value = size;
+    setScreenSize(size);
   },
 
   mounted() {
     setupScore();
+    this.bluesky = isAchievedBlueSky();
     if (this.finalLevel === this.levelComplete) this.isGameComplete = true;
   },
 
@@ -146,7 +156,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .version {
   position: absolute;
   left: 94vw;
@@ -168,15 +178,12 @@ export default {
 .white {
   color: white;
 }
-
 .lightgreen {
   color: lightgreen;
 }
-
 .gold {
   color: gold;
 }
-
 .font-mono {
   font-family: monospace;
 }
@@ -229,60 +236,6 @@ export default {
   column-gap: 10%;
 }
 
-.grid-score-buttons .history-record {
-  display: flex;
-  flex-direction: column;
-  min-width: 280px;
-  max-width: 400px;
-
-  background-color: #2c5c816f;
-  border: 1px solid #24b3c9;
-  border-radius: 8px;
-  padding: 6px 18px;
-}
-
-.grid-score-buttons .history-record h3 {
-  margin-top: 0;
-  margin-bottom: 8px;
-  border-bottom: 1px solid white;
-}
-
-.grid-score-buttons .history-record .row {
-  display: flex;
-  justify-content: space-between;
-}
-
-.grid-score-buttons .button-restart {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 120px;
-}
-
-.grid-score-buttons .button-restart button {
-  width: 100px;
-  height: 32px;
-
-  border-radius: 4px;
-  box-shadow: 2px 1px 4px #000000a0;
-  background-color: lightgreen;
-  border: 1px solid white;
-}
-
-.grid-score-buttons .button-restart button h2 {
-  font-size: 20px;
-}
-
-.grid-score-buttons .button-restart button:hover {
-  cursor: pointer;
-  background-color: rgb(119, 201, 119);
-}
-
-.grid-score-buttons .button-restart button:active {
-  margin-left: 2px;
-  box-shadow: none;
-}
-
 .grid-score-buttons .button-start {
   display: flex;
   flex-direction: column;
@@ -332,4 +285,70 @@ export default {
     font-size: 33px;
   }
 }
+
+// row-history-badges ////////////////////////////////////////
+.row-history-badges {
+  display: flex;
+  margin-top: 40px;
+  column-gap: 5%;
+  row-gap: 40px;
+}
+
+// history-record ////////////////////////////////////////
+.history-record {
+  display: flex;
+  flex-direction: column;
+  min-width: 280px;
+
+  background-color: #2c5c816f;
+  border: 1px solid #24b3c9;
+  border-radius: 8px;
+  padding: 6px 18px;
+}
+
+.history-record h3 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  border-bottom: 1px solid white;
+}
+
+.history-record .row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.history-record .button-restart {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.history-record .button-restart button {
+  width: 80px;
+  height: 30px;
+
+  border-radius: 4px;
+  box-shadow: 4px 2px 2px #000000a0;
+  background-color: lightgreen;
+  border: 1px solid white;
+}
+
+.history-record .button-restart button h3 {
+  color: rgb(28, 28, 28);
+  font-size: 20px;
+  margin-bottom: 0;
+  border: none;
+}
+
+.history-record .button-restart button:hover {
+  cursor: pointer;
+  background-color: rgb(119, 201, 119);
+}
+
+.history-record .button-restart button:active {
+  position: relative;
+  left: 2px;
+  box-shadow: none;
+}
+// END row-history-badges //////////////////////////////////////
 </style>

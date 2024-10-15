@@ -3,20 +3,26 @@
     <div class="badges">
       <BlueSky
         v-if="bluesky"
-        class="badge badge-achieved"
+        class="badge-achieved"
         :class="blueSkyClassComputed"
+        :style="badgeStyle"
         @click="onClickBadgeAchieved('blueSkyClass')"
         @mouseenter="onMouseEnterBadgeAchieved('bluesky')"
         @mouseleave="onMouseLeaveBadgeAchieved()"
       />
-      <BadgeEmpty v-if="!bluesky" class="badge" />
-      <BadgeEmpty class="badge" />
-      <BadgeEmpty class="badge" />
-      <BadgeEmpty class="badge" />
+      <BadgeEmpty
+        v-if="!bluesky"
+        :style="badgeStyle"
+        @mouseenter="onMouseEnterBadgeAchieved('bluesky')"
+        @mouseleave="onMouseLeaveBadgeAchieved()"
+      />
+      <BadgeEmpty :style="badgeStyle" />
+      <BadgeEmpty :style="badgeStyle" />
+      <BadgeEmpty :style="badgeStyle" />
     </div>
     <div v-if="showBadgeDesc" class="badges-desc">
       <h3 class="light-green">{{ badgeTitle }}</h3>
-      <p>{{ badgeDesc }}</p>
+      <p class="white">{{ badgeDesc }}</p>
     </div>
   </div>
 </template>
@@ -32,6 +38,7 @@ const BadgeTypes = Object.freeze({
 
 export default {
   props: {
+    size: { type: Number, default: 44 },
     bluesky: { type: Boolean },
     isNewBlueSky: { type: Boolean },
     isShowDescription: { type: Boolean },
@@ -55,6 +62,10 @@ export default {
   },
 
   computed: {
+    badgeStyle: function () {
+      return 'width:' + this.size + 'px';
+    },
+
     blueSkyClassComputed: function () {
       if (this.blueSkyClass) {
         return this.blueSkyClass;
@@ -108,10 +119,44 @@ export default {
 
 <style lang="scss" scoped>
 .container {
+  --duration-scale: 6s;
+  --timing-scale: linear(
+    0 0%,
+    0 1.8%,
+    0.01 3.6%,
+    0.03 6.35%,
+    0.07 9.1%,
+    0.13 11.4%,
+    0.19 13.4%,
+    0.27 15%,
+    0.34 16.1%,
+    0.54 18.35%,
+    0.66 20.6%,
+    0.72 22.4%,
+    0.77 24.6%,
+    0.81 27.3%,
+    0.85 30.4%,
+    0.88 35.1%,
+    0.92 40.6%,
+    0.94 47.2%,
+    0.96 55%,
+    0.98 64%,
+    0.99 74.4%,
+    1 86.4%,
+    1 100%
+  );
+}
+
+.container {
   display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
 
   .light-green {
     color: lightgreen;
+  }
+  .white {
+    color: white;
   }
 }
 
@@ -119,42 +164,28 @@ export default {
   display: flex;
   column-gap: 12px;
   align-items: center;
-
-  width: 25%;
-  height: 32px;
-  margin: 8px 12%;
   padding: 12px 12px;
 
   background-color: #2c5c81ff;
   border: 1px solid #24b3c9;
   border-radius: 6px;
 }
-.container.small .badges {
-  height: 18px;
-}
 
-.container .badge {
-  width: 44px;
-}
-.container.small .badge {
-  width: 34px;
-}
-
-.container .badge.badge-expand {
+.container .badge-expand {
   animation: scale var(--duration-scale) var(--timing-scale) 0s 1 forwards;
 }
 
-.container .badge.badge-collapse {
+.container .badge-collapse {
   animation: shrink var(--duration-scale) var(--timing-scale) 0s 1 forwards;
 }
 
-.container .badge.badge-achieved {
+.container .badge-achieved {
   :hover {
     cursor: pointer;
   }
 }
 
-.container .badge.badge-new {
+.container .badge-new {
   animation: scale-shrink var(--duration-scale) var(--timing-scale) 8s 1
     forwards;
 }
@@ -162,8 +193,15 @@ export default {
 .container .badges-desc {
   display: flex;
   align-items: center;
+  font-family: monospace;
+  width: 420px;
+
   h3 {
-    margin-right: 8px;
+    margin: 8px;
+    font-size: 18px;
+  }
+  p {
+    font-size: 14px;
   }
 }
 
