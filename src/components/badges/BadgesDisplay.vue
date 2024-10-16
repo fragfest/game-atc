@@ -16,9 +16,21 @@
         @mouseenter="onMouseEnterBadgeAchieved('bluesky')"
         @mouseleave="onMouseLeaveBadgeAchieved()"
       />
-      <BadgeEmpty :style="badgeStyle" />
-      <BadgeEmpty :style="badgeStyle" />
-      <BadgeEmpty :style="badgeStyle" />
+      <BadgeEmpty
+        :style="badgeStyle"
+        @mouseenter="onMouseEnterBadgeAchieved('none')"
+        @mouseleave="onMouseLeaveBadgeAchieved()"
+      />
+      <BadgeEmpty
+        :style="badgeStyle"
+        @mouseenter="onMouseEnterBadgeAchieved('none')"
+        @mouseleave="onMouseLeaveBadgeAchieved()"
+      />
+      <BadgeEmpty
+        :style="badgeStyle"
+        @mouseenter="onMouseEnterBadgeAchieved('none')"
+        @mouseleave="onMouseLeaveBadgeAchieved()"
+      />
     </div>
     <div v-if="showBadgeDesc" class="badges-desc">
       <h3 class="light-green">{{ badgeTitle }}</h3>
@@ -91,6 +103,10 @@ export default {
 
   methods: {
     onMouseEnterBadgeAchieved: function (badgeType) {
+      if (badgeType === 'none') {
+        this.badgeTitle = '';
+        this.badgeDesc = 'future achievement';
+      }
       if (badgeType === 'bluesky') {
         this.badgeTitle = BadgeTypes.bluesky.title;
         this.badgeDesc = BadgeTypes.bluesky.desc;

@@ -107,6 +107,7 @@
 </template>
 
 <script>
+import { play, SoundType } from '../js/game/sound';
 import { getClassSize, getScreenSize, ScreenSizes } from '../js/utils';
 import {
   getScore,
@@ -302,6 +303,7 @@ export default {
     if (newBadgeAchieved) {
       setBadgeBlueSky();
       this.isShowBadgeBox = true;
+      play(SoundType.Ding);
       if (this.bluesky) {
         this.blueSkyClass = 'badge-new';
         this.isNewBlueSky = true;
