@@ -11,7 +11,7 @@ export const flightQuality = (plane) => {
   const turbulenceMsMax = 60 * 1000;
   const turbulenceFn = (x) => x.turbulenceMs / turbulenceMsMax;
   const turbulenceRaw = turbulenceFn(plane) < 1 ? turbulenceFn(plane) : 1;
-  const turbulenceWeight = 0.3;
+  const turbulenceWeight = 0.5;
   const turbulence = turbulenceRaw * turbulenceWeight;
   return 1 - turbulence;
 };

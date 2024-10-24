@@ -27,6 +27,7 @@ import {
 } from '../game/score/score';
 import { play, SoundType } from '../game/sound';
 import { isInWeather, isTurbulence } from '../game/weather';
+import { drawPlaneWake, calcWake } from './aircraftWake';
 
 export default class Aircraft {
   constructor(
@@ -698,6 +699,7 @@ export default class Aircraft {
 
   setProximity({ entityManagerArr, screenSize, showCircles, timestamp }) {
     const isEntityCloseTo = isCloseToEntity(screenSize)(this);
+    // TODO extract isAirborne
     const isAirborne = (plane) =>
       !plane.isTaxiing && !plane.takeoff && !plane.isTouchedDown;
     const isOnRunway = (plane) =>
@@ -734,6 +736,18 @@ export default class Aircraft {
     } else {
       this.isWeatherTurbulence = false;
     }
+
+    // wake proximity //////////////////////////////////////////
+    const wakeObjs = calcWake({ entityManagerArr, aircraft: this });
+    if (wakeObjs.length) {
+      wakeObjs.forEach(({ planes, strength }) => {
+        planes.forEach((plane) => {
+          console.log(plane.title, 'in wake, score:', strength);
+        });
+      });
+    }
+
+    // TODO plane proximity remove return statements
 
     // plane proximity //////////////////////////////////////////
     const planeClose = entityManagerArr.find(isPlaneClose);
@@ -888,6 +902,9 @@ const _draw = (self, color) => {
   const proximityDist = self.isSmall
     ? getTooCloseDistance(ScreenSizes.Small)
     : getTooCloseDistance(ScreenSizes.Large);
+
+  // drawPlaneWake(self, self.textLayerObj);
+
   if (self.isShowCircle) {
     self.textLayerObj.ctx.strokeStyle = 'white';
     self.textLayerObj.ctx.beginPath();
