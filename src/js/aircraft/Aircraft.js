@@ -1,4 +1,4 @@
-import { DestinationType, Direction, isAircraft } from '../types';
+import { DestinationType, Direction, isAircraft, isAirborne } from '../types';
 import {
   ScreenSizes,
   inputHeadingToRad,
@@ -27,7 +27,7 @@ import {
 } from '../game/score/score';
 import { play, SoundType } from '../game/sound';
 import { isInWeather, isTurbulence } from '../game/weather';
-import { drawPlaneWake, calcWake } from './aircraftWake';
+import { calcWake } from './aircraftWake';
 
 export default class Aircraft {
   constructor(
@@ -699,9 +699,6 @@ export default class Aircraft {
 
   setProximity({ entityManagerArr, screenSize, showCircles, timestamp }) {
     const isEntityCloseTo = isCloseToEntity(screenSize)(this);
-    // TODO extract isAirborne
-    const isAirborne = (plane) =>
-      !plane.isTaxiing && !plane.takeoff && !plane.isTouchedDown;
     const isOnRunway = (plane) =>
       !plane.isTaxiing && (plane.takeoff || plane.isTouchedDown);
     const isSameRunway = (plane) => plane.runway === this.runway;
@@ -738,12 +735,10 @@ export default class Aircraft {
     }
 
     // wake proximity //////////////////////////////////////////
-    const wakeObjs = calcWake({ entityManagerArr, aircraft: this });
-    if (wakeObjs.length) {
-      wakeObjs.forEach(({ planes, strength }) => {
-        planes.forEach((plane) => {
-          console.log(plane.title, 'in wake, score:', strength);
-        });
+    const planesInWake = calcWake({ entityManagerArr, aircraft: this });
+    if (planesInWake.length) {
+      planesInWake.forEach(({ plane, strength }) => {
+        console.log(plane.title, 'in wake, score:', strength);
       });
     }
 
@@ -903,6 +898,7 @@ const _draw = (self, color) => {
     ? getTooCloseDistance(ScreenSizes.Small)
     : getTooCloseDistance(ScreenSizes.Large);
 
+  // TODO debug wake circles
   // drawPlaneWake(self, self.textLayerObj);
 
   if (self.isShowCircle) {

@@ -1,6 +1,6 @@
 import { getTooCloseDistance } from '../entity';
 import { ScreenSizes, isWithinDist } from '../utils';
-import { isAircraft } from '../types';
+import { isAircraft, isAirborne } from '../types';
 
 /**
  * @typedef {import('./Aircraft')} Aircraft
@@ -32,9 +32,6 @@ export const drawPlaneWake = (aircraft, textLayerObj) => {
 };
 
 export const calcWake = ({ entityManagerArr, aircraft }) => {
-  // TODO extract isAirborne
-  const isAirborne = (plane) =>
-    !plane.isTaxiing && !plane.takeoff && !plane.isTouchedDown;
   const isNotOriginPlane = (plane) => plane.id !== aircraft.id;
   const isPlane = (obj) =>
     isAircraft(obj) && isAirborne(obj) && isNotOriginPlane(obj);
@@ -57,7 +54,7 @@ export const calcWake = ({ entityManagerArr, aircraft }) => {
     : getTooCloseDistance(ScreenSizes.Large);
   const minRadius = distMiles3 * 0.1;
 
-  const wakeObjs = [];
+  const planesInWake = [];
 
   aircraft.trailPixelArr.forEach((point, index) => {
     const { wakeRadius, wakeStrength, wakeAltitude } = wake(index);
@@ -67,13 +64,22 @@ export const calcWake = ({ entityManagerArr, aircraft }) => {
     const planesHorizontal = getPlanesInWake(circleRadius, point);
     const planes = planesHorizontal.filter(isWithinAlt(aircraft, wakeAltitude));
     if (planes.length === 0) return;
-    wakeObjs.push({ planes, strength: wakeStrength });
+
+    const createWakeObj = (planeInwake) => ({
+      plane: planeInwake,
+      strength: strengthByAirframe(aircraft, planeInwake, wakeStrength),
+    });
+    planesInWake.push(...planes.map(createWakeObj));
   });
 
-  return wakeObjs;
+  return planesInWake;
 };
 
 // PRIVATE ////////////////////////////////////////////////////////
+
+const strengthByAirframe = (planeSrc, planeInWake, wakeStrength) => {
+  return wakeStrength;
+};
 
 const wake = (index) => {
   const retObj = {};
@@ -82,11 +88,9 @@ const wake = (index) => {
   retObj.wakeStrength = 0;
 
   const strengthByIndex = (wakeIndex) => {
-    // strengthMin + airframeModifier <= 1
     const strengthMin = 0.1;
-    const airframeModifier = 0.9;
     const ratio = (wakeIndexMax - wakeIndex) / wakeIndexMax;
-    return strengthMin + airframeModifier * ratio;
+    return strengthMin + (1 - strengthMin) * ratio;
   };
 
   const altitudeMax = 1000;

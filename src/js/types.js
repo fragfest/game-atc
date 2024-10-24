@@ -31,3 +31,5 @@ export const isDeparture = (obj) =>
   isAircraft(obj) && obj.destinationType === DestinationType.Departure;
 export const isArrival = (obj) =>
   isAircraft(obj) && obj.destinationType === DestinationType.Arrival;
+export const isAirborne = (obj) =>
+  isAircraft(obj) && !obj.isTaxiing && !obj.takeoff && !obj.isTouchedDown;
