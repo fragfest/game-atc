@@ -7,7 +7,7 @@
       <h2 class="white">
         {{ airframeDetails.make }} {{ airframeDetails.airframe }}
       </h2>
-      <div v-if="plane.isWeatherTurbulence" class="weather" :class="sizeClass">
+      <div v-if="plane.isTurbulenceWeather" class="weather" :class="sizeClass">
         <div>
           <img src="/img/weather/rain.gif" />
         </div>
@@ -241,8 +241,10 @@ export default {
 
     flightQualityMessage: function () {
       if (!this.plane) return '';
-      const isTurbulence = this.plane.isWeatherTurbulence;
+      const isTurbulence = this.plane.isTurbulenceWeather;
+      const isWake = this.plane.isTurbulenceWake;
       if (isTurbulence) return 'turbulence';
+      if (isWake) return 'wake';
       return '';
     },
   },

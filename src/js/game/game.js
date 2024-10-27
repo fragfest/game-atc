@@ -204,7 +204,11 @@ export const gameTick =
       spawnPlaneUpdateFn(updateIntervalMs);
       entityManagerArr.forEach(callFn('hide'));
       entityManagerArr.forEach(
-        callFn('update', { deltaTimeMs: updateIntervalMs, entityManagerArr })
+        callFn('update', {
+          deltaTimeMs: updateIntervalMs,
+          entityManagerArr,
+          timestamp,
+        })
       );
       entityManagerArr.forEach(callFn('updateHandoff', { entityManagerArr }));
       entityManagerArr.forEach(

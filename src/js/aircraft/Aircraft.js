@@ -16,6 +16,7 @@ import {
 } from '../entity';
 import { MessageEvents, publishMessage as publish } from '../events/messages';
 import {
+  wakePenalty,
   turbulencePenalty,
   resetProximity,
   uniqueProximityPair,
@@ -83,10 +84,16 @@ export default class Aircraft {
     // html class
     this.isShowHtmlPulse = true;
 
-    // states
-    this.isWeatherTurbulence = false;
+    // turbulence
+    this.isTurbulenceWake = false;
+    this.turbulenceWakeArr = [];
+    this.wakeTimestampMs = 0;
+    this.wakeMs = 0;
+    this.isTurbulenceWeather = false;
     this.turbulenceTimestampMs = 0;
     this.turbulenceMs = 0;
+
+    // states
     this.isDelayed = false;
     this.isSelected = false;
     this.isHandoff = false;
@@ -145,6 +152,18 @@ export default class Aircraft {
 
   clickEventCB() {
     throw new Error('clickEventCB not attached');
+  }
+
+  /**
+   * @param {Number} strengthNum
+   */
+  addTurbulenceWake(strengthNum) {
+    const strength = Number(strengthNum);
+    this.turbulenceWakeArr.push(strength);
+  }
+
+  resetTurbulenceWakeArr() {
+    this.turbulenceWakeArr = [];
   }
 
   setIsDelayed(isDelayed) {
@@ -381,6 +400,10 @@ export default class Aircraft {
     }
   }
 
+  ////////////////////////////////////////////////////////////////////////
+  // UPDATE FUNCS
+  ////////////////////////////////////////////////////////////////////////
+
   updateHtmlClass() {
     if (!this.htmlAircraftDiv) return;
 
@@ -530,7 +553,28 @@ export default class Aircraft {
     return calcDelta(speedDeltaPerMs);
   }
 
-  update({ deltaTimeMs }) {
+  updateWake(timestampMs) {
+    const isInWake = !!this.turbulenceWakeArr.length;
+    const maxStrength = this.turbulenceWakeArr.reduce(
+      (acc, val) => (acc > val ? acc : val),
+      0
+    );
+    this.resetTurbulenceWakeArr();
+
+    if (!isInWake) {
+      this.isTurbulenceWake = false;
+    } else if (!this.isTurbulenceWake && isInWake) {
+      this.wakeTimestampMs = timestampMs;
+      this.isTurbulenceWake = true;
+    } else if (isInWake) {
+      const turbulenceDiff = timestampMs - this.wakeTimestampMs;
+      this.wakeTimestampMs = timestampMs;
+      this.wakeMs += turbulenceDiff;
+      wakePenalty(turbulenceDiff, maxStrength);
+    }
+  }
+
+  update({ deltaTimeMs, timestamp }) {
     const headingOld = this.headingRad;
     const headingTarget = this.headingTargetRad;
     const headingChange = this.turnRateRadPerMs * deltaTimeMs;
@@ -594,6 +638,8 @@ export default class Aircraft {
       this.updateHtmlClass();
     }
 
+    this.updateWake(timestamp);
+
     // timer
     if (this.time <= 0) {
       this.time = 0;
@@ -633,6 +679,10 @@ export default class Aircraft {
       this.setDestroyFlag(true);
     }
   }
+
+  ////////////////////////////////////////////////////////////////////////
+  // END UPDATE FUNCS
+  ////////////////////////////////////////////////////////////////////////
 
   draw(timestamp) {
     const setIfImgSrcDiff = (str) => {
@@ -717,33 +767,30 @@ export default class Aircraft {
     // weather proximity //////////////////////////////////////////
     const turbulenceArr = entityManagerArr.filter(isTurbulence);
     if (turbulenceArr.length) {
-      const isWeatherTurbulence = !!turbulenceArr.find(isInWeather(this));
+      const isTurbulenceWeather = !!turbulenceArr.find(isInWeather(this));
 
-      if (!isWeatherTurbulence) {
-        this.isWeatherTurbulence = false;
-      } else if (!this.isWeatherTurbulence && isWeatherTurbulence) {
+      if (!isTurbulenceWeather) {
+        this.isTurbulenceWeather = false;
+      } else if (!this.isTurbulenceWeather && isTurbulenceWeather) {
         this.turbulenceTimestampMs = timestampMs;
-        this.isWeatherTurbulence = true;
-      } else if (isWeatherTurbulence) {
+        this.isTurbulenceWeather = true;
+      } else if (isTurbulenceWeather) {
         const turbulenceDiff = timestampMs - this.turbulenceTimestampMs;
         this.turbulenceTimestampMs = timestampMs;
         this.turbulenceMs += turbulenceDiff;
         turbulencePenalty(turbulenceDiff);
       }
     } else {
-      this.isWeatherTurbulence = false;
+      this.isTurbulenceWeather = false;
     }
 
     // wake proximity //////////////////////////////////////////
     const planesInWake = calcWake({ entityManagerArr, aircraft: this });
-    if (planesInWake.length) {
-      planesInWake.forEach(({ plane, strength }) => {
-        console.log(plane.title, 'in wake, score:', strength);
-      });
-    }
+    planesInWake.forEach(({ plane, strength }) =>
+      plane.addTurbulenceWake(strength)
+    );
 
     // TODO plane proximity remove return statements
-
     // plane proximity //////////////////////////////////////////
     const planeClose = entityManagerArr.find(isPlaneClose);
     if (!planeClose) {

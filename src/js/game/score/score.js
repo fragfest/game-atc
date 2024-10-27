@@ -26,7 +26,19 @@ export const resetScore = () => {
   score.conflict = 0;
   score.delayed = 0;
   score.turbulence = 0;
+  score.wake = 0;
   setScore(score);
+};
+
+export const wakePenalty = (timeDiffMs, strength) => {
+  const score = getScore();
+  const wakeNew = score.wake + strength * (timeDiffMs / 1000);
+  score.wake = Number(wakeNew.toFixed(3));
+
+  console.log('score.wake', score.wake);
+
+  setScore(score);
+  publishScore(score);
 };
 
 export const turbulencePenalty = (timeDiffMs) => {
@@ -214,6 +226,7 @@ const v = '0.1.3';
  * @property {number} conflict
  * @property {number} delayed
  * @property {number} turbulence
+ * @property {number} wake
  */
 const Score = {
   level: 0,
@@ -223,6 +236,7 @@ const Score = {
   conflict: 0,
   delayed: 0,
   turbulence: 0,
+  wake: 0,
 };
 
 /**

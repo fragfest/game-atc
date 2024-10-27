@@ -50,7 +50,7 @@
           <div class="font-large"><b>Traffic</b></div>
           <div>TCAS conflict</div>
         </div>
-        <div v-else-if="isWeatherTurbulence" class="weather">
+        <div v-else-if="isTurbulenceWeather" class="weather">
           <div>
             <img src="/img/weather/rain.gif" />
           </div>
@@ -311,10 +311,10 @@ export default {
       return minutesStr + ':' + secondsStr;
     },
 
-    isWeatherTurbulence: function () {
+    isTurbulenceWeather: function () {
       const plane = getPlane(this.plane, this.planes);
       if (!plane) return false;
-      return plane.isWeatherTurbulence;
+      return plane.isTurbulenceWeather;
     },
 
     isNavToHandoff: function () {
