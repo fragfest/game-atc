@@ -1,6 +1,7 @@
 import { getTooCloseDistance } from '../entity';
 import { ScreenSizes, isWithinDist } from '../utils';
 import { isAircraft, isAirborne } from '../types';
+import { getWakeStrength } from './airframe';
 
 /**
  * @typedef {import('./Aircraft')} Aircraft
@@ -78,7 +79,10 @@ export const calcWake = ({ entityManagerArr, aircraft }) => {
 // PRIVATE ////////////////////////////////////////////////////////
 
 const strengthByAirframe = (planeSrc, planeInWake, wakeStrength) => {
-  return wakeStrength;
+  const srcAirframe = getWakeStrength(planeSrc.wake);
+  const destAirframe = getWakeStrength(planeInWake.wake);
+  const total = srcAirframe * wakeStrength * 2 - destAirframe * wakeStrength;
+  return total;
 };
 
 const wake = (index) => {

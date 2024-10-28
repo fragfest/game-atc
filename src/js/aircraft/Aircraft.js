@@ -8,6 +8,7 @@ import {
   leftPadZeros,
   altitudeDisplay,
   isWithinDist,
+  accMax,
 } from '../utils';
 import {
   getTooCloseDistance,
@@ -555,10 +556,7 @@ export default class Aircraft {
 
   updateWake(timestampMs) {
     const isInWake = !!this.turbulenceWakeArr.length;
-    const maxStrength = this.turbulenceWakeArr.reduce(
-      (acc, val) => (acc > val ? acc : val),
-      0
-    );
+    const maxStrength = this.turbulenceWakeArr.reduce(accMax, 0);
     this.resetTurbulenceWakeArr();
 
     if (!isInWake) {

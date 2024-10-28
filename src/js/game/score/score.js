@@ -34,9 +34,6 @@ export const wakePenalty = (timeDiffMs, strength) => {
   const score = getScore();
   const wakeNew = score.wake + strength * (timeDiffMs / 1000);
   score.wake = Number(wakeNew.toFixed(3));
-
-  console.log('score.wake', score.wake);
-
   setScore(score);
   publishScore(score);
 };

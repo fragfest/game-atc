@@ -116,8 +116,10 @@ export const getClassSize = (screenSize) => {
   return '';
 };
 
-// SETUP /////////////////////////////////////////////////////////////////
+// GENERAL /////////////////////////////////////////////////////////////////
+export const accMax = (acc, val) => (acc > val ? acc : val);
 
+// SETUP /////////////////////////////////////////////////////////////////
 export const setupGameLoadAndExit = () => {
   if (process.env.NODE_ENV === 'production') {
     // browser prompts on reload and close

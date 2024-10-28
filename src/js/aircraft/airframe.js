@@ -27,6 +27,21 @@ export const Airframes = Object.freeze({
   B77W: 'B77W',
 });
 
+export const getWakeStrength = (rating) => {
+  switch (rating) {
+    case WakeRating.L:
+      return 1;
+    case WakeRating.M:
+      return 2;
+    case WakeRating.H:
+      return 3;
+    case WakeRating.J:
+      return 4;
+    default:
+      return 1;
+  }
+};
+
 export const WakeRating = Object.freeze({
   L: 'L',
   M: 'M',
