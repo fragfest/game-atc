@@ -45,7 +45,8 @@ import BadgeEmpty from './BadgeEmpty.vue';
 import BlueSky from './BlueSky';
 
 const BadgeTypes = Object.freeze({
-  bluesky: { title: 'Blue Sky', desc: 'avoid all turbulent weather' },
+  none: { title: '', desc: 'future achievement' },
+  bluesky: { title: 'Blue Sky', desc: 'avoid all turbulence' },
 });
 
 export default {
@@ -104,8 +105,8 @@ export default {
   methods: {
     onMouseEnterBadgeAchieved: function (badgeType) {
       if (badgeType === 'none') {
-        this.badgeTitle = '';
-        this.badgeDesc = 'future achievement';
+        this.badgeTitle = BadgeTypes.none.title;
+        this.badgeDesc = BadgeTypes.none.desc;
       }
       if (badgeType === 'bluesky') {
         this.badgeTitle = BadgeTypes.bluesky.title;

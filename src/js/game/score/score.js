@@ -30,10 +30,9 @@ export const resetScore = () => {
   setScore(score);
 };
 
-export const wakePenalty = (timeDiffMs, strength) => {
+export const wakePenalty = (newScore) => {
   const score = getScore();
-  const wakeNew = score.wake + strength * (timeDiffMs / 1000);
-  score.wake = Number(wakeNew.toFixed(3));
+  score.wake += newScore;
   setScore(score);
   publishScore(score);
 };

@@ -85,11 +85,12 @@ export default class Aircraft {
     // html class
     this.isShowHtmlPulse = true;
 
-    // turbulence
+    // turbulence & wake
     this.isTurbulenceWake = false;
     this.turbulenceWakeArr = [];
     this.wakeTimestampMs = 0;
     this.wakeMs = 0;
+    this.wakeScore = 0;
     this.isTurbulenceWeather = false;
     this.turbulenceTimestampMs = 0;
     this.turbulenceMs = 0;
@@ -567,8 +568,13 @@ export default class Aircraft {
     } else if (isInWake) {
       const turbulenceDiff = timestampMs - this.wakeTimestampMs;
       this.wakeTimestampMs = timestampMs;
+      const newScore = Number(
+        ((maxStrength * turbulenceDiff) / 1000).toFixed(3)
+      );
+      this.wakeScore += newScore;
       this.wakeMs += turbulenceDiff;
-      wakePenalty(turbulenceDiff, maxStrength);
+      wakePenalty(newScore);
+      turbulencePenalty(turbulenceDiff);
     }
   }
 
@@ -762,7 +768,13 @@ export default class Aircraft {
     const timestampMs = timestamp;
     this.setShowCircle(!!showCircles);
 
-    // weather proximity //////////////////////////////////////////
+    // wake proximity //////////////////////////////////////////
+    const planesInWake = calcWake({ entityManagerArr, aircraft: this });
+    planesInWake.forEach(({ plane, strength }) =>
+      plane.addTurbulenceWake(strength)
+    );
+
+    // turbulence & weather proximity //////////////////////////////////////////
     const turbulenceArr = entityManagerArr.filter(isTurbulence);
     if (turbulenceArr.length) {
       const isTurbulenceWeather = !!turbulenceArr.find(isInWeather(this));
@@ -781,12 +793,6 @@ export default class Aircraft {
     } else {
       this.isTurbulenceWeather = false;
     }
-
-    // wake proximity //////////////////////////////////////////
-    const planesInWake = calcWake({ entityManagerArr, aircraft: this });
-    planesInWake.forEach(({ plane, strength }) =>
-      plane.addTurbulenceWake(strength)
-    );
 
     // TODO plane proximity remove return statements
     // plane proximity //////////////////////////////////////////

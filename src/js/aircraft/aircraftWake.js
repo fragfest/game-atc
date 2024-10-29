@@ -81,8 +81,7 @@ export const calcWake = ({ entityManagerArr, aircraft }) => {
 const strengthByAirframe = (planeSrc, planeInWake, wakeStrength) => {
   const srcAirframe = getWakeStrength(planeSrc.wake);
   const destAirframe = getWakeStrength(planeInWake.wake);
-  const total = srcAirframe * wakeStrength * 2 - destAirframe * wakeStrength;
-  return total;
+  return srcAirframe * wakeStrength * 2 - destAirframe * wakeStrength;
 };
 
 const wake = (index) => {

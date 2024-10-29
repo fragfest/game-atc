@@ -244,7 +244,7 @@ export default {
       const isTurbulence = this.plane.isTurbulenceWeather;
       const isWake = this.plane.isTurbulenceWake;
       if (isTurbulence) return 'turbulence';
-      if (isWake) return 'wake';
+      if (isWake) return 'wake ' + this.plane.wakeScore.toFixed(1);
       return '';
     },
   },
