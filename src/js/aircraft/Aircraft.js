@@ -573,6 +573,8 @@ export default class Aircraft {
       );
       this.wakeScore += newScore;
       this.wakeMs += turbulenceDiff;
+      // TODO wake danger shown with different colors?
+      // newScore wake danger: Caution > 1.2 :: Danger > 2
       wakePenalty(newScore);
       turbulencePenalty(turbulenceDiff);
     }

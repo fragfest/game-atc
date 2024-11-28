@@ -50,12 +50,20 @@
           <div class="font-large"><b>Traffic</b></div>
           <div>TCAS conflict</div>
         </div>
-        <div v-else-if="isTurbulenceWeather" class="weather">
+        <div v-else-if="isTurbulenceWake" class="warn-icon">
+          <div>
+            <img src="/img/weather/wind.gif" />
+          </div>
+          <div>
+            <p>wake</p>
+          </div>
+        </div>
+        <div v-else-if="isTurbulenceWeather" class="warn-icon">
           <div>
             <img src="/img/weather/rain.gif" />
           </div>
           <div>
-            <p>turbulence</p>
+            <p>weather</p>
           </div>
         </div>
         <div v-else-if="isLanding" class="takeoff-landing">
@@ -311,6 +319,12 @@ export default {
       return minutesStr + ':' + secondsStr;
     },
 
+    isTurbulenceWake: function () {
+      const plane = getPlane(this.plane, this.planes);
+      if (!plane) return false;
+      return plane.isTurbulenceWake;
+    },
+
     isTurbulenceWeather: function () {
       const plane = getPlane(this.plane, this.planes);
       if (!plane) return false;
@@ -487,7 +501,7 @@ export default {
       box-shadow: 1px 1px rgb(0, 84, 84);
     }
 
-    .weather {
+    .warn-icon {
       img {
         max-width: 22px;
       }
@@ -619,7 +633,7 @@ export default {
       text-shadow: 2px 2px black;
     }
 
-    .weather {
+    .warn-icon {
       display: flex;
       justify-content: center;
       align-items: center;

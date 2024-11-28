@@ -7,12 +7,25 @@
       <h2 class="white">
         {{ airframeDetails.make }} {{ airframeDetails.airframe }}
       </h2>
-      <div v-if="plane.isTurbulenceWeather" class="weather" :class="sizeClass">
+
+      <div v-if="plane.isTurbulenceWake" class="warn-icon" :class="sizeClass">
+        <div>
+          <img src="/img/weather/wind.gif" />
+        </div>
+        <div>
+          <p>wake</p>
+        </div>
+      </div>
+      <div
+        v-else-if="plane.isTurbulenceWeather"
+        class="warn-icon"
+        :class="sizeClass"
+      >
         <div>
           <img src="/img/weather/rain.gif" />
         </div>
         <div>
-          <p>turbulence</p>
+          <p>weather</p>
         </div>
       </div>
     </div>
@@ -243,8 +256,9 @@ export default {
       if (!this.plane) return '';
       const isTurbulence = this.plane.isTurbulenceWeather;
       const isWake = this.plane.isTurbulenceWake;
-      if (isTurbulence) return 'turbulence';
-      if (isWake) return 'wake ' + this.plane.wakeScore.toFixed(1);
+      if (isTurbulence) return 'weather';
+      // TODO wake danger shown with different colors?
+      if (isWake) return 'wake ';
       return '';
     },
   },
@@ -351,7 +365,7 @@ export default {
   }
 }
 
-.info-panel .header .weather {
+.info-panel .header .warn-icon {
   display: flex;
   justify-content: space-between;
   align-items: center;
