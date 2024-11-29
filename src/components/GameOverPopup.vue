@@ -293,6 +293,7 @@ export default {
     if (total < 0) this.total = 0;
     else this.total = total;
 
+    // SET LEVEL PASS ////////////////////////////////////////
     if (isVictory(score)) levelComplete(this.total);
     resetScore();
 

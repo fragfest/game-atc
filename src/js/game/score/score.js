@@ -209,7 +209,7 @@ const v = '0.1.3';
 
 /**
  * @typedef {object} HistoryScore
- * @property {Score} score
+ * @property {Score} -- destructured Score props at this level
  * @property {number} scoreTotal
  */
 
