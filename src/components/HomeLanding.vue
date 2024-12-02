@@ -56,10 +56,16 @@
                 {{ record.historyScore.scoreTotal }}
               </p>
               <div class="button-restart">
-                <button @click="onRetryClick(record.level)">
+                <button class="w-80" @click="onRetryClick(record.level)">
                   <h3>retry</h3>
                 </button>
               </div>
+            </div>
+            <hr v-if="levelsTotal" />
+            <div v-if="levelsTotal" class="row">
+              <p>total</p>
+              <p class="gold">{{ levelsTotal }}</p>
+              <div class="w-80"></div>
             </div>
           </div>
 
@@ -115,6 +121,16 @@ export default {
   },
 
   computed: {
+    levelsTotal: function () {
+      const score = (record) => record?.historyScore?.scoreTotal;
+
+      const records = getHistoryRecords().filter((obj) => obj.level > 0);
+      const total = records.reduce((acc, val) => acc + score(val), 0);
+      if (total > 99999) return '99,999+';
+      if (total <= 0) return '';
+      return total.toLocaleString('en-CA');
+    },
+
     badgeSize: function () {
       if (screenSize.value === ScreenSizes.Small) return 34;
       return 60;
@@ -157,6 +173,26 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+hr {
+  width: 100%;
+}
+.w-80 {
+  width: 80px;
+}
+
+.white {
+  color: white;
+}
+.lightgreen {
+  color: lightgreen;
+}
+.gold {
+  color: gold;
+}
+.font-mono {
+  font-family: monospace;
+}
+
 .version {
   position: absolute;
   left: 94vw;
@@ -173,19 +209,6 @@ export default {
 
   background-image: url('/public/img/sky.jpg');
   background-size: cover;
-}
-
-.white {
-  color: white;
-}
-.lightgreen {
-  color: lightgreen;
-}
-.gold {
-  color: gold;
-}
-.font-mono {
-  font-family: monospace;
 }
 
 .home section {
@@ -325,9 +348,7 @@ export default {
 }
 
 .history-record .button-restart button {
-  width: 80px;
   height: 30px;
-
   border-radius: 4px;
   box-shadow: 4px 2px 2px #000000a0;
   background-color: lightgreen;
