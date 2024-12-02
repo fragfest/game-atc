@@ -10,7 +10,7 @@
         @mouseenter="onMouseEnterBadgeAchieved('bluesky')"
         @mouseleave="onMouseLeaveBadgeAchieved()"
       />
-      <BadgeEmpty
+      <BlueSkyGrey
         v-if="!bluesky"
         :style="badgeStyle"
         @mouseenter="onMouseEnterBadgeAchieved('bluesky')"
@@ -43,6 +43,7 @@
 import { getClassSize, getScreenSize } from '../../js/utils';
 import BadgeEmpty from './BadgeEmpty.vue';
 import BlueSky from './BlueSky';
+import BlueSkyGrey from './BlueSkyGrey';
 
 const BadgeTypes = Object.freeze({
   none: { title: '', desc: 'future achievement' },
@@ -57,7 +58,7 @@ export default {
     isShowDescription: { type: Boolean },
   },
 
-  components: { BadgeEmpty, BlueSky },
+  components: { BadgeEmpty, BlueSky, BlueSkyGrey },
 
   data() {
     return {

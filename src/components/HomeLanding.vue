@@ -42,7 +42,7 @@
 
         <div class="row-history-badges">
           <div v-if="showHistory" class="history-record">
-            <h3>completed</h3>
+            <h3>levels</h3>
             <div
               v-for="(record, index) in historyRecordArr"
               :key="index"
@@ -307,6 +307,7 @@ export default {
 }
 
 .history-record h3 {
+  text-align: center;
   margin-top: 0;
   margin-bottom: 8px;
   border-bottom: 1px solid white;
