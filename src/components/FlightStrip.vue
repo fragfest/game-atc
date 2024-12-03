@@ -478,6 +478,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '~/src/scss/common.scss';
+
 // strip small
 .strip.small {
   width: 280px;
@@ -545,7 +547,8 @@ export default {
   }
 
   &.hover {
-    right: 6px;
+    right: 0px;
+    @include shiftLeft(6, 0.15);
   }
 
   &.selected {

@@ -1,0 +1,12 @@
+/**
+* @param {number} pixels
+* @param {number} duration seconds
+*/
+@mixin shiftLeft($pixels, $duration) {
+  animation: left $duration + s forwards;
+  @keyframes left {
+    100% {
+      right: $pixels + px;
+    }
+  }
+}
