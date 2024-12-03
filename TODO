@@ -3,6 +3,8 @@ Wishlist:
   ☐ Noise abatement mechanic (250+ kts)
   ☐ Fuel mechanic
   ☐ ScorePanel icons instead of text
+  ☐ Flight Quality - weather dangerous
+  ☐ Crash mechanic
 
 Bugs:
   ☐ Training can't be retried. Complete training and hit retry (without refreshing). A blank/frozen game screen appears.
@@ -24,8 +26,6 @@ ATCv0.1.3:
     ✔ InfoPanel flight experience indicator @started(24-07-30 19:39) @done(24-08-05 10:39) @lasted(5d15h1m)
     ✔ Achievement Badge Blue Sky @started(24-10-07 11:27) @done(24-10-15 22:04) @lasted(1w1d10h37m53s)
     ✔ Flight Quality - wake turbulence @started(24-10-16 13:19) @done(24-11-27 20:49) @lasted(6w8h30m54s)
-    ☐ Flight Quality - weather dangerous
-    ☐ Crash mechanic
     ☐ Level intro prompt: airport name, scenario description
     ☐ More badges
     ☐ More airports
@@ -33,7 +33,6 @@ ATCv0.1.3:
     ☐ Leaderboard for all players
     ☐ Anti-cheat
     ☐ Analytics
-    ☐ Feedback
     
   Minor:
     ✔ More flights/airframes @started(24-07-23 22:44) @done(24-07-23 23:40) @lasted(56m29s)
