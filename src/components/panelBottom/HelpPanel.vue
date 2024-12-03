@@ -9,6 +9,7 @@
       <div class="row tab-left">
         <span>{{ arrivalContent }}</span>
       </div>
+
       <div class="row green"><b>Controls</b></div>
       <div class="row tab-left">
         <b>select plane</b
@@ -20,8 +21,7 @@
       <div class="row tab-left">
         <b>set altitude (alt)</b>
         <span>
-          enter 3 digits 010-400, hit enter. Sets altitude in 100s of feet, 010
-          = 1000ft
+          enter 3 digits 010-400, hit enter. 100ft steps: 010 = 1000ft
         </span>
       </div>
       <div class="row tab-left">
@@ -46,6 +46,7 @@
         <b>cycle waypoints</b>
         <span> click waypoint on flight strip. Shortcut 'W' key</span>
       </div>
+
       <div class="row green"><b>Rules</b></div>
       <div class="row tab-left">
         <b>failed (handoff)</b>
@@ -67,28 +68,48 @@
           aircraft separation must be 3 miles laterally or 1,000ft vertically
         </span>
       </div>
+
+      <div class="row green"><b>Turbulence</b></div>
+      <div class="row tab-left">
+        <b>weather</b>
+        <span>
+          Clouds with rain symbols will reduce flight quality and incur
+          turbulence penalty points
+        </span>
+      </div>
+      <div class="row tab-left">
+        <b>wake</b>
+        <span>
+          Aircraft show a wake symbol when <b>too close behind</b> and
+          <b>within 1000ft</b> of another aircraft. When in a wake, trailing
+          aircraft will incur reduced flight quality and turbulence penalty
+          points. Wake strength is based on aircraft size as shown on flight
+          strips: Light (L), Medium (M), Heavy (H), Super (J). Smaller aircraft
+          in the wake of larger ones will be affected more.
+        </span>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { getClassSize } from "../../js/utils";
+import { getClassSize } from '../../js/utils';
 
 export default {
-  name: "HelpPanel",
+  name: 'HelpPanel',
   props: {
     screenSize: { type: String },
   },
   data() {
     return {
       departureContent:
-        "Departing aircraft have blue flight strips. The take off button gets planes off the ground. " +
-        "A plane needs directions to its handoff waypoint shown on its flight strip. " +
-        "The handoff button steers a plane to its waypoint. A plane must be directed to 6000ft or above to complete the handoff. ",
+        'Departing aircraft have blue flight strips. The take off button gets planes off the ground. ' +
+        'A plane needs directions to its handoff waypoint shown on its flight strip. ' +
+        'The handoff button steers a plane to its waypoint. A plane must be directed to 6000ft or above to complete the handoff. ',
       arrivalContent:
-        "Arriving aircraft have orange flight strips. The hold button can be used to direct planes to circle a waypoint. A waypoint can be edited on the flight strip. " +
-        "The land button will guide a plane onto the runway. The land button is available when the plane is: 1) steered towards the runway shown on its flight strip; " +
-        "2) at an altitude of 5000ft or below; 3) close enough to the runway. ",
+        'Arriving aircraft have orange flight strips. The hold button can be used to direct planes to circle a waypoint. A waypoint can be edited on the flight strip. ' +
+        'The land button will guide a plane onto the runway. The land button is available when the plane is: 1) steered towards the runway shown on its flight strip; ' +
+        '2) at an altitude of 5000ft or below; 3) close enough to the runway. ',
     };
   },
 

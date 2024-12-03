@@ -5,7 +5,10 @@
       <img :src="airframe.images.iconDefault" />
       <h1 class="green">{{ plane.title }}</h1>
       <h2 class="white">
-        {{ airframeDetails.make }} {{ airframeDetails.airframe }}
+        <div>{{ airframeDetails.make }}</div>
+        <div>
+          {{ airframeDetails.airframe }} <small>({{ plane.wake }})</small>
+        </div>
       </h2>
 
       <div v-if="plane.isTurbulenceWake" class="warn-icon" :class="sizeClass">
@@ -284,11 +287,12 @@ export default {
 }
 
 .info-panel.small .header {
+  gap: 12px;
   padding: 6px 0;
   height: 30px;
 
   h1 {
-    font-size: 14px;
+    font-size: 12px;
   }
   h2 {
     font-size: 10px;
@@ -351,6 +355,7 @@ export default {
 
 .info-panel .header {
   display: flex;
+  gap: 22px;
   padding: 12px 0;
   height: 80px;
   border-bottom: 1px solid lightgreen;
@@ -358,7 +363,6 @@ export default {
   h1,
   h2 {
     align-self: center;
-    margin-left: 3%;
   }
   img {
     max-width: 16%;
