@@ -492,6 +492,7 @@ p {
 
 .game {
   display: flex;
+  overflow-x: hidden;
 }
 
 .row-left {
