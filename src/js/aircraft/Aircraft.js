@@ -102,6 +102,7 @@ export default class Aircraft {
     this.isFlyingOutOfArea = false;
     this.isNonInteractive = false;
     this.destroyFlag = false;
+    this.deleteInProgress = false;
     this.onGlidePath = false;
     this.isTaxiing = false;
     this.isTouchedDown = false;
@@ -450,10 +451,17 @@ export default class Aircraft {
   updateDestroy({ entityManagerArr }) {
     if (!this.destroyFlag) return;
 
+    if (this.deleteInProgress) return;
+    this.deleteInProgress = true;
+
     this.destroy();
-    const index = entityManagerArr.findIndex((entity) => entity.id === this.id);
-    if (index === -1) return;
-    entityManagerArr.splice(index, 1);
+    setTimeout(() => {
+      const index = entityManagerArr.findIndex(
+        (entity) => entity.id === this.id
+      );
+      if (index === -1) return;
+      entityManagerArr.splice(index, 1);
+    }, 800);
   }
 
   updateHeading(headingOld, headingTarget, headingChange, direction) {

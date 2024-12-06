@@ -308,9 +308,30 @@ export default {
 
   computed: {
     containerClass: function () {
-      let spawn = false;
-      if (!this.isQueueStrip && !this.isEmptyStrip) spawn = true;
-      return { spawn };
+      let spawnArrival = false;
+      let spawnDestination = false;
+
+      if (this.isQueueStrip || this.isEmptyStrip) {
+        return {};
+      }
+
+      if (this.isDeleteInProgress) {
+        return { 'spawn-delete': true };
+      } else if (this.isTaxiing) {
+        spawnDestination = true;
+      } else if (this.isArrival) {
+        spawnArrival = true;
+      }
+      return {
+        'spawn-destination': spawnDestination,
+        'spawn-arrival': spawnArrival,
+      };
+    },
+
+    isDeleteInProgress: function () {
+      const plane = getPlane(this.plane, this.planes);
+      if (!plane) return false;
+      return plane.deleteInProgress;
     },
 
     displayTime: function () {
@@ -403,9 +424,13 @@ export default {
 
       const isSelected = plane ? plane.id === this.planeSelected.id : false;
       const selected = isSelected ? 'selected' : '';
-      const hover = this.isHover ? 'hover' : '';
       const empty = this.isEmptyStrip ? 'empty' : '';
       const queue = this.isQueueStrip ? 'empty' : '';
+
+      let hover = this.isHover ? 'hover' : '';
+      if (this.isEmptyStrip || this.isQueueStrip) {
+        hover = '';
+      }
 
       const classes = [].concat(queue, empty, hover, selected, size);
       return classes.join(' ');
@@ -485,14 +510,25 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import '~/src/scss/common.scss';
 
-.spawn {
-  @include vars;
-  @include spawnFlighStrip(4);
+.spawn-delete {
+  position: relative;
+  left: 0px;
+  @include shiftRightFade(400, 0.8);
+}
 
-  animation: spawn 1.6s var(--timing-bounce) 0s 1 forwards;
+.spawn-arrival {
+  @include vars;
+  @include spawnFlighStrip('spawn-arrival', 4, 0);
+  animation: spawn-arrival 1.6s var(--timing-bounce) 0s 1 forwards;
+}
+
+.spawn-destination {
+  @include vars;
+  @include spawnFlighStrip('spawn-destination', 0, -4);
+  animation: spawn-destination 1.6s var(--timing-bounce) 0s 1 forwards;
 }
 
 // strip small
@@ -556,9 +592,6 @@ export default {
 
   &.empty {
     cursor: default;
-    &.hover {
-      right: 0;
-    }
   }
 
   &.hover {

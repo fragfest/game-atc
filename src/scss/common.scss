@@ -1,4 +1,19 @@
 /**
+* calling scss should have default position i.e. { left: 0px; }
+* @param {number} pixels
+* @param {number} duration - seconds
+*/
+@mixin shiftRightFade($pixels, $duration) {
+  animation: right $duration + s forwards;
+  @keyframes right {
+    100% {
+      left: $pixels + px;
+      opacity: 0;
+    }
+  }
+}
+
+/**
 * calling scss should have default position i.e. { right: 0px; }
 * @param {number} pixels
 * @param {number} duration - seconds
@@ -13,15 +28,17 @@
 }
 
 /**
-* @param {number} percent - viewport width vw
+* @param {number} keyFrameId - unique @keyframes id
+* @param {number} percentX - viewport width vw
+* @param {number} percentY - viewport height vh
 */
-@mixin spawnFlighStrip($percent) {
-  @keyframes spawn {
+@mixin spawnFlighStrip($keyFrameId, $percentX, $percentY) {
+  @keyframes #{$keyFrameId} {
     0% {
-      transform: translate($percent + vw, 0px);
+      transform: translate($percentX + vw, $percentY + vh);
     }
     100% {
-      transform: translate(0px, 0px);
+      transform: translate(0vw, 0vh);
     }
   }
 }
