@@ -45,20 +45,20 @@
 </template>
 
 <script>
-import InputField from "./InputField.vue";
+import InputField from './InputField.vue';
 import {
   leftPadZeros,
   convHdgRadToThreeDigits,
   isValidHeading,
   isValidAltitude,
   isValidSpeed,
-  altitudeDisplay,
-} from "../../js/utils";
+} from '../../js/utils';
 
+// TODO test more characters
 const inputFilter = (value) => {
   let inputHeading = value;
-  if (value.substring(0, 3) === "---") {
-    inputHeading = value[3] || "";
+  if (value.substring(0, 3) === '---') {
+    inputHeading = value[3] || '';
   }
   if (inputHeading.length > 3) {
     inputHeading = value[3];
@@ -73,7 +73,7 @@ export default {
     planeSelected: { type: Object, required: true },
   },
 
-  emits: ["updatedHeadingEv", "updatedAltitudeEv"],
+  emits: ['updatedHeadingEv', 'updatedAltitudeEv'],
 
   data() {
     return {
@@ -93,12 +93,12 @@ export default {
       const altTarget = newPlane.altitudeTarget;
       const altShort = altTarget
         ? Math.floor(altTarget / 100).toString()
-        : "---";
-      const speedTarget = newPlane.speedTarget ? newPlane.speedTarget : "---";
+        : '---';
+      const speedTarget = newPlane.speedTarget ? newPlane.speedTarget : '---';
 
-      this.inputHeading = newPlane.id ? leftPadZeros(heading) : "";
-      this.inputAltitude = newPlane.id ? leftPadZeros(altShort) : "";
-      this.inputSpeed = newPlane.id ? leftPadZeros(speedTarget) : "";
+      this.inputHeading = newPlane.id ? leftPadZeros(heading) : '';
+      this.inputAltitude = newPlane.id ? leftPadZeros(altShort) : '';
+      this.inputSpeed = newPlane.id ? leftPadZeros(speedTarget) : '';
 
       this.focusHeading = false;
       this.focusAltitude = false;
@@ -160,19 +160,19 @@ export default {
 
     heading: function () {
       const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
-      if (!planeSel) return "";
+      if (!planeSel) return '';
       return planeSel.heading;
     },
 
     altitude: function () {
       const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
-      if (!planeSel) return "";
-      return altitudeDisplay(planeSel.altitude);
+      if (!planeSel) return '';
+      return leftPadZeros(Math.floor(planeSel.altitude / 100).toString());
     },
 
     speed: function () {
       const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
-      if (!planeSel) return "";
+      if (!planeSel) return '';
       return Math.round(planeSel.speed);
     },
   },
@@ -209,13 +209,13 @@ export default {
     inputEventHeading: function (ev) {
       const value = ev.target.value;
       if (!this.planeSelected.setHeadingDegrees) {
-        this.inputHeading = "";
+        this.inputHeading = '';
         return;
       }
 
       this.inputHeading = inputFilter(value);
       if (!isValidHeading(this.inputHeading)) {
-        this.inputHeading = "---";
+        this.inputHeading = '---';
         return;
       }
     },
@@ -224,11 +224,11 @@ export default {
       if (!this.planeSelected.setHeadingDegrees) return;
       this.inputHeading = inputFilter(this.inputHeading);
       if (this.inputHeading.length !== 3) {
-        this.inputHeading = "---";
+        this.inputHeading = '---';
         return;
       }
       if (!isValidHeading(this.inputHeading)) {
-        this.inputHeading = "";
+        this.inputHeading = '';
         return;
       }
 
@@ -237,19 +237,19 @@ export default {
       this.$nextTick(() => {
         this.focusAltitude = true;
       });
-      this.$emit("updatedHeadingEv", this.inputHeading);
+      this.$emit('updatedHeadingEv', this.inputHeading);
     },
 
     inputEventAltitude: function (ev) {
       const value = ev.target.value;
       if (!this.planeSelected.setAltitude) {
-        this.inputAltitude = "";
+        this.inputAltitude = '';
         return;
       }
 
       this.inputAltitude = inputFilter(value);
       if (!isValidAltitude(this.planeSelected, this.inputAltitude)) {
-        this.inputAltitude = "---";
+        this.inputAltitude = '---';
         return;
       }
     },
@@ -258,7 +258,7 @@ export default {
       if (!this.planeSelected.setAltitude) return;
       this.inputAltitude = inputFilter(this.inputAltitude);
       if (this.inputAltitude.length !== 3) {
-        this.inputAltitude = "---";
+        this.inputAltitude = '---';
         return;
       }
 
@@ -268,19 +268,19 @@ export default {
       this.$nextTick(() => {
         this.focusSpeed = true;
       });
-      this.$emit("updatedAltitudeEv", alt);
+      this.$emit('updatedAltitudeEv', alt);
     },
 
     inputEventSpeed: function (ev) {
       const value = ev.target.value;
       if (!this.planeSelected.setSpeed) {
-        this.inputSpeed = "";
+        this.inputSpeed = '';
         return;
       }
 
       this.inputSpeed = inputFilter(value);
       if (!isValidSpeed(this.planeSelected, this.inputSpeed)) {
-        this.inputSpeed = "---";
+        this.inputSpeed = '---';
         return;
       }
     },
@@ -289,7 +289,7 @@ export default {
       if (!this.planeSelected.setSpeed) return;
       this.inputSpeed = inputFilter(this.inputSpeed);
       if (this.inputSpeed.length !== 3) {
-        this.inputSpeed = "---";
+        this.inputSpeed = '---';
         return;
       }
 

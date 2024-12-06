@@ -308,24 +308,12 @@ export default {
 
   computed: {
     containerClass: function () {
-      let spawnArrival = false;
-      let spawnDestination = false;
-
-      if (this.isQueueStrip || this.isEmptyStrip) {
-        return {};
-      }
-
-      if (this.isDeleteInProgress) {
-        return { 'spawn-delete': true };
-      } else if (this.isTaxiing) {
-        spawnDestination = true;
-      } else if (this.isArrival) {
-        spawnArrival = true;
-      }
-      return {
-        'spawn-destination': spawnDestination,
-        'spawn-arrival': spawnArrival,
-      };
+      if (this.isQueueStrip) return '';
+      if (this.isDeleteInProgress) return 'spawn-delete';
+      if (this.isTaxiing) return 'spawn-destination';
+      if (this.isEmptyStrip) return 'spawn-destination';
+      if (this.isArrival) return 'spawn-arrival';
+      return '';
     },
 
     isDeleteInProgress: function () {
