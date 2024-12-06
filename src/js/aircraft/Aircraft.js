@@ -689,6 +689,7 @@ export default class Aircraft {
     }
     if (outsideCanvasWidth(this.x, 15) || outsideCanvasHeight(this.y, 15)) {
       _clearTrailPixelsAll(this);
+      this.setShowCircle(false);
       this.isFlyingOutOfArea = true;
       this.setDestroyFlag(true);
     }
@@ -709,6 +710,7 @@ export default class Aircraft {
 
     this.hide();
     if (this.isTaxiing) return;
+    if (this.destroyFlag) return;
 
     let color = 'white';
     if (this.hasProximityAlert) {
