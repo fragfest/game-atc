@@ -54,8 +54,7 @@ import {
   isValidSpeed,
 } from '../../js/utils';
 
-// TODO test more characters
-const inputFilter = (value) => {
+const inputLengthReset = (value) => {
   let inputHeading = value;
   if (value.substring(0, 3) === '---') {
     inputHeading = value[3] || '';
@@ -213,16 +212,18 @@ export default {
         return;
       }
 
-      this.inputHeading = inputFilter(value);
-      if (!isValidHeading(this.inputHeading)) {
+      const newHeading = inputLengthReset(value);
+      if (!isValidHeading(newHeading)) {
         this.inputHeading = '---';
+        ev.target.value = '---';
         return;
       }
+      this.inputHeading = newHeading;
     },
 
     inputHeadingKeyDown: function () {
       if (!this.planeSelected.setHeadingDegrees) return;
-      this.inputHeading = inputFilter(this.inputHeading);
+      this.inputHeading = inputLengthReset(this.inputHeading);
       if (this.inputHeading.length !== 3) {
         this.inputHeading = '---';
         return;
@@ -247,16 +248,18 @@ export default {
         return;
       }
 
-      this.inputAltitude = inputFilter(value);
-      if (!isValidAltitude(this.planeSelected, this.inputAltitude)) {
+      const newAltitude = inputLengthReset(value);
+      if (!isValidAltitude(this.planeSelected, newAltitude)) {
         this.inputAltitude = '---';
+        ev.target.value = '---';
         return;
       }
+      this.inputAltitude = newAltitude;
     },
 
     inputAltitudeKeyDown: function () {
       if (!this.planeSelected.setAltitude) return;
-      this.inputAltitude = inputFilter(this.inputAltitude);
+      this.inputAltitude = inputLengthReset(this.inputAltitude);
       if (this.inputAltitude.length !== 3) {
         this.inputAltitude = '---';
         return;
@@ -278,16 +281,18 @@ export default {
         return;
       }
 
-      this.inputSpeed = inputFilter(value);
-      if (!isValidSpeed(this.planeSelected, this.inputSpeed)) {
+      const newSpeed = inputLengthReset(value);
+      if (!isValidSpeed(this.planeSelected, newSpeed)) {
         this.inputSpeed = '---';
+        ev.target.value = '---';
         return;
       }
+      this.inputSpeed = newSpeed;
     },
 
     inputSpeedKeyDown: function () {
       if (!this.planeSelected.setSpeed) return;
-      this.inputSpeed = inputFilter(this.inputSpeed);
+      this.inputSpeed = inputLengthReset(this.inputSpeed);
       if (this.inputSpeed.length !== 3) {
         this.inputSpeed = '---';
         return;
