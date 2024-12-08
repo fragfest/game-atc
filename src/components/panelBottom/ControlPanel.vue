@@ -105,6 +105,17 @@
           >
             <path class="arrow" d="M 0 0 L 6 3 L 0 6 Z" />
           </marker>
+
+          <marker
+            id="arrow-target"
+            orient="90"
+            markerWidth="12"
+            markerHeight="8"
+            refX="7"
+            refY="3"
+          >
+            <path class="arrow-target" d="M 0 0 L 6 3 L 0 6 Z" />
+          </marker>
         </defs>
 
         <circle
@@ -121,6 +132,15 @@
             <line x1="0" y1="-220" x2="0" y2="-205" />
             <text x="0" y="-180" class="text" />
           </g>
+
+          <g
+            id="target-arrow"
+            marker-start="url(#arrow-target)"
+            transform="rotate(0)"
+          >
+            <line class="tick-arrow" x1="0" y1="-220" x2="0" y2="-205" />
+          </g>
+
           <g
             id="gauge-tick-arrow"
             marker-start="url(#arrow)"
@@ -156,11 +176,20 @@ import CircleInputs from './CircleInputs';
  * @typedef {import('../../js/events/messages.js').PlaneErrorObj} PlaneErrorObj
  */
 
-const setCompass = (headingRad) => {
+const setCompass = (headingRad, headingTargetRad) => {
+  if (headingRad === null) return;
   const headingDegree = convertToSmallDegrees(radToDegrees(headingRad));
   const tickEl = document.querySelector('#gauge-tick-arrow');
   if (!tickEl) return;
   tickEl.setAttribute('transform', 'rotate(' + headingDegree + ')');
+
+  if (headingTargetRad === null) return;
+  const headingTargetDegree = convertToSmallDegrees(
+    radToDegrees(headingTargetRad)
+  );
+  const targetEl = document.querySelector('#target-arrow');
+  if (!targetEl) return;
+  targetEl.setAttribute('transform', 'rotate(' + headingTargetDegree + ')');
 };
 
 let circleInputs;
@@ -307,7 +336,7 @@ export default {
     heading: function () {
       const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
       if (!planeSel) return '';
-      setCompass(planeSel.headingRad);
+      setCompass(planeSel.headingRad, planeSel.headingTargetRad);
       return planeSel.heading;
     },
 
@@ -326,8 +355,8 @@ export default {
 
   watch: {
     planeSelected(newPlane) {
-      if (!newPlane.id) setCompass((-1 * Math.PI) / 2);
-      if (newPlane.id) setCompass(newPlane.headingRad);
+      if (!newPlane.id) setCompass((-1 * Math.PI) / 2, (-1 * Math.PI) / 2);
+      if (newPlane.id) setCompass(newPlane.headingRad, null);
     },
   },
 
@@ -577,10 +606,14 @@ export default {
   .arrow {
     fill: white;
   }
+  .arrow-target {
+    fill: limegreen;
+  }
 
   line {
     stroke: white;
     stroke-width: 4px;
+
     &.tick-arrow {
       stroke: transparent;
     }

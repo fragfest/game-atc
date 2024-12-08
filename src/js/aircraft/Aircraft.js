@@ -806,7 +806,6 @@ export default class Aircraft {
       this.isTurbulenceWeather = false;
     }
 
-    // TODO plane proximity remove return statements
     // plane proximity //////////////////////////////////////////
     const planeClose = entityManagerArr.find(isPlaneClose);
     if (!planeClose) {

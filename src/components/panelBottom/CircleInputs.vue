@@ -54,7 +54,7 @@ import {
   isValidSpeed,
 } from '../../js/utils';
 
-const inputLengthReset = (value) => {
+const inputLengthFilter = (value) => {
   let inputHeading = value;
   if (value.substring(0, 3) === '---') {
     inputHeading = value[3] || '';
@@ -212,7 +212,7 @@ export default {
         return;
       }
 
-      const newHeading = inputLengthReset(value);
+      const newHeading = inputLengthFilter(value);
       if (!isValidHeading(newHeading)) {
         this.inputHeading = '---';
         ev.target.value = '---';
@@ -223,7 +223,7 @@ export default {
 
     inputHeadingKeyDown: function () {
       if (!this.planeSelected.setHeadingDegrees) return;
-      this.inputHeading = inputLengthReset(this.inputHeading);
+      this.inputHeading = inputLengthFilter(this.inputHeading);
       if (this.inputHeading.length !== 3) {
         this.inputHeading = '---';
         return;
@@ -248,7 +248,7 @@ export default {
         return;
       }
 
-      const newAltitude = inputLengthReset(value);
+      const newAltitude = inputLengthFilter(value);
       if (!isValidAltitude(this.planeSelected, newAltitude)) {
         this.inputAltitude = '---';
         ev.target.value = '---';
@@ -259,7 +259,7 @@ export default {
 
     inputAltitudeKeyDown: function () {
       if (!this.planeSelected.setAltitude) return;
-      this.inputAltitude = inputLengthReset(this.inputAltitude);
+      this.inputAltitude = inputLengthFilter(this.inputAltitude);
       if (this.inputAltitude.length !== 3) {
         this.inputAltitude = '---';
         return;
@@ -281,7 +281,7 @@ export default {
         return;
       }
 
-      const newSpeed = inputLengthReset(value);
+      const newSpeed = inputLengthFilter(value);
       if (!isValidSpeed(this.planeSelected, newSpeed)) {
         this.inputSpeed = '---';
         ev.target.value = '---';
@@ -292,7 +292,7 @@ export default {
 
     inputSpeedKeyDown: function () {
       if (!this.planeSelected.setSpeed) return;
-      this.inputSpeed = inputLengthReset(this.inputSpeed);
+      this.inputSpeed = inputLengthFilter(this.inputSpeed);
       if (this.inputSpeed.length !== 3) {
         this.inputSpeed = '---';
         return;
