@@ -10,19 +10,29 @@
 </template>
 
 <script>
-import { ScreenSizes } from '../../js/utils';
+import { getClassSize, getScreenSize, ScreenSizes } from '../../js/utils';
 
 export default {
   name: 'ToolTip',
   props: {
     disabled: { type: Boolean },
-    size: { type: String },
   },
+
+  data() {
+    return {
+      sizeClass: '',
+    };
+  },
+
+  mounted() {
+    this.sizeClass = getClassSize(getScreenSize());
+  },
+
   computed: {
     classComputed: function () {
       let classStr = '';
       classStr += this.disabled ? 'disabled' : '';
-      if (this.size === ScreenSizes.Small) classStr += ' small';
+      if (this.sizeClass === ScreenSizes.Small) classStr += ' small';
       return classStr;
     },
   },
@@ -55,4 +65,3 @@ main {
   }
 }
 </style>
-

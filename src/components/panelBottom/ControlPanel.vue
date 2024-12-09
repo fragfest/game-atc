@@ -4,7 +4,7 @@
     <div class="btn-info-panel" :class="sizeClass">
       <div class="btn-container">
         <div v-show="!isTaxiing && isArrival" class="btn">
-          <ToolTip :disabled="isDisabled" :size="sizeClass">
+          <ToolTip :disabled="isDisabled">
             <button
               class="land"
               :class="landBtnClass"
@@ -15,7 +15,7 @@
             </button>
             <template v-slot:hover>cleared ILS approach (L)</template>
           </ToolTip>
-          <ToolTip :disabled="isDisabled" :size="sizeClass">
+          <ToolTip :disabled="isDisabled">
             <button
               class="hold"
               :class="holdHandoffBtnClass"
@@ -28,7 +28,7 @@
           </ToolTip>
         </div>
         <div v-show="!isTaxiing && isDeparture" class="btn">
-          <ToolTip :disabled="isDisabled" :size="sizeClass">
+          <ToolTip :disabled="isDisabled">
             <button
               class="takeoff"
               :class="holdHandoffBtnClass"
@@ -41,7 +41,7 @@
           </ToolTip>
         </div>
         <div v-show="isTaxiing" class="btn">
-          <ToolTip :size="sizeClass">
+          <ToolTip>
             <button class="takeoff" @click="takeoffClick">
               <span>take off</span>
             </button>

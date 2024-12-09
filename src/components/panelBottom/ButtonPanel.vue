@@ -1,7 +1,7 @@
 <template>
   <div class="button-panel" :class="screenSize">
-    <!-- muted -->
-    <ToolTip v-if="isMuted" :size="screenSize">
+    <!-- mute sounds -->
+    <ToolTip v-if="isSoundMuted">
       <button
         class="button-aircraft"
         :class="showMutedClass"
@@ -25,8 +25,8 @@
       </template>
     </ToolTip>
 
-    <!-- unmute -->
-    <ToolTip v-if="!isMuted" :size="screenSize">
+    <!-- unmute sounds -->
+    <ToolTip v-if="!isSoundMuted">
       <button
         class="button-aircraft"
         :class="showMutedClass"
@@ -59,7 +59,7 @@
     </ToolTip>
 
     <!-- conflict circles -->
-    <ToolTip :size="screenSize">
+    <ToolTip>
       <button
         id="button-tcas-circle"
         class="button-aircraft"
@@ -100,7 +100,7 @@ export default {
 
   data() {
     return {
-      isMuted: true,
+      isSoundMuted: true,
       isShowCircles: false,
     };
   },
@@ -111,7 +111,7 @@ export default {
     },
 
     showMutedClass: function () {
-      if (!this.isMuted) return 'active';
+      if (!this.isSoundMuted) return 'active';
       return '';
     },
 
@@ -123,8 +123,8 @@ export default {
 
   methods: {
     onMuteToggle: function () {
-      this.isMuted = !this.isMuted;
-      setMute(this.isMuted);
+      this.isSoundMuted = !this.isSoundMuted;
+      setMute(this.isSoundMuted);
     },
 
     onShowCircles: function () {
