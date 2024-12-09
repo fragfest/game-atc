@@ -26,7 +26,7 @@ ATCv0.1.3:
     ✔ InfoPanel flight experience indicator @started(24-07-30 19:39) @done(24-08-05 10:39) @lasted(5d15h1m)
     ✔ Achievement Badge Blue Sky @started(24-10-07 11:27) @done(24-10-15 22:04) @lasted(1w1d10h37m53s)
     ✔ Flight Quality - wake turbulence @started(24-10-16 13:19) @done(24-11-27 20:49) @lasted(6w8h30m54s)
-    ☐ Animations: consider for prompts, flightstrip, compass control panel @started(24-12-03 16:50)
+    ✔ Animations: consider for flightstrip, scorePanel @started(24-12-03 16:50) @done(24-12-09 12:03) @lasted(5d19h13m49s)
     ☐ ground elevation variable
     ☐ Level intro prompt: airport name, scenario description
     ☐ More badges

@@ -418,7 +418,7 @@ export default {
   background-color: #00000080;
 
   .bckgrnd-blue {
-    background-color: #122534;
+    background-image: linear-gradient(to right, #01192b, #408bc5);
     border-radius: 6px;
   }
 
@@ -433,12 +433,12 @@ export default {
   }
 
   .bckgrnd-red {
-    background-color: orangered;
+    background-image: linear-gradient(to right, #4a0000, #af0202);
     border-radius: 6px;
   }
 
   .bckgrnd-yellow {
-    background-color: #674300;
+    background-image: linear-gradient(to right, #422c03, #bf7f07);
     border-radius: 6px;
   }
 

@@ -3,33 +3,53 @@
     <div class="score-info">
       <div class="score-row" :class="sizeClass">
         <span class="margin-top font-large badge blue">departures</span>
-        <span>{{ score.departures }}/{{ goals.Departures }}</span>
+        <div :class="departuresPulseClass">
+          <span class="badge badge-score" :class="departuresPointsClass">
+            {{ score.departures }}/{{ goals.Departures }}
+          </span>
+        </div>
       </div>
       <div class="score-row" :class="sizeClass">
         <span class="margin-top font-large badge yellow">arrivals</span>
-        <span>{{ score.arrivals }}/{{ goals.Arrivals }}</span>
+        <div :class="arrivalsPulseClass">
+          <span class="badge badge-score" :class="arrivalsPointsClass">
+            {{ score.arrivals }}/{{ goals.Arrivals }}
+          </span>
+        </div>
       </div>
       <div class="score-row" :class="sizeClass">
-        <span class="margin-top badge conflict">
+        <span class="margin-top badge dark-red">
           failed <small>handoffs & landings</small>
         </span>
-        <span>{{ score.failed }}/{{ goals.Failed }}</span>
+        <div :class="failedPulseClass">
+          <span class="badge badge-score" :class="failedPointsClass">
+            {{ score.failed }}/{{ goals.Failed }}
+          </span>
+        </div>
       </div>
       <div class="score-row" :class="sizeClass">
-        <span class="margin-top badge conflict"> delays </span>
-        <span>{{ score.delayed }}/{{ goals.Delayed }}</span>
+        <span class="margin-top badge dark-red"> delays </span>
+        <div :class="delayedPulseClass">
+          <span class="badge badge-score" :class="delayedPointsClass">
+            {{ score.delayed }}/{{ goals.Delayed }}
+          </span>
+        </div>
       </div>
       <div class="score-row" :class="sizeClass">
-        <span class="margin-top badge conflict">
+        <span class="margin-top badge dark-red">
           conflict <small>seconds</small>
         </span>
-        <span>{{ conflictDisplay }}/{{ goals.Conflict }}</span>
+        <div :class="conflictPulseClass">
+          <span class="badge badge-score" :class="conflictPointsClass">
+            {{ conflictDisplay }}/{{ goals.Conflict }}
+          </span>
+        </div>
       </div>
       <div v-if="turbulenceDisplay" class="score-row" :class="sizeClass">
         <span class="margin-top badge white">
           turbulence <small>seconds</small>
         </span>
-        <span>{{ turbulenceDisplay }}</span>
+        <span class="badge badge-score white">{{ turbulenceDisplay }}</span>
       </div>
 
       <!-- <hr />
@@ -75,6 +95,22 @@ export default {
         turbulence: 0,
       },
       goals: getGoals(),
+
+      departuresPulseClass: '',
+      departuresPointsClass: 'green',
+      departuresTimeoutId: null,
+      arrivalsPulseClass: '',
+      arrivalsPointsClass: 'green',
+      arrivalsTimeoutId: null,
+      failedPulseClass: '',
+      failedPointsClass: 'red',
+      failedTimeoutId: null,
+      delayedPulseClass: '',
+      delayedPointsClass: 'red',
+      delayedTimeoutId: null,
+      conflictPulseClass: '',
+      conflictPointsClass: 'red',
+      conflictTimeoutId: null,
     };
   },
 
@@ -84,6 +120,75 @@ export default {
     subscribeScore(ScoreEvents.ScoreEV, (score) => {
       this.score = score;
     });
+  },
+
+  watch: {
+    score(scoreNew, scoreOld) {
+      if (scoreNew.departures > scoreOld.departures) {
+        if (this.departuresTimeoutId) {
+          clearTimeout(this.departuresTimeoutId);
+          this.departuresTimeoutId = null;
+        }
+        this.departuresPulseClass = 'pulse';
+        this.departuresPointsClass = 'fade-out';
+        this.departuresTimeoutId = setTimeout(() => {
+          this.departuresPulseClass = '';
+          this.departuresPointsClass = 'green';
+        }, 8000);
+      }
+
+      if (scoreNew.arrivals > scoreOld.arrivals) {
+        if (this.arrivalsTimeoutId) {
+          clearTimeout(this.arrivalsTimeoutId);
+          this.arrivalsTimeoutId = null;
+        }
+        this.arrivalsPulseClass = 'pulse';
+        this.arrivalsPointsClass = 'fade-out';
+        this.arrivalsTimeoutId = setTimeout(() => {
+          this.arrivalsPulseClass = '';
+          this.arrivalsPointsClass = 'green';
+        }, 8000);
+      }
+
+      if (scoreNew.failed > scoreOld.failed) {
+        if (this.failedTimeoutId) {
+          clearTimeout(this.failedTimeoutId);
+          this.failedTimeoutId = null;
+        }
+        this.failedPulseClass = 'pulse-red';
+        this.failedPointsClass = 'fade-out-red';
+        this.failedTimeoutId = setTimeout(() => {
+          this.failedPulseClass = '';
+          this.failedPointsClass = 'red';
+        }, 8000);
+      }
+
+      if (scoreNew.delayed > scoreOld.delayed) {
+        if (this.delayedTimeoutId) {
+          clearTimeout(this.delayedTimeoutId);
+          this.delayedTimeoutId = null;
+        }
+        this.delayedPulseClass = 'pulse-red';
+        this.delayedPointsClass = 'fade-out-red';
+        this.delayedTimeoutId = setTimeout(() => {
+          this.delayedPulseClass = '';
+          this.delayedPointsClass = 'red';
+        }, 8000);
+      }
+
+      if (scoreNew.conflict > scoreOld.conflict) {
+        if (this.conflictTimeoutId) {
+          clearTimeout(this.conflictTimeoutId);
+          this.conflictTimeoutId = null;
+        }
+        this.conflictPulseClass = 'pulse-infinite';
+        this.conflictPointsClass = 'dark-red';
+        this.conflictTimeoutId = setTimeout(() => {
+          this.conflictPulseClass = '';
+          this.conflictPointsClass = 'red';
+        }, 8000);
+      }
+    },
   },
 
   computed: {
@@ -120,7 +225,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 // score-panel
 .score-panel {
   display: flex;
@@ -137,6 +242,7 @@ export default {
 }
 // END score-panel
 
+// score-info
 .score-info {
   display: flex;
   flex-direction: column;
@@ -147,7 +253,9 @@ export default {
   padding: 8px 14px;
   color: white;
 
-  .white {
+  .white,
+  .red,
+  .green {
     color: black;
   }
 }
@@ -162,6 +270,7 @@ export default {
   margin-top: 0px;
   margin-bottom: 6px;
 }
+// END score-info
 
 // score-row
 .score-row {
@@ -184,19 +293,39 @@ export default {
     font-family: Monospace;
     background-color: darkslategrey;
   }
-  .conflict {
-    font-family: Monospace;
-    font-weight: 600;
-    background-color: #9f0404;
+  .badge-score {
+    min-width: 30px;
+    margin-right: 0px;
+    padding: 2px 4px;
+    border-radius: 4px;
+    text-align: right;
+  }
+
+  .red {
+    background-image: linear-gradient(to right, #fecece, #fceeee);
+  }
+  .dark-red {
+    background-image: linear-gradient(to right, #4a0000, #af0202);
+  }
+  .fade-out-red {
+    background-image: linear-gradient(to right, #4a0000, #af0202);
+    animation: 8s fade-out-red 0s 1 forwards;
   }
   .yellow {
-    background-color: #674300;
+    background-image: linear-gradient(to right, #422c03, #bf7f07);
   }
   .blue {
-    background-color: #122534;
+    background-image: linear-gradient(to right, #01192b, #408bc5);
   }
   .white {
-    background-color: white;
+    background-image: linear-gradient(to right, #b4b2b2, white);
+  }
+  .green {
+    background-image: linear-gradient(to right, #cffccf, #eefdee);
+  }
+  .fade-out {
+    background-image: linear-gradient(to right, #008e00, #01b201);
+    animation: 8s fade-out 0s 1 forwards;
   }
 }
 
@@ -210,7 +339,90 @@ export default {
 
   .badge {
     padding: 6px;
+    border-radius: 4px;
+  }
+  .badge-score {
+    min-width: 20px;
+    padding: 4px 6px;
   }
 }
 // END score-row
+
+@mixin pulse-mixin {
+  content: '';
+  width: 0px;
+  height: 0px;
+  border-radius: 8px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.pulse {
+  position: relative;
+}
+.pulse::after {
+  @include pulse-mixin;
+  border: 4px solid #01b201;
+  animation: 1.4s pulse 0s 4 forwards;
+}
+
+.pulse-red {
+  position: relative;
+}
+.pulse-red::after {
+  @include pulse-mixin;
+  border: 4px solid #af0202;
+  animation: 1.4s pulse 0s 4 forwards;
+}
+
+.pulse-infinite {
+  position: relative;
+}
+.pulse-infinite::after {
+  @include pulse-mixin;
+  border: 4px solid #af0202;
+  animation: 1.4s pulse 0s infinite;
+}
+
+@keyframes fade-out-red {
+  90% {
+    color: white;
+    background-image: linear-gradient(to right, #4a0000, #af0202);
+  }
+  100% {
+    color: black;
+    background-image: linear-gradient(to right, #fecece, #fceeee);
+  }
+}
+
+@keyframes fade-out {
+  90% {
+    color: white;
+    background-image: linear-gradient(to right, #008e00, #01b201);
+  }
+  100% {
+    color: black;
+    background-image: linear-gradient(to right, #cffccf, #eefdee);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    width: 50px;
+    height: 20px;
+    opacity: 0;
+  }
+  20% {
+    width: 50px;
+    height: 20px;
+    opacity: 1;
+  }
+  100% {
+    width: 90px;
+    height: 60px;
+    opacity: 0;
+  }
+}
 </style>
