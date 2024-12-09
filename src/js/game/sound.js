@@ -1,7 +1,7 @@
 import { VictoryEvents, subscribeVictory } from './victory';
 import { subscribeScore, ScoreEvents } from './score/score';
 
-let background;
+// let background;
 let collision;
 let ding;
 let denied;
@@ -13,7 +13,7 @@ let flick;
 let squelch;
 
 export const SoundType = Object.freeze({
-  Background: 'Background',
+  // Background: 'Background',
   Collision: 'Collision',
   Ding: 'Ding',
   Fail: 'Fail',
@@ -28,12 +28,12 @@ export const SoundType = Object.freeze({
 let isMuted = true;
 let oldScore = null;
 let isSubscribed = false;
-let isBackgroundPlaying = false;
+// let isBackgroundPlaying = false;
 
 export const setup = () => {
-  isBackgroundPlaying = false;
+  // isBackgroundPlaying = false;
+  // background = new Audio('/audio/tower-background.mp3');
 
-  background = new Audio('/audio/tower-background.mp3');
   collision = new Audio('/audio/collision-warning.mp3');
   ding = new Audio('/audio/ding.mp3');
   denied = new Audio('/audio/denied.mp3');
@@ -68,8 +68,9 @@ export const setup = () => {
 
 export const destroy = () => {
   setMute(true);
-  stop(SoundType.Background);
-  background = null;
+
+  // stop(SoundType.Background);
+  // background = null;
 
   collision = null;
   ding = null;
@@ -88,12 +89,12 @@ export const destroy = () => {
 export const setMute = (isMutedArg) => {
   isMuted = !!isMutedArg;
 
-  if (!isBackgroundPlaying && !isMuted) {
-    isBackgroundPlaying = true;
-    playLoop(SoundType.Background);
-  }
+  // if (!isBackgroundPlaying && !isMuted) {
+  //   isBackgroundPlaying = true;
+  //   playLoop(SoundType.Background);
+  // }
+  // background.muted = isMuted;
 
-  background.muted = isMuted;
   collision.muted = isMuted;
   ding.muted = isMuted;
   denied.muted = isMuted;
@@ -113,19 +114,19 @@ export const playLoop = (soundType) => {
     isSubscribed = true;
     subscribeVictory(VictoryEvents.Failed, () => {
       stop(SoundType.Collision);
-      stop(SoundType.Background);
+      // stop(SoundType.Background);
     });
     subscribeVictory(VictoryEvents.Success, () => {
       stop(SoundType.Collision);
-      stop(SoundType.Background);
+      // stop(SoundType.Background);
     });
   }
 
-  if (soundType === SoundType.Background) {
-    background.loop = true;
-    background.volume = 0.2;
-    return background.play();
-  }
+  // if (soundType === SoundType.Background) {
+  //   background.loop = true;
+  //   background.volume = 0.2;
+  //   return background.play();
+  // }
   if (soundType === SoundType.Collision) {
     collision.loop = true;
     return collision.play();
@@ -171,11 +172,11 @@ export const play = (soundType) => {
  * @param {SoundType} soundType
  */
 export const stop = (soundType) => {
-  if (soundType === SoundType.Background) {
-    background.pause();
-    background.currentTime = 0;
-    return;
-  }
+  // if (soundType === SoundType.Background) {
+  //   background.pause();
+  //   background.currentTime = 0;
+  //   return;
+  // }
   if (soundType === SoundType.Collision) {
     collision.pause();
     collision.currentTime = 0;

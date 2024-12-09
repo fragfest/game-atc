@@ -8,6 +8,7 @@ Wishlist:
   ☐ ScorePanel icons instead of text
   ☐ Flight Quality - weather dangerous
   ☐ Crash mechanic
+  ☐ Move background soundtrack to gameOverPopup
 
 ATCv0.1.3:
   Bugs:
@@ -39,9 +40,7 @@ ATCv0.1.3:
   Minor:
     ✔ More flights/airframes @started(24-07-23 22:44) @done(24-07-23 23:40) @lasted(56m29s)
     ✔ Achievement Badges placeholders for future @started(24-10-16 12:00) @done(24-10-16 13:10) @lasted(1h10m4s)
-    ✘ Move background soundtrack to gameOverPopup @started(24-12-09 12:30) @cancelled(24-12-09 14:15) @wasted(1h45m8s)
-    ☐ Sound select on HomePage, Game page & persist @started(24-12-09 14:54)
-    ☐ Sound for popups
+    ✔ Remove background atc chatter soundtrack @done(24-12-09 15:24)
     ☐ InfoPanel duplicate of FlightStrip icons/text (consider ?)
     ☐ Failed Landing plane pulse and sound (consider dropping as failure)
     ☐ Warn with message on mobile
