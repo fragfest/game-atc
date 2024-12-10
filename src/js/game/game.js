@@ -42,11 +42,12 @@ export const setup = (state) => (argObj) => {
   const canvasObj = getCanvasObj(argObj);
 
   const firstPlaneCanvasObj = { ...canvasObj, flightObj: { time: 10 * 60 } };
-  const spawnFirstPlane = () =>
+  const spawnFirstPlane = () => {
     spawnAircraftRnd(screenSize, entityManagerArr)(
       () => createAircraftRndDestinationType(firstPlaneCanvasObj, 1),
       1
     );
+  };
 
   const spawnPlaneUpdateFn = spawnPlaneGameTick(
     canvasObj,

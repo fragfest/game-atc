@@ -184,6 +184,7 @@ import {
   setup as setupMessages,
   destroy as destroyMessages,
 } from '../js/events/messages';
+import { showLevelIntro } from '../js/levels/levelIntro';
 
 let screenSize = ScreenSizes.Large;
 let width = getGameSize(ScreenSizes.Large).width;
@@ -467,7 +468,9 @@ export default {
 
     attachHtmlQueue(this, 'tutorialBoxHtml', tutorialBoxHtmlQueue);
     setupVictory();
-    setupFullGame(gameState)(setupArg);
+    showLevelIntro(tutorialBox, () => {
+      setupFullGame(gameState)(setupArg);
+    });
 
     // window.addEventListener("resize", () => {
     //   setup(setupArg);
@@ -680,6 +683,10 @@ p {
     background-color: red;
     font-size: 16px;
     font-weight: bold;
+  }
+
+  .green {
+    color: lightgreen;
   }
 }
 // END tutorial
