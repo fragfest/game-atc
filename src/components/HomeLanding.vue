@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="home" :class="screenSize">
     <section>
       <div class="content">
         <h1 class="title">ATC - Future Flight Ops</h1>
@@ -41,7 +41,7 @@
         <!-- END grid-score-buttons -->
 
         <div class="row-history-badges">
-          <div v-if="showHistory" class="history-record">
+          <div v-if="showHistory" class="history-record" :class="screenSize">
             <h3>levels</h3>
             <div
               v-for="(record, index) in historyRecordArr"
@@ -56,7 +56,10 @@
                 {{ record.historyScore.scoreTotal }}
               </p>
               <div class="button-restart">
-                <button class="w-80" @click="onRetryClick(record.level)">
+                <button
+                  class="history-col-width"
+                  @click="onRetryClick(record.level)"
+                >
                   <h3>retry</h3>
                 </button>
               </div>
@@ -65,7 +68,7 @@
             <div v-if="levelsTotal" class="row">
               <p>total</p>
               <p class="gold">{{ levelsTotal }}</p>
-              <div class="w-80"></div>
+              <div class="history-col-width"></div>
             </div>
           </div>
 
@@ -84,7 +87,6 @@
 </template>
 
 <script>
-import { ref } from 'vue';
 import { getFinalLevel } from '../js/game/victory';
 import {
   setup as setupScore,
@@ -92,13 +94,16 @@ import {
   getHistoryRecords,
 } from '../js/game/score/score';
 import { getHighestLevelCompleted } from '../js/game/score/score';
-import { calculateScreenSize, setScreenSize, ScreenSizes } from '../js/utils';
+import {
+  calculateScreenSize,
+  setScreenSize,
+  ScreenSizes,
+  getScreenSize,
+} from '../js/utils';
 import { isAchievedBlueSky } from '../js/game/score/badges';
 
 import BadgesDisplay from './badges/BadgesDisplay';
 import CyberBox from './common/CyberBox';
-
-const screenSize = ref('');
 
 export default {
   components: {
@@ -108,6 +113,7 @@ export default {
 
   data() {
     return {
+      screenSize: '',
       isTutorial: getHighestLevelCompleted() === null,
       levelComplete: getHighestLevelCompleted(),
       levelNext: getHighestLevelCompleted() + 1,
@@ -132,7 +138,7 @@ export default {
     },
 
     badgeSize: function () {
-      if (screenSize.value === ScreenSizes.Small) return 34;
+      if (this.screenSize === ScreenSizes.Small) return 34;
       return 60;
     },
 
@@ -149,11 +155,11 @@ export default {
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
     const size = calculateScreenSize(windowWidth, windowHeight);
-    screenSize.value = size;
     setScreenSize(size);
   },
 
   mounted() {
+    this.screenSize = getScreenSize();
     setupScore();
     this.bluesky = isAchievedBlueSky();
     if (this.finalLevel === this.levelComplete) this.isGameComplete = true;
@@ -175,9 +181,6 @@ export default {
 <style lang="scss" scoped>
 hr {
   width: 100%;
-}
-.w-80 {
-  width: 80px;
 }
 
 .white {
@@ -201,6 +204,15 @@ hr {
   font-weight: 500;
   color: darkblue;
 }
+
+// home ////////////////////////////////////////////////////
+// small ///////////////////////
+.home.small {
+  section {
+    font-size: 18px;
+  }
+}
+// small END ///////////////////////
 
 .home {
   display: flex;
@@ -251,6 +263,7 @@ hr {
   color: lightgreen;
 }
 
+// grid-score-buttons ////////////////////////////////////////
 .grid-score-buttons {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -310,6 +323,9 @@ hr {
 }
 
 // row-history-badges ////////////////////////////////////////
+.home.small .row-history-badges {
+  margin-top: 0px;
+}
 .row-history-badges {
   display: flex;
   margin-top: 40px;
@@ -318,6 +334,23 @@ hr {
 }
 
 // history-record ////////////////////////////////////////
+// small ///////////////////////
+.history-record.small {
+  min-width: 240px;
+
+  .history-col-width {
+    width: 60px;
+  }
+
+  .button-restart button {
+    height: 24px;
+  }
+  .button-restart button h3 {
+    font-size: 16px;
+  }
+}
+// small END ///////////////////////
+
 .history-record {
   display: flex;
   flex-direction: column;
@@ -334,6 +367,10 @@ hr {
   margin-top: 0;
   margin-bottom: 8px;
   border-bottom: 1px solid white;
+}
+
+.history-record .history-col-width {
+  width: 80px;
 }
 
 .history-record .row {
@@ -372,5 +409,4 @@ hr {
   left: 2px;
   box-shadow: none;
 }
-// END row-history-badges //////////////////////////////////////
 </style>
