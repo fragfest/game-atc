@@ -90,7 +90,7 @@ const getLevelObj = (level) => {
       displayTimeMs: 16000,
       width: 0.72,
       airportHeading: `London Heathrow (LHR)`,
-      airportSubheading: `Westbound Operations - weather: severe`,
+      airportSubheading: `Westbound Operations - weather: heavy`,
       text1: `Many weather systems, but with some gaps of blue sky. Watch for wake turbulence when aircraft density increases.`,
     };
   }

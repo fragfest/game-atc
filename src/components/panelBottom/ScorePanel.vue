@@ -309,7 +309,7 @@ export default {
   }
   .fade-out-red {
     background-image: linear-gradient(to right, #4a0000, #af0202);
-    animation: 8s fade-out-red 0s 1 forwards;
+    animation: 10s fade-out-red 0s 1 forwards;
   }
   .yellow {
     background-image: linear-gradient(to right, #422c03, #bf7f07);
@@ -325,7 +325,7 @@ export default {
   }
   .fade-out {
     background-image: linear-gradient(to right, #008e00, #01b201);
-    animation: 8s fade-out 0s 1 forwards;
+    animation: 10s fade-out 0s 1 forwards;
   }
 }
 

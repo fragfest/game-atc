@@ -43,7 +43,7 @@ export default class Waypoint {
   }
 
   update({ entityManagerArr }) {
-    const planeHoldingHoldoff = (entity) => {
+    const planeHoldingHandoff = (entity) => {
       if (!(entity instanceof Aircraft)) return false;
       if (!entity.isHolding && !entity.isHandoff) return false;
       if (entity.waypoint === this.title) return true;
@@ -51,7 +51,7 @@ export default class Waypoint {
     };
     const isClose = isCloseToWaypoint({ ...this, altitude: 0 });
 
-    const planes = entityManagerArr.filter(planeHoldingHoldoff);
+    const planes = entityManagerArr.filter(planeHoldingHandoff);
     planes.forEach((plane) => {
       const deltaY = this.y - plane.y;
       const deltaX = this.x - plane.x;
