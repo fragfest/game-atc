@@ -134,5 +134,7 @@ export default class Waypoint {
     this.textLayerObj.ctx.font = this.isSmall ? '10px Arial' : '12px Arial';
     this.textLayerObj.ctx.fillText(this.title, this.x + 2, this.y - 4);
   }
+
+  updateDestroy() {}
 }
 // class Waypoint END

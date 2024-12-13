@@ -185,6 +185,8 @@ import {
   destroy as destroyMessages,
 } from '../js/events/messages';
 import { showLevelIntro } from '../js/levels/levelIntro';
+import { getMapEntities } from '../js/airports/airports.js';
+import { getAirportByLevel } from '../js/levels/levels.js';
 
 let screenSize = ScreenSizes.Large;
 let width = getGameSize(ScreenSizes.Large).width;
@@ -373,6 +375,7 @@ export default {
     const width = getGameSize(screenSize).width;
     const height = getGameSize(screenSize).height;
 
+    // TODO rename to generic message cyberbox
     const tutorialBoxHtmlQueue = [];
     const tutorialBox = {
       tutorialBoxTop,
@@ -395,9 +398,12 @@ export default {
       tutorialEventArg.updatedAltitudeTutorial(alt);
     setShowCircles_isShowCirclesArg = setShowCircles(gameState);
 
-    const isTutorial = getScore().level === 0;
+    const level = getScore().level;
+    const isTutorial = level === 0;
+    const airport = getAirportByLevel(level);
 
     const setupArg = {
+      airport,
       screenSize,
       backgroundObj,
       imgLayerObj,
@@ -450,8 +456,9 @@ export default {
       tutorialBox,
       gameState
     );
+
     drawInertElements(imgLayerObj, { screenSize, width, height });
-    setupEntities(setupArg);
+    setupEntities(setupArg, getMapEntities(airport));
     resetScore();
 
     // TUTORIAL

@@ -1,6 +1,5 @@
-import { getGameSize, ScreenSizes } from "../utils";
+import { getGameSize, ScreenSizes } from '../utils';
 import { WaypointType, HoldingPosition } from '../types';
-
 
 export const Runways = Object.freeze({
   TwoSevenRight: '27R',
@@ -9,12 +8,12 @@ export const Runways = Object.freeze({
 
 export const getRunwaysAll = () => {
   return ['27R', '27L'];
-}
+};
 
 export const getRunwayRnd = () => {
   const index = Math.floor(Math.random() * getRunwaysAll().length);
   return getRunwaysAll()[index];
-}
+};
 
 export const getRunway = (runway, screenSize) => {
   const obj = runways(runway, screenSize);
@@ -38,17 +37,23 @@ export const Waypoints = Object.freeze({
 
 export const getWaypointDestinationsAll = () => {
   return ['DET', 'MID', 'CPT', 'BPK'];
-}
+};
 
 export const getWaypointArrivalsAll = () => {
   return ['BNN', 'OCK', 'LAM', 'BIG'];
-}
+};
 
+export const getWaypointBySection = (sectionInt) => {
+  if (sectionInt >= 1 && sectionInt <= 4) return Waypoints.LAM;
+  if (sectionInt >= 5 && sectionInt <= 8) return Waypoints.BIG;
+};
+
+// TODO refactor: use getWaypointDestinationsAll() and have caller choose rnd
 export const getWaypointDepartureRnd = () => {
   const waypointsDeparture = ['DET', 'MID', 'CPT', 'BPK'];
   const indexDeparture = Math.floor(Math.random() * waypointsDeparture.length);
   return waypointsDeparture[indexDeparture];
-}
+};
 
 export const getWaypoint = (waypoint, screenSize) => {
   const obj = waypoints(waypoint, screenSize);
@@ -67,7 +72,7 @@ const runways = (runway, screenSize) => {
   let titleY = 0;
   let titlePosition27L = { x: 0, y: 0 };
   let titlePosition27R = { x: 0, y: 0 };
-  
+
   switch (screenSize) {
     case ScreenSizes.Large:
       xOffset = -140;

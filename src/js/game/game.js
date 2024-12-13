@@ -1,14 +1,5 @@
-import Waypoint from '../canvas/Waypoint';
-import Runway from '../airports/Runway';
 import { isCloseToWeather, weatherGameLoop } from './weather';
 import { isCloseToPlane, hasEntityFuncs } from '../entity';
-import {
-  getRunway,
-  Runways,
-  getWaypoint,
-  getWaypointDestinationsAll,
-  getWaypointArrivalsAll,
-} from '../airports/LHR';
 
 import { getGameSize } from '../utils';
 import { draw as drawScale } from '../canvas/scale';
@@ -40,11 +31,12 @@ export const setup = (state) => (argObj) => {
   const width = getGameSize(argObj.screenSize).width;
   const height = getGameSize(argObj.screenSize).height;
   const canvasObj = getCanvasObj(argObj);
+  const airport = argObj.airport;
 
   const firstPlaneCanvasObj = { ...canvasObj, flightObj: { time: 10 * 60 } };
   const spawnFirstPlane = () => {
     spawnAircraftRnd(screenSize, entityManagerArr)(
-      () => createAircraftRndDestinationType(firstPlaneCanvasObj, 1),
+      () => createAircraftRndDestinationType(firstPlaneCanvasObj, 1, airport),
       1
     );
   };
@@ -87,48 +79,9 @@ export const headingLayerClearFn =
     headingLayerObj.ctx.clearRect(0, 0, width, height);
   };
 
-export const setupEntities = (argObj) => {
+export const setupEntities = (argObj, arr) => {
   const entityAdd = entityManagerAdd(argObj.entityManagerArr);
-
-  const runway27R = new Runway(
-    Runways.TwoSevenRight,
-    argObj.imgLayerObj,
-    argObj.screenSize,
-    getRunway(Runways.TwoSevenRight, argObj.screenSize)
-  );
-  const runway27L = new Runway(
-    Runways.TwoSevenLeft,
-    argObj.imgLayerObj,
-    argObj.screenSize,
-    getRunway(Runways.TwoSevenLeft, argObj.screenSize)
-  );
-
-  entityAdd(runway27R);
-  entityAdd(runway27L);
-
-  getWaypointArrivalsAll().forEach((waypoint) => {
-    entityAdd(
-      new Waypoint(
-        waypoint,
-        argObj.backgroundObj,
-        argObj.headingLayerObj,
-        argObj.screenSize,
-        getWaypoint(waypoint, argObj.screenSize)
-      )
-    );
-  });
-
-  getWaypointDestinationsAll().forEach((waypoint) => {
-    entityAdd(
-      new Waypoint(
-        waypoint,
-        argObj.backgroundObj,
-        argObj.headingLayerObj,
-        argObj.screenSize,
-        getWaypoint(waypoint, argObj.screenSize)
-      )
-    );
-  });
+  arr.forEach((entity) => entityAdd(entity(argObj)));
 };
 
 export const getCanvasObj = (argObj) => ({

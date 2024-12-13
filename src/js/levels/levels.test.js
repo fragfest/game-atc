@@ -2,14 +2,18 @@ import { describe, beforeEach, test, jest, expect } from '@jest/globals';
 import { callAircraftFnByLevel } from './levels.js';
 import * as types from '../types.js';
 import * as utils from '../utils.js';
+import { Airport } from '../airports/airports.js';
 
 describe('Level', () => {
+  let airport;
   let entityManagerArr, goals, score;
   let getChanceFn, aircraftFn;
 
   describe('level 1 & 2', () => {
     beforeEach(() => {
       jest.spyOn(types, 'isAircraft').mockImplementation(() => true);
+
+      airport = Airport.Heathrow;
       entityManagerArr = [];
       goals = { Arrivals: 1, Departures: 1 };
       getChanceFn = jest.fn(() => 0.123);
@@ -27,7 +31,7 @@ describe('Level', () => {
       });
 
       expect(getChanceFn).toHaveBeenCalledWith(0.1);
-      expect(aircraftFn).toHaveBeenCalledWith(0.123, 1, { time: 600 });
+      expect(aircraftFn).toHaveBeenCalledWith(0.123, 1, { time: 600 }, airport);
     });
 
     test('level 1 only spawn departures', () => {
@@ -69,7 +73,12 @@ describe('Level', () => {
       });
 
       expect(getChanceFn).toHaveBeenCalledWith(0.03);
-      expect(aircraftFn).toHaveBeenCalledWith(0.123, 0, { time: 1080 });
+      expect(aircraftFn).toHaveBeenCalledWith(
+        0.123,
+        0,
+        { time: 1080 },
+        airport
+      );
     });
 
     test('level 2 only spawn arrivals', () => {
@@ -106,6 +115,7 @@ describe('Level', () => {
       jest.spyOn(utils, 'getDepartureCount').mockImplementation(() => 2);
       jest.spyOn(utils, 'getArrivalCount').mockImplementation(() => 2);
 
+      airport = Airport.Heathrow;
       entityManagerArr = [
         { destinationType: types.DestinationType.Departure },
         { destinationType: types.DestinationType.Departure },
@@ -143,7 +153,12 @@ describe('Level', () => {
       });
 
       expect(getChanceFn).toHaveBeenCalledWith(0.5);
-      expect(aircraftFn).toHaveBeenCalledWith(0.123, 1, { time: 1080 });
+      expect(aircraftFn).toHaveBeenCalledWith(
+        0.123,
+        1,
+        { time: 1080 },
+        airport
+      );
     });
 
     test('lowCount spawn arrival', () => {
@@ -158,7 +173,12 @@ describe('Level', () => {
       });
 
       expect(getChanceFn).toHaveBeenCalledWith(0.5);
-      expect(aircraftFn).toHaveBeenCalledWith(0.123, 0, { time: 1080 });
+      expect(aircraftFn).toHaveBeenCalledWith(
+        0.123,
+        0,
+        { time: 1080 },
+        airport
+      );
     });
 
     test('not lowCount spawn random', () => {
@@ -176,7 +196,12 @@ describe('Level', () => {
       });
 
       expect(getChanceFn).toHaveBeenCalledWith(0.03);
-      expect(aircraftFn).toHaveBeenCalledWith(0.123, 0.4, { time: 1080 });
+      expect(aircraftFn).toHaveBeenCalledWith(
+        0.123,
+        0.4,
+        { time: 1080 },
+        airport
+      );
     });
 
     test('when all departures done, spawn arrivals', () => {
@@ -190,7 +215,12 @@ describe('Level', () => {
       });
 
       expect(getChanceFn).toHaveBeenCalledWith(0.5);
-      expect(aircraftFn).toHaveBeenCalledWith(0.123, 0, { time: 1080 });
+      expect(aircraftFn).toHaveBeenCalledWith(
+        0.123,
+        0,
+        { time: 1080 },
+        airport
+      );
     });
 
     test('when all arrivals done, spawn departures', () => {
@@ -204,7 +234,12 @@ describe('Level', () => {
       });
 
       expect(getChanceFn).toHaveBeenCalledWith(0.5);
-      expect(aircraftFn).toHaveBeenCalledWith(0.123, 1, { time: 1080 });
+      expect(aircraftFn).toHaveBeenCalledWith(
+        0.123,
+        1,
+        { time: 1080 },
+        airport
+      );
     });
   });
 });

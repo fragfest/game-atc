@@ -6,7 +6,9 @@ const hasEntityState = (state) => {
 
 export const hasEntityFuncs = (entity) => {
   return (
-    typeof entity.update === 'function' && typeof entity.draw === 'function'
+    typeof entity.update === 'function' &&
+    typeof entity.draw === 'function' &&
+    typeof entity.updateDestroy === 'function'
   );
 };
 

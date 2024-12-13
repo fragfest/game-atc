@@ -38,15 +38,15 @@
         <div class="info-center-speed">
           <p>
             <b>
-              <span class="green">speed (min)</span>
-            </b>
-            {{ plane.speedMin }} kts
-          </p>
-          <p>
-            <b>
               <span class="green">speed (landing)</span>
             </b>
             {{ plane.speedLanding }} kts
+          </p>
+          <p>
+            <b>
+              <span class="green">speed (min)</span>
+            </b>
+            {{ plane.speedMin }} kts
           </p>
           <p>
             <b>

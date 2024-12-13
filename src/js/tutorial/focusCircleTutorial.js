@@ -4,17 +4,17 @@ export const scorePanel = (size) => {
   if (size === ScreenSizes.Small) {
     return {
       size,
-      top: 640,
-      left: 312,
-      width: 320,
-      height: 72,
+      top: 647,
+      left: 300,
+      width: 310,
+      height: 70,
     };
   }
 
   return {
     size,
-    top: 858,
-    left: 580,
+    top: 853,
+    left: 565,
     width: 320,
     height: 90,
   };
@@ -164,8 +164,8 @@ export const flightStripThirdWaypoint = (size) => {
   if (size === ScreenSizes.Small) {
     return {
       size,
-      top: 201,
-      left: 1090,
+      top: 198,
+      left: 1080,
       width: 58,
       height: 28,
     };
@@ -174,7 +174,7 @@ export const flightStripThirdWaypoint = (size) => {
   return {
     size,
     top: 245,
-    left: 1436,
+    left: 1425,
     width: 68,
     height: 36,
   };
@@ -184,7 +184,7 @@ export const flightStripSecond = (size) => {
   if (size === ScreenSizes.Small) {
     return {
       size,
-      top: 129,
+      top: 130,
       left: 1018,
       width: 279,
       height: 52,

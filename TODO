@@ -2,14 +2,16 @@ Bugs:
   ☐ Training can't be retried. Complete training and hit retry (without refreshing). A blank/frozen game screen appears.
 
 Wishlist:
+  ☐ Ground elevation topography & mechanics
   ☐ Engine contrails
   ☐ Noise abatement mechanic (250+ kts)
-  ☐ Fuel mechanic
+  ☐ Fuel mechanics
   ☐ ScorePanel icons instead of text
   ☐ Flight Quality - weather dangerous
   ☐ Crash mechanic
   ☐ Add button for background sounds
   ☐ Sound on dialog text spawn
+  ☐ 3 miles horizontal for every 1000ft vertical descent
 
 ATCv0.1.3:
   Bugs:
@@ -30,11 +32,11 @@ ATCv0.1.3:
     ✔ Flight Quality - wake turbulence @started(24-10-16 13:19) @done(24-11-27 20:49) @lasted(6w8h30m54s)
     ✔ Animations: consider for flightstrip, scorePanel @started(24-12-03 16:50) @done(24-12-09 12:03) @lasted(5d19h13m49s)
     ✔ Level intro prompt: airport name, scenario description @started(24-12-09 15:27) @done(24-12-09 20:17) @lasted(4h50m45s)
-    ☐ ground elevation variable
+    ☐ More airports @started(24-12-12 22:02)
     ☐ More badges
-    ☐ More airports
+    ☐ difficulty setting that changes delay timers
     ☐ Loading/Splash screen (i.e. while assets download)
-    ☐ Leaderboard for all players
+    ☐ Leaderboard online multiplayer
     ☐ Anti-cheat
     ☐ Analytics
     
@@ -44,7 +46,6 @@ ATCv0.1.3:
     ✔ Seperate background atc chatter soundtrack toggle @done(24-12-09 15:24)
     ☐ Warn with message on mobile
     ☐ Slower landing rollouts (takeoffs too?)
-    ☐ 3 miles horizontal for every 1000ft vertical descent
 
 ATCv0.1.2:
   Bugs:
