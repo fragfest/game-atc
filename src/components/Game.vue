@@ -68,7 +68,7 @@
           </div>
           <!-- TUTORIAL -->
 
-          <img src="/img/london.png" :height="height" class="layer-eight" />
+          <img :src="backgroundImage" :height="height" class="layer-eight" />
         </div>
 
         <div class="row-bottom layer-seven">
@@ -138,7 +138,6 @@ import FlightStrip from './FlightStrip';
 import FlightStripDeparture from './FlightStripDeparture';
 import GameOverPopup from './GameOverPopup';
 
-import { getWaypointArrivalsAll } from '../js/airports/LHR';
 import {
   setup as setupFullGame,
   setupEntities,
@@ -185,7 +184,11 @@ import {
   destroy as destroyMessages,
 } from '../js/events/messages';
 import { showLevelIntro } from '../js/levels/levelIntro';
-import { getMapEntities } from '../js/airports/airports.js';
+import {
+  getMapEntities,
+  getMapImage,
+  getWaypointArrivalsAll,
+} from '../js/airports/airports.js';
 import { getAirportByLevel } from '../js/levels/levels.js';
 
 let screenSize = ScreenSizes.Large;
@@ -230,6 +233,8 @@ export default {
       inputSpeed: '',
       aircraftClicked,
       hasPopup: false,
+      backgroundImage: '',
+
       // tutorial
       tutorialBoxHtml: '',
       focusCircleType: '',
@@ -398,9 +403,11 @@ export default {
       tutorialEventArg.updatedAltitudeTutorial(alt);
     setShowCircles_isShowCirclesArg = setShowCircles(gameState);
 
+    // LEVEL, AIRPORT
     const level = getScore().level;
     const isTutorial = level === 0;
     const airport = getAirportByLevel(level);
+    this.backgroundImage = getMapImage(airport);
 
     const setupArg = {
       airport,
@@ -443,7 +450,7 @@ export default {
     setupMessages();
     setupEvents(
       this,
-      getWaypointArrivalsAll(),
+      getWaypointArrivalsAll(airport),
       aircraftClicked,
       () => controlPanel.setFocus(),
       () => {
@@ -456,9 +463,9 @@ export default {
       tutorialBox,
       gameState
     );
-
     drawInertElements(imgLayerObj, { screenSize, width, height });
     setupEntities(setupArg, getMapEntities(airport));
+
     resetScore();
 
     // TUTORIAL
@@ -473,6 +480,7 @@ export default {
     }
     // END TUTORIAL
 
+    // MAIN GAME
     attachHtmlQueue(this, 'tutorialBoxHtml', tutorialBoxHtmlQueue);
     setupVictory();
     showLevelIntro(tutorialBox, () => {

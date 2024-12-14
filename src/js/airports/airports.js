@@ -10,6 +10,7 @@ import {
   getRunwayRnd as getRunwayRndLHR,
   getWaypointDepartureRnd as getWaypointDepartureRndLHR,
   getWaypointBySection as getWaypointBySectionLHR,
+  getMapImage as getMapImageLHR,
 } from './LHR';
 import {
   getFlightDeparture as getFlightDepartureLHR,
@@ -20,8 +21,26 @@ export const Airport = Object.freeze({
   Heathrow: 'Heathrow',
 });
 
+export const getMapImage = (airport) => {
+  if (airport === Airport.Heathrow) return getMapImageLHR();
+
+  throw new Error('unknown airport: ' + airport);
+};
+
+export const getWaypointArrivalsAll = (airport) => {
+  if (airport === Airport.Heathrow) return getWaypointArrivalsLHR();
+
+  throw new Error('unknown airport: ' + airport);
+};
+
 export const getWaypointBySection = (airport) => (sectionInt) => {
   if (airport === Airport.Heathrow) return getWaypointBySectionLHR(sectionInt);
+
+  throw new Error('unknown airport: ' + airport);
+};
+
+export const getWaypointDepartureRnd = (airport) => {
+  if (airport === Airport.Heathrow) return getWaypointDepartureRndLHR();
 
   throw new Error('unknown airport: ' + airport);
 };
@@ -34,12 +53,6 @@ export const getFlightDeparture = (airport) => (spawned) => {
 
 export const getFlightArrival = (airport) => (spawned) => {
   if (airport === Airport.Heathrow) return getFlightArrivalLHR(spawned);
-
-  throw new Error('unknown airport: ' + airport);
-};
-
-export const getWaypointDepartureRnd = (airport) => {
-  if (airport === Airport.Heathrow) return getWaypointDepartureRndLHR();
 
   throw new Error('unknown airport: ' + airport);
 };

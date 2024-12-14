@@ -6,6 +6,8 @@ export const Runways = Object.freeze({
   TwoSevenLeft: '27L',
 });
 
+export const getMapImage = () => '/img/london.png';
+
 export const getRunwaysAll = () => {
   return ['27R', '27L'];
 };
