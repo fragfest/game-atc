@@ -31,6 +31,8 @@ export const weatherGameLoop = (width, height, args) => {
   if (level === 4) level4(weatherArgs);
   if (level === 5) level5(weatherArgs);
   if (level === 6) level6(weatherArgs);
+  // TODO create unique inert clouds
+  if (level === 7) level1(weatherArgs);
 
   window.requestAnimationFrame(tick(width, height, args));
 };

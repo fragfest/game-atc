@@ -19,6 +19,10 @@ const veryHighChance = 0.5;
 const guaranteedChance = 1;
 const chanceDepartureBase = 0.4;
 
+// TODO //////////////////////////////////////////
+// central LevelObj typedef here. files: weather.js, levelIntro.js, victory.js, airports.js
+// TODO //////////////////////////////////////////
+
 /**
  * @typedef {Function} GetSpawnChance
  * @param {number} chanceOfPlanePerSec
@@ -50,16 +54,14 @@ export const callAircraftFnByLevel = (level, arg) => {
   if (level === 4) return spawnPlaneLevel3(arg, airport);
   if (level === 5) return spawnPlaneLevel3(arg, airport);
   if (level === 6) return spawnPlaneLevel3(arg, airport);
+  if (level === 7) return spawnPlaneLevel1(arg, airport);
   return spawnPlaneLevel3(arg, airport);
 };
 
 export const getAirportByLevel = (level) => {
-  if (level === 0) {
-    return Airport.Heathrow;
-  }
-  if (level >= 1 && level <= 6) {
-    return Airport.Heathrow;
-  }
+  if (level === 0) return Airport.Heathrow;
+  if (level >= 1 && level <= 6) return Airport.Heathrow;
+  if (level >= 7) return Airport.NewYorkJFK;
 
   return Airport.Heathrow;
 };

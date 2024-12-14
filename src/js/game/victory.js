@@ -21,7 +21,7 @@ export const setup = () => {
   });
 };
 
-export const getFinalLevel = () => FinalLevel;
+export const getFinalLevel = () => Object.keys(GoalsLevels).length - 1;
 
 /**
  * @param {VictoryEvents} victoryEvent
@@ -81,7 +81,6 @@ export const publishFailed = () => {
 
 // PRIVATE //////////////////////////////////////////////////
 
-const FinalLevel = 6;
 const GoalsLevels = {
   0: {
     Arrivals: 1,
@@ -138,6 +137,14 @@ const GoalsLevels = {
     Conflict: 30,
     SpawnRate: 1.5,
     Delayed: 3,
+  },
+  7: {
+    Arrivals: 0,
+    Departures: 8,
+    Failed: 3,
+    Conflict: 60,
+    SpawnRate: 1,
+    Delayed: 6,
   },
 };
 

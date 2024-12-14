@@ -38,6 +38,7 @@
           <canvas
             ref="background"
             class="canvas background layer-zero"
+            :style="styleBackgnd"
             :width="width"
             :height="height"
           ></canvas>
@@ -187,6 +188,7 @@ import { showLevelIntro } from '../js/levels/levelIntro';
 import {
   getMapEntities,
   getMapImage,
+  getMapImageOpacity,
   getWaypointArrivalsAll,
 } from '../js/airports/airports.js';
 import { getAirportByLevel } from '../js/levels/levels.js';
@@ -198,6 +200,7 @@ let height = getGameSize(ScreenSizes.Large).height;
 let gameState = {};
 let entityManagerArr = ref([]);
 let aircraftClicked = ref({});
+const backgroundOpacity = ref(1);
 
 let tutorialBoxTop = ref(0.4);
 let tutorialBoxLeft = ref(0.4);
@@ -269,6 +272,11 @@ export default {
       const boxWidth = width * tutorialBoxWidth.value;
       return boxWidth.toString();
     },
+
+    styleBackgnd: () => ({
+      'background-color': 'black',
+      opacity: backgroundOpacity.value,
+    }),
 
     styleTutorial: () => ({
       top: height * tutorialBoxTop.value + 'px',
@@ -408,6 +416,7 @@ export default {
     const isTutorial = level === 0;
     const airport = getAirportByLevel(level);
     this.backgroundImage = getMapImage(airport);
+    backgroundOpacity.value = getMapImageOpacity(airport);
 
     const setupArg = {
       airport,
@@ -598,11 +607,6 @@ p {
 }
 .layer-zero {
   z-index: 0;
-}
-
-.background {
-  background-color: black;
-  opacity: 0.5;
 }
 
 .entity-div {

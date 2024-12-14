@@ -33,12 +33,13 @@ ATCv0.1.3:
     ✔ Animations: consider for flightstrip, scorePanel @started(24-12-03 16:50) @done(24-12-09 12:03) @lasted(5d19h13m49s)
     ✔ Level intro prompt: airport name, scenario description @started(24-12-09 15:27) @done(24-12-09 20:17) @lasted(4h50m45s)
     ☐ More airports @started(24-12-12 22:02)
+    ☐ Custom play level
     ☐ More badges
     ☐ difficulty setting that changes delay timers
     ☐ Loading/Splash screen (i.e. while assets download)
-    ☐ Leaderboard online multiplayer
+    ☐ Online Leaderboard 
     ☐ Anti-cheat
-    ☐ Analytics
+    ☐ Google Analytics
     
   Minor:
     ✔ More flights/airframes @started(24-07-23 22:44) @done(24-07-23 23:40) @lasted(56m29s)
@@ -46,6 +47,7 @@ ATCv0.1.3:
     ✔ Seperate background atc chatter soundtrack toggle @done(24-12-09 15:24)
     ☐ Warn with message on mobile
     ☐ Slower landing rollouts (takeoffs too?)
+    ☐ panelBottom responsive i.e. message tip box is bigger
 
 ATCv0.1.2:
   Bugs:

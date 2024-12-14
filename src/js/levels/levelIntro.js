@@ -95,5 +95,19 @@ const getLevelObj = (level) => {
     };
   }
 
+  if (level === 7) {
+    return {
+      // displayTimeMs: 20000,
+      displayTimeMs: 1000,
+      width: 0.72,
+      // airportHeading: `NEW NEW NEW (XXX)`,
+      airportHeading: ``,
+      // airportSubheading: `NEW Operations - early morning, departures only`,
+      airportSubheading: ``,
+      // text1: `Welcome to new airport NEW NEW NEW! We have a quiet morning for you to get accustomed to the new map.`,
+      text1: ``,
+    };
+  }
+
   return {};
 };
