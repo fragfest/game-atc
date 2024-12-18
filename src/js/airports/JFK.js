@@ -2,14 +2,13 @@ import { HoldingPosition, WaypointType } from '../types';
 import { getGameSize, ScreenSizes } from '../utils';
 
 export const Runways = Object.freeze({
-  TwoSevenRight: '27R',
-  TwoSevenLeft: '27L',
+  TwentyTwoLeft: '22L',
 });
 
 export const getMapImage = () => '/img/new-york.png';
 
 export const getRunwaysAll = () => {
-  return ['27R', '27L'];
+  return ['22L'];
 };
 
 export const getRunwayRnd = () => {
@@ -68,53 +67,42 @@ export const getWaypoint = (waypoint, screenSize) => {
 
 const runways = (runway, screenSize) => {
   const width = getGameSize(screenSize).width;
-  let xOffset = 0;
   const height = getGameSize(screenSize).height;
+  let xOffset = 0;
   let yOffset = 0;
   let length = 0;
   let runwayWidth = 0;
   let titleY = 0;
-  let titlePosition27L = { x: 0, y: 0 };
-  let titlePosition27R = { x: 0, y: 0 };
+  let titlePosition22L = { x: 0, y: 0 };
 
   switch (screenSize) {
     case ScreenSizes.Large:
-      xOffset = -140;
-      yOffset = 26;
+      xOffset = 345;
+      yOffset = 65;
       length = 60;
       runwayWidth = 4;
-      titlePosition27R = { x: 0, y: -8 };
-      titlePosition27L = { x: 0, y: 16 };
+      titlePosition22L = { x: 8, y: 12 };
       break;
     case ScreenSizes.Small:
+      // TODO
       xOffset = -105;
       yOffset = 18;
       length = 40;
       runwayWidth = 1.6;
       titleY - 11;
-      titlePosition27R = { x: 0, y: -5 };
-      titlePosition27L = { x: 0, y: 11 };
+      titlePosition22L = { x: 0, y: 11 };
       break;
   }
 
   switch (runway) {
-    case '27R':
-      return {
-        x: width / 2 + xOffset,
-        y: height / 2 + yOffset,
-        heading: 270,
-        length,
-        width: runwayWidth,
-        titlePosition: titlePosition27R,
-      };
-    case '27L':
+    case '22L':
       return {
         x: width / 2 + xOffset,
         y: height / 2 + 18 + yOffset,
-        heading: 270,
+        heading: 211,
         length,
         width: runwayWidth,
-        titlePosition: titlePosition27L,
+        titlePosition: titlePosition22L,
       };
   }
 };

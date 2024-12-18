@@ -102,21 +102,12 @@ export const getRunwayRnd = (airport) => {
 // TODO create jsdoc typedef of Entity for func desc
 export const getMapEntities = (airport) => {
   if (airport === Airport.NewYorkJFK) {
-    const runway27R = (argObj) => {
+    const runway22L = (argObj) => {
       return new Runway(
-        RunwaysJFK.TwoSevenRight,
+        RunwaysJFK.TwentyTwoLeft,
         argObj.imgLayerObj,
         argObj.screenSize,
-        getRunwayJFK(RunwaysJFK.TwoSevenRight, argObj.screenSize)
-      );
-    };
-
-    const runway27L = (argObj) => {
-      return new Runway(
-        RunwaysJFK.TwoSevenLeft,
-        argObj.imgLayerObj,
-        argObj.screenSize,
-        getRunwayJFK(RunwaysJFK.TwoSevenLeft, argObj.screenSize)
+        getRunwayJFK(RunwaysJFK.TwentyTwoLeft, argObj.screenSize)
       );
     };
 
@@ -143,7 +134,7 @@ export const getMapEntities = (airport) => {
         );
       }
     );
-    return [runway27L, runway27R].concat(waypointArrivals, waypointDepartures);
+    return [runway22L].concat(waypointArrivals, waypointDepartures);
   }
 
   if (airport === Airport.Heathrow) {
