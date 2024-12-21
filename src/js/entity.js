@@ -1,5 +1,6 @@
 import { ScreenSizes, isWithinDist } from './utils';
 
+// entity type ////////////////////////////////////////////////
 const hasEntityState = (state) => {
   return 'id' in state && 'x' in state && 'y' in state && 'altitude' in state;
 };
@@ -10,6 +11,17 @@ export const hasEntityFuncs = (entity) => {
     typeof entity.draw === 'function' &&
     typeof entity.updateDestroy === 'function'
   );
+};
+// END entity type ////////////////////////////////////////////////
+
+export const getHeadingToEntity = (entitySrc) => (entityDest) => {
+  const deltaX = entityDest.x - entitySrc.x;
+  const deltaY = entityDest.y - entitySrc.y;
+  let hdgToDest = Math.atan(deltaY / deltaX);
+  if (deltaX < 0) {
+    hdgToDest = Math.PI + hdgToDest;
+  }
+  return hdgToDest;
 };
 
 export const distBetweenEntities = (entityOne) => (entityTwo) => {

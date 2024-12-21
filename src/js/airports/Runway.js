@@ -11,6 +11,7 @@ import {
 import { MessageEvents, publishMessage as publish } from '../events/messages';
 import { play, SoundType } from '../game/sound';
 import { planeLandFail } from '../game/score/score';
+import { getHeadingToEntity } from '../entity';
 
 ////////////////////////////////////////////////////////////
 // class Runway
@@ -237,21 +238,12 @@ const isHeadingClose = (self, entity, distToRunway) => {
   if (distToRunway > 200) return deltaHeading < 2;
 };
 
-const isTurnAngleSmall = (self, entity) => {
-  const deltaX = entity.x - self.x;
-  const deltaY = entity.y - self.y;
-  let hdgToPlane = radToDegrees(Math.atan((-1 * deltaY) / deltaX));
-  if (deltaX > 0) {
-    hdgToPlane = 180 - hdgToPlane;
-  } else {
-    hdgToPlane = 360 - hdgToPlane;
-  }
-  hdgToPlane = degreesToRad(hdgToPlane);
-
+const isTurnAngleSmall = (self, plane) => {
   const oppositeRunwayHdgDeg = convertToSmallDegrees(
     radToDegrees(self.runwayHeading + Math.PI)
   );
   const oppositeRunwayHdg = degreesToRad(oppositeRunwayHdgDeg);
+  const hdgToPlane = getHeadingToEntity(self)(plane);
 
   const arcMax = 15;
   return isHeadingWithinArc(hdgToPlane, oppositeRunwayHdg, arcMax);
