@@ -37,12 +37,23 @@ export const convHdgRadToThreeDigits = (rad) => {
   return leftPadZeros(degrees);
 };
 
-// UTIL /////////////////////////////////////////////////////////////////
+// UTIL //////////////////////////////////////////////////////////////////
+/**
+ * @param {number} hdgRad heading to check (radians)
+ * @param {number} arcCentreHdgRad centre line heading (radians)
+ * @param {number} arcAngleDeg arc on each side of centre line (degrees)
+ * @returns {boolean}
+ */
+export const isHeadingWithinArc = (hdgRad, arcCentreHdgRad, arcAngleDeg) => {
+  const arcAngle = deg2Rad(arcAngleDeg);
+  const angleWithinLeftArc = hdgRad >= arcCentreHdgRad - arcAngle;
+  const angleWithinRightArc = hdgRad <= arcCentreHdgRad + arcAngle;
+  return angleWithinLeftArc && angleWithinRightArc;
+};
+
 export const isWithinDist = (distMax, obj1, obj2) => {
   return distBetweenEntities(obj1)(obj2) < distMax;
 };
-export const randMinMax = (min, max) => min + Math.random() * (max - min);
-export const leftPadZeros = (str) => ('000' + str).slice(-3);
 
 export const isValidHeading = (str) => {
   const isInRange = parseInt(str) >= 0 && parseInt(str) <= 360;
@@ -67,7 +78,9 @@ export const isValidSpeed = (plane, str) => {
   return isValidThreeDigitInput(str, isInRange);
 };
 
-// SIZE /////////////////////////////////////////////////////////////////
+export const leftPadZeros = (str) => ('000' + str).slice(-3);
+
+// SIZE //////////////////////////////////////////////////////////////
 export const ScreenSizes = Object.freeze({
   Small: 'small',
   Large: 'large',
@@ -118,6 +131,7 @@ export const getClassSize = (screenSize) => {
 
 // GENERAL /////////////////////////////////////////////////////////////////
 export const accMax = (acc, val) => (acc > val ? acc : val);
+export const randMinMax = (min, max) => min + Math.random() * (max - min);
 
 // SETUP /////////////////////////////////////////////////////////////////
 export const setupGameLoadAndExit = () => {
@@ -167,3 +181,6 @@ const isValidThreeDigitInput = (str, isInRange) => {
   }
   return hasOnlyInts && isNotAllZeros && isInRange;
 };
+
+// GENERAL /////////////////////////////////////////////////////////////////
+const deg2Rad = (deg) => (deg * Math.PI) / 180;

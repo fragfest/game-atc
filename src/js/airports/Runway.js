@@ -2,7 +2,9 @@ import { isAircraft, Direction } from '../types';
 import {
   convertToSmallDegrees,
   convHdgRadToThreeDigits,
+  degreesToRad,
   inputHeadingToRad,
+  isHeadingWithinArc,
   radToDegrees,
   ScreenSizes,
 } from '../utils';
@@ -96,15 +98,16 @@ export default class Runway {
       if (!entity.landing) return;
 
       // const { x, y } = { ...entity };
-      // console.log({ x, y }, entity.prevPosition, entity.onGlidePath);
       // if (isGettingCloser) {
-      //   const outgoingHeading = self.runwayHeading + Math.PI;
-      //   const oncourseX = dist * Math.cos(outgoingHeading);
-      //   const oncourseY = dist * Math.sin(outgoingHeading);
-      //   const xdiff = self.x + oncourseX;
-      //   const ydiff = self.y + oncourseY;
-      //   self.imgLayerCtx.fillStyle = 'yellow';
-      //   self.imgLayerCtx.fillRect(xdiff, ydiff, 3, 3);
+      //   console.log({ x, y }, entity.prevPosition);
+      //   console.log('onGlidePath', entity.onGlidePath);
+      //   const outgoingHeading = this.runwayHeading + Math.PI;
+      //   const oncourseX = distObj.dist * Math.cos(outgoingHeading);
+      //   const oncourseY = distObj.dist * Math.sin(outgoingHeading);
+      //   const xdiff = this.x + oncourseX;
+      //   const ydiff = this.y + oncourseY;
+      //   this.ctx.fillStyle = 'yellow';
+      //   this.ctx.fillRect(xdiff, ydiff, 3, 3);
       // }
 
       if (!isGettingCloser && entity.onGlidePath) {
@@ -130,10 +133,7 @@ export default class Runway {
         return entity.setLanding(false);
       }
 
-      if (
-        !isTurnAngleSmall(this, entity, distToRunway) &&
-        !entity.onGlidePath
-      ) {
+      if (!isTurnAngleSmall(this, entity) && !entity.onGlidePath) {
         showMsgOffCourse(this.runwayHeading, entity);
         play(SoundType.Fail);
         return entity.setLanding(false);
@@ -237,13 +237,24 @@ const isHeadingClose = (self, entity, distToRunway) => {
   if (distToRunway > 200) return deltaHeading < 2;
 };
 
-const isTurnAngleSmall = (self, entity, distToRunway) => {
-  const angleMaxDeg = 15;
-  const x = Math.abs(self.x - entity.x);
-  const angleToGlidepath = convertToSmallDegrees(
-    radToDegrees(Math.acos(x / distToRunway)) - 90
+const isTurnAngleSmall = (self, entity) => {
+  const deltaX = entity.x - self.x;
+  const deltaY = entity.y - self.y;
+  let hdgToPlane = radToDegrees(Math.atan((-1 * deltaY) / deltaX));
+  if (deltaX > 0) {
+    hdgToPlane = 180 - hdgToPlane;
+  } else {
+    hdgToPlane = 360 - hdgToPlane;
+  }
+  hdgToPlane = degreesToRad(hdgToPlane);
+
+  const oppositeRunwayHdgDeg = convertToSmallDegrees(
+    radToDegrees(self.runwayHeading + Math.PI)
   );
-  return angleToGlidepath < angleMaxDeg;
+  const oppositeRunwayHdg = degreesToRad(oppositeRunwayHdgDeg);
+
+  const arcMax = 15;
+  return isHeadingWithinArc(hdgToPlane, oppositeRunwayHdg, arcMax);
 };
 
 /**
