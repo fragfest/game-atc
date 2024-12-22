@@ -129,9 +129,9 @@ const PerformanceModifiers = Object.freeze({
     speedTakeoff: 165,
     speedMin: 220,
     speedLanding: 145,
-    speedDeltaPerMs: 1.6,
-    altitudeRatePerMs: 0.034,
-    turnRateRadPerMs: 0.000042,
+    speedDeltaPerMs: 1.7,
+    altitudeRatePerMs: 0.037,
+    turnRateRadPerMs: 0.000045,
     wake: WakeRating.H,
   },
 });
@@ -149,7 +149,7 @@ const IconSizes = Object.freeze({
   B78X: { top: 0, side: 24 },
   B772: { top: 0, side: 26 },
   B77W: { top: 0, side: 26 },
-  // B748: { top: 0, side: 32 },
+  B748: { top: 0, side: 32 },
 });
 
 const imagesObj = (type) => ({
@@ -236,9 +236,9 @@ const performanceByAirframe = {
   },
   B748: {
     ...basePerformance,
-    ...PerformanceModifiers.A388,
+    ...PerformanceModifiers.B748,
     type: 'B748',
-    images: imagesObj('A388'),
+    images: imagesObj('B748'),
   },
 };
 
