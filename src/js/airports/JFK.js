@@ -24,33 +24,33 @@ export const getRunway = (runway, screenSize) => {
 
 export const Waypoints = Object.freeze({
   // arrival
-  BNN: 'BNN',
-  OCK: 'OCK',
-  LAM: 'LAM',
-  BIG: 'BIG',
+  CORVT: 'CORVT',
+  LENDY: 'LENDY',
+  KMCHI: 'KMCHI',
   // departure
-  DET: 'DET',
-  MID: 'MID',
-  CPT: 'CPT',
-  BPK: 'BPK',
+  NORTH: 'NORTH',
+  SOUTH: 'SOUTH',
+  SHIPP: 'SHIPP',
+  SBJ: 'SBJ',
 });
 
 export const getWaypointDestinationsAll = () => {
-  return ['DET', 'MID', 'CPT', 'BPK'];
+  return ['NORTH', 'SOUTH', 'SHIPP', 'SBJ'];
 };
 
 export const getWaypointArrivalsAll = () => {
-  return ['BNN', 'OCK', 'LAM', 'BIG'];
+  return ['CORVT', 'LENDY', 'KMCHI'];
 };
 
+// sections numbered from WNW going clockwise: 1 - 8
 export const getWaypointBySection = (sectionInt) => {
-  if (sectionInt >= 1 && sectionInt <= 4) return Waypoints.LAM;
-  if (sectionInt >= 5 && sectionInt <= 8) return Waypoints.BIG;
+  if (sectionInt >= 1 && sectionInt <= 2) return Waypoints.LENDY;
+  if (sectionInt >= 3 && sectionInt <= 6) return Waypoints.CORVT;
+  if (sectionInt >= 7 && sectionInt <= 8) return Waypoints.KMCHI;
 };
 
-// TODO refactor: use getWaypointDestinationsAll() and have caller choose rnd
 export const getWaypointDepartureRnd = () => {
-  const waypointsDeparture = ['DET', 'MID', 'CPT', 'BPK'];
+  const waypointsDeparture = getWaypointDestinationsAll();
   const indexDeparture = Math.floor(Math.random() * waypointsDeparture.length);
   return waypointsDeparture[indexDeparture];
 };
@@ -72,7 +72,6 @@ const runways = (runway, screenSize) => {
   let yOffset = 0;
   let length = 0;
   let runwayWidth = 0;
-  let titleY = 0;
   let titlePosition22L = { x: 0, y: 0 };
 
   switch (screenSize) {
@@ -83,14 +82,13 @@ const runways = (runway, screenSize) => {
       runwayWidth = 4;
       titlePosition22L = { x: 8, y: 12 };
       break;
+    // TODO //////////////////////////////////////////////////////////////////
     case ScreenSizes.Small:
-      // TODO
-      xOffset = -105;
-      yOffset = 18;
-      length = 40;
-      runwayWidth = 1.6;
-      titleY - 11;
-      titlePosition22L = { x: 0, y: 11 };
+      xOffset = 345;
+      yOffset = 65;
+      length = 60;
+      runwayWidth = 4;
+      titlePosition22L = { x: 8, y: 12 };
       break;
   }
 
@@ -113,114 +111,101 @@ const waypoints = (waypoint, screenSize) => {
 
   if (screenSize === ScreenSizes.Large) {
     switch (waypoint) {
-      case 'BNN':
+      case 'CORVT':
         return {
           holdingPosition: HoldingPosition.North,
           type: WaypointType.Arrival,
-          x: width / 2 - 215,
-          y: height / 2 - 155,
+          x: width - 250,
+          y: height / 2 - 180,
         };
-      case 'OCK':
+      case 'LENDY':
         return {
           holdingPosition: HoldingPosition.South,
           type: WaypointType.Arrival,
-          x: 465,
-          y: height - 160,
+          x: width / 4 + 250,
+          y: height / 2 - 280,
         };
-      case 'LAM':
+      case 'KMCHI':
         return {
           holdingPosition: HoldingPosition.North,
           type: WaypointType.Arrival,
-          x: width / 2 + 400,
-          y: height / 2 - 150,
+          x: width / 2 - 70,
+          y: height - 240,
         };
-      case 'BIG':
-        return {
-          holdingPosition: HoldingPosition.South,
-          type: WaypointType.Arrival,
-          x: width / 2 + 350,
-          y: height / 2 + 160,
-        };
-      case 'DET':
+      case 'NORTH':
         return {
           type: WaypointType.Departure,
-          x: width / 2 + 150,
-          y: height - 28,
+          x: width - 200,
+          y: 50,
         };
-      case 'MID':
+      case 'SOUTH':
         return {
           type: WaypointType.Departure,
-          x: 270,
-          y: height - 42,
+          x: width / 2 + 20,
+          y: height - 30,
         };
-      case 'CPT':
+      case 'SHIPP':
+        return {
+          type: WaypointType.Departure,
+          x: width - 70,
+          y: height - 50,
+        };
+      case 'SBJ':
         return {
           type: WaypointType.Departure,
           x: 50,
-          y: height / 2 - 45,
-        };
-      case 'BPK':
-        return {
-          type: WaypointType.Departure,
-          x: width / 2 + 70,
-          y: 50,
+          y: height / 2,
         };
     }
   }
 
+  // TODO //////////////////////////////////////////////////////////////////
   if (screenSize === ScreenSizes.Small) {
     switch (waypoint) {
-      case 'BNN':
+      case 'CORVT':
         return {
           holdingPosition: HoldingPosition.North,
           type: WaypointType.Arrival,
-          x: width / 2 - 160,
-          y: height / 2 - 118,
+          x: width - 250,
+          y: height / 2 - 180,
         };
-      case 'OCK':
+      case 'LENDY':
         return {
           holdingPosition: HoldingPosition.South,
           type: WaypointType.Arrival,
-          x: 350,
-          y: height - 120,
+          x: width / 4 + 250,
+          y: height / 2 - 280,
         };
-      case 'LAM':
-        return {
-          holdingPosition: HoldingPosition.North,
-          type: WaypointType.Arrival,
-          x: width / 2 + 290,
-          y: height / 2 - 112,
-        };
-      case 'BIG':
+      case 'KMCHI':
         return {
           holdingPosition: HoldingPosition.South,
           type: WaypointType.Arrival,
-          x: width / 2 + 260,
-          y: height / 2 + 115,
+          x: width / 2 - 70,
+          y: height - 240,
         };
-      case 'DET':
+      case 'NORTH':
         return {
           type: WaypointType.Departure,
-          x: width / 2 + 112,
-          y: height - 22,
+          x: width - 200,
+          y: 50,
         };
-      case 'MID':
+      case 'SOUTH':
         return {
           type: WaypointType.Departure,
-          x: 202,
+          x: width / 2 + 20,
           y: height - 30,
         };
-      case 'CPT':
+      case 'SHIPP':
         return {
           type: WaypointType.Departure,
-          x: 39,
-          y: height / 2 - 33,
+          x: width - 70,
+          y: height - 50,
         };
-      case 'BPK':
+      case 'SBJ':
         return {
           type: WaypointType.Departure,
-          x: width / 2 + 60,
-          y: 35,
+          x: 50,
+          y: height / 2,
         };
     }
   }

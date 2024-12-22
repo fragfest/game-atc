@@ -130,6 +130,7 @@ export default class Aircraft {
     // flightstrip info
     this.hasProximityAlert = false;
     this.destinationType = planeObj.destinationType || ''; // TODO consolidate with WaypointType
+    this.airport = planeObj.airport || '';
     this.runway = planeObj.runway || '';
     this.waypoint = '';
     this.setWaypoint(planeObj.waypoint || '');

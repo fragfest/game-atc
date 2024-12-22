@@ -185,6 +185,7 @@ const createAircraftArrival = (
       airframeObj,
       waypoint: newPlane.waypoint,
       runway: runway.title,
+      airport,
     }
   );
   aircraft.clickEventCB = () => clickCB(aircraft);
@@ -234,6 +235,7 @@ const createAircraftDeparture = (
       airframeObj,
       waypoint: newPlane.waypoint,
       runway: runway.title,
+      airport,
     }
   );
   aircraft.clickEventCB = () => clickCB(aircraft);

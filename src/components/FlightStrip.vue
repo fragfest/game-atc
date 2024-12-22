@@ -44,7 +44,7 @@
           <template v-slot:hover>cycle waypoints (W)</template>
         </ToolTip>
 
-        <div class="col">{{ plane.airframe }} / {{ plane.wake }}</div>
+        <div class="col">{{ plane.airframe }} {{ plane.wake }}</div>
 
         <div class="col fixed-width no-border">
           <div v-if="hasProximityAlert" class="conflict">
@@ -245,7 +245,7 @@ import Bowser from 'bowser';
 
 import { DestinationType } from '../js/types';
 import { getClassSize, nextWaypoint } from '../js/utils';
-import { getWaypointArrivalsAll } from '../js/airports/LHR';
+import { getWaypointArrivalsAll } from '../js/airports/airports';
 import {
   MessageEvents,
   subscribeMessage as subscribe,
@@ -477,7 +477,10 @@ export default {
     waypointClick: function () {
       const plane = getPlane(this.plane, this.planes);
       if (!plane) return;
-      const waypoint = nextWaypoint(getWaypointArrivalsAll(), plane);
+      const waypoint = nextWaypoint(
+        getWaypointArrivalsAll(plane.airport),
+        plane
+      );
       plane.setWaypoint(waypoint);
     },
 
