@@ -20,6 +20,7 @@ export const Airframes = Object.freeze({
   A333: 'A333',
   A388: 'A388',
   B738: 'B738',
+  B38M: 'B38M',
   B763: 'B763',
   B788: 'B788',
   B789: 'B789',
@@ -82,6 +83,7 @@ const basePerformance = {
 
 const PerformanceModifiers = Object.freeze({
   B738: {},
+  B38M: {},
   A320: {},
   A321: {},
   A333: {
@@ -143,6 +145,7 @@ const IconSizes = Object.freeze({
   A333: { top: 0, side: 26 },
   A388: { top: 0, side: 32 },
   B738: { top: 0, side: 22 },
+  B38M: { top: 0, side: 22 },
   B763: { top: 0, side: 24 },
   B788: { top: 0, side: 24 },
   B789: { top: 0, side: 24 },
@@ -166,6 +169,12 @@ const performanceByAirframe = {
     ...basePerformance,
     ...PerformanceModifiers.B738,
     type: 'B738',
+    images: imagesObj('A320'),
+  },
+  B38M: {
+    ...basePerformance,
+    ...PerformanceModifiers.B38M,
+    type: 'B38M',
     images: imagesObj('A320'),
   },
   A319: {
@@ -248,6 +257,7 @@ const detailsByAirframe = {
   A321: { make: 'Airbus', airframe: 'A321-231' },
   A333: { make: 'Airbus', airframe: 'A330-300' },
   A388: { make: 'Airbus', airframe: 'A380-800' },
+  B38M: { make: 'Boeing', airframe: '737-MAX-8' },
   B738: { make: 'Boeing', airframe: '737-8K2' },
   B763: { make: 'Boeing', airframe: '767-300' },
   B788: { make: 'Boeing', airframe: '787-8' },
