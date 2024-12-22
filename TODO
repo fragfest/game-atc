@@ -45,9 +45,10 @@ ATCv0.1.3:
     ✔ More flights/airframes @started(24-07-23 22:44) @done(24-07-23 23:40) @lasted(56m29s)
     ✔ Achievement Badges placeholders for future @started(24-10-16 12:00) @done(24-10-16 13:10) @lasted(1h10m4s)
     ✔ Seperate background atc chatter soundtrack toggle @done(24-12-09 15:24)
+    ☐ panelBottom responsive i.e. message tip box is bigger
+    ☐ small scorePanel make smaller
     ☐ Warn with message on mobile
     ☐ Slower landing rollouts (takeoffs too?)
-    ☐ panelBottom responsive i.e. message tip box is bigger
 
 ATCv0.1.2:
   Bugs:

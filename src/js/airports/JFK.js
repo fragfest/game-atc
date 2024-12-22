@@ -82,13 +82,12 @@ const runways = (runway, screenSize) => {
       runwayWidth = 4;
       titlePosition22L = { x: 8, y: 12 };
       break;
-    // TODO //////////////////////////////////////////////////////////////////
     case ScreenSizes.Small:
-      xOffset = 345;
-      yOffset = 65;
-      length = 60;
-      runwayWidth = 4;
-      titlePosition22L = { x: 8, y: 12 };
+      xOffset = 256;
+      yOffset = 46;
+      length = 40;
+      runwayWidth = 2.2;
+      titlePosition22L = { x: 6, y: 8 };
       break;
   }
 
@@ -153,41 +152,40 @@ const waypoints = (waypoint, screenSize) => {
       case 'SBJ':
         return {
           type: WaypointType.Departure,
-          x: 50,
+          x: 40,
           y: height / 2,
         };
     }
   }
 
-  // TODO //////////////////////////////////////////////////////////////////
   if (screenSize === ScreenSizes.Small) {
     switch (waypoint) {
       case 'CORVT':
         return {
           holdingPosition: HoldingPosition.North,
           type: WaypointType.Arrival,
-          x: width - 250,
-          y: height / 2 - 180,
+          x: width - 190,
+          y: height / 2 - 130,
         };
       case 'LENDY':
         return {
           holdingPosition: HoldingPosition.South,
           type: WaypointType.Arrival,
-          x: width / 4 + 250,
-          y: height / 2 - 280,
+          x: width / 4 + 190,
+          y: height / 2 - 210,
         };
       case 'KMCHI':
         return {
-          holdingPosition: HoldingPosition.South,
+          holdingPosition: HoldingPosition.North,
           type: WaypointType.Arrival,
-          x: width / 2 - 70,
-          y: height - 240,
+          x: width / 2 - 50,
+          y: height - 180,
         };
       case 'NORTH':
         return {
           type: WaypointType.Departure,
-          x: width - 200,
-          y: 50,
+          x: width - 150,
+          y: 40,
         };
       case 'SOUTH':
         return {
@@ -198,13 +196,13 @@ const waypoints = (waypoint, screenSize) => {
       case 'SHIPP':
         return {
           type: WaypointType.Departure,
-          x: width - 70,
-          y: height - 50,
+          x: width - 60,
+          y: height - 40,
         };
       case 'SBJ':
         return {
           type: WaypointType.Departure,
-          x: 50,
+          x: 30,
           y: height / 2,
         };
     }
