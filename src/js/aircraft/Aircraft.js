@@ -124,7 +124,7 @@ export default class Aircraft {
     this.time = flightObj.time;
     this.title = flightObj.flight.trim().substring(0, 6);
     this.city = flightObj.city;
-    this.airport = flightObj.airport;
+    this.airportCode = flightObj.airport;
     this.airline = flightObj.airline;
 
     // flightstrip info

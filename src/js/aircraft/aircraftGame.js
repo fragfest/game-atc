@@ -50,6 +50,18 @@ export const spawnPlaneGameTick =
       flightObj,
       airport
     ) => {
+      // createAircraftRndFn(
+      //   () =>
+      //     createAircraftArrival(
+      //       entityManagerArr,
+      //       canvasObj,
+      //       flightObj,
+      //       airport,
+      //       canvasObj.clickCB
+      //     ),
+      //   1
+      // );
+
       createAircraftRndFn(
         () =>
           createAircraftRndDestinationType(
@@ -166,13 +178,6 @@ const createAircraftArrival = (
     canvasObjText,
     canvasObjHeading,
     canvasEntityEl,
-    // {
-    //   x: 470,
-    //   y: 500,
-    //   heading: '090',
-    //   altitude: 5000,
-    //   speed,
-    // },
     {
       x: newPlane.x,
       y: newPlane.y,

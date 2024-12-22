@@ -139,8 +139,8 @@ const GoalsLevels = {
     Delayed: 3,
   },
   7: {
-    // Arrivals: 8,
-    Arrivals: 0,
+    Arrivals: 8,
+    // Arrivals: 0,
     Departures: 8,
     Failed: 3,
     Conflict: 60,

@@ -16,6 +16,7 @@ export const getPerformance = (airframe, screenSize) => {
 export const Airframes = Object.freeze({
   A319: 'A319',
   A320: 'A320',
+  A321: 'A321',
   A333: 'A333',
   A388: 'A388',
   B738: 'B738',
@@ -25,6 +26,7 @@ export const Airframes = Object.freeze({
   B78X: 'B78X',
   B772: 'B772',
   B77W: 'B77W',
+  B748: 'B748',
 });
 
 export const getWakeStrength = (rating) => {
@@ -81,6 +83,7 @@ const basePerformance = {
 const PerformanceModifiers = Object.freeze({
   B738: {},
   A320: {},
+  A321: {},
   A333: {
     speedTakeoff: 160,
     speedMin: 200,
@@ -89,6 +92,15 @@ const PerformanceModifiers = Object.freeze({
     altitudeRatePerMs: 0.036,
     turnRateRadPerMs: 0.000046,
     wake: WakeRating.H,
+  },
+  A388: {
+    speedTakeoff: 165,
+    speedMin: 220,
+    speedLanding: 145,
+    speedDeltaPerMs: 1.6,
+    altitudeRatePerMs: 0.034,
+    turnRateRadPerMs: 0.000042,
+    wake: WakeRating.J,
   },
   B763: {
     speedTakeoff: 160,
@@ -113,20 +125,21 @@ const PerformanceModifiers = Object.freeze({
     turnRateRadPerMs: 0.000046,
     wake: WakeRating.H,
   },
-  A388: {
+  B748: {
     speedTakeoff: 165,
     speedMin: 220,
     speedLanding: 145,
     speedDeltaPerMs: 1.6,
     altitudeRatePerMs: 0.034,
     turnRateRadPerMs: 0.000042,
-    wake: WakeRating.J,
+    wake: WakeRating.H,
   },
 });
 
 const IconSizes = Object.freeze({
   A319: { top: 0, side: 22 },
   A320: { top: 0, side: 22 },
+  A321: { top: 0, side: 22 },
   A333: { top: 0, side: 26 },
   A388: { top: 0, side: 32 },
   B738: { top: 0, side: 22 },
@@ -136,6 +149,7 @@ const IconSizes = Object.freeze({
   B78X: { top: 0, side: 24 },
   B772: { top: 0, side: 26 },
   B77W: { top: 0, side: 26 },
+  // B748: { top: 0, side: 32 },
 });
 
 const imagesObj = (type) => ({
@@ -164,6 +178,12 @@ const performanceByAirframe = {
     ...basePerformance,
     ...PerformanceModifiers.A320,
     type: 'A320',
+    images: imagesObj('A320'),
+  },
+  A321: {
+    ...basePerformance,
+    ...PerformanceModifiers.A321,
+    type: 'A321',
     images: imagesObj('A320'),
   },
   A333: {
@@ -214,18 +234,26 @@ const performanceByAirframe = {
     type: 'B77W',
     images: imagesObj('B77W'),
   },
+  B748: {
+    ...basePerformance,
+    ...PerformanceModifiers.A388,
+    type: 'B748',
+    images: imagesObj('A388'),
+  },
 };
 
 const detailsByAirframe = {
-  B738: { make: 'Boeing', airframe: '737-8K2' },
   A319: { make: 'Airbus', airframe: 'A319-131' },
   A320: { make: 'Airbus', airframe: 'A320-200' },
+  A321: { make: 'Airbus', airframe: 'A321-231' },
   A333: { make: 'Airbus', airframe: 'A330-300' },
   A388: { make: 'Airbus', airframe: 'A380-800' },
+  B738: { make: 'Boeing', airframe: '737-8K2' },
   B763: { make: 'Boeing', airframe: '767-300' },
   B788: { make: 'Boeing', airframe: '787-8' },
   B789: { make: 'Boeing', airframe: '787-9' },
   B78X: { make: 'Boeing', airframe: '787-10' },
   B772: { make: 'Boeing', airframe: '777-236ER' },
   B77W: { make: 'Boeing', airframe: '777-300ER' },
+  B748: { make: 'Boeing', airframe: '747-8' },
 };

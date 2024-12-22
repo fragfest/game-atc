@@ -104,7 +104,7 @@
           <span class="green">{{ cityType }}</span>
         </b>
         {{ plane.city }}
-        <small>({{ plane.airport }})</small>
+        <small>({{ plane.airportCode }})</small>
       </p>
       <p>
         <b>
