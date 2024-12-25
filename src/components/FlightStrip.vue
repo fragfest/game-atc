@@ -33,7 +33,7 @@
         <div v-if="!isArrival" class="col font-large">
           <b>{{ plane.waypoint }}</b>
         </div>
-        <ToolTip v-else>
+        <ToolTip v-else position="close">
           <div class="col">
             <button @click="waypointClick">
               <span class="font-large">
@@ -44,7 +44,7 @@
           <template v-slot:hover>cycle waypoints (W)</template>
         </ToolTip>
 
-        <div class="col">{{ plane.airframe }} {{ plane.wake }}</div>
+        <div class="col w-42">{{ plane.airframe }} {{ plane.wake }}</div>
 
         <div class="col fixed-width no-border">
           <div v-if="hasProximityAlert" class="conflict">
@@ -522,15 +522,19 @@ export default {
   animation: spawn-destination 1.6s var(--timing-bounce) 0s 1 forwards;
 }
 
+.w-42 {
+  width: 42px;
+}
+
 // strip small
 .strip.small {
-  width: 280px;
-  min-width: 280px;
-  height: 56px;
+  width: 300px;
+  min-width: 300px;
+  height: 60px;
 
   // strip-info
   .strip-info {
-    top: 10px;
+    top: 11px;
     left: 4px;
 
     font: 10px Arial;
@@ -575,9 +579,9 @@ export default {
 // strip (large)
 .strip {
   position: relative;
-  width: 360px;
-  min-width: 360px;
-  height: 71px;
+  width: 378px;
+  min-width: 378px;
+  height: 75px;
   margin-left: 16px;
   cursor: pointer;
 
@@ -601,7 +605,7 @@ export default {
     display: flex;
     align-items: center;
     position: absolute;
-    top: 16px;
+    top: 18px;
     left: 8px;
     height: 38px;
 
@@ -620,8 +624,9 @@ export default {
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 6px;
+
       height: 26px;
+      padding: 6px;
       text-align: center;
       border-right: solid 1px #b2b0b0;
     }

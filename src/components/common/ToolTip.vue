@@ -16,6 +16,12 @@ export default {
   name: 'ToolTip',
   props: {
     disabled: { type: Boolean },
+    position: {
+      type: String,
+      validator: (val) => {
+        return ['close'].includes(val);
+      },
+    },
   },
 
   data() {
@@ -32,6 +38,7 @@ export default {
     classComputed: function () {
       let classStr = '';
       classStr += this.disabled ? 'disabled' : '';
+      classStr += this.position ? this.position : '';
       if (this.sizeClass === ScreenSizes.Small) classStr += ' small';
       return classStr;
     },
@@ -44,19 +51,26 @@ main {
   .tooltip .hover {
     visibility: hidden;
     position: absolute;
-    background-color: black;
-    color: white;
     border-radius: 6px;
     padding: 6px 12px;
-    font-size: 14px;
     margin-top: 4px;
     margin-left: 12px;
+
+    background-color: black;
+    color: white;
+    font-family: Arial;
+    font-size: 14px;
     z-index: 1;
 
     &.small {
       font-size: 11px;
       padding: 4px 8px;
     }
+  }
+
+  .tooltip .hover.close {
+    margin-top: -12px;
+    margin-left: 50px;
   }
 
   .tooltip:hover .hover:not(.disabled) {

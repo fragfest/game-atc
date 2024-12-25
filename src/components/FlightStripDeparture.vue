@@ -69,7 +69,6 @@ export default {
   data() {
     return {};
   },
-  mounted() {},
 
   computed: {
     planesAirborne: function () {
@@ -105,8 +104,8 @@ export default {
 
   methods: {
     taxiItemStyle(index) {
-      let leftBase = -360;
-      if (this.screenSize === ScreenSizes.Small) leftBase = -283;
+      let leftBase = -378;
+      if (this.screenSize === ScreenSizes.Small) leftBase = -302;
       const left = leftBase * (index + 1);
       return {
         left: left + 'px',

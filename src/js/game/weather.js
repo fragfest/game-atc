@@ -322,9 +322,9 @@ const createWeatherEntity = (
   updateWeatherFn
 ) => ({
   weatherType,
-  updateWeatherFn,
   centerXY,
   radius,
+  updateWeatherFn,
 });
 
 const updateXY = (diffXY, XY, centerXY, obj) => {

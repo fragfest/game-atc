@@ -343,7 +343,7 @@ export default {
   }
   .badge-score {
     min-width: 20px;
-    padding: 4px 6px;
+    padding: 2px 4px;
   }
 }
 // END score-row
