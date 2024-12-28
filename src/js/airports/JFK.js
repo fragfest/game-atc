@@ -1,5 +1,7 @@
+import Waypoint from '../canvas/Waypoint';
 import { HoldingPosition, WaypointType } from '../types';
 import { getGameSize, ScreenSizes } from '../utils';
+import Runway from './Runway';
 
 export const Runways = Object.freeze({
   TwentyTwoLeft: '22L',
@@ -59,6 +61,42 @@ export const getWaypoint = (waypoint, screenSize) => {
   const obj = waypoints(waypoint, screenSize);
   if (!obj) throw new Error('waypoint not found: ' + waypoint);
   return obj;
+};
+
+export const getMapEntities = () => {
+  const runway22L = (argObj) => {
+    return new Runway(
+      Runways.TwentyTwoLeft,
+      argObj.imgLayerObj,
+      argObj.screenSize,
+      getRunway(Runways.TwentyTwoLeft, argObj.screenSize)
+    );
+  };
+
+  const waypointArrivals = getWaypointArrivalsAll().map(
+    (waypoint) => (argObj) => {
+      return new Waypoint(
+        waypoint,
+        argObj.backgroundObj,
+        argObj.headingLayerObj,
+        argObj.screenSize,
+        getWaypoint(waypoint, argObj.screenSize)
+      );
+    }
+  );
+
+  const waypointDepartures = getWaypointDestinationsAll().map(
+    (waypoint) => (argObj) => {
+      return new Waypoint(
+        waypoint,
+        argObj.backgroundObj,
+        argObj.headingLayerObj,
+        argObj.screenSize,
+        getWaypoint(waypoint, argObj.screenSize)
+      );
+    }
+  );
+  return [runway22L].concat(waypointArrivals, waypointDepartures);
 };
 
 ///////////////////////////////////////////////////////////////

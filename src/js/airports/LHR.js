@@ -1,5 +1,7 @@
 import { getGameSize, ScreenSizes } from '../utils';
 import { WaypointType, HoldingPosition } from '../types';
+import Runway from './Runway';
+import Waypoint from '../canvas/Waypoint';
 
 export const Runways = Object.freeze({
   TwoSevenRight: '27R',
@@ -61,6 +63,51 @@ export const getWaypoint = (waypoint, screenSize) => {
   const obj = waypoints(waypoint, screenSize);
   if (!obj) throw new Error('waypoint not found: ' + waypoint);
   return obj;
+};
+
+export const getMapEntities = () => {
+  const runway27R = (argObj) => {
+    return new Runway(
+      Runways.TwoSevenRight,
+      argObj.imgLayerObj,
+      argObj.screenSize,
+      getRunway(Runways.TwoSevenRight, argObj.screenSize)
+    );
+  };
+
+  const runway27L = (argObj) => {
+    return new Runway(
+      Runways.TwoSevenLeft,
+      argObj.imgLayerObj,
+      argObj.screenSize,
+      getRunway(Runways.TwoSevenLeft, argObj.screenSize)
+    );
+  };
+
+  const waypointArrivals = getWaypointArrivalsAll().map(
+    (waypoint) => (argObj) => {
+      return new Waypoint(
+        waypoint,
+        argObj.backgroundObj,
+        argObj.headingLayerObj,
+        argObj.screenSize,
+        getWaypoint(waypoint, argObj.screenSize)
+      );
+    }
+  );
+
+  const waypointDepartures = getWaypointDestinationsAll().map(
+    (waypoint) => (argObj) => {
+      return new Waypoint(
+        waypoint,
+        argObj.backgroundObj,
+        argObj.headingLayerObj,
+        argObj.screenSize,
+        getWaypoint(waypoint, argObj.screenSize)
+      );
+    }
+  );
+  return [runway27L, runway27R].concat(waypointArrivals, waypointDepartures);
 };
 
 ///////////////////////////////////////////////////////////////

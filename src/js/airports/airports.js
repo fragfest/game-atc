@@ -1,17 +1,11 @@
-import Runway from './Runway';
-import Waypoint from '../canvas/Waypoint';
-
 // LHR
 import {
-  Runways as RunwaysLHR,
-  getRunway as getRunwayLHR,
-  getWaypoint as getWaypointLHR,
   getWaypointArrivalsAll as getWaypointArrivalsLHR,
-  getWaypointDestinationsAll as getWaypointDestinationsLHR,
   getRunwayRnd as getRunwayRndLHR,
   getWaypointDepartureRnd as getWaypointDepartureRndLHR,
   getWaypointBySection as getWaypointBySectionLHR,
   getMapImage as getMapImageLHR,
+  getMapEntities as getMapEntitiesLHR,
 } from './LHR';
 import {
   getFlightDeparture as getFlightDepartureLHR,
@@ -21,15 +15,12 @@ import {
 
 // JFK
 import {
-  Runways as RunwaysJFK,
-  getRunway as getRunwayJFK,
-  getWaypoint as getWaypointJFK,
   getWaypointArrivalsAll as getWaypointArrivalsJFK,
-  getWaypointDestinationsAll as getWaypointDestinationsJFK,
   getRunwayRnd as getRunwayRndJFK,
   getWaypointDepartureRnd as getWaypointDepartureRndJFK,
   getWaypointBySection as getWaypointBySectionJFK,
   getMapImage as getMapImageJFK,
+  getMapEntities as getMapEntitiesJFK,
 } from './JFK';
 import {
   getFlightDeparture as getFlightDepartureJFK,
@@ -99,88 +90,9 @@ export const getRunwayRnd = (airport) => {
   throw new Error('unknown airport: ' + airport);
 };
 
-// TODO create jsdoc typedef of Entity for func desc
 export const getMapEntities = (airport) => {
-  if (airport === Airport.NewYorkJFK) {
-    const runway22L = (argObj) => {
-      return new Runway(
-        RunwaysJFK.TwentyTwoLeft,
-        argObj.imgLayerObj,
-        argObj.screenSize,
-        getRunwayJFK(RunwaysJFK.TwentyTwoLeft, argObj.screenSize)
-      );
-    };
-
-    const waypointArrivals = getWaypointArrivalsJFK().map(
-      (waypoint) => (argObj) => {
-        return new Waypoint(
-          waypoint,
-          argObj.backgroundObj,
-          argObj.headingLayerObj,
-          argObj.screenSize,
-          getWaypointJFK(waypoint, argObj.screenSize)
-        );
-      }
-    );
-
-    const waypointDepartures = getWaypointDestinationsJFK().map(
-      (waypoint) => (argObj) => {
-        return new Waypoint(
-          waypoint,
-          argObj.backgroundObj,
-          argObj.headingLayerObj,
-          argObj.screenSize,
-          getWaypointJFK(waypoint, argObj.screenSize)
-        );
-      }
-    );
-    return [runway22L].concat(waypointArrivals, waypointDepartures);
-  }
-
-  if (airport === Airport.Heathrow) {
-    const runway27R = (argObj) => {
-      return new Runway(
-        RunwaysLHR.TwoSevenRight,
-        argObj.imgLayerObj,
-        argObj.screenSize,
-        getRunwayLHR(RunwaysLHR.TwoSevenRight, argObj.screenSize)
-      );
-    };
-
-    const runway27L = (argObj) => {
-      return new Runway(
-        RunwaysLHR.TwoSevenLeft,
-        argObj.imgLayerObj,
-        argObj.screenSize,
-        getRunwayLHR(RunwaysLHR.TwoSevenLeft, argObj.screenSize)
-      );
-    };
-
-    const waypointArrivals = getWaypointArrivalsLHR().map(
-      (waypoint) => (argObj) => {
-        return new Waypoint(
-          waypoint,
-          argObj.backgroundObj,
-          argObj.headingLayerObj,
-          argObj.screenSize,
-          getWaypointLHR(waypoint, argObj.screenSize)
-        );
-      }
-    );
-
-    const waypointDepartures = getWaypointDestinationsLHR().map(
-      (waypoint) => (argObj) => {
-        return new Waypoint(
-          waypoint,
-          argObj.backgroundObj,
-          argObj.headingLayerObj,
-          argObj.screenSize,
-          getWaypointLHR(waypoint, argObj.screenSize)
-        );
-      }
-    );
-    return [runway27L, runway27R].concat(waypointArrivals, waypointDepartures);
-  }
+  if (airport === Airport.NewYorkJFK) return getMapEntitiesJFK();
+  if (airport === Airport.Heathrow) return getMapEntitiesLHR();
 
   throw new Error('unknown airport: ' + airport);
 };

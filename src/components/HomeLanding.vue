@@ -87,7 +87,7 @@
 </template>
 
 <script>
-import { getFinalLevel } from '../js/game/victory';
+import { getFinalLevel } from '../js/levels/getLevel';
 import {
   setup as setupScore,
   levelRetry,

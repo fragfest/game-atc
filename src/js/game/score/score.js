@@ -1,4 +1,5 @@
-import { setGoal, getFinalLevel } from '../victory';
+import { setGoal } from '../victory';
+import { getFinalLevel } from '../../levels/getLevel';
 
 // NOTE: key & values must match
 export const ScoreEvents = Object.freeze({

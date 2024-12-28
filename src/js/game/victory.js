@@ -102,8 +102,6 @@ const Goals = {
  * @returns {Goals}
  */
 
-export const getFinalLevel = () => 7;
-
 /**
  * @returns {GoalsFunc}
  */
