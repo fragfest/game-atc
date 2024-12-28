@@ -1,11 +1,22 @@
+// import { getLevelObj } from '../levels/levels';
+import { getLevelObj } from '../levels/getLevel';
 import { getScreenSize, ScreenSizes, isWithinDist } from '../utils';
-import { getScore } from './score/score';
 
 export const WeatherType = Object.freeze({
   Inert: 'Inert',
   Turbulence: 'Turbulence',
 });
 export const isTurbulence = (obj) => obj.weatherType === WeatherType.Turbulence;
+
+/**
+ * @typedef {Function} WeatherFunc
+ * @param {Object} args weatherArgs
+ * @param {Number} args.width
+ * @param {Number} args.height
+ * @param {Object} args.ctx
+ * @param {Object} args.entityDiv
+ * @param {Array} args.entityManagerArr
+ */
 
 /**
  * @param {Number} width
@@ -23,17 +34,7 @@ export const weatherGameLoop = (width, height, args) => {
     entityDiv: args.entityDiv,
     entityManagerArr: args.entityManagerArr,
   };
-
-  const level = getScore().level;
-  if (level === 1) level1(weatherArgs);
-  if (level === 2) level2(weatherArgs);
-  if (level === 3) level3(weatherArgs);
-  if (level === 4) level4(weatherArgs);
-  if (level === 5) level5(weatherArgs);
-  if (level === 6) level6(weatherArgs);
-  // TODO create unique inert clouds
-  if (level === 7) level1(weatherArgs);
-
+  getLevelObj().weatherFn(weatherArgs);
   window.requestAnimationFrame(tick(width, height, args));
 };
 
@@ -82,6 +83,31 @@ export const isInWeather = (entityObj) => (weatherEntity) => {
 ////////////////////////////////////////////////////////////////////////
 // LEVELS
 ////////////////////////////////////////////////////////////////////////
+/**
+ * @param {Number} gameLevel
+ * @returns {WeatherFunc}
+ */
+export const getWeatherLevelByGameLevel = (gameLevel) => {
+  const weatherFn = ({ width, height, ctx, entityDiv, entityManagerArr }) => {
+    const weatherArgs = {
+      width,
+      height,
+      ctx,
+      entityDiv,
+      entityManagerArr,
+    };
+
+    if (gameLevel === 1) level1(weatherArgs);
+    if (gameLevel === 2) level2(weatherArgs);
+    if (gameLevel === 3) level3(weatherArgs);
+    if (gameLevel === 4) level4(weatherArgs);
+    if (gameLevel === 5) level5(weatherArgs);
+    if (gameLevel === 6) level6(weatherArgs);
+    // TODO create unique inert clouds
+    if (gameLevel === 7) level1(weatherArgs);
+  };
+  return weatherFn;
+};
 
 export const getTurbulenceLevels = () => [5, 6];
 

@@ -41,6 +41,8 @@ export default class Aircraft {
     positionObj,
     planeObj
   ) {
+    this.classType = 'Aircraft';
+
     this.id = Math.random();
     this.ctx = entityLayerObj.ctx;
     this.canvasWidth = entityLayerObj.width;

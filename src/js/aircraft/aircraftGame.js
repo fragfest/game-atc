@@ -50,27 +50,13 @@ export const spawnPlaneGameTick =
       flightObj,
       airport
     ) => {
-      // createAircraftRndFn(
-      //   () =>
-      //     createAircraftArrival(
-      //       entityManagerArr,
-      //       canvasObj,
-      //       flightObj,
-      //       airport,
-      //       canvasObj.clickCB
-      //     ),
-      //   1
-      // );
-
-      createAircraftRndFn(
-        () =>
-          createAircraftRndDestinationType(
-            { ...canvasObj, flightObj: { ...flightObj } },
-            chanceOfDeparture,
-            airport
-          ),
-        chanceOfPlane
-      );
+      createAircraftRndFn(() => {
+        return createAircraftRndDestinationType(
+          { ...canvasObj, flightObj: { ...flightObj } },
+          chanceOfDeparture,
+          airport
+        );
+      }, chanceOfPlane);
     };
 
     const getChanceFn = (chanceOfPlanePerSec) => {
@@ -79,7 +65,7 @@ export const spawnPlaneGameTick =
       return chanceOfPlaneBase * (spawnRate * spawnRateModifier);
     };
 
-    callAircraftFnByLevel(score.level, {
+    callAircraftFnByLevel({
       entityManagerArr,
       goals,
       score,

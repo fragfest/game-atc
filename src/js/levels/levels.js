@@ -1,27 +1,12 @@
-import { Airport } from '../airports/airports.js';
 import { isAircraft } from '../types.js';
 import { getDepartureCount, getArrivalCount } from '../utils.js';
+import { getAirportByLevel, getLevelObj } from './getLevel.js';
 
 /**
- * @typedef {import('../airports/airports.js').Airport} Airport
- */
-/**
+ * @typedef {import('../types.js').Airport} Airport
  * @typedef {import('../game/score/score.js').Score} Score
- */
-/**
  * @typedef {import('../game/victory.js').Goals} Goals
  */
-
-const noChance = 0;
-const baseChance = 0.03;
-const highChance = 0.1;
-const veryHighChance = 0.5;
-const guaranteedChance = 1;
-const chanceDepartureBase = 0.4;
-
-// TODO //////////////////////////////////////////
-// central LevelObj typedef here. files: weather.js, levelIntro.js, victory.js, airports.js
-// TODO //////////////////////////////////////////
 
 /**
  * @typedef {Function} GetSpawnChance
@@ -35,41 +20,59 @@ const chanceDepartureBase = 0.4;
  * @param {object} flightObj
  * @param {Airport} airport
  */
+/**
+ * @typedef {Object} LevelArg
+ * @property {Array} entityManagerArr
+ * @property {Goals} goals
+ * @property {Score} score
+ * @property {GetSpawnChance} getChanceFn
+ * @property {SpawnPlane} aircraftFn
+ */
 
 /**
- * @param {Number} level
+ * @typedef {Function} LevelFunc
  * @param {Object} arg
- * @param {Array} arg.entityManagerArr
- * @param {Goals} arg.goals
- * @param {Score} arg.score
- * @param {GetSpawnChance} arg.getChanceFn
- * @param {SpawnPlane} arg.aircraftFn
+ * @param {LevelArg} arg.levelArg
+ */
+
+/**
+ * @param {Object} arg
+ * @param {LevelArg} arg.levelArg
  * @returns none
  */
-export const callAircraftFnByLevel = (level, arg) => {
-  const airport = getAirportByLevel(level);
-  if (level === 1) return spawnPlaneLevel1(arg, airport);
-  if (level === 2) return spawnPlaneLevel2(arg, airport);
-  if (level === 3) return spawnPlaneLevel3(arg, airport);
-  if (level === 4) return spawnPlaneLevel3(arg, airport);
-  if (level === 5) return spawnPlaneLevel3(arg, airport);
-  if (level === 6) return spawnPlaneLevel3(arg, airport);
-  // if (level === 7) return spawnPlaneLevel1(arg, airport);
-  if (level === 7) return spawnPlaneLevel3(arg, airport);
-  return spawnPlaneLevel3(arg, airport);
+export const callAircraftFnByLevel = (arg) => {
+  getLevelObj().levelFn(arg);
 };
 
-export const getAirportByLevel = (level) => {
-  if (level === 0) return Airport.Heathrow;
-  if (level >= 1 && level <= 6) return Airport.Heathrow;
-  if (level >= 7) return Airport.NewYorkJFK;
-
-  return Airport.Heathrow;
+/**
+ * @param {Number} gameLevel
+ * @returns {LevelFunc}
+ */
+export const getSpawnByGameLevel = (gameLevel) => {
+  const spawnFn = (spawnArg) => {
+    const airport = getAirportByLevel(gameLevel);
+    if (gameLevel === 1) return spawnPlaneLevel1(spawnArg, airport);
+    if (gameLevel === 2) return spawnPlaneLevel2(spawnArg, airport);
+    if (gameLevel === 3) return spawnPlaneLevel3(spawnArg, airport);
+    if (gameLevel === 4) return spawnPlaneLevel3(spawnArg, airport);
+    if (gameLevel === 5) return spawnPlaneLevel3(spawnArg, airport);
+    if (gameLevel === 6) return spawnPlaneLevel3(spawnArg, airport);
+    if (gameLevel === 7) return spawnPlaneLevel1(spawnArg, airport);
+    return spawnPlaneLevel3(spawnArg, airport);
+  };
+  return spawnFn;
 };
 
 ////////////////////////////////////////////////////////////////////////
 // SPAWN LEVEL 1
 ////////////////////////////////////////////////////////////////////////
+const noChance = 0;
+const baseChance = 0.03;
+const highChance = 0.1;
+const veryHighChance = 0.5;
+const guaranteedChance = 1;
+const chanceDepartureBase = 0.4;
+
 /**
  * @param {Object} arg
  * @param {Array} arg.entityManagerArr

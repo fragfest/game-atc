@@ -1,5 +1,5 @@
 import { Airframes } from '../aircraft/airframe';
-import { DestinationType } from '../../js/types';
+import { DestinationType } from '../types';
 // import { leftPadZeros } from '../../js/utils';
 
 export const getFlightArrival = (spawned) => {

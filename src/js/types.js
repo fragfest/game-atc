@@ -1,5 +1,3 @@
-import Aircraft from './aircraft/Aircraft';
-
 export const FocusCircleType = Object.freeze({
   Rectangle: 'Rectangle',
   Circle: 'Circle',
@@ -26,7 +24,7 @@ export const Direction = Object.freeze({
   Right: 'right',
 });
 
-export const isAircraft = (obj) => obj instanceof Aircraft;
+export const isAircraft = (obj) => obj.classType === 'Aircraft';
 export const isDeparture = (obj) =>
   isAircraft(obj) && obj.destinationType === DestinationType.Departure;
 export const isArrival = (obj) =>

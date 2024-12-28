@@ -1,3 +1,4 @@
+import { getLevelObj } from '../levels/getLevel.js';
 import { ScoreEvents, subscribeScore } from './score/score.js';
 
 /**
@@ -21,8 +22,6 @@ export const setup = () => {
   });
 };
 
-export const getFinalLevel = () => Object.keys(GoalsLevels).length - 1;
-
 /**
  * @param {VictoryEvents} victoryEvent
  * @param {scoreCB} cb
@@ -34,7 +33,7 @@ export const subscribeVictory = (victoryEvent, cb) => {
 };
 
 export const setGoal = (levelNum) => {
-  const goals = GoalsLevels[levelNum] || { ...Goals };
+  const goals = getLevelObj().goalFn(levelNum) || { ...Goals };
   localStorage.setItem('goals', JSON.stringify(goals));
 };
 
@@ -79,84 +78,14 @@ export const publishFailed = () => {
   document.dispatchEvent(new CustomEvent(VictoryEvents.Failed));
 };
 
-// PRIVATE //////////////////////////////////////////////////
-
-const GoalsLevels = {
-  0: {
-    Arrivals: 1,
-    Departures: 1,
-    Failed: 3,
-    Conflict: 999,
-    SpawnRate: 1,
-    Delayed: 4,
-  },
-  1: {
-    Arrivals: 0,
-    Departures: 8,
-    Failed: 3,
-    Conflict: 60,
-    SpawnRate: 1,
-    Delayed: 6,
-  },
-  2: {
-    Arrivals: 8,
-    Departures: 1,
-    Failed: 3,
-    Conflict: 60,
-    SpawnRate: 1,
-    Delayed: 6,
-  },
-  3: {
-    Arrivals: 8,
-    Departures: 8,
-    Failed: 3,
-    Conflict: 60,
-    SpawnRate: 1,
-    Delayed: 6,
-  },
-  4: {
-    Arrivals: 12,
-    Departures: 12,
-    Failed: 2,
-    Conflict: 60,
-    SpawnRate: 2,
-    Delayed: 4,
-  },
-  5: {
-    Arrivals: 12,
-    Departures: 12,
-    Failed: 2,
-    Conflict: 30,
-    SpawnRate: 1.5,
-    Delayed: 3,
-  },
-  6: {
-    Arrivals: 12,
-    Departures: 12,
-    Failed: 2,
-    Conflict: 30,
-    SpawnRate: 1.5,
-    Delayed: 3,
-  },
-  7: {
-    Arrivals: 8,
-    // Arrivals: 0,
-    Departures: 8,
-    Failed: 3,
-    Conflict: 60,
-    SpawnRate: 1,
-    Delayed: 6,
-  },
-};
-
 /**
- * @typedef {object} Goals
- * @property {number} Arrivals
- * @property {number} Departures
- * @property {number} Failed
- * @property {number} Conflict
- * @property {number} SpawnRate
- * @property {number} Delayed
+ * @typedef {Object} Goals
+ * @property {Number} Arrivals
+ * @property {Number} Departures
+ * @property {Number} Failed
+ * @property {Number} Conflict
+ * @property {Number} SpawnRate
+ * @property {Number} Delayed
  */
 const Goals = {
   Arrivals: 0,
@@ -165,4 +94,102 @@ const Goals = {
   Conflict: 0,
   SpawnRate: 0,
   Delayed: 0,
+};
+
+/**
+ * @typedef {Function} GoalsFunc
+ * @param {Number} gameLevel
+ * @returns {Goals}
+ */
+
+export const getFinalLevel = () => 7;
+
+/**
+ * @returns {GoalsFunc}
+ */
+export const getGoalsByLevel = () => {
+  return (gameLevel) => {
+    if (gameLevel === 0) {
+      return {
+        Arrivals: 1,
+        Departures: 1,
+        Failed: 3,
+        Conflict: 999,
+        SpawnRate: 1,
+        Delayed: 4,
+      };
+    }
+    if (gameLevel === 1) {
+      return {
+        Arrivals: 0,
+        Departures: 8,
+        Failed: 3,
+        Conflict: 60,
+        SpawnRate: 1,
+        Delayed: 6,
+      };
+    }
+    if (gameLevel === 2) {
+      return {
+        Arrivals: 8,
+        Departures: 1,
+        Failed: 3,
+        Conflict: 60,
+        SpawnRate: 1,
+        Delayed: 6,
+      };
+    }
+    if (gameLevel === 3) {
+      return {
+        Arrivals: 8,
+        Departures: 8,
+        Failed: 3,
+        Conflict: 60,
+        SpawnRate: 1,
+        Delayed: 6,
+      };
+    }
+    if (gameLevel === 4) {
+      return {
+        Arrivals: 12,
+        Departures: 12,
+        Failed: 2,
+        Conflict: 60,
+        SpawnRate: 2,
+        Delayed: 4,
+      };
+    }
+    if (gameLevel === 5) {
+      return {
+        Arrivals: 12,
+        Departures: 12,
+        Failed: 2,
+        Conflict: 30,
+        SpawnRate: 1.5,
+        Delayed: 3,
+      };
+    }
+    if (gameLevel === 6) {
+      return {
+        Arrivals: 12,
+        Departures: 12,
+        Failed: 2,
+        Conflict: 30,
+        SpawnRate: 1.5,
+        Delayed: 3,
+      };
+    }
+    if (gameLevel === 7) {
+      return {
+        Arrivals: 0,
+        Departures: 8,
+        Failed: 3,
+        Conflict: 60,
+        SpawnRate: 1,
+        Delayed: 6,
+      };
+    }
+
+    throw new Error('unknown level: ' + gameLevel);
+  };
 };

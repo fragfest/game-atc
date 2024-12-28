@@ -191,7 +191,7 @@ import {
   getMapImageOpacity,
   getWaypointArrivalsAll,
 } from '../js/airports/airports.js';
-import { getAirportByLevel } from '../js/levels/levels.js';
+import { getAirportByLevel } from '../js/levels/getLevel';
 
 let screenSize = ScreenSizes.Large;
 let width = getGameSize(ScreenSizes.Large).width;
