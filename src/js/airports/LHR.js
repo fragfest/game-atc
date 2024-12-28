@@ -1,7 +1,11 @@
 import { getGameSize, ScreenSizes } from '../utils';
-import { WaypointType, HoldingPosition } from '../types';
+import { HoldingPosition, WaypointType } from '../types';
 import Runway from './Runway';
 import Waypoint from '../canvas/Waypoint';
+
+/**
+ * @typedef {import('./airports/airports.js').EntitySetupFn} EntitySetupFn
+ */
 
 export const Runways = Object.freeze({
   TwoSevenRight: '27R',
@@ -10,9 +14,7 @@ export const Runways = Object.freeze({
 
 export const getMapImage = () => '/img/london.png';
 
-export const getRunwaysAll = () => {
-  return ['27R', '27L'];
-};
+export const getRunwaysAll = () => Object.values(Runways);
 
 export const getRunwayRnd = () => {
   const index = Math.floor(Math.random() * getRunwaysAll().length);
@@ -25,28 +27,32 @@ export const getRunway = (runway, screenSize) => {
   return obj;
 };
 
-// TODO split into departure and arrivals
-export const Waypoints = Object.freeze({
-  // arrival
+export const WaypointArrivals = Object.freeze({
   BNN: 'BNN',
   OCK: 'OCK',
   LAM: 'LAM',
   BIG: 'BIG',
-  // departure
+});
+export const WaypointDepartures = Object.freeze({
   DET: 'DET',
   MID: 'MID',
   CPT: 'CPT',
   BPK: 'BPK',
 });
+export const Waypoints = Object.freeze({
+  ...WaypointArrivals,
+  ...WaypointDepartures,
+});
 
 export const getWaypointDestinationsAll = () => {
-  return ['DET', 'MID', 'CPT', 'BPK'];
+  return Object.values(WaypointDepartures);
 };
 
 export const getWaypointArrivalsAll = () => {
-  return ['BNN', 'OCK', 'LAM', 'BIG'];
+  return Object.values(WaypointArrivals);
 };
 
+// sections numbered from WNW going clockwise: 1 - 8
 export const getWaypointBySection = (sectionInt) => {
   if (sectionInt >= 1 && sectionInt <= 4) return Waypoints.LAM;
   if (sectionInt >= 5 && sectionInt <= 8) return Waypoints.BIG;
@@ -54,9 +60,9 @@ export const getWaypointBySection = (sectionInt) => {
 
 // TODO refactor: use getWaypointDestinationsAll() and have caller choose rnd
 export const getWaypointDepartureRnd = () => {
-  const waypointsDeparture = ['DET', 'MID', 'CPT', 'BPK'];
-  const indexDeparture = Math.floor(Math.random() * waypointsDeparture.length);
-  return waypointsDeparture[indexDeparture];
+  const waypoints = getWaypointDestinationsAll();
+  const index = Math.floor(Math.random() * waypoints.length);
+  return waypoints[index];
 };
 
 export const getWaypoint = (waypoint, screenSize) => {
@@ -65,6 +71,9 @@ export const getWaypoint = (waypoint, screenSize) => {
   return obj;
 };
 
+/**
+ * @returns {Array.<EntitySetupFn>}
+ */
 export const getMapEntities = () => {
   const runway27R = (argObj) => {
     return new Runway(
@@ -116,12 +125,11 @@ export const getMapEntities = () => {
 
 const runways = (runway, screenSize) => {
   const width = getGameSize(screenSize).width;
-  let xOffset = 0;
   const height = getGameSize(screenSize).height;
+  let xOffset = 0;
   let yOffset = 0;
   let length = 0;
   let runwayWidth = 0;
-  let titleY = 0;
   let titlePosition27L = { x: 0, y: 0 };
   let titlePosition27R = { x: 0, y: 0 };
 
@@ -131,22 +139,21 @@ const runways = (runway, screenSize) => {
       yOffset = 26;
       length = 60;
       runwayWidth = 4;
-      titlePosition27R = { x: 0, y: -8 };
       titlePosition27L = { x: 0, y: 16 };
+      titlePosition27R = { x: 0, y: -8 };
       break;
     case ScreenSizes.Small:
       xOffset = -105;
       yOffset = 18;
       length = 40;
       runwayWidth = 1.6;
-      titleY - 11;
-      titlePosition27R = { x: 0, y: -5 };
       titlePosition27L = { x: 0, y: 11 };
+      titlePosition27R = { x: 0, y: -5 };
       break;
   }
 
   switch (runway) {
-    case '27R':
+    case Runways.TwoSevenRight:
       return {
         x: width / 2 + xOffset,
         y: height / 2 + yOffset,
@@ -155,7 +162,7 @@ const runways = (runway, screenSize) => {
         width: runwayWidth,
         titlePosition: titlePosition27R,
       };
-    case '27L':
+    case Runways.TwoSevenLeft:
       return {
         x: width / 2 + xOffset,
         y: height / 2 + 18 + yOffset,
@@ -173,53 +180,53 @@ const waypoints = (waypoint, screenSize) => {
 
   if (screenSize === ScreenSizes.Large) {
     switch (waypoint) {
-      case 'BNN':
+      case WaypointArrivals.BNN:
         return {
           holdingPosition: HoldingPosition.North,
           type: WaypointType.Arrival,
           x: width / 2 - 215,
           y: height / 2 - 155,
         };
-      case 'OCK':
+      case WaypointArrivals.OCK:
         return {
           holdingPosition: HoldingPosition.South,
           type: WaypointType.Arrival,
           x: 465,
           y: height - 160,
         };
-      case 'LAM':
+      case WaypointArrivals.LAM:
         return {
           holdingPosition: HoldingPosition.North,
           type: WaypointType.Arrival,
           x: width / 2 + 400,
           y: height / 2 - 150,
         };
-      case 'BIG':
+      case WaypointArrivals.BIG:
         return {
           holdingPosition: HoldingPosition.South,
           type: WaypointType.Arrival,
           x: width / 2 + 350,
           y: height / 2 + 160,
         };
-      case 'DET':
+      case WaypointDepartures.DET:
         return {
           type: WaypointType.Departure,
           x: width / 2 + 150,
           y: height - 28,
         };
-      case 'MID':
+      case WaypointDepartures.MID:
         return {
           type: WaypointType.Departure,
           x: 270,
           y: height - 42,
         };
-      case 'CPT':
+      case WaypointDepartures.CPT:
         return {
           type: WaypointType.Departure,
           x: 50,
           y: height / 2 - 45,
         };
-      case 'BPK':
+      case WaypointDepartures.BPK:
         return {
           type: WaypointType.Departure,
           x: width / 2 + 70,
@@ -230,53 +237,53 @@ const waypoints = (waypoint, screenSize) => {
 
   if (screenSize === ScreenSizes.Small) {
     switch (waypoint) {
-      case 'BNN':
+      case WaypointArrivals.BNN:
         return {
           holdingPosition: HoldingPosition.North,
           type: WaypointType.Arrival,
           x: width / 2 - 160,
           y: height / 2 - 118,
         };
-      case 'OCK':
+      case WaypointArrivals.OCK:
         return {
           holdingPosition: HoldingPosition.South,
           type: WaypointType.Arrival,
           x: 350,
           y: height - 120,
         };
-      case 'LAM':
+      case WaypointArrivals.LAM:
         return {
           holdingPosition: HoldingPosition.North,
           type: WaypointType.Arrival,
           x: width / 2 + 290,
           y: height / 2 - 112,
         };
-      case 'BIG':
+      case WaypointArrivals.BIG:
         return {
           holdingPosition: HoldingPosition.South,
           type: WaypointType.Arrival,
           x: width / 2 + 260,
           y: height / 2 + 115,
         };
-      case 'DET':
+      case WaypointDepartures.DET:
         return {
           type: WaypointType.Departure,
           x: width / 2 + 112,
           y: height - 22,
         };
-      case 'MID':
+      case WaypointDepartures.MID:
         return {
           type: WaypointType.Departure,
           x: 202,
           y: height - 30,
         };
-      case 'CPT':
+      case WaypointDepartures.CPT:
         return {
           type: WaypointType.Departure,
           x: 39,
           y: height / 2 - 33,
         };
-      case 'BPK':
+      case WaypointDepartures.BPK:
         return {
           type: WaypointType.Departure,
           x: width / 2 + 60,

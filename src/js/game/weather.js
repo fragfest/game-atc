@@ -97,14 +97,16 @@ export const getWeatherLevelByGameLevel = (gameLevel) => {
       entityManagerArr,
     };
 
-    if (gameLevel === 1) level1(weatherArgs);
-    if (gameLevel === 2) level2(weatherArgs);
-    if (gameLevel === 3) level3(weatherArgs);
-    if (gameLevel === 4) level4(weatherArgs);
-    if (gameLevel === 5) level5(weatherArgs);
-    if (gameLevel === 6) level6(weatherArgs);
+    if (gameLevel === 1) return level1(weatherArgs);
+    if (gameLevel === 2) return level2(weatherArgs);
+    if (gameLevel === 3) return level3(weatherArgs);
+    if (gameLevel === 4) return level4(weatherArgs);
+    if (gameLevel === 5) return level5(weatherArgs);
+    if (gameLevel === 6) return level6(weatherArgs);
     // TODO create unique inert clouds
-    if (gameLevel === 7) level1(weatherArgs);
+    if (gameLevel === 7) return level1(weatherArgs);
+
+    throw new Error('unknown level: ' + gameLevel);
   };
   return weatherFn;
 };

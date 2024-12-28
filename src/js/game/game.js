@@ -11,6 +11,10 @@ import {
 import { SoundType, play, playLoop, stop } from './sound';
 
 /**
+ * @typedef {import('../airports/airports.js').EntitySetupFn} EntitySetupFn
+ */
+
+/**
  * @typedef {object} State
  * @property {Boolean} gameLoopCancel
  * @property {Boolean} gameLoopRunning
@@ -79,6 +83,11 @@ export const headingLayerClearFn =
     headingLayerObj.ctx.clearRect(0, 0, width, height);
   };
 
+/**
+ *
+ * @param {Object} argObj game setupArg
+ * @param {Array.<EntitySetupFn>} arr
+ */
 export const setupEntities = (argObj, arr) => {
   const entityAdd = entityManagerAdd(argObj.entityManagerArr);
   arr.forEach((entity) => entityAdd(entity(argObj)));

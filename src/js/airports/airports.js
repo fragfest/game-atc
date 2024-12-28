@@ -1,18 +1,3 @@
-// LHR
-import {
-  getWaypointArrivalsAll as getWaypointArrivalsLHR,
-  getRunwayRnd as getRunwayRndLHR,
-  getWaypointDepartureRnd as getWaypointDepartureRndLHR,
-  getWaypointBySection as getWaypointBySectionLHR,
-  getMapImage as getMapImageLHR,
-  getMapEntities as getMapEntitiesLHR,
-} from './LHR';
-import {
-  getFlightDeparture as getFlightDepartureLHR,
-  getFlightArrival as getFlightArrivalLHR,
-} from '../flights/LHR';
-// END LHR
-
 // JFK
 import {
   getWaypointArrivalsAll as getWaypointArrivalsJFK,
@@ -27,6 +12,21 @@ import {
   getFlightArrival as getFlightArrivalJFK,
 } from '../flights/JFK';
 // END JFK
+
+// LHR
+import {
+  getWaypointArrivalsAll as getWaypointArrivalsLHR,
+  getRunwayRnd as getRunwayRndLHR,
+  getWaypointDepartureRnd as getWaypointDepartureRndLHR,
+  getWaypointBySection as getWaypointBySectionLHR,
+  getMapImage as getMapImageLHR,
+  getMapEntities as getMapEntitiesLHR,
+} from './LHR';
+import {
+  getFlightDeparture as getFlightDepartureLHR,
+  getFlightArrival as getFlightArrivalLHR,
+} from '../flights/LHR';
+// END LHR
 
 export const Airport = Object.freeze({
   Heathrow: 'Heathrow',
@@ -90,6 +90,17 @@ export const getRunwayRnd = (airport) => {
   throw new Error('unknown airport: ' + airport);
 };
 
+/**
+ * @typedef {Function} EntitySetupFn
+ * @param {Object} setupArg
+ * @param {Object} setupArg.imgLayerObj canvas object
+ * @param {Object} setupArg.backgroundObj canvas object
+ * @param {Object} setupArg.headingLayerObj canvas object
+ * @param {Object} setupArg.screenSize
+ */
+/**
+ * @returns {Array.<EntitySetupFn>}
+ */
 export const getMapEntities = (airport) => {
   if (airport === Airport.NewYorkJFK) return getMapEntitiesJFK();
   if (airport === Airport.Heathrow) return getMapEntitiesLHR();
