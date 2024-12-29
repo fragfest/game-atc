@@ -17,7 +17,7 @@ import { convertToSmallDegrees, radToDegrees, ScreenSizes } from '../utils';
 ////////////////////////////////////////////////////////////
 export default class Waypoint {
   constructor(title, entityLayerObj, textLayerObj, screenSize, waypointObj) {
-    this.class = 'waypoint';
+    this.classType = 'Waypoint';
     this.id = Math.random();
     this.title = title.trim();
     this.type = waypointObj.type || WaypointType.Arrival;

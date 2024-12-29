@@ -58,7 +58,6 @@ export const getWaypointBySection = (sectionInt) => {
   if (sectionInt >= 5 && sectionInt <= 8) return Waypoints.BIG;
 };
 
-// TODO refactor: use getWaypointDestinationsAll() and have caller choose rnd
 export const getWaypointDepartureRnd = () => {
   const waypoints = getWaypointDestinationsAll();
   const index = Math.floor(Math.random() * waypoints.length);

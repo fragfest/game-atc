@@ -255,7 +255,8 @@ const setScore = (score) => {
  * @param {Score} score
  */
 const publishScore = (score) => {
-  const scoreEvent = ScoreEvents.ScoreEV; // TODO might be needed when specified in a future func arg
+  // NOTE ScoreEvents unused
+  const scoreEvent = ScoreEvents.ScoreEV;
   if (!ScoreEvents[scoreEvent])
     throw new Error('unknown score event: ' + scoreEvent);
   document.dispatchEvent(new CustomEvent(scoreEvent, { detail: { score } }));

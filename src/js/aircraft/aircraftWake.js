@@ -8,7 +8,7 @@ import { getWakeStrength } from './airframe';
  */
 
 /**
- * DEBUG function to visualize wakes
+ * DEBUG function to visualize wake circles
  * @param {Aircraft} aircraft
  * @param {Context} textLayerObj
  */

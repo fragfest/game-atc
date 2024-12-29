@@ -129,8 +129,8 @@ export const getIntro = (gameLevel) => {
         width: 0.72,
         levelNum: gameLevel,
         airportHeading: `New York (JFK)`,
-        airportSubheading: `Southbound Operations - quiet day, departures only`,
-        text1: `Welcome to New York,&nbsp;<b>Controller</b>! We have a quiet shift for you to get accustomed to the new flight operations.`,
+        airportSubheading: `Southbound Operations - quiet day, weather: clear`,
+        text1: `Welcome to New York,&nbsp;<b>Controller</b>! We have a quiet shift for you to get accustomed to new flight operations.`,
       };
       // return {
       //   displayTimeMs: 1000,

@@ -179,12 +179,12 @@ export const getGoalsByLevel = () => {
     }
     if (gameLevel === 7) {
       return {
-        Arrivals: 0,
+        Arrivals: 8,
         Departures: 8,
-        Failed: 3,
-        Conflict: 60,
+        Failed: 2,
+        Conflict: 30,
         SpawnRate: 1,
-        Delayed: 6,
+        Delayed: 3,
       };
     }
 

@@ -118,7 +118,7 @@ export default {
 
     this.isSafari = browser === 'Safari';
 
-    //TODO fails with yarn build
+    //NOTE fails with yarn build
     // this.id = crypto.randomUUID();
     this.id = Math.random();
   },

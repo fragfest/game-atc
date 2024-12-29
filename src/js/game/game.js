@@ -95,7 +95,6 @@ export const setupEntities = (argObj, arr) => {
 
 export const getCanvasObj = (argObj) => ({
   entityManagerArr: argObj.entityManagerArr,
-  // TODO remove screenSize
   screenSize: argObj.screenSize,
   width: getGameSize(argObj.screenSize).width,
   height: getGameSize(argObj.screenSize).height,

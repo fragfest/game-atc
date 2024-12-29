@@ -260,7 +260,6 @@ export default {
       const isTurbulence = this.plane.isTurbulenceWeather;
       const isWake = this.plane.isTurbulenceWake;
       if (isTurbulence) return 'weather';
-      // TODO wake danger shown with different colors?
       if (isWake) return 'wake ';
       return '';
     },

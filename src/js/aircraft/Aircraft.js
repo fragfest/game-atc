@@ -48,7 +48,7 @@ export default class Aircraft {
     this.canvasWidth = entityLayerObj.width;
     this.canvasHeight = entityLayerObj.height;
     this.textLayerObj = textLayerObj;
-    this.headingLayerObj = headingLayerObj; // TODO remove?
+    this.headingLayerObj = headingLayerObj; // TODO remove unused
     this.positionObj = positionObj;
 
     this.direction = Direction.None;
@@ -118,7 +118,6 @@ export default class Aircraft {
     this.trailPixelArr = [];
     // state numbers
     this.prevPosition = { x: 0, y: 0 };
-    // TODO migrate to using prevPosition
     this.distPrevHolding = Infinity;
     this.distPrevHandoff = Infinity;
 
@@ -131,7 +130,7 @@ export default class Aircraft {
 
     // flightstrip info
     this.hasProximityAlert = false;
-    this.destinationType = planeObj.destinationType || ''; // TODO consolidate with WaypointType
+    this.destinationType = planeObj.destinationType || '';
     this.airport = planeObj.airport || '';
     this.runway = planeObj.runway || '';
     this.waypoint = '';
@@ -436,8 +435,7 @@ export default class Aircraft {
     if (this.destinationType !== DestinationType.Departure) return;
 
     const isTargetWaypoint = (entity) =>
-      entity.class === 'waypoint' && // TODO deprecate the class prop
-      entity.title === this.waypoint;
+      entity.classType === 'Waypoint' && entity.title === this.waypoint;
     const waypointObj = entityManagerArr.find(isTargetWaypoint);
     if (!waypointObj) return;
 
@@ -584,7 +582,6 @@ export default class Aircraft {
       );
       this.wakeScore += newScore;
       this.wakeMs += turbulenceDiff;
-      // TODO wake danger shown with different colors?
       // newScore wake danger: Caution > 1.2 :: Danger > 2
       wakePenalty(newScore);
       turbulencePenalty(turbulenceDiff);
@@ -963,7 +960,7 @@ const _draw = (self, color) => {
     ? getTooCloseDistance(ScreenSizes.Small)
     : getTooCloseDistance(ScreenSizes.Large);
 
-  // TODO debug wake circles
+  // DEBUG wake circles
   // drawPlaneWake(self, self.textLayerObj);
 
   if (self.isShowCircle) {

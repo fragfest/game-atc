@@ -57,7 +57,7 @@ describe('Waypoint', () => {
       screenSize,
       waypointObj
     );
-    expect(waypoint.class).toBe('waypoint');
+    expect(waypoint.classType).toBe('Waypoint');
     expect(waypoint.type).toBe('arrival');
     expect(waypoint.westSideTurnDirection).toBe(Direction.Right);
     expect(waypoint.eastSideTurnDirection).toBe(Direction.Left);
