@@ -75,12 +75,7 @@ const guaranteedChance = 1;
 const chanceDepartureBase = 0.4;
 
 /**
- * @param {Object} arg
- * @param {Array} arg.entityManagerArr
- * @param {Goals} arg.goals
- * @param {Score} arg.score
- * @param {GetSpawnChance} arg.getChanceFn
- * @param {SpawnPlane} arg.aircraftFn
+ * @param {LevelArg} arg
  * @param {String} airport
  * @returns none
  */
@@ -94,8 +89,8 @@ export const spawnPlaneLevel1 = (arg, airport) => {
     score
   );
   if (areAllSpawned) return;
-
   if (areDeparturesSpawned) return;
+
   aircraftFn(getChanceFn(highChance), guaranteedChance, flightObj, airport);
 };
 
@@ -103,12 +98,7 @@ export const spawnPlaneLevel1 = (arg, airport) => {
 // SPAWN LEVEL 2
 ////////////////////////////////////////////////////////////////////////
 /**
- * @param {Object} arg
- * @param {Array} arg.entityManagerArr
- * @param {Goals} arg.goals
- * @param {Score} arg.score
- * @param {GetSpawnChance} arg.getChanceFn
- * @param {SpawnPlane} arg.aircraftFn
+ * @param {LevelArg} arg
  * @param {String} airport
  * @returns none
  */
@@ -122,21 +112,16 @@ export const spawnPlaneLevel2 = (arg, airport) => {
     score
   );
   if (areAllSpawned) return;
-
   if (areArrivalsSpawned) return;
-  return aircraftFn(getChanceFn(baseChance), noChance, flightObj, airport);
+
+  aircraftFn(getChanceFn(baseChance), noChance, flightObj, airport);
 };
 
 ////////////////////////////////////////////////////////////////////////
 // SPAWN LEVEL 3
 ////////////////////////////////////////////////////////////////////////
 /**
- * @param {Object} arg
- * @param {Array} arg.entityManagerArr
- * @param {Goals} arg.goals
- * @param {Score} arg.score
- * @param {GetSpawnChance} arg.getChanceFn
- * @param {SpawnPlane} arg.aircraftFn
+ * @param {LevelArg} arg
  * @param {String} airport
  * @returns none
  */
@@ -188,12 +173,7 @@ export const spawnPlaneLevel3 = (arg, airport) => {
   }
 
   // not a lowCount && both Arrivals + Departures remaining
-  return aircraftFn(
-    getChanceFn(chance),
-    chanceDepartureBase,
-    flightObj,
-    airport
-  );
+  aircraftFn(getChanceFn(chance), chanceDepartureBase, flightObj, airport);
 };
 
 ////////////////////////////////////////////////////////////////////////

@@ -103,7 +103,7 @@ export const getWeatherLevelByGameLevel = (gameLevel) => {
     if (gameLevel === 4) return level4(weatherArgs);
     if (gameLevel === 5) return level5(weatherArgs);
     if (gameLevel === 6) return level6(weatherArgs);
-    // TODO create unique inert clouds
+    // TODO create more weather levels
     if (gameLevel === 7) return level1(weatherArgs);
 
     throw new Error('unknown level: ' + gameLevel);

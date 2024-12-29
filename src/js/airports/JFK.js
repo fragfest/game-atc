@@ -9,6 +9,7 @@ import Waypoint from '../canvas/Waypoint';
 
 export const Runways = Object.freeze({
   TwentyTwoLeft: '22L',
+  TwentyTwoRight: '22R',
 });
 
 export const getMapImage = () => '/img/new-york.png';
@@ -82,6 +83,15 @@ export const getMapEntities = () => {
     );
   };
 
+  const runway22R = (argObj) => {
+    return new Runway(
+      Runways.TwentyTwoRight,
+      argObj.imgLayerObj,
+      argObj.screenSize,
+      getRunway(Runways.TwentyTwoRight, argObj.screenSize)
+    );
+  };
+
   const waypointArrivals = getWaypointArrivalsAll().map(
     (waypoint) => (argObj) => {
       return new Waypoint(
@@ -105,7 +115,7 @@ export const getMapEntities = () => {
       );
     }
   );
-  return [runway22L].concat(waypointArrivals, waypointDepartures);
+  return [runway22L, runway22R].concat(waypointArrivals, waypointDepartures);
 };
 
 ///////////////////////////////////////////////////////////////
@@ -115,38 +125,67 @@ export const getMapEntities = () => {
 const runways = (runway, screenSize) => {
   const width = getGameSize(screenSize).width;
   const height = getGameSize(screenSize).height;
-  let xOffset = 0;
-  let yOffset = 0;
-  let length = 0;
+  // 22L
+  let xOffset22L = 0;
+  let yOffset22L = 0;
+  let length22L = 0;
   let runwayWidth = 0;
-  let titlePosition = { x: 0, y: 0 };
+  let titlePosition22L = { x: 0, y: 0 };
+  // 22R
+  let xOffset22R = 0;
+  let yOffset22R = 0;
+  let length22R = 0;
+  let titlePosition22R = { x: 0, y: 0 };
 
   switch (screenSize) {
     case ScreenSizes.Large:
-      xOffset = 345;
-      yOffset = 65;
-      length = 60;
+      // 22L
+      xOffset22L = 345;
+      yOffset22L = 83;
+      length22L = 54;
       runwayWidth = 4;
-      titlePosition = { x: 8, y: 12 };
+      titlePosition22L = { x: 8, y: 12 };
+      // 22R
+      xOffset22R = 330;
+      yOffset22R = 78;
+      length22R = 66;
+      titlePosition22R = { x: -36, y: 6 };
       break;
+
     case ScreenSizes.Small:
-      xOffset = 256;
-      yOffset = 46;
-      length = 40;
+      // 22L
+      xOffset22L = 252;
+      yOffset22L = 70;
+      length22L = 28;
       runwayWidth = 2.2;
-      titlePosition = { x: 6, y: 8 };
+      titlePosition22L = { x: 6, y: 8 };
+      // 22R
+      xOffset22R = 243;
+      yOffset22R = 64;
+      length22R = 42;
+      titlePosition22R = { x: -26, y: -4 };
       break;
   }
 
   switch (runway) {
     case Runways.TwentyTwoLeft:
       return {
-        x: width / 2 + xOffset,
-        y: height / 2 + 18 + yOffset,
+        x: width / 2 + xOffset22L,
+        y: height / 2 + yOffset22L,
         heading: 211,
-        length,
+        length: length22L,
         width: runwayWidth,
-        titlePosition,
+        titlePosition: titlePosition22L,
+      };
+
+    case Runways.TwentyTwoRight:
+      return {
+        x: width / 2 + xOffset22R,
+        y: height / 2 + yOffset22R,
+        heading: 211,
+        length: length22R,
+        width: runwayWidth,
+        titlePosition: titlePosition22R,
       };
   }
 };

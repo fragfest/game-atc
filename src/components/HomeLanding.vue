@@ -221,6 +221,7 @@ hr {
 
   background-image: url('/public/img/sky.jpg');
   background-size: cover;
+  cursor: default;
 }
 
 .home section {

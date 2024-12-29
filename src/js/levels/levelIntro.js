@@ -124,22 +124,22 @@ export const getIntro = (gameLevel) => {
     }
 
     if (gameLevel === 7) {
-      // return {
-      //   displayTimeMs: 20000,
-      //   width: 0.72,
-      //   levelNum: gameLevel,
-      //   airportHeading: `New York (JFK)`,
-      //   airportSubheading: `Southbound Operations - early morning, departures only`,
-      //   text1: `Welcome to New York! We have a quiet morning for you to get accustomed to the new flight ops,&nbsp;<b>Controller</b>.`,
-      // };
       return {
-        displayTimeMs: 1000,
+        displayTimeMs: 20000,
         width: 0.72,
         levelNum: gameLevel,
-        airportHeading: ``,
-        airportSubheading: ``,
-        text1: ``,
+        airportHeading: `New York (JFK)`,
+        airportSubheading: `Southbound Operations - quiet day, departures only`,
+        text1: `Welcome to New York,&nbsp;<b>Controller</b>! We have a quiet shift for you to get accustomed to the new flight operations.`,
       };
+      // return {
+      //   displayTimeMs: 1000,
+      //   width: 0.72,
+      //   levelNum: gameLevel,
+      //   airportHeading: ``,
+      //   airportSubheading: ``,
+      //   text1: ``,
+      // };
     }
 
     throw new Error('unknown level: ' + gameLevel);
