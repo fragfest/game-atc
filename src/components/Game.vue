@@ -45,7 +45,7 @@
 
           <Plane></Plane>
 
-          <!-- TUTORIAL -->
+          <!-- msgPopup -->
           <FocusCircle
             v-if="focusCircleType"
             class="layer-eight"
@@ -58,16 +58,16 @@
           ></FocusCircle>
 
           <div
-            v-if="tutorialBoxHtml"
-            class="tutorial layer-eight"
+            v-if="msgPopupHtml"
+            class="msg-popup layer-eight"
             :class="screenSize"
-            :style="styleTutorial"
+            :style="msgPopupStyle"
           >
-            <CyberBox :width="tutorialWidth" type="dialog">
-              <p v-html="tutorialBoxHtml"></p>
+            <CyberBox :width="msgPopupWidth" type="dialog">
+              <p v-html="msgPopupHtml"></p>
             </CyberBox>
           </div>
-          <!-- TUTORIAL -->
+          <!-- msgPopup -->
 
           <img :src="backgroundImage" :height="height" class="layer-eight" />
         </div>
@@ -202,9 +202,9 @@ let entityManagerArr = ref([]);
 let aircraftClicked = ref({});
 const backgroundOpacity = ref(1);
 
-let tutorialBoxTop = ref(0.4);
-let tutorialBoxLeft = ref(0.4);
-let tutorialBoxWidth = ref(0.4);
+let msgPopupTop = ref(0.4);
+let msgPopupLeft = ref(0.4);
+let msgPopupWidth = ref(0.4);
 
 let updatedHeadingTutorial_hdgArg = null;
 let updatedAltitudeTutorial_altArg = null;
@@ -238,8 +238,8 @@ export default {
       hasPopup: false,
       backgroundImage: '',
 
-      // tutorial
-      tutorialBoxHtml: '',
+      // msgPopup
+      msgPopupHtml: '',
       focusCircleType: '',
       focusCircle: {},
     };
@@ -268,8 +268,8 @@ export default {
       return planes.filter(isArrival);
     },
 
-    tutorialWidth: () => {
-      const boxWidth = width * tutorialBoxWidth.value;
+    msgPopupWidth: () => {
+      const boxWidth = width * msgPopupWidth.value;
       return boxWidth.toString();
     },
 
@@ -278,9 +278,9 @@ export default {
       opacity: backgroundOpacity.value,
     }),
 
-    styleTutorial: () => ({
-      top: height * tutorialBoxTop.value + 'px',
-      left: width * tutorialBoxLeft.value + 'px',
+    msgPopupStyle: () => ({
+      top: height * msgPopupTop.value + 'px',
+      left: width * msgPopupLeft.value + 'px',
     }),
 
     styleScope: () => ({
@@ -388,13 +388,12 @@ export default {
     const width = getGameSize(screenSize).width;
     const height = getGameSize(screenSize).height;
 
-    // TODO rename to generic message cyberbox
-    const tutorialBoxHtmlQueue = [];
-    const tutorialBox = {
-      tutorialBoxTop,
-      tutorialBoxLeft,
-      tutorialBoxWidth,
-      tutorialBoxHtmlQueue,
+    const msgPopupHtmlQueue = [];
+    const msgPopup = {
+      msgPopupTop,
+      msgPopupLeft,
+      msgPopupWidth,
+      msgPopupHtmlQueue,
     };
     const tutorialEventArg = {
       setIsHoldingTutorial: () => {},
@@ -443,7 +442,7 @@ export default {
           tutorialUpdateEventCB(
             this,
             'focusCircleType',
-            tutorialBox,
+            msgPopup,
             this.focusCircle,
             tutorialEventArg,
             aircraftClicked,
@@ -469,7 +468,7 @@ export default {
       () => {
         this.hasPopup = true;
       },
-      tutorialBox,
+      msgPopup,
       gameState
     );
     drawInertElements(imgLayerObj, { screenSize, width, height });
@@ -482,7 +481,7 @@ export default {
       subscribeScore(ScoreEvents.ScoreEV, (score) => {
         if (isDefeat(score)) publishFailed();
       });
-      attachHtmlQueue(this, 'tutorialBoxHtml', tutorialBoxHtmlQueue);
+      attachHtmlQueue(this, 'msgPopupHtml', msgPopupHtmlQueue);
       setupTutorialEvents(tutorialEventArg, gameState);
       setupTutorial(gameState)(setupArg);
       return;
@@ -490,9 +489,9 @@ export default {
     // END TUTORIAL
 
     // MAIN GAME
-    attachHtmlQueue(this, 'tutorialBoxHtml', tutorialBoxHtmlQueue);
+    attachHtmlQueue(this, 'msgPopupHtml', msgPopupHtmlQueue);
     setupVictory();
-    showLevelIntro(tutorialBox, () => {
+    showLevelIntro(msgPopup, () => {
       setupFullGame(gameState)(setupArg);
     });
 
@@ -613,9 +612,9 @@ p {
   position: absolute;
 }
 
-// tutorial
+// msg-popup ////////////////////////////////////////
 // small
-.tutorial.small {
+.msg-popup.small {
   font-size: 11px;
 
   p {
@@ -656,7 +655,7 @@ p {
 }
 // END small
 
-.tutorial {
+.msg-popup {
   position: absolute;
   color: white;
   font-size: 14px;
@@ -708,5 +707,5 @@ p {
     color: lightgreen;
   }
 }
-// END tutorial
+// END msg-popup ///////////////////////////////////////
 </style>

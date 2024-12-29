@@ -3,18 +3,14 @@ import { getScore } from './score/score';
 import { isFailedCondition, isConflictCondition, isDelayed } from './victory';
 
 /**
- * @param {Object} tutorialBox contains vue ref properties
+ * @param {Object} msgPopup contains vue ref properties
  * @param {Boolean} isSuccess
  */
-export const gameOver = (tutorialBox, isSuccess) => {
+export const gameOver = (msgPopup, isSuccess) => {
   if (isSuccess) return;
 
-  const {
-    tutorialBoxTop,
-    tutorialBoxLeft,
-    tutorialBoxWidth,
-    tutorialBoxHtmlQueue,
-  } = tutorialBox;
+  const { msgPopupTop, msgPopupLeft, msgPopupWidth, msgPopupHtmlQueue } =
+    msgPopup;
 
   const score = getScore();
   const isFailed = isFailedCondition(score.failed);
@@ -34,19 +30,19 @@ export const gameOver = (tutorialBox, isSuccess) => {
     crossText = 'Delays';
   }
 
-  fillHtmlQueue('<clear>', tutorialBoxHtmlQueue);
+  fillHtmlQueue('<clear>', msgPopupHtmlQueue);
 
   setTimeout(() => {
     const dialogBox = { top: 0.1, left: 0.1, width: 0.45, html: '' };
-    tutorialBoxTop.value = dialogBox.top;
-    tutorialBoxLeft.value = dialogBox.left;
-    tutorialBoxWidth.value = dialogBox.width;
+    msgPopupTop.value = dialogBox.top;
+    msgPopupLeft.value = dialogBox.left;
+    msgPopupWidth.value = dialogBox.width;
     dialogBox.html =
       `<b>${title}</b><br><br>` +
       `You are relieved of duty, <b>Controller</b>! Another controller will take over.` +
       `<div class="line"></div>` +
       `<div class="line"><span class="cross">&times;</span> <span class="text"><b>${crossText}</b></span></div>`;
 
-    fillHtmlQueue(dialogBox.html, tutorialBoxHtmlQueue);
+    fillHtmlQueue(dialogBox.html, msgPopupHtmlQueue);
   }, 1000);
 };

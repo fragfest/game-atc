@@ -1,35 +1,31 @@
 import { fillHtmlQueue } from '../game/gameEvents';
 import { getLevelObj } from './getLevel';
 
-export const showLevelIntro = (tutorialBox, cb) => {
-  const {
-    tutorialBoxTop,
-    tutorialBoxLeft,
-    tutorialBoxWidth,
-    tutorialBoxHtmlQueue,
-  } = tutorialBox;
+export const showLevelIntro = (msgPopup, cb) => {
+  const { msgPopupTop, msgPopupLeft, msgPopupWidth, msgPopupHtmlQueue } =
+    msgPopup;
 
   const obj = getLevelObj().introFn();
 
   if (obj.width) {
-    fillHtmlQueue('<clear>', tutorialBoxHtmlQueue);
+    fillHtmlQueue('<clear>', msgPopupHtmlQueue);
     setTimeout(() => {
       const levelStr = `LEVEL ${obj.levelNum}`;
       const dialogBox = { top: 0.2, left: 0.2, width: obj.width, html: '' };
-      tutorialBoxTop.value = dialogBox.top;
-      tutorialBoxLeft.value = dialogBox.left;
-      tutorialBoxWidth.value = dialogBox.width;
+      msgPopupTop.value = dialogBox.top;
+      msgPopupLeft.value = dialogBox.left;
+      msgPopupWidth.value = dialogBox.width;
       dialogBox.html =
         `<h2 class="green">${levelStr}</h2>` +
         `<h3 class="green">${obj.airportHeading}</h3>` +
         `<div class="line"><b>${obj.airportSubheading}</b></div>` +
         `<div class="text">${obj.text1}</div>`;
-      fillHtmlQueue(dialogBox.html, tutorialBoxHtmlQueue);
+      fillHtmlQueue(dialogBox.html, msgPopupHtmlQueue);
     }, 1000);
   }
 
   setTimeout(() => {
-    fillHtmlQueue('<clear>', tutorialBoxHtmlQueue);
+    fillHtmlQueue('<clear>', msgPopupHtmlQueue);
     cb();
   }, obj.displayTimeMs || 0);
 };

@@ -28,7 +28,7 @@ import { gameOver } from './gameOver';
  * @param {Function} controlPanelFocusFn function to focus input field in controlPanel
  * @param {Function} selectPlaneFn function to set the selected plane
  * @param {Function} gamePopupFn function to set the game over pop-up
- * @param {Object} tutorialBox contains vue ref properties
+ * @param {Object} msgPopup contains vue ref properties
  * @param {State} state game state
  */
 export const setup = (
@@ -38,7 +38,7 @@ export const setup = (
   controlPanelFocusFn,
   selectPlaneFn,
   gamePopupFn,
-  tutorialBox,
+  msgPopup,
   state
 ) => {
   let isGameOver = false;
@@ -52,14 +52,14 @@ export const setup = (
   subscribeVictory(VictoryEvents.Success, () => {
     if (isGameOver) return;
     isGameOver = true;
-    gameOver(tutorialBox, true);
+    gameOver(msgPopup, true);
     gameOverFreezePopup(2000);
   });
 
   subscribeVictory(VictoryEvents.Failed, () => {
     if (isGameOver) return;
     isGameOver = true;
-    gameOver(tutorialBox, false);
+    gameOver(msgPopup, false);
     gameOverFreezePopup(12000);
   });
 
@@ -166,7 +166,7 @@ export const setupTutorialEvents = (tutorialEventArg, state) => {
 /**
  * @param {VueThis} self
  * @param {String} focusCircleTypeProp
- * @param {Object} tutorialBox contains vue ref properties
+ * @param {Object} msgPopup contains vue ref properties
  * @param {Object} focusCircle
  * @param {Object} planeSelCBs object with planeSel funcs
  * @param {VueRef} planeSelVueRef vue ref to plane selected object
@@ -175,7 +175,7 @@ export const setupTutorialEvents = (tutorialEventArg, state) => {
 export const tutorialUpdateEventCB = (
   self,
   focusCircleTypeProp,
-  tutorialBox,
+  msgPopup,
   focusCircle,
   planeSelCBs,
   planeSelVueRef,
@@ -191,19 +191,15 @@ export const tutorialUpdateEventCB = (
     focusCircle.height = state.focusCircle.height;
   }
 
-  const {
-    tutorialBoxTop,
-    tutorialBoxLeft,
-    tutorialBoxWidth,
-    tutorialBoxHtmlQueue,
-  } = tutorialBox;
+  const { msgPopupTop, msgPopupLeft, msgPopupWidth, msgPopupHtmlQueue } =
+    msgPopup;
   if (state.dialogBox) {
-    tutorialBoxTop.value = state.dialogBox.top;
-    tutorialBoxLeft.value = state.dialogBox.left;
-    tutorialBoxWidth.value = state.dialogBox.width;
+    msgPopupTop.value = state.dialogBox.top;
+    msgPopupLeft.value = state.dialogBox.left;
+    msgPopupWidth.value = state.dialogBox.width;
 
     if (state.dialogBox.html.length) {
-      fillHtmlQueue(state.dialogBox.html, tutorialBoxHtmlQueue);
+      fillHtmlQueue(state.dialogBox.html, msgPopupHtmlQueue);
       state.dialogBox.html = '';
     }
   }
