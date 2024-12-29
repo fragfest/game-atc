@@ -12,7 +12,7 @@ export const Runways = Object.freeze({
   TwentyTwoRight: '22R',
 });
 
-export const getMapImage = () => '/img/new-york.png';
+export const getMapImage = () => '/img/maps/new-york.png';
 
 export const getRunwaysAll = () => Object.values(Runways);
 
@@ -140,28 +140,28 @@ const runways = (runway, screenSize) => {
   switch (screenSize) {
     case ScreenSizes.Large:
       // 22L
-      xOffset22L = 345;
-      yOffset22L = 83;
-      length22L = 54;
+      xOffset22L = 343;
+      yOffset22L = 92;
+      length22L = 52;
       runwayWidth = 4;
       titlePosition22L = { x: 8, y: 12 };
       // 22R
       xOffset22R = 330;
-      yOffset22R = 78;
-      length22R = 66;
+      yOffset22R = 87;
+      length22R = 64;
       titlePosition22R = { x: -36, y: 6 };
       break;
 
     case ScreenSizes.Small:
       // 22L
       xOffset22L = 252;
-      yOffset22L = 70;
-      length22L = 28;
+      yOffset22L = 74;
+      length22L = 30;
       runwayWidth = 2.2;
       titlePosition22L = { x: 6, y: 8 };
       // 22R
-      xOffset22R = 243;
-      yOffset22R = 64;
+      xOffset22R = 244;
+      yOffset22R = 69;
       length22R = 42;
       titlePosition22R = { x: -26, y: -4 };
       break;
