@@ -1,5 +1,10 @@
 import { getGameSize, ScreenSizes } from '../utils';
-import { HoldingPosition, WaypointType } from '../types';
+import {
+  DestinationType,
+  HoldingPosition,
+  RunwayType,
+  WaypointType,
+} from '../types';
 import Runway from './Runway';
 import Waypoint from '../canvas/Waypoint';
 
@@ -7,20 +12,31 @@ import Waypoint from '../canvas/Waypoint';
  * @typedef {import('./airports/airports.js').EntitySetupFn} EntitySetupFn
  */
 
-export const Runways = Object.freeze({
-  TwentyTwo: '22',
-  TwentyThree: '23',
+export const RunwaysDepartureOnly = Object.freeze({
   SixteenLeft: '16L',
   SixteenRight: '16R',
+});
+export const RunwaysArrivalOnly = Object.freeze({
+  TwentyTwo: '22',
+  TwentyThree: '23',
+});
+export const Runways = Object.freeze({
+  ...RunwaysArrivalOnly,
+  ...RunwaysDepartureOnly,
 });
 
 export const getMapImage = () => '/img/maps/tokyo.png';
 
-export const getRunwaysAll = () => Object.values(Runways);
-
-export const getRunwayRnd = () => {
-  const index = Math.floor(Math.random() * getRunwaysAll().length);
-  return getRunwaysAll()[index];
+export const getRunwayRnd = (destinationType) => {
+  let runwayArr = [];
+  if (destinationType === DestinationType.Arrival) {
+    runwayArr = Object.values(RunwaysArrivalOnly);
+  }
+  if (destinationType === DestinationType.Departure) {
+    runwayArr = Object.values(RunwaysDepartureOnly);
+  }
+  const index = Math.floor(Math.random() * runwayArr.length);
+  return runwayArr[index];
 };
 
 export const getRunway = (runway, screenSize) => {
@@ -54,9 +70,9 @@ export const getWaypointArrivalsAll = () => {
 
 // sections numbered from WNW going clockwise: 1 - 8
 export const getWaypointBySection = (sectionInt) => {
-  if (sectionInt >= 1 && sectionInt <= 2) return Waypoints.HONDA;
-  if (sectionInt >= 3 && sectionInt <= 6) return Waypoints.HONDA;
-  if (sectionInt >= 7 && sectionInt <= 8) return Waypoints.HONDA;
+  if (sectionInt >= 1 && sectionInt <= 3) return Waypoints.SYE;
+  if (sectionInt >= 4 && sectionInt <= 6) return Waypoints.HONDA;
+  if (sectionInt >= 7 && sectionInt <= 8) return Waypoints.KAIHO;
 };
 
 export const getWaypointDepartureRnd = () => {
@@ -78,8 +94,8 @@ export const getMapEntities = () => {
   const runway22 = (argObj) => {
     return new Runway(
       Runways.TwentyTwo,
+      RunwayType.ArrivalOnly,
       argObj.imgLayerObj,
-      argObj.screenSize,
       getRunway(Runways.TwentyTwo, argObj.screenSize)
     );
   };
@@ -87,8 +103,8 @@ export const getMapEntities = () => {
   const runway23 = (argObj) => {
     return new Runway(
       Runways.TwentyThree,
+      RunwayType.ArrivalOnly,
       argObj.imgLayerObj,
-      argObj.screenSize,
       getRunway(Runways.TwentyThree, argObj.screenSize)
     );
   };
@@ -96,8 +112,8 @@ export const getMapEntities = () => {
   const runway16L = (argObj) => {
     return new Runway(
       Runways.SixteenLeft,
+      RunwayType.DepartureOnly,
       argObj.imgLayerObj,
-      argObj.screenSize,
       getRunway(Runways.SixteenLeft, argObj.screenSize)
     );
   };
@@ -105,8 +121,8 @@ export const getMapEntities = () => {
   const runway16R = (argObj) => {
     return new Runway(
       Runways.SixteenRight,
+      RunwayType.DepartureOnly,
       argObj.imgLayerObj,
-      argObj.screenSize,
       getRunway(Runways.SixteenRight, argObj.screenSize)
     );
   };

@@ -106,10 +106,10 @@ export const getFlightArrival = (airport) => (spawned) => {
   throw new Error('unknown airport: ' + airport);
 };
 
-export const getRunwayRnd = (airport) => {
+export const getRunwayRnd = (destinationType, airport) => {
   if (airport === Airport.Heathrow) return getRunwayRndLHR();
   if (airport === Airport.NewYorkJFK) return getRunwayRndJFK();
-  if (airport === Airport.TokyoHND) return getRunwayRndHND();
+  if (airport === Airport.TokyoHND) return getRunwayRndHND(destinationType);
 
   throw new Error('unknown airport: ' + airport);
 };

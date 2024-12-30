@@ -8,6 +8,12 @@ export const HoldingPosition = Object.freeze({
   South: 'south',
 });
 
+export const RunwayType = Object.freeze({
+  ArrivalOnly: 'arrivalOnly',
+  DepartureOnly: 'departureOnly',
+  Both: 'both',
+});
+
 export const WaypointType = Object.freeze({
   Arrival: 'arrival',
   Departure: 'departure',

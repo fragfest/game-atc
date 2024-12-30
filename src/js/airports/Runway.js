@@ -1,8 +1,9 @@
-import { isAircraft, Direction } from '../types';
+import { isAircraft, Direction, RunwayType } from '../types';
 import {
   convertToSmallDegrees,
   convHdgRadToThreeDigits,
   degreesToRad,
+  getScreenSize,
   inputHeadingToRad,
   isHeadingWithinArc,
   radToDegrees,
@@ -17,7 +18,10 @@ import { getHeadingToEntity } from '../entity';
 // class Runway
 ////////////////////////////////////////////////////////////
 export default class Runway {
-  constructor(title, imgLayerObj, screenSize, runwayObj) {
+  constructor(title, runwayType, imgLayerObj, runwayObj) {
+    this.classType = 'Waypoint';
+    const screenSize = getScreenSize();
+
     this.id = Math.random();
     this.title = title.trim();
     this.x = runwayObj.x;
@@ -35,6 +39,11 @@ export default class Runway {
     this.titlePosition = runwayObj.titlePosition || {};
     this.titleX = this.titlePosition.x || 0;
     this.titleY = this.titlePosition.y || 0;
+
+    this.isShowDashes = true;
+    if (runwayType === RunwayType.DepartureOnly) {
+      this.isShowDashes = false;
+    }
 
     // this.ctx.fillStyle = 'greenyellow';
     // this.ctx.fillRect(this.x - 2, this.y - 2, 4, 4);
@@ -60,7 +69,10 @@ export default class Runway {
     this.ctx.fillText(this.title, this.x + this.titleX, this.y + this.titleY);
 
     // draw runway heading dashes
-    const length = this.isSmall ? 65 : 100;
+    let length = 0;
+    if (this.isShowDashes) {
+      length = this.isSmall ? 65 : 100;
+    }
     const dashLength = this.isSmall ? 4 : 6;
     const dashSpaceMultiple = 4;
     const reverseRunwayHeading = this.runwayHeading + Math.PI;

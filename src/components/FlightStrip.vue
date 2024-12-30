@@ -559,14 +559,17 @@ export default {
     }
 
     .col {
+      min-width: 19px;
       height: 20px;
       padding: 6px;
     }
+
     .conflict {
       width: 90%;
-      margin-left: 4px;
+      margin-left: 0px;
       padding: 2px 4px;
     }
+
     .fixed-width {
       width: 75px;
       padding-left: 12px;
@@ -625,11 +628,13 @@ export default {
       flex-direction: column;
       justify-content: center;
 
+      min-width: 26px;
       height: 26px;
       padding: 6px;
       text-align: center;
       border-right: solid 1px #b2b0b0;
     }
+
     .btn-group {
       display: flex;
       flex-direction: row;
@@ -708,7 +713,7 @@ export default {
       background-color: red;
       border-radius: 4px;
       padding: 4px 8px;
-      margin-left: 8px;
+      margin-left: 4px;
       color: white;
     }
   }

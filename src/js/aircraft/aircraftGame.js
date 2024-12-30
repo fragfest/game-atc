@@ -144,7 +144,7 @@ const createAircraftArrival = (
     height,
   } = canvasObjs;
 
-  const runwayTitleRnd = getRunwayRnd(airport);
+  const runwayTitleRnd = getRunwayRnd(DestinationType.Arrival, airport);
   const runway = entityManagerArr.find((x) => x.title === runwayTitleRnd);
 
   // sections numbered from WNW going clockwise: 1 - 8
@@ -192,7 +192,7 @@ const createAircraftDeparture = (
 ) => {
   const { canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl } =
     canvasObjs;
-  const runwayTitleRnd = getRunwayRnd(airport);
+  const runwayTitleRnd = getRunwayRnd(DestinationType.Departure, airport);
   const runway = entityManagerArr.find((x) => x.title === runwayTitleRnd);
 
   const newPlane = {

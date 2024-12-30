@@ -1,5 +1,5 @@
 import { getGameSize, ScreenSizes } from '../utils';
-import { HoldingPosition, WaypointType } from '../types';
+import { HoldingPosition, RunwayType, WaypointType } from '../types';
 import Runway from './Runway';
 import Waypoint from '../canvas/Waypoint';
 
@@ -77,8 +77,8 @@ export const getMapEntities = () => {
   const runway22L = (argObj) => {
     return new Runway(
       Runways.TwentyTwoLeft,
+      RunwayType.Both,
       argObj.imgLayerObj,
-      argObj.screenSize,
       getRunway(Runways.TwentyTwoLeft, argObj.screenSize)
     );
   };
@@ -86,8 +86,8 @@ export const getMapEntities = () => {
   const runway22R = (argObj) => {
     return new Runway(
       Runways.TwentyTwoRight,
+      RunwayType.Both,
       argObj.imgLayerObj,
-      argObj.screenSize,
       getRunway(Runways.TwentyTwoRight, argObj.screenSize)
     );
   };
