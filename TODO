@@ -13,6 +13,7 @@ Wishlist:
   ☐ Crash mechanic i.e. due to emergency
   ☐ Sound on dialog text spawn
   ☐ 3 miles horizontal for every 1000ft vertical descent
+  ☐ Flights have defined arrival sections, departure waypoints
 
 ATCv0.1.3:
   Bugs:
@@ -35,6 +36,7 @@ ATCv0.1.3:
     ✔ Level intro prompt: airport name, scenario description @started(24-12-09 15:27) @done(24-12-09 20:17) @lasted(4h50m45s)
     ☐ More airports @started(24-12-12 22:02)
     ☐ More levels
+    ☐ More airframe profile images
     ☐ Custom play level
     ☐ More badges
     ☐ difficulty setting that changes delay timers

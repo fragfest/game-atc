@@ -48,7 +48,7 @@ export const getRunway = (runway, screenSize) => {
 export const WaypointArrivals = Object.freeze({
   HONDA: 'HONDA',
   KAIHO: 'KAIHO',
-  SYE: 'SYE',
+  NATTY: 'NATTY',
 });
 export const WaypointDepartures = Object.freeze({
   KAIJI: 'KAIJI',
@@ -70,7 +70,7 @@ export const getWaypointArrivalsAll = () => {
 
 // sections numbered from WNW going clockwise: 1 - 8
 export const getWaypointBySection = (sectionInt) => {
-  if (sectionInt >= 1 && sectionInt <= 3) return Waypoints.SYE;
+  if (sectionInt >= 1 && sectionInt <= 3) return Waypoints.NATTY;
   if (sectionInt >= 4 && sectionInt <= 6) return Waypoints.HONDA;
   if (sectionInt >= 7 && sectionInt <= 8) return Waypoints.KAIHO;
 };
@@ -301,7 +301,7 @@ const waypoints = (waypoint, screenSize) => {
           y: 0.92 * height,
         };
 
-      case WaypointArrivals.SYE:
+      case WaypointArrivals.NATTY:
         return {
           holdingPosition: HoldingPosition.South,
           type: WaypointType.Arrival,
@@ -350,7 +350,7 @@ const waypoints = (waypoint, screenSize) => {
           y: 0.92 * height,
         };
 
-      case WaypointArrivals.SYE:
+      case WaypointArrivals.NATTY:
         return {
           holdingPosition: HoldingPosition.South,
           type: WaypointType.Arrival,
