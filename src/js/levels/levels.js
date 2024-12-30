@@ -58,6 +58,7 @@ export const getSpawnByGameLevel = (gameLevel) => {
     if (gameLevel === 5) return spawnLevel1(spawnArg, airport);
     if (gameLevel === 6) return spawnLevel1(spawnArg, airport);
     if (gameLevel === 7) return spawnLevel1(spawnArg, airport);
+    if (gameLevel === 8) return spawnLevel1(spawnArg, airport);
 
     throw new Error('unknown level: ' + gameLevel);
   };

@@ -125,11 +125,11 @@ export const getMapEntities = () => {
 const runways = (runway, screenSize) => {
   const width = getGameSize(screenSize).width;
   const height = getGameSize(screenSize).height;
+  let runwayWidth = 0;
   // 22L
   let xOffset22L = 0;
   let yOffset22L = 0;
   let length22L = 0;
-  let runwayWidth = 0;
   let titlePosition22L = { x: 0, y: 0 };
   // 22R
   let xOffset22R = 0;
@@ -139,11 +139,11 @@ const runways = (runway, screenSize) => {
 
   switch (screenSize) {
     case ScreenSizes.Large:
+      runwayWidth = 4;
       // 22L
       xOffset22L = 343;
       yOffset22L = 92;
       length22L = 52;
-      runwayWidth = 4;
       titlePosition22L = { x: 8, y: 12 };
       // 22R
       xOffset22R = 330;
@@ -153,11 +153,11 @@ const runways = (runway, screenSize) => {
       break;
 
     case ScreenSizes.Small:
+      runwayWidth = 2.2;
       // 22L
       xOffset22L = 252;
       yOffset22L = 74;
       length22L = 30;
-      runwayWidth = 2.2;
       titlePosition22L = { x: 6, y: 8 };
       // 22R
       xOffset22R = 244;

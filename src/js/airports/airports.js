@@ -1,3 +1,18 @@
+// HND
+import {
+  getWaypointArrivalsAll as getWaypointArrivalsHND,
+  getRunwayRnd as getRunwayRndHND,
+  getWaypointDepartureRnd as getWaypointDepartureRndHND,
+  getWaypointBySection as getWaypointBySectionHND,
+  getMapImage as getMapImageHND,
+  getMapEntities as getMapEntitiesHND,
+} from './HND';
+import {
+  getFlightDeparture as getFlightDepartureHND,
+  getFlightArrival as getFlightArrivalHND,
+} from '../flights/HND';
+// END HND
+
 // JFK
 import {
   getWaypointArrivalsAll as getWaypointArrivalsJFK,
@@ -31,11 +46,13 @@ import {
 export const Airport = Object.freeze({
   Heathrow: 'Heathrow',
   NewYorkJFK: 'NewYorkJFK',
+  TokyoHND: 'TokyoHND',
 });
 
 export const getMapImageOpacity = (airport) => {
   if (airport === Airport.Heathrow) return 0.5;
   if (airport === Airport.NewYorkJFK) return 0.4;
+  if (airport === Airport.TokyoHND) return 0.3;
 
   throw new Error('unknown airport: ' + airport);
 };
@@ -43,6 +60,7 @@ export const getMapImageOpacity = (airport) => {
 export const getMapImage = (airport) => {
   if (airport === Airport.Heathrow) return getMapImageLHR();
   if (airport === Airport.NewYorkJFK) return getMapImageJFK();
+  if (airport === Airport.TokyoHND) return getMapImageHND();
 
   throw new Error('unknown airport: ' + airport);
 };
@@ -50,6 +68,7 @@ export const getMapImage = (airport) => {
 export const getWaypointArrivalsAll = (airport) => {
   if (airport === Airport.Heathrow) return getWaypointArrivalsLHR();
   if (airport === Airport.NewYorkJFK) return getWaypointArrivalsJFK();
+  if (airport === Airport.TokyoHND) return getWaypointArrivalsHND();
 
   throw new Error('unknown airport: ' + airport);
 };
@@ -58,6 +77,7 @@ export const getWaypointBySection = (airport) => (sectionInt) => {
   if (airport === Airport.Heathrow) return getWaypointBySectionLHR(sectionInt);
   if (airport === Airport.NewYorkJFK)
     return getWaypointBySectionJFK(sectionInt);
+  if (airport === Airport.TokyoHND) return getWaypointBySectionHND(sectionInt);
 
   throw new Error('unknown airport: ' + airport);
 };
@@ -65,6 +85,7 @@ export const getWaypointBySection = (airport) => (sectionInt) => {
 export const getWaypointDepartureRnd = (airport) => {
   if (airport === Airport.Heathrow) return getWaypointDepartureRndLHR();
   if (airport === Airport.NewYorkJFK) return getWaypointDepartureRndJFK();
+  if (airport === Airport.TokyoHND) return getWaypointDepartureRndHND();
 
   throw new Error('unknown airport: ' + airport);
 };
@@ -72,6 +93,7 @@ export const getWaypointDepartureRnd = (airport) => {
 export const getFlightDeparture = (airport) => (spawned) => {
   if (airport === Airport.Heathrow) return getFlightDepartureLHR(spawned);
   if (airport === Airport.NewYorkJFK) return getFlightDepartureJFK(spawned);
+  if (airport === Airport.TokyoHND) return getFlightDepartureHND(spawned);
 
   throw new Error('unknown airport: ' + airport);
 };
@@ -79,6 +101,7 @@ export const getFlightDeparture = (airport) => (spawned) => {
 export const getFlightArrival = (airport) => (spawned) => {
   if (airport === Airport.Heathrow) return getFlightArrivalLHR(spawned);
   if (airport === Airport.NewYorkJFK) return getFlightArrivalJFK(spawned);
+  if (airport === Airport.TokyoHND) return getFlightArrivalHND(spawned);
 
   throw new Error('unknown airport: ' + airport);
 };
@@ -86,6 +109,7 @@ export const getFlightArrival = (airport) => (spawned) => {
 export const getRunwayRnd = (airport) => {
   if (airport === Airport.Heathrow) return getRunwayRndLHR();
   if (airport === Airport.NewYorkJFK) return getRunwayRndJFK();
+  if (airport === Airport.TokyoHND) return getRunwayRndHND();
 
   throw new Error('unknown airport: ' + airport);
 };
@@ -104,6 +128,7 @@ export const getRunwayRnd = (airport) => {
 export const getMapEntities = (airport) => {
   if (airport === Airport.NewYorkJFK) return getMapEntitiesJFK();
   if (airport === Airport.Heathrow) return getMapEntitiesLHR();
+  if (airport === Airport.TokyoHND) return getMapEntitiesHND();
 
   throw new Error('unknown airport: ' + airport);
 };

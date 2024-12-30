@@ -2,14 +2,15 @@ Bugs:
   ☐ Training can't be retried. Complete training and hit retry (without refreshing). A blank/frozen game screen appears.
 
 Wishlist:
-  ☐ Ground elevation topography & mechanics
+  ☐ Restricted areas with min altitude levels
+  ☐ Ground elevation topography & mechanic
   ☐ Engine contrails
-  ☐ Noise abatement mechanic (250+ kts)
+  ☐ Noise abatement mechanic (max 250kts below 10Kft)
   ☐ Fuel mechanics
   ☐ ScorePanel icons instead of text
   ☐ Flight Quality - weather dangerous
-  ☐ Crash mechanic
-  ☐ Add button for background sounds
+  ☐ Emergency message popup/flighstrip/aircraft & mechanic
+  ☐ Crash mechanic i.e. due to emergency
   ☐ Sound on dialog text spawn
   ☐ 3 miles horizontal for every 1000ft vertical descent
 
@@ -46,6 +47,7 @@ ATCv0.1.3:
     ✔ More flights/airframes @started(24-07-23 22:44) @done(24-07-23 23:40) @lasted(56m29s)
     ✔ Achievement Badges placeholders for future @started(24-10-16 12:00) @done(24-10-16 13:10) @lasted(1h10m4s)
     ✔ Seperate background atc chatter soundtrack toggle @done(24-12-09 15:24)
+    ✔ Add button for background sounds @done(24-12-29 14:25)
     ☐ panelBottom responsive i.e. message tip box is bigger
     ☐ small scorePanel make smaller
     ☐ Warn with message on mobile
