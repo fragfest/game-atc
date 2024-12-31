@@ -197,6 +197,16 @@ export const getGoalsByLevel = () => {
         Delayed: 3,
       };
     }
+    if (gameLevel === 9) {
+      return {
+        Arrivals: 8,
+        Departures: 8,
+        Failed: 2,
+        Conflict: 30,
+        SpawnRate: 1,
+        Delayed: 3,
+      };
+    }
 
     throw new Error('unknown level: ' + gameLevel);
   };

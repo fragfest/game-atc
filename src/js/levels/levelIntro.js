@@ -139,13 +139,24 @@ export const getIntro = (gameLevel) => {
         airportSubheading: `South Wind Operations - quiet day, weather: clear`,
         text1: `Welcome to Tokyo,&nbsp;<b>Controller</b>! We have a quiet shift for you to get accustomed to new flight operations.`,
       };
+    }
+
+    if (gameLevel === 9) {
+      return {
+        displayTimeMs: 1000,
+        width: 0.72,
+        levelNum: gameLevel,
+        airportHeading: ``,
+        airportSubheading: ``,
+        text1: ``,
+      };
       // return {
-      //   displayTimeMs: 1000,
+      //   displayTimeMs: 20000,
       //   width: 0.72,
       //   levelNum: gameLevel,
-      //   airportHeading: ``,
-      //   airportSubheading: ``,
-      //   text1: ``,
+      //   airportHeading: `Amsterdam (AMS)`,
+      //   airportSubheading: `South Wind Operations - quiet day, weather: clear`,
+      //   text1: `Welcome to Amsterdam,&nbsp;<b>Controller</b>! We have a quiet shift for you to get accustomed to new flight operations.`,
       // };
     }
 

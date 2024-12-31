@@ -34,6 +34,7 @@ export const getFlightArrival = (airport) => (spawned) => {
   if (airport === Airport.Heathrow) return LHR.getFlightArrival(spawned);
   if (airport === Airport.NewYorkJFK) return JFK.getFlightArrival(spawned);
   if (airport === Airport.TokyoHND) return flightArrival(HND, spawned);
+  if (airport === Airport.Amsterdam) return flightArrival(HND, spawned);
 
   throw new Error('unknown airport: ' + airport);
 };
@@ -47,6 +48,7 @@ export const getFlightDeparture = (airport) => (spawned) => {
   if (airport === Airport.Heathrow) return LHR.getFlightDeparture(spawned);
   if (airport === Airport.NewYorkJFK) return JFK.getFlightDeparture(spawned);
   if (airport === Airport.TokyoHND) return flightDeparture(HND, spawned);
+  if (airport === Airport.Amsterdam) return flightDeparture(HND, spawned);
 
   throw new Error('unknown airport: ' + airport);
 };
