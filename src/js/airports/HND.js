@@ -1,15 +1,10 @@
 import { getGameSize, ScreenSizes } from '../utils';
-import {
-  DestinationType,
-  HoldingPosition,
-  RunwayType,
-  WaypointType,
-} from '../types';
+import { HoldingPosition, RunwayType, WaypointType } from '../types';
 import Runway from './Runway';
 import Waypoint from '../canvas/Waypoint';
 
 /**
- * @typedef {import('./airports/airports.js').EntitySetupFn} EntitySetupFn
+ * @typedef {import('./airports.js').EntitySetupFn} EntitySetupFn
  */
 
 export const RunwaysDepartureOnly = Object.freeze({
@@ -24,26 +19,6 @@ export const Runways = Object.freeze({
   ...RunwaysArrivalOnly,
   ...RunwaysDepartureOnly,
 });
-
-export const getMapImage = () => '/img/maps/tokyo.png';
-
-export const getRunwayRnd = (destinationType) => {
-  let runwayArr = [];
-  if (destinationType === DestinationType.Arrival) {
-    runwayArr = Object.values(RunwaysArrivalOnly);
-  }
-  if (destinationType === DestinationType.Departure) {
-    runwayArr = Object.values(RunwaysDepartureOnly);
-  }
-  const index = Math.floor(Math.random() * runwayArr.length);
-  return runwayArr[index];
-};
-
-export const getRunway = (runway, screenSize) => {
-  const obj = runways(runway, screenSize);
-  if (!obj) throw new Error('runway not found: ' + runway);
-  return obj;
-};
 
 export const WaypointArrivals = Object.freeze({
   HONDA: 'HONDA',
@@ -60,14 +35,6 @@ export const Waypoints = Object.freeze({
   ...WaypointDepartures,
 });
 
-export const getWaypointDestinationsAll = () => {
-  return Object.values(WaypointDepartures);
-};
-
-export const getWaypointArrivalsAll = () => {
-  return Object.values(WaypointArrivals);
-};
-
 // sections numbered from WNW going clockwise: 1 - 8
 export const getWaypointBySection = (sectionInt) => {
   if (sectionInt >= 1 && sectionInt <= 3) return Waypoints.NATTY;
@@ -75,85 +42,43 @@ export const getWaypointBySection = (sectionInt) => {
   if (sectionInt >= 7 && sectionInt <= 8) return Waypoints.KAIHO;
 };
 
-export const getWaypointDepartureRnd = () => {
-  const waypoints = getWaypointDestinationsAll();
-  const index = Math.floor(Math.random() * waypoints.length);
-  return waypoints[index];
-};
-
-export const getWaypoint = (waypoint, screenSize) => {
-  const obj = waypoints(waypoint, screenSize);
-  if (!obj) throw new Error('waypoint not found: ' + waypoint);
-  return obj;
-};
-
 /**
  * @returns {Array.<EntitySetupFn>}
  */
 export const getMapEntities = () => {
-  const runway22 = (argObj) => {
-    return new Runway(
-      Runways.TwentyTwo,
-      RunwayType.ArrivalOnly,
-      argObj.imgLayerObj,
-      getRunway(Runways.TwentyTwo, argObj.screenSize)
-    );
-  };
-
-  const runway23 = (argObj) => {
-    return new Runway(
-      Runways.TwentyThree,
-      RunwayType.ArrivalOnly,
-      argObj.imgLayerObj,
-      getRunway(Runways.TwentyThree, argObj.screenSize)
-    );
-  };
-
-  const runway16L = (argObj) => {
-    return new Runway(
-      Runways.SixteenLeft,
-      RunwayType.DepartureOnly,
-      argObj.imgLayerObj,
-      getRunway(Runways.SixteenLeft, argObj.screenSize)
-    );
-  };
-
-  const runway16R = (argObj) => {
-    return new Runway(
-      Runways.SixteenRight,
-      RunwayType.DepartureOnly,
-      argObj.imgLayerObj,
-      getRunway(Runways.SixteenRight, argObj.screenSize)
-    );
-  };
-
-  const waypointArrivals = getWaypointArrivalsAll().map(
-    (waypoint) => (argObj) => {
-      return new Waypoint(
-        waypoint,
-        argObj.backgroundObj,
-        argObj.headingLayerObj,
-        argObj.screenSize,
-        getWaypoint(waypoint, argObj.screenSize)
+  const runwaysDeparture = Object.values(RunwaysDepartureOnly).map(
+    (runway) => (argObj) => {
+      return new Runway(
+        runway,
+        RunwayType.DepartureOnly,
+        argObj.imgLayerObj,
+        runways(runway, argObj.screenSize)
       );
     }
   );
 
-  const waypointDepartures = getWaypointDestinationsAll().map(
-    (waypoint) => (argObj) => {
-      return new Waypoint(
-        waypoint,
-        argObj.backgroundObj,
-        argObj.headingLayerObj,
-        argObj.screenSize,
-        getWaypoint(waypoint, argObj.screenSize)
+  const runwaysArrival = Object.values(RunwaysArrivalOnly).map(
+    (runway) => (argObj) => {
+      return new Runway(
+        runway,
+        RunwayType.ArrivalOnly,
+        argObj.imgLayerObj,
+        runways(runway, argObj.screenSize)
       );
     }
   );
-  return [runway22, runway23, runway16L, runway16R].concat(
-    waypointArrivals,
-    waypointDepartures
-  );
+
+  const waypointsArr = Object.values(Waypoints).map((waypoint) => (argObj) => {
+    return new Waypoint(
+      waypoint,
+      argObj.backgroundObj,
+      argObj.headingLayerObj,
+      argObj.screenSize,
+      waypoints(waypoint, argObj.screenSize)
+    );
+  });
+
+  return [].concat(runwaysDeparture, runwaysArrival, waypointsArr);
 };
 
 ///////////////////////////////////////////////////////////////
@@ -210,7 +135,6 @@ const runways = (runway, screenSize) => {
       titlePosition16R = { x: -12, y: 40 };
       break;
 
-    // TODO
     case ScreenSizes.Small:
       runwayWidth = 2.2;
       // 22
@@ -319,7 +243,7 @@ const waypoints = (waypoint, screenSize) => {
       case WaypointDepartures.URAGA:
         return {
           type: WaypointType.Departure,
-          x: 0.6 * width,
+          x: 0.8 * width,
           y: height - 50,
         };
 
@@ -368,7 +292,7 @@ const waypoints = (waypoint, screenSize) => {
       case WaypointDepartures.URAGA:
         return {
           type: WaypointType.Departure,
-          x: 0.6 * width,
+          x: 0.8 * width,
           y: height - 40,
         };
 

@@ -11,12 +11,11 @@ import { getGoals } from '../game/victory';
 import { getScore } from '../game/score/score';
 import { callAircraftFnByLevel } from '../levels/levels';
 import {
-  getFlightArrival,
-  getFlightDeparture,
   getRunwayRnd,
   getWaypointBySection,
   getWaypointDepartureRnd,
 } from '../airports/airports';
+import { getFlightArrival, getFlightDeparture } from '../flights/flights';
 
 /**
  * @callback CreateAircraft
@@ -126,7 +125,9 @@ export const createAircraftRndDestinationType = (
   }
 };
 
-// PRIVATE /////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+// PRIVATE
+////////////////////////////////////////////////////////////////////////////
 
 const createAircraftArrival = (
   entityManagerArr,
@@ -234,11 +235,16 @@ const createAircraftDeparture = (
 };
 
 let spawned = [];
-const createFlight = (getFlightFn) => {
-  let newFlight = getFlightFn(spawned);
+/**
+ * create a new FlightObj not already in spawned list of objects
+ * @param {import('../flights/flights').SpawnFn} spawnFn
+ * @returns {import('../flights/flights').FlightObj}
+ */
+const createFlight = (spawnFn) => {
+  let newFlight = spawnFn(spawned);
   if (!newFlight) {
     spawned = [];
-    newFlight = getFlightFn(spawned);
+    newFlight = spawnFn(spawned);
   }
   spawned.push(newFlight);
   return newFlight;
