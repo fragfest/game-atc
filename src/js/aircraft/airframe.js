@@ -18,7 +18,10 @@ export const Airframes = Object.freeze({
   A320: 'A320',
   A321: 'A321',
   A333: 'A333',
+  A332: 'A332',
+  A339: 'A339',
   A350: 'A350',
+  A359: 'A359',
   A388: 'A388',
   B738: 'B738',
   B38M: 'B38M',
@@ -28,7 +31,9 @@ export const Airframes = Object.freeze({
   B78X: 'B78X',
   B772: 'B772',
   B77W: 'B77W',
+  B77L: 'B77L',
   B748: 'B748',
+  B744: 'B744',
 });
 
 export const getWakeStrength = (rating) => {
@@ -212,10 +217,28 @@ const performanceByAirframe = {
     type: 'A333',
     images: imagesObj('A333'),
   },
+  A332: {
+    ...basePerformance,
+    ...PerformanceModifiers.A333,
+    type: 'A332',
+    images: imagesObj('A333'),
+  },
+  A339: {
+    ...basePerformance,
+    ...PerformanceModifiers.A333,
+    type: 'A333',
+    images: imagesObj('A333'),
+  },
   A350: {
     ...basePerformance,
     ...PerformanceModifiers.A350,
     type: 'A350',
+    images: imagesObj('A333'),
+  },
+  A359: {
+    ...basePerformance,
+    ...PerformanceModifiers.A350,
+    type: 'A359',
     images: imagesObj('A333'),
   },
   A388: {
@@ -260,10 +283,22 @@ const performanceByAirframe = {
     type: 'B77W',
     images: imagesObj('B77W'),
   },
+  B77L: {
+    ...basePerformance,
+    ...PerformanceModifiers.B77W,
+    type: 'B77L',
+    images: imagesObj('B77W'),
+  },
   B748: {
     ...basePerformance,
     ...PerformanceModifiers.B748,
     type: 'B748',
+    images: imagesObj('B748'),
+  },
+  B744: {
+    ...basePerformance,
+    ...PerformanceModifiers.B748,
+    type: 'B744',
     images: imagesObj('B748'),
   },
 };
@@ -273,7 +308,10 @@ const detailsByAirframe = {
   A320: { make: 'Airbus', airframe: 'A320-200' },
   A321: { make: 'Airbus', airframe: 'A321-231' },
   A333: { make: 'Airbus', airframe: 'A330-300' },
+  A332: { make: 'Airbus', airframe: 'A330-203' },
+  A339: { make: 'Airbus', airframe: 'A330-941' },
   A350: { make: 'Airbus', airframe: 'A350-1000' },
+  A359: { make: 'Airbus', airframe: 'A350-941' },
   A388: { make: 'Airbus', airframe: 'A380-800' },
   B38M: { make: 'Boeing', airframe: '737-MAX-8' },
   B738: { make: 'Boeing', airframe: '737-8K2' },
@@ -283,5 +321,7 @@ const detailsByAirframe = {
   B78X: { make: 'Boeing', airframe: '787-10' },
   B772: { make: 'Boeing', airframe: '777-236ER' },
   B77W: { make: 'Boeing', airframe: '777-300ER' },
+  B77L: { make: 'Boeing', airframe: '777-FFX' },
   B748: { make: 'Boeing', airframe: '747-8' },
+  B744: { make: 'Boeing', airframe: '747-4HAF(ER)' },
 };

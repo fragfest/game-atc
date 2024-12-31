@@ -1,7 +1,8 @@
-import { Airport } from '../airports/airports';
+import * as AMS from './AMS';
 import * as LHR from './LHR';
 import * as JFK from './JFK';
 import * as HND from './HND';
+import { Airport } from '../airports/airports';
 
 /**
  * @typedef {import('../types.js').DestinationType} DestinationType
@@ -34,7 +35,7 @@ export const getFlightArrival = (airport) => (spawned) => {
   if (airport === Airport.Heathrow) return LHR.getFlightArrival(spawned);
   if (airport === Airport.NewYorkJFK) return JFK.getFlightArrival(spawned);
   if (airport === Airport.TokyoHND) return flightArrival(HND, spawned);
-  if (airport === Airport.Amsterdam) return flightArrival(HND, spawned);
+  if (airport === Airport.AmsterdamAMS) return flightArrival(AMS, spawned);
 
   throw new Error('unknown airport: ' + airport);
 };
@@ -48,7 +49,7 @@ export const getFlightDeparture = (airport) => (spawned) => {
   if (airport === Airport.Heathrow) return LHR.getFlightDeparture(spawned);
   if (airport === Airport.NewYorkJFK) return JFK.getFlightDeparture(spawned);
   if (airport === Airport.TokyoHND) return flightDeparture(HND, spawned);
-  if (airport === Airport.Amsterdam) return flightDeparture(HND, spawned);
+  if (airport === Airport.AmsterdamAMS) return flightDeparture(AMS, spawned);
 
   throw new Error('unknown airport: ' + airport);
 };
