@@ -7,25 +7,17 @@ import Waypoint from '../canvas/Waypoint';
  * @typedef {import('./airports/airports.js').EntitySetupFn} EntitySetupFn
  */
 
-export const Runways = Object.freeze({
+export const RunwaysDepartures = Object.freeze({
   TwoSevenRight: '27R',
   TwoSevenLeft: '27L',
 });
-
-export const getMapImage = () => '/img/maps/london.png';
-
-export const getRunwaysAll = () => Object.values(Runways);
-
-export const getRunwayRnd = () => {
-  const index = Math.floor(Math.random() * getRunwaysAll().length);
-  return getRunwaysAll()[index];
-};
-
-export const getRunway = (runway, screenSize) => {
-  const obj = runways(runway, screenSize);
-  if (!obj) throw new Error('runway not found: ' + runway);
-  return obj;
-};
+export const RunwaysArrivals = Object.freeze({
+  TwoSevenRight: '27R',
+  TwoSevenLeft: '27L',
+});
+export const Runways = Object.freeze({
+  ...RunwaysArrivals,
+});
 
 export const WaypointArrivals = Object.freeze({
   BNN: 'BNN',
@@ -44,78 +36,42 @@ export const Waypoints = Object.freeze({
   ...WaypointDepartures,
 });
 
-export const getWaypointDestinationsAll = () => {
-  return Object.values(WaypointDepartures);
-};
-
-export const getWaypointArrivalsAll = () => {
-  return Object.values(WaypointArrivals);
-};
-
 // sections numbered from WNW going clockwise: 1 - 8
 export const getWaypointBySection = (sectionInt) => {
   if (sectionInt >= 1 && sectionInt <= 4) return Waypoints.LAM;
   if (sectionInt >= 5 && sectionInt <= 8) return Waypoints.BIG;
 };
 
-export const getWaypointDepartureRnd = () => {
-  const waypoints = getWaypointDestinationsAll();
-  const index = Math.floor(Math.random() * waypoints.length);
-  return waypoints[index];
-};
-
-export const getWaypoint = (waypoint, screenSize) => {
-  const obj = waypoints(waypoint, screenSize);
-  if (!obj) throw new Error('waypoint not found: ' + waypoint);
-  return obj;
-};
-
 /**
  * @returns {Array.<EntitySetupFn>}
  */
 export const getMapEntities = () => {
-  const runway27R = (argObj) => {
+  const runwaysArr = Object.values(Runways).map((runway) => (argObj) => {
     return new Runway(
-      Runways.TwoSevenRight,
+      runway,
       RunwayType.Both,
       argObj.imgLayerObj,
-      getRunway(Runways.TwoSevenRight, argObj.screenSize)
+      runways(runway, argObj.screenSize)
     );
-  };
+  });
 
-  const runway27L = (argObj) => {
-    return new Runway(
-      Runways.TwoSevenLeft,
-      RunwayType.Both,
-      argObj.imgLayerObj,
-      getRunway(Runways.TwoSevenLeft, argObj.screenSize)
+  const waypointsArr = Object.values(Waypoints).map((waypoint) => (argObj) => {
+    return new Waypoint(
+      waypoint,
+      argObj.backgroundObj,
+      argObj.headingLayerObj,
+      argObj.screenSize,
+      waypoints(waypoint, argObj.screenSize)
     );
-  };
+  });
 
-  const waypointArrivals = getWaypointArrivalsAll().map(
-    (waypoint) => (argObj) => {
-      return new Waypoint(
-        waypoint,
-        argObj.backgroundObj,
-        argObj.headingLayerObj,
-        argObj.screenSize,
-        getWaypoint(waypoint, argObj.screenSize)
-      );
-    }
-  );
+  return [].concat(runwaysArr, waypointsArr);
+};
 
-  const waypointDepartures = getWaypointDestinationsAll().map(
-    (waypoint) => (argObj) => {
-      return new Waypoint(
-        waypoint,
-        argObj.backgroundObj,
-        argObj.headingLayerObj,
-        argObj.screenSize,
-        getWaypoint(waypoint, argObj.screenSize)
-      );
-    }
-  );
-  return [runway27L, runway27R].concat(waypointArrivals, waypointDepartures);
+// test function
+export const getWaypoint = (waypoint, screenSize) => {
+  const obj = waypoints(waypoint, screenSize);
+  return obj;
 };
 
 ///////////////////////////////////////////////////////////////

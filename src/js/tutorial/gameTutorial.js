@@ -8,7 +8,7 @@ import {
   headingLayerClearFn,
 } from '../game/game';
 import Aircraft from '../aircraft/Aircraft';
-import { getFlightArrival, getFlightDeparture } from '../flights/LHR';
+import { getFlightDeparture, getFlightArrival } from '../flights/flights';
 import { Waypoints, Runways } from '../airports/LHR';
 import { getPerformance } from '../aircraft/airframe';
 import { Stages, ElapsedTimes } from './typesTutorial';
@@ -20,6 +20,7 @@ import { DestinationType, FocusCircleType } from '../types';
 import { scorePanel } from './focusCircleTutorial';
 import { ScoreEvents, subscribeScore } from '../game/score/score.js';
 import { isVictory, publishSuccess } from '../game/victory';
+import { Airport } from '../airports/airports.js';
 
 /**
  * @typedef {import('../game/game.js').State} State
@@ -103,7 +104,7 @@ const createPlaneDepartureStage = ({
   const altitude = 0;
   const speed = 0;
 
-  const flight = getFlightDeparture([]);
+  const flight = getFlightDeparture(Airport.LondonLHR)([]);
   const airframeObj = getPerformance(flight.airframe, screenSize);
 
   const aircraft = new Aircraft(
@@ -140,7 +141,7 @@ const createPlaneArrivalStage = ({
   clickCB,
   positionObj,
 }) => {
-  const flight = getFlightArrival([]);
+  const flight = getFlightArrival(Airport.LondonLHR)([]);
   const destinationType = DestinationType.Arrival;
 
   const airframeObj = getPerformance(flight.airframe, screenSize);

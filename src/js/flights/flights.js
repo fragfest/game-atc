@@ -33,8 +33,8 @@ import { Airport } from '../airports/airports';
  * @returns {SpawnFn}
  */
 export const getFlightArrival = (airport) => (spawned) => {
-  if (airport === Airport.Heathrow) return LHR.getFlightArrival(spawned);
-  if (airport === Airport.NewYorkJFK) return JFK.getFlightArrival(spawned);
+  if (airport === Airport.LondonLHR) return flightArrival(LHR, spawned);
+  if (airport === Airport.NewYorkJFK) return flightArrival(JFK, spawned);
   if (airport === Airport.TokyoHND) return flightArrival(HND, spawned);
   if (airport === Airport.AmsterdamAMS) return flightArrival(AMS, spawned);
   if (airport === Airport.VancouverYVR) return flightArrival(YVR, spawned);
@@ -48,8 +48,8 @@ export const getFlightArrival = (airport) => (spawned) => {
  * @returns {SpawnFn}
  */
 export const getFlightDeparture = (airport) => (spawned) => {
-  if (airport === Airport.Heathrow) return LHR.getFlightDeparture(spawned);
-  if (airport === Airport.NewYorkJFK) return JFK.getFlightDeparture(spawned);
+  if (airport === Airport.LondonLHR) return flightDeparture(LHR, spawned);
+  if (airport === Airport.NewYorkJFK) return flightDeparture(JFK, spawned);
   if (airport === Airport.TokyoHND) return flightDeparture(HND, spawned);
   if (airport === Airport.AmsterdamAMS) return flightDeparture(AMS, spawned);
   if (airport === Airport.VancouverYVR) return flightDeparture(YVR, spawned);

@@ -3,31 +3,11 @@ import { DestinationType } from '../types';
 import * as YVR from './YVR';
 import * as AMS from './AMS';
 import * as HND from './HND';
-
-// JFK
-import {
-  getWaypointArrivalsAll as getWaypointArrivalsJFK,
-  getRunwayRnd as getRunwayRndJFK,
-  getWaypointDepartureRnd as getWaypointDepartureRndJFK,
-  getWaypointBySection as getWaypointBySectionJFK,
-  getMapImage as getMapImageJFK,
-  getMapEntities as getMapEntitiesJFK,
-} from './JFK';
-// END JFK
-
-// LHR
-import {
-  getWaypointArrivalsAll as getWaypointArrivalsLHR,
-  getRunwayRnd as getRunwayRndLHR,
-  getWaypointDepartureRnd as getWaypointDepartureRndLHR,
-  getWaypointBySection as getWaypointBySectionLHR,
-  getMapImage as getMapImageLHR,
-  getMapEntities as getMapEntitiesLHR,
-} from './LHR';
-// END LHR
+import * as JFK from './JFK';
+import * as LHR from './LHR';
 
 export const Airport = Object.freeze({
-  Heathrow: 'Heathrow',
+  LondonLHR: 'LondonLHR',
   NewYorkJFK: 'NewYorkJFK',
   TokyoHND: 'TokyoHND',
   AmsterdamAMS: 'AmsterdamAMS',
@@ -35,7 +15,7 @@ export const Airport = Object.freeze({
 });
 
 export const getMapImageOpacity = (airport) => {
-  if (airport === Airport.Heathrow) return 0.5;
+  if (airport === Airport.LondonLHR) return 0.5;
   if (airport === Airport.NewYorkJFK) return 0.4;
   if (airport === Airport.TokyoHND) return 0.3;
   if (airport === Airport.AmsterdamAMS) return 0.3;
@@ -45,8 +25,8 @@ export const getMapImageOpacity = (airport) => {
 };
 
 export const getMapImage = (airport) => {
-  if (airport === Airport.Heathrow) return getMapImageLHR();
-  if (airport === Airport.NewYorkJFK) return getMapImageJFK();
+  if (airport === Airport.LondonLHR) return '/img/maps/london.png';
+  if (airport === Airport.NewYorkJFK) return '/img/maps/new-york.png';
   if (airport === Airport.TokyoHND) return '/img/maps/tokyo.png';
   if (airport === Airport.AmsterdamAMS) return '/img/maps/amsterdam.png';
   if (airport === Airport.VancouverYVR) return '/img/maps/vancouver.png';
@@ -55,8 +35,8 @@ export const getMapImage = (airport) => {
 };
 
 export const getWaypointArrivalsAll = (airport) => {
-  if (airport === Airport.Heathrow) return getWaypointArrivalsLHR();
-  if (airport === Airport.NewYorkJFK) return getWaypointArrivalsJFK();
+  if (airport === Airport.LondonLHR) return waypointArrivalsAll(LHR);
+  if (airport === Airport.NewYorkJFK) return waypointArrivalsAll(JFK);
   if (airport === Airport.TokyoHND) return waypointArrivalsAll(HND);
   if (airport === Airport.AmsterdamAMS) return waypointArrivalsAll(AMS);
   if (airport === Airport.VancouverYVR) return waypointArrivalsAll(YVR);
@@ -65,9 +45,10 @@ export const getWaypointArrivalsAll = (airport) => {
 };
 
 export const getWaypointBySection = (airport) => (sectionInt) => {
-  if (airport === Airport.Heathrow) return getWaypointBySectionLHR(sectionInt);
+  if (airport === Airport.LondonLHR)
+    return LHR.getWaypointBySection(sectionInt);
   if (airport === Airport.NewYorkJFK)
-    return getWaypointBySectionJFK(sectionInt);
+    return JFK.getWaypointBySection(sectionInt);
   if (airport === Airport.TokyoHND) return HND.getWaypointBySection(sectionInt);
   if (airport === Airport.AmsterdamAMS)
     return AMS.getWaypointBySection(sectionInt);
@@ -78,8 +59,8 @@ export const getWaypointBySection = (airport) => (sectionInt) => {
 };
 
 export const getWaypointDepartureRnd = (airport) => {
-  if (airport === Airport.Heathrow) return getWaypointDepartureRndLHR();
-  if (airport === Airport.NewYorkJFK) return getWaypointDepartureRndJFK();
+  if (airport === Airport.LondonLHR) return waypointDepartureRnd(LHR);
+  if (airport === Airport.NewYorkJFK) return waypointDepartureRnd(JFK);
   if (airport === Airport.TokyoHND) return waypointDepartureRnd(HND);
   if (airport === Airport.AmsterdamAMS) return waypointDepartureRnd(AMS);
   if (airport === Airport.VancouverYVR) return waypointDepartureRnd(YVR);
@@ -88,8 +69,8 @@ export const getWaypointDepartureRnd = (airport) => {
 };
 
 export const getRunwayRnd = (destinationType, airport) => {
-  if (airport === Airport.Heathrow) return getRunwayRndLHR();
-  if (airport === Airport.NewYorkJFK) return getRunwayRndJFK();
+  if (airport === Airport.LondonLHR) return runwayRnd(LHR, destinationType);
+  if (airport === Airport.NewYorkJFK) return runwayRnd(JFK, destinationType);
   if (airport === Airport.TokyoHND) return runwayRnd(HND, destinationType);
   if (airport === Airport.AmsterdamAMS) return runwayRnd(AMS, destinationType);
   if (airport === Airport.VancouverYVR) return runwayRnd(YVR, destinationType);
@@ -109,8 +90,8 @@ export const getRunwayRnd = (destinationType, airport) => {
  * @returns {Array.<EntitySetupFn>}
  */
 export const getMapEntities = (airport) => {
-  if (airport === Airport.NewYorkJFK) return getMapEntitiesJFK();
-  if (airport === Airport.Heathrow) return getMapEntitiesLHR();
+  if (airport === Airport.LondonLHR) return LHR.getMapEntities();
+  if (airport === Airport.NewYorkJFK) return JFK.getMapEntities();
   if (airport === Airport.TokyoHND) return HND.getMapEntities();
   if (airport === Airport.AmsterdamAMS) return AMS.getMapEntities();
   if (airport === Airport.VancouverYVR) return YVR.getMapEntities();

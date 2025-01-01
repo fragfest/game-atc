@@ -1,40 +1,8 @@
 import { Airframes } from '../aircraft/airframe';
 import { DestinationType } from '../types';
-// import { leftPadZeros } from '../../js/utils';
-
-export const getFlightArrival = (spawned) => {
-  const flightsUnspawned = flightsArrival.filter(isNotSpawned(spawned));
-  const total = flightsUnspawned.length;
-  if (total === 0) return null;
-
-  const flightObj = flightsUnspawned[getRndIndex(total)];
-  // flightObj.flight = setRndFlightTitle(flightObj);
-  flightObj.time = setTimeSecs();
-  return flightObj;
-};
-
-export const getFlightDeparture = (spawned) => {
-  const flightsUnspawned = flightsDeparture.filter(isNotSpawned(spawned));
-  const total = flightsUnspawned.length;
-  if (total === 0) return null;
-
-  const flightObj = flightsUnspawned[getRndIndex(total)];
-  // flightObj.flight = setRndFlightTitle(flightObj);
-  flightObj.time = setTimeSecs();
-  return flightObj;
-};
-
-////////////// PRIVATE //////////////////////////////////////
-const setTimeSecs = () => 15 * 60;
-// const setRndFlightTitle = (obj) => {
-//   return obj.airlineCode + leftPadZeros(Math.floor(Math.random() * 1000));
-// };
-const getRndIndex = (total) => Math.floor(Math.random() * total);
-const isNotSpawned = (spawnedArr) => (obj) =>
-  !spawnedArr.find((x) => x.flight === obj.flight);
 
 // NOTE time is being patched to contain {number} seconds
-const flightsArrival = [
+export const flightsArrival = [
   {
     type: DestinationType.Arrival,
     time: '06:55',
@@ -178,7 +146,7 @@ const flightsArrival = [
 ];
 
 // NOTE time is being patched to contain {number} seconds
-const flightsDeparture = [
+export const flightsDeparture = [
   {
     type: DestinationType.Departure,
     time: '10:10',

@@ -20,11 +20,14 @@ export const Airframes = Object.freeze({
   A333: 'A333',
   A332: 'A332',
   A339: 'A339',
+  A35K: 'A35K',
   A350: 'A350',
   A359: 'A359',
   A388: 'A388',
+  B737: 'B737',
   B738: 'B738',
   B38M: 'B38M',
+  B39M: 'B39M',
   B763: 'B763',
   B788: 'B788',
   B789: 'B789',
@@ -88,10 +91,11 @@ const basePerformance = {
 };
 
 const PerformanceModifiers = Object.freeze({
-  B738: {},
-  B38M: {},
-  A320: {},
-  A321: {},
+  B38M: {
+    speedDeltaPerMs: 2.2,
+    altitudeRatePerMs: 0.044,
+    turnRateRadPerMs: 0.000054,
+  },
   A333: {
     speedTakeoff: 160,
     speedMin: 200,
@@ -161,7 +165,6 @@ const IconSizes = Object.freeze({
   A350: { top: 0, side: 26 },
   A388: { top: 0, side: 32 },
   B738: { top: 0, side: 22 },
-  B38M: { top: 0, side: 22 },
   B763: { top: 0, side: 24 },
   B788: { top: 0, side: 24 },
   B789: { top: 0, side: 24 },
@@ -187,10 +190,22 @@ const performanceByAirframe = {
     type: 'B738',
     images: imagesObj('A320'),
   },
+  B737: {
+    ...basePerformance,
+    ...PerformanceModifiers.B738,
+    type: 'B737',
+    images: imagesObj('A320'),
+  },
   B38M: {
     ...basePerformance,
     ...PerformanceModifiers.B38M,
     type: 'B38M',
+    images: imagesObj('A320'),
+  },
+  B39M: {
+    ...basePerformance,
+    ...PerformanceModifiers.B38M,
+    type: 'B39M',
     images: imagesObj('A320'),
   },
   A319: {
@@ -227,6 +242,12 @@ const performanceByAirframe = {
     ...basePerformance,
     ...PerformanceModifiers.A333,
     type: 'A333',
+    images: imagesObj('A333'),
+  },
+  A35K: {
+    ...basePerformance,
+    ...PerformanceModifiers.A350,
+    type: 'A35K',
     images: imagesObj('A333'),
   },
   A350: {
@@ -310,10 +331,13 @@ const detailsByAirframe = {
   A333: { make: 'Airbus', airframe: 'A330-300' },
   A332: { make: 'Airbus', airframe: 'A330-203' },
   A339: { make: 'Airbus', airframe: 'A330-941' },
+  A35K: { make: 'Airbus', airframe: 'A350-1041' },
   A350: { make: 'Airbus', airframe: 'A350-1000' },
   A359: { make: 'Airbus', airframe: 'A350-941' },
   A388: { make: 'Airbus', airframe: 'A380-800' },
+  B737: { make: 'Boeing', airframe: '737-7CT' },
   B38M: { make: 'Boeing', airframe: '737-MAX-8' },
+  B39M: { make: 'Boeing', airframe: '737-MAX-9' },
   B738: { make: 'Boeing', airframe: '737-8K2' },
   B763: { make: 'Boeing', airframe: '767-300' },
   B788: { make: 'Boeing', airframe: '787-8' },

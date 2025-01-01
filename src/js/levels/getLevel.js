@@ -40,8 +40,8 @@ export const getLevelObj = () => {
 export const getFinalLevel = () => 10;
 
 export const getAirportByLevel = (gameLevel) => {
-  if (gameLevel === 0) return Airport.Heathrow;
-  if (gameLevel >= 1 && gameLevel <= 6) return Airport.Heathrow;
+  if (gameLevel === 0) return Airport.LondonLHR;
+  if (gameLevel >= 1 && gameLevel <= 6) return Airport.LondonLHR;
   if (gameLevel === 7) return Airport.NewYorkJFK;
   if (gameLevel === 8) return Airport.TokyoHND;
   if (gameLevel === 9) return Airport.AmsterdamAMS;

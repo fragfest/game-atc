@@ -15,7 +15,7 @@ describe('Level', () => {
       jest.spyOn(types, 'isAircraft').mockImplementation(() => true);
       jest.spyOn(scoreJs, 'getScore').mockImplementation(() => ({ level }));
 
-      airport = Airport.Heathrow;
+      airport = Airport.LondonLHR;
       entityManagerArr = [];
       goals = { Arrivals: 1, Departures: 1 };
       getChanceFn = jest.fn(() => 0.123);
@@ -134,7 +134,7 @@ describe('Level', () => {
       jest.spyOn(utils, 'getArrivalCount').mockImplementation(() => 2);
 
       level = 3;
-      airport = Airport.Heathrow;
+      airport = Airport.LondonLHR;
       entityManagerArr = [
         { destinationType: types.DestinationType.Departure },
         { destinationType: types.DestinationType.Departure },

@@ -153,22 +153,22 @@ export const getIntro = (gameLevel) => {
     }
 
     if (gameLevel === 10) {
-      return {
-        displayTimeMs: 1000,
-        width: 0.72,
-        levelNum: gameLevel,
-        airportHeading: ``,
-        airportSubheading: ``,
-        text1: ``,
-      };
       // return {
-      //   displayTimeMs: 20000,
+      //   displayTimeMs: 1000,
       //   width: 0.72,
       //   levelNum: gameLevel,
-      //   airportHeading: `Vancouver (YVR)`,
-      //   airportSubheading: `West Wind Operations - quiet day, weather: clear`,
-      //   text1: `Welcome to Vancouver,&nbsp;<b>Controller</b>! We have a quiet shift for you to get accustomed to new flight operations.`,
+      //   airportHeading: ``,
+      //   airportSubheading: ``,
+      //   text1: ``,
       // };
+      return {
+        displayTimeMs: 20000,
+        width: 0.72,
+        levelNum: gameLevel,
+        airportHeading: `Vancouver (YVR)`,
+        airportSubheading: `West Wind Operations - quiet day, weather: clear`,
+        text1: `Welcome to Vancouver,&nbsp;<b>Controller</b>! We have a quiet shift for you to get accustomed to new flight operations.`,
+      };
     }
 
     throw new Error('unknown level: ' + gameLevel);
