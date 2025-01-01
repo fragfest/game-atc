@@ -7,17 +7,17 @@ import Waypoint from '../canvas/Waypoint';
  * @typedef {import('./airports.js').EntitySetupFn} EntitySetupFn
  */
 
-export const RunwaysDepartureOnly = Object.freeze({
+export const RunwaysDepartures = Object.freeze({
   SixteenLeft: '16L',
   SixteenRight: '16R',
 });
-export const RunwaysArrivalOnly = Object.freeze({
+export const RunwaysArrivals = Object.freeze({
   TwentyTwo: '22',
   TwentyThree: '23',
 });
 export const Runways = Object.freeze({
-  ...RunwaysArrivalOnly,
-  ...RunwaysDepartureOnly,
+  ...RunwaysArrivals,
+  ...RunwaysDepartures,
 });
 
 export const WaypointArrivals = Object.freeze({
@@ -46,7 +46,7 @@ export const getWaypointBySection = (sectionInt) => {
  * @returns {Array.<EntitySetupFn>}
  */
 export const getMapEntities = () => {
-  const runwaysDeparture = Object.values(RunwaysDepartureOnly).map(
+  const runwaysDeparture = Object.values(RunwaysDepartures).map(
     (runway) => (argObj) => {
       return new Runway(
         runway,
@@ -57,7 +57,7 @@ export const getMapEntities = () => {
     }
   );
 
-  const runwaysArrival = Object.values(RunwaysArrivalOnly).map(
+  const runwaysArrival = Object.values(RunwaysArrivals).map(
     (runway) => (argObj) => {
       return new Runway(
         runway,

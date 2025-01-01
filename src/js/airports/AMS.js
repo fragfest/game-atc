@@ -7,17 +7,17 @@ import Waypoint from '../canvas/Waypoint';
  * @typedef {import('./airports.js').EntitySetupFn} EntitySetupFn
  */
 
-export const RunwaysDepartureOnly = Object.freeze({
+export const RunwaysDepartures = Object.freeze({
   EighteenLeft: '18L',
   Twentyfour: '24',
 });
-export const RunwaysArrivalOnly = Object.freeze({
+export const RunwaysArrivals = Object.freeze({
   EighteenRight: '18R',
   EighteenCentre: '18C',
 });
 export const Runways = Object.freeze({
-  ...RunwaysArrivalOnly,
-  ...RunwaysDepartureOnly,
+  ...RunwaysArrivals,
+  ...RunwaysDepartures,
 });
 
 export const WaypointArrivals = Object.freeze({
@@ -44,7 +44,7 @@ export const getWaypointBySection = (sectionInt) => {
  * @returns {Array.<EntitySetupFn>}
  */
 export const getMapEntities = () => {
-  const runwaysDeparture = Object.values(RunwaysDepartureOnly).map(
+  const runwaysDeparture = Object.values(RunwaysDepartures).map(
     (runway) => (argObj) => {
       return new Runway(
         runway,
@@ -55,7 +55,7 @@ export const getMapEntities = () => {
     }
   );
 
-  const runwaysArrival = Object.values(RunwaysArrivalOnly).map(
+  const runwaysArrival = Object.values(RunwaysArrivals).map(
     (runway) => (argObj) => {
       return new Runway(
         runway,
@@ -86,7 +86,8 @@ export const getMapEntities = () => {
 const runways = (runway, screenSize) => {
   const width = getGameSize(screenSize).width;
   const height = getGameSize(screenSize).height;
-  const widthLarge = 4;
+  let widthRunway = 4;
+  if (screenSize === ScreenSizes.Small) widthRunway = 2.8;
 
   if (runway === Runways.EighteenRight) {
     return {
@@ -94,7 +95,7 @@ const runways = (runway, screenSize) => {
       y: 0.5 * height,
       heading: 183,
       length: 65,
-      width: widthLarge,
+      width: widthRunway,
       titlePosition: { x: -32, y: 10 },
     };
   }
@@ -105,7 +106,7 @@ const runways = (runway, screenSize) => {
       y: 0.6 * height,
       heading: 183,
       length: 65,
-      width: widthLarge,
+      width: widthRunway,
       titlePosition: { x: -32, y: 14 },
     };
   }
@@ -116,7 +117,7 @@ const runways = (runway, screenSize) => {
       y: 0.62 * height,
       heading: 183,
       length: 65,
-      width: widthLarge,
+      width: widthRunway,
       titlePosition: { x: -32, y: 10 },
     };
   }
@@ -127,7 +128,7 @@ const runways = (runway, screenSize) => {
       y: 0.68 * height,
       heading: 238,
       length: 65,
-      width: widthLarge,
+      width: widthRunway,
       titlePosition: { x: -22, y: 4 },
     };
   }

@@ -1,3 +1,4 @@
+import * as YVR from './YVR';
 import * as AMS from './AMS';
 import * as LHR from './LHR';
 import * as JFK from './JFK';
@@ -36,6 +37,7 @@ export const getFlightArrival = (airport) => (spawned) => {
   if (airport === Airport.NewYorkJFK) return JFK.getFlightArrival(spawned);
   if (airport === Airport.TokyoHND) return flightArrival(HND, spawned);
   if (airport === Airport.AmsterdamAMS) return flightArrival(AMS, spawned);
+  if (airport === Airport.VancouverYVR) return flightArrival(YVR, spawned);
 
   throw new Error('unknown airport: ' + airport);
 };
@@ -50,6 +52,7 @@ export const getFlightDeparture = (airport) => (spawned) => {
   if (airport === Airport.NewYorkJFK) return JFK.getFlightDeparture(spawned);
   if (airport === Airport.TokyoHND) return flightDeparture(HND, spawned);
   if (airport === Airport.AmsterdamAMS) return flightDeparture(AMS, spawned);
+  if (airport === Airport.VancouverYVR) return flightDeparture(YVR, spawned);
 
   throw new Error('unknown airport: ' + airport);
 };

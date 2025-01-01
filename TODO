@@ -36,9 +36,9 @@ ATCv0.1.3:
     ✔ Level intro prompt: airport name, scenario description @started(24-12-09 15:27) @done(24-12-09 20:17) @lasted(4h50m45s)
     ☐ More airports @started(24-12-12 22:02)
     ☐ More levels
-    ☐ More airframe profile images
     ☐ Custom play level
     ☐ More badges
+    ☐ More airframe profile images
     ☐ difficulty setting that changes delay timers
     ☐ Loading/Splash screen (i.e. while assets download)
     ☐ Online Leaderboard 
@@ -50,10 +50,10 @@ ATCv0.1.3:
     ✔ Achievement Badges placeholders for future @started(24-10-16 12:00) @done(24-10-16 13:10) @lasted(1h10m4s)
     ✔ Seperate background atc chatter soundtrack toggle @done(24-12-09 15:24)
     ✔ Add button for background sounds @done(24-12-29 14:25)
+    ☐ Slower landing rollouts (takeoffs too?)
     ☐ panelBottom responsive i.e. message tip box is bigger
     ☐ small scorePanel make smaller
     ☐ Warn with message on mobile
-    ☐ Slower landing rollouts (takeoffs too?)
 
 ATCv0.1.2:
   Bugs:

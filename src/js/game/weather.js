@@ -107,6 +107,7 @@ export const getWeatherLevelByGameLevel = (gameLevel) => {
     if (gameLevel === 7) return level1(weatherArgs);
     if (gameLevel === 8) return level1(weatherArgs);
     if (gameLevel === 9) return level1(weatherArgs);
+    if (gameLevel === 10) return level1(weatherArgs);
 
     throw new Error('unknown level: ' + gameLevel);
   };
