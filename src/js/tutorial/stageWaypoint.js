@@ -1,10 +1,5 @@
-import { ElapsedTimes } from './typesTutorial';
-import { DestinationType, FocusCircleType } from '../types';
-import {
-  controlPanelHolding,
-  flightStripThird,
-  flightStripThirdWaypoint,
-} from './focusCircleTutorial';
+import { ElapsedTimes, resetFocus } from './utilsTutorial';
+import { DestinationType } from '../types';
 
 let event = '';
 const Events = Object.freeze({
@@ -50,7 +45,9 @@ export const stageWaypoint = (
     }, 1000);
   }
 
+  const flightstripArrivalIndex = 1;
   const isReadyFirstInput = elapsedTime > ElapsedTimes.WaypointFirstInputMs;
+
   const isSecondArrivalPlaneSelected =
     objEventCB.isPlaneSelected &&
     planeSelected?.destinationType === DestinationType.Arrival &&
@@ -61,8 +58,9 @@ export const stageWaypoint = (
     event === Events.WaitForSelected0 &&
     !isSecondArrivalPlaneSelected
   ) {
-    state.focusCircleType = FocusCircleType.Rectangle;
-    state.focusCircle = flightStripThird(screenSize);
+    resetFocus(state.focusObj);
+    state.focusObj.flightStripArrFocusIndex = flightstripArrivalIndex;
+    state.focusObj.isFlightStripArrFocus = true;
     setGameLoopStateFn(false);
   }
 
@@ -73,8 +71,8 @@ export const stageWaypoint = (
 
   if (event === Events.WaitForInput0 && isSetCheckmarkPlaneSelected) {
     event = Events.WaitForInput1;
-    state.focusCircleType = FocusCircleType.Rectangle;
-    state.focusCircle = flightStripThirdWaypoint(screenSize);
+    state.focusObj.isFlightStripArrFocus = false;
+    state.focusObj.isFlightStripArrWaypointFocus = true;
   }
 
   const isWaypointSelected =
@@ -86,14 +84,14 @@ export const stageWaypoint = (
 
   if (event === Events.WaitForInput2 && isSetCheckmarkWaypoint) {
     event = Events.WaitForInput3;
-    state.focusCircleType = FocusCircleType.Rectangle;
-    state.focusCircle = controlPanelHolding(screenSize);
+    state.focusObj.isFlightStripArrWaypointFocus = false;
+    state.focusObj.isControlPanelHoldHandoffFocus = true;
   }
 
   const isHoldingSelected =
     isSecondArrivalPlaneSelected && planeSelected?.isHolding;
   if (event === Events.WaitForInput3 && isHoldingSelected) {
-    state.focusCircleType = null;
+    resetFocus(state.focusObj);
     isSetCheckmarkHolding = true;
   }
 

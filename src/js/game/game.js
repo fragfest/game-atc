@@ -15,14 +15,26 @@ import { SoundType, play, playLoop, stop } from './sound';
  */
 
 /**
- * @typedef {object} State
+ * @typedef {Object} FocusObj show focus pulses
+ * @property {Boolean} isFlightStripDepFocus
+ * @property {Number} flightStripArrFocusIndex
+ * @property {Boolean} isFlightStripArrFocus
+ * @property {Boolean} isFlightStripArrWaypointFocus
+ * @property {Boolean} isControlPanelTakeoffLandFocus
+ * @property {Boolean} isControlPanelHoldHandoffFocus
+ * @property {Boolean} isControlPanelHeadingFocus
+ * @property {Boolean} isControlPanelAltitudeFocus
+ * @property {Boolean} isScorePanelFocus
+ */
+
+/**
+ * @typedef {Object} State
  * @property {Boolean} gameLoopCancel
  * @property {Boolean} gameLoopRunning
  * @property {Boolean} playProximitySound
  * @property {Boolean} showCircles
  * @property {Object} dialogBox
- * @property {String} focusCircleType
- * @property {Object} focusCircle
+ * @property {FocusObj} focusObj
  */
 
 /**
@@ -150,6 +162,7 @@ export const gameTick =
     gameUpdateFn
   ) =>
   (timestamp) => {
+    if (!state.focusObj) state.focusObj = {};
     let gameLoopRunning = state.gameLoopRunning;
     let showCircles = state.showCircles;
 

@@ -11,13 +11,12 @@ import Aircraft from '../aircraft/Aircraft';
 import { getFlightDeparture, getFlightArrival } from '../flights/flights';
 import { Waypoints, Runways } from '../airports/LHR';
 import { getPerformance } from '../aircraft/airframe';
-import { Stages, ElapsedTimes } from './typesTutorial';
+import { Stages, ElapsedTimes, resetFocus } from './utilsTutorial.js';
 import { stageArrivalLand } from './stageArrivalLand';
 import { stageDeparture } from './stageDeparture';
 import { stageWaypoint } from './stageWaypoint';
 import { stageConflict } from './stageConflict';
-import { DestinationType, FocusCircleType } from '../types';
-import { scorePanel } from './focusCircleTutorial';
+import { DestinationType } from '../types';
 import { ScoreEvents, subscribeScore } from '../game/score/score.js';
 import { isVictory, publishSuccess } from '../game/victory';
 import { Airport } from '../airports/airports.js';
@@ -81,7 +80,9 @@ export const planeSelectedFn = (state) => {
   setGameLoopState(state)(true);
 };
 
-// PRIVATE /////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
+// PRIVATE
+//////////////////////////////////////////////////////////////////////////////////
 
 const createPlaneDepartureStage = ({
   screenSize,
@@ -106,6 +107,7 @@ const createPlaneDepartureStage = ({
 
   const flight = getFlightDeparture(Airport.LondonLHR)([]);
   const airframeObj = getPerformance(flight.airframe, screenSize);
+  const airport = Airport.LondonLHR;
 
   const aircraft = new Aircraft(
     flight,
@@ -125,6 +127,7 @@ const createPlaneDepartureStage = ({
       airframeObj,
       waypoint: newPlane.waypoint,
       runway: runway.title,
+      airport,
     }
   );
   aircraft.clickEventCB = () => clickCB(aircraft);
@@ -147,6 +150,7 @@ const createPlaneArrivalStage = ({
   const airframeObj = getPerformance(flight.airframe, screenSize);
   const waypoint = Waypoints.LAM;
   const runway = Runways.TwoSevenLeft;
+  const airport = Airport.LondonLHR;
 
   const aircraft = new Aircraft(
     flight,
@@ -155,7 +159,7 @@ const createPlaneArrivalStage = ({
     canvasObjHeading,
     canvasEntityEl,
     positionObj,
-    { destinationType, airframeObj, waypoint, runway }
+    { destinationType, airframeObj, waypoint, runway, airport }
   );
   aircraft.clickEventCB = () => clickCB(aircraft);
 
@@ -337,13 +341,15 @@ const tutorial =
           `Please wait for the <b>Departures</b> and <b>Arrivals</b> goals to complete.<br>` +
           `Welcome to the Future Flight Ops system!`;
         state.dialogBox = { top: 0.1, left: 0.1, width: 0.6, html };
-        state.focusCircleType = FocusCircleType.Rectangle;
-        state.focusCircle = scorePanel(screenSize);
+        state.focusObj.isScorePanelFocus = true;
       }, 1000);
 
       setTimeout(() => {
         subscribeScore(ScoreEvents.ScoreEV, (score) => {
-          if (isVictory(score)) publishSuccess();
+          if (isVictory(score)) {
+            resetFocus(state.focusObj);
+            publishSuccess();
+          }
         });
       }, 8000);
 

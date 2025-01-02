@@ -1,8 +1,3 @@
-export const FocusCircleType = Object.freeze({
-  Rectangle: 'Rectangle',
-  Circle: 'Circle',
-});
-
 export const HoldingPosition = Object.freeze({
   North: 'north',
   South: 'south',

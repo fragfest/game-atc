@@ -1,12 +1,6 @@
-import { ElapsedTimes } from './typesTutorial';
-import { DestinationType, FocusCircleType } from '../types';
+import { ElapsedTimes, resetFocus } from './utilsTutorial.js';
+import { DestinationType } from '../types';
 import { radToDegrees } from '../utils';
-import {
-  controlPanelAltitude,
-  controlPanelHeading,
-  controlPanelLanding,
-  flightStripSecond,
-} from './focusCircleTutorial.js';
 
 let event = '';
 const Events = Object.freeze({
@@ -70,8 +64,9 @@ export const stageArrivalLand = (
     event === Events.WaitForSelected0 &&
     !isArrivalPlaneSelected
   ) {
-    state.focusCircleType = FocusCircleType.Rectangle;
-    state.focusCircle = flightStripSecond(screenSize);
+    resetFocus(state.focusObj);
+    state.focusObj.flightStripArrFocusIndex = 0;
+    state.focusObj.isFlightStripArrFocus = true;
     setGameLoopStateFn(false);
   }
 
@@ -82,8 +77,8 @@ export const stageArrivalLand = (
 
   if (event === Events.WaitForInput0 && isSetCheckmarkSelected) {
     event = Events.WaitForInput1;
-    state.focusCircleType = FocusCircleType.Rectangle;
-    state.focusCircle = controlPanelAltitude(screenSize);
+    state.focusObj.isFlightStripArrFocus = false;
+    state.focusObj.isControlPanelAltitudeFocus = true;
   }
 
   if (
@@ -93,8 +88,8 @@ export const stageArrivalLand = (
   ) {
     if (objEventCB.altitudeValue <= 5000) {
       event = Events.WaitForInput2;
-      state.focusCircleType = FocusCircleType.Rectangle;
-      state.focusCircle = controlPanelHeading(screenSize);
+      state.focusObj.isControlPanelAltitudeFocus = false;
+      state.focusObj.isControlPanelHeadingFocus = true;
       isSetCheckmarkAltitude = true;
     }
   }
@@ -112,8 +107,8 @@ export const stageArrivalLand = (
 
   if (event === Events.WaitForInput3 && isSetCheckmarkHeading) {
     event = Events.WaitForInput4;
-    state.focusCircleType = FocusCircleType.Rectangle;
-    state.focusCircle = controlPanelLanding(screenSize);
+    state.focusObj.isControlPanelHeadingFocus = false;
+    state.focusObj.isControlPanelTakeoffLandFocus = true;
   }
 
   if (
@@ -121,7 +116,7 @@ export const stageArrivalLand = (
     isArrivalPlaneSelected &&
     objEventCB.buttonLanding
   ) {
-    state.focusCircleType = null;
+    resetFocus(state.focusObj);
     isSetCheckmarkLanding = true;
   }
 

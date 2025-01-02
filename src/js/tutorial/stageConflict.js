@@ -1,5 +1,5 @@
 import Aircraft from '../aircraft/Aircraft';
-import { ElapsedTimes } from './typesTutorial';
+import { ElapsedTimes } from './utilsTutorial';
 
 let event = '';
 const Events = Object.freeze({

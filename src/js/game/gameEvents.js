@@ -19,6 +19,7 @@ import { gameOver } from './gameOver';
 
 /**
  * @typedef {import('./game.js').State} State
+ * @typedef {import('./game.js').FocusObj} FocusObj
  */
 
 /**
@@ -164,31 +165,37 @@ export const setupTutorialEvents = (tutorialEventArg, state) => {
 };
 
 /**
- * @param {VueThis} self
- * @param {String} focusCircleTypeProp
+ * @param {FocusObj} focusObj sets focus pulses
  * @param {Object} msgPopup contains vue ref properties
- * @param {Object} focusCircle
  * @param {Object} planeSelCBs object with planeSel funcs
  * @param {VueRef} planeSelVueRef vue ref to plane selected object
  * @param {State} state game state
  */
 export const tutorialUpdateEventCB = (
-  self,
-  focusCircleTypeProp,
+  focusObj,
   msgPopup,
-  focusCircle,
   planeSelCBs,
   planeSelVueRef,
   state
 ) => {
-  self[focusCircleTypeProp] = state.focusCircleType || '';
-
-  if (state.focusCircle) {
-    focusCircle.size = state.focusCircle.size;
-    focusCircle.top = state.focusCircle.top;
-    focusCircle.left = state.focusCircle.left;
-    focusCircle.width = state.focusCircle.width;
-    focusCircle.height = state.focusCircle.height;
+  if (state.focusObj) {
+    focusObj.isFlightStripDepFocus =
+      state?.focusObj?.isFlightStripDepFocus ?? false;
+    focusObj.flightStripArrFocusIndex =
+      state?.focusObj?.flightStripArrFocusIndex ?? 0;
+    focusObj.isFlightStripArrFocus =
+      state?.focusObj?.isFlightStripArrFocus ?? false;
+    focusObj.isFlightStripArrWaypointFocus =
+      state?.focusObj?.isFlightStripArrWaypointFocus ?? false;
+    focusObj.isControlPanelTakeoffLandFocus =
+      state?.focusObj?.isControlPanelTakeoffLandFocus ?? false;
+    focusObj.isControlPanelHoldHandoffFocus =
+      state?.focusObj?.isControlPanelHoldHandoffFocus ?? false;
+    focusObj.isControlPanelHeadingFocus =
+      state?.focusObj?.isControlPanelHeadingFocus ?? false;
+    focusObj.isControlPanelAltitudeFocus =
+      state?.focusObj?.isControlPanelAltitudeFocus ?? false;
+    focusObj.isScorePanelFocus = state?.focusObj?.isScorePanelFocus ?? false;
   }
 
   const { msgPopupTop, msgPopupLeft, msgPopupWidth, msgPopupHtmlQueue } =

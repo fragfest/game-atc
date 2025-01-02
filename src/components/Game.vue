@@ -46,17 +46,6 @@
           <Plane></Plane>
 
           <!-- msgPopup -->
-          <FocusCircle
-            v-if="focusCircleType"
-            class="layer-eight"
-            :size="screenSize"
-            :type="focusCircleType"
-            :top="focusCircle.top"
-            :left="focusCircle.left"
-            :width="focusCircle.width"
-            :height="focusCircle.height"
-          ></FocusCircle>
-
           <div
             v-if="msgPopupHtml"
             class="msg-popup layer-eight"
@@ -84,7 +73,9 @@
                 :screenSize="screenSize"
                 @showCirclesEv="showCirclesEv"
               ></ButtonPanel>
-              <ScorePanel></ScorePanel>
+              <ScorePanel
+                :hasFocusPulse="focusObj.isScorePanelFocus"
+              ></ScorePanel>
             </div>
           </div>
           <div class="row-bottom-right">
@@ -93,6 +84,7 @@
               :planeSelected="aircraftClicked"
               :planes="planesSorted"
               :screenSize="screenSize"
+              :focusObj="focusObj"
               @updatedAltitudeEv="updatedAltitudeEv"
               @updatedHeadingEv="updatedHeadingEv"
             ></ControlPanel>
@@ -105,6 +97,7 @@
           :planeSelected="aircraftClicked"
           :planes="planesDeparture"
           :screenSize="screenSize"
+          :hasFocusPulse="focusObj.isFlightStripDepFocus"
         ></FlightStripDeparture>
         <ul>
           <li v-for="(plane, index) in planesArrival" :key="index">
@@ -113,6 +106,8 @@
               :planeSelected="aircraftClicked"
               :planes="planesSorted"
               :screenSize="screenSize"
+              :hasFocusPulse="hasFocusPulse(index)"
+              :hasFocusPulseWaypoint="hasFocusPulseWaypoint(index)"
             ></FlightStrip>
           </li>
         </ul>
@@ -124,12 +119,12 @@
 <script>
 /**
  * @typedef {import('../js/game/game.js').State} State
+ * @typedef {import('../js/game/game.js').FocusObj} FocusObj
  */
 
 import { ref } from 'vue';
 
 import Plane from './canvas/Plane.vue';
-import FocusCircle from './common/FocusCircle';
 import CyberBox from './common/CyberBox';
 import ButtonPanel from './panelBottom/ButtonPanel';
 import DetailsPanel from './panelBottom/DetailsPanel';
@@ -214,7 +209,6 @@ export default {
   name: 'atc-game',
   components: {
     Plane,
-    FocusCircle,
     CyberBox,
     FlightStripDeparture,
     FlightStrip,
@@ -240,8 +234,21 @@ export default {
 
       // msgPopup
       msgPopupHtml: '',
-      focusCircleType: '',
-      focusCircle: {},
+
+      /**
+       * @property {FocusObj} focusObj
+       */
+      focusObj: {
+        isFlightStripDepFocus: false,
+        flightStripArrFocusIndex: 0,
+        isFlightStripArrFocus: false,
+        isFlightStripArrWaypointFocus: false,
+        isControlPanelTakeoffLandFocus: false,
+        isControlPanelHoldHandoffFocus: false,
+        isControlPanelHeadingFocus: false,
+        isControlPanelAltitudeFocus: false,
+        isScorePanelFocus: false,
+      },
     };
   },
 
@@ -290,16 +297,13 @@ export default {
 
     stylePanelRight: () => {
       let minWidth = 410;
-      // let maxHeight = 1035;
       if (screenSize === ScreenSizes.Small) {
         minWidth = 296;
-        // maxHeight = 795;
       }
       return {
         'min-width': minWidth + 'px',
         width: '100%',
         'min-height': '99vh',
-        // "max-height": maxHeight + "px",
       };
     },
 
@@ -310,6 +314,18 @@ export default {
   },
 
   methods: {
+    hasFocusPulseWaypoint: function (index) {
+      return index === this.focusObj.flightStripArrFocusIndex
+        ? this.focusObj.isFlightStripArrWaypointFocus
+        : false;
+    },
+
+    hasFocusPulse: function (index) {
+      return index === this.focusObj.flightStripArrFocusIndex
+        ? this.focusObj.isFlightStripArrFocus
+        : false;
+    },
+
     updatedHeadingEv: function (hdgVal) {
       updatedHeadingTutorial_hdgArg(hdgVal);
     },
@@ -440,10 +456,8 @@ export default {
         gameUpdateEventCB(aircraftClicked, entityManagerArr);
         if (isTutorial) {
           tutorialUpdateEventCB(
-            this,
-            'focusCircleType',
+            this.focusObj,
             msgPopup,
-            this.focusCircle,
             tutorialEventArg,
             aircraftClicked,
             gameState

@@ -35,7 +35,7 @@
         </div>
         <ToolTip v-else position="close">
           <div class="col">
-            <button @click="waypointClick">
+            <button @click="waypointClick" :class="waypointClass">
               <span class="font-large">
                 <b>{{ plane.waypoint }}</b>
               </span>
@@ -266,8 +266,10 @@ export default {
     planeSelected: { type: Object },
     planes: { type: Array },
     screenSize: { type: String },
-    isQueueStrip: { type: Boolean, required: false },
-    isEmptyStrip: { type: Boolean, required: false },
+    isQueueStrip: { type: Boolean },
+    isEmptyStrip: { type: Boolean },
+    hasFocusPulse: { type: Boolean },
+    hasFocusPulseWaypoint: { type: Boolean },
   },
   components: { ToolTip },
 
@@ -314,6 +316,29 @@ export default {
       if (this.isEmptyStrip) return 'spawn-destination';
       if (this.isArrival) return 'spawn-arrival';
       return '';
+    },
+
+    stripClass: function () {
+      const plane = getPlane(this.plane, this.planes);
+      const size = getClassSize(this.screenSize);
+
+      const isSelected = plane ? plane.id === this.planeSelected.id : false;
+      const selected = isSelected ? 'selected' : '';
+      const empty = this.isEmptyStrip ? 'empty' : '';
+      const queue = this.isQueueStrip ? 'empty' : '';
+      const pulse = this.hasFocusPulse ? 'pulse' : '';
+
+      let hover = this.isHover ? 'hover' : '';
+      if (this.isEmptyStrip || this.isQueueStrip) {
+        hover = '';
+      }
+
+      const classes = [].concat(pulse, queue, empty, hover, selected, size);
+      return classes.join(' ');
+    },
+
+    waypointClass: function () {
+      return this.hasFocusPulseWaypoint ? 'pulse' : '';
     },
 
     isDeleteInProgress: function () {
@@ -404,24 +429,6 @@ export default {
 
     dashVal: function () {
       return this.isQueueStrip ? '1' : '';
-    },
-
-    stripClass: function () {
-      const plane = getPlane(this.plane, this.planes);
-      const size = getClassSize(this.screenSize);
-
-      const isSelected = plane ? plane.id === this.planeSelected.id : false;
-      const selected = isSelected ? 'selected' : '';
-      const empty = this.isEmptyStrip ? 'empty' : '';
-      const queue = this.isQueueStrip ? 'empty' : '';
-
-      let hover = this.isHover ? 'hover' : '';
-      if (this.isEmptyStrip || this.isQueueStrip) {
-        hover = '';
-      }
-
-      const classes = [].concat(queue, empty, hover, selected, size);
-      return classes.join(' ');
     },
 
     outerLineSmall: function () {
@@ -526,7 +533,7 @@ export default {
   width: 42px;
 }
 
-// strip small
+// strip (small)
 .strip.small {
   width: 300px;
   min-width: 300px;
@@ -577,7 +584,7 @@ export default {
   }
   // strip-info END
 }
-// strip small END
+// strip (small) END
 
 // strip (large)
 .strip {
@@ -627,6 +634,7 @@ export default {
       display: flex;
       flex-direction: column;
       justify-content: center;
+      position: relative;
 
       min-width: 26px;
       height: 26px;
@@ -721,14 +729,41 @@ export default {
 }
 // strip (large) END
 
+// animation ////////////////////////////////////////////////
+
 .strip .time-delay {
   color: orangered;
   animation: breath 4s ease-out infinite;
 }
-
 @keyframes breath {
   50% {
     opacity: 0.2;
+  }
+}
+
+.strip.pulse::before,
+.col .pulse::before {
+  pointer-events: none;
+  content: '';
+  position: absolute;
+  animation: focus-pulse 1.4s infinite linear;
+
+  top: -3px;
+  left: -4px;
+  width: 100%;
+  height: 100%;
+  border: 4px solid white;
+  border-radius: 12px;
+}
+
+@keyframes focus-pulse {
+  0% {
+    transform: scale(1, 1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.08, 1.25);
+    opacity: 0;
   }
 }
 </style>

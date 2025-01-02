@@ -2,6 +2,7 @@ Bugs:
   ☐ Training can't be retried. Complete training and hit retry (without refreshing). A blank/frozen game screen appears.
 
 Wishlist:
+  ☐ HomePage show score breakdown perhaps with icons
   ☐ Restricted areas with min altitude levels
   ☐ Ground elevation topography & mechanic
   ☐ Engine contrails
@@ -50,6 +51,7 @@ ATCv0.1.3:
     ✔ Achievement Badges placeholders for future @started(24-10-16 12:00) @done(24-10-16 13:10) @lasted(1h10m4s)
     ✔ Seperate background atc chatter soundtrack toggle @done(24-12-09 15:24)
     ✔ Add button for background sounds @done(24-12-29 14:25)
+    ☐ Faster altitude decrease than increase
     ☐ Slower landing rollouts (takeoffs too?)
     ☐ panelBottom responsive i.e. message tip box is bigger
     ☐ small scorePanel make smaller

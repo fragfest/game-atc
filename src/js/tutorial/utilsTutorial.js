@@ -17,3 +17,13 @@ export const ElapsedTimes = Object.freeze({
   ConflictStartMs: 4000,
   ConflictFirstInputMs: 16000,
 });
+
+/**
+ * reset all focus pulses
+ * @param {import("../game/game").FocusObj} focusObj
+ */
+export const resetFocus = (focusObj) => {
+  Object.keys(focusObj).forEach((prop) => {
+    focusObj[prop] = false;
+  });
+};

@@ -42,7 +42,7 @@
         </div>
         <div v-show="isTaxiing" class="btn">
           <ToolTip>
-            <button class="takeoff" @click="takeoffClick">
+            <button class="takeoff" @click="takeoffClick" :class="takeoffClass">
               <span>take off</span>
             </button>
             <template v-slot:hover>take off (T)</template>
@@ -84,6 +84,7 @@
         :sizeClass="sizeClass"
         :planes="planes"
         :planeSelected="planeSelected"
+        :focusObj="focusObj"
         @updatedHeadingEv="updatedHeadingEv"
         @updatedAltitudeEv="updatedAltitudeEv"
       />
@@ -196,7 +197,6 @@ let circleInputs;
 
 export default {
   name: 'ControlPanel',
-
   components: { ToolTip, CircleInputs },
 
   props: {
@@ -205,6 +205,7 @@ export default {
     planeSelected: { type: Object },
     planes: { type: Object },
     screenSize: { type: String },
+    focusObj: { type: Object },
   },
 
   emits: ['updatedHeadingEv', 'updatedAltitudeEv'],
@@ -306,20 +307,36 @@ export default {
       return this.planeSelected.isTaxiing;
     },
 
+    takeoffClass: function () {
+      if (this.focusObj?.isControlPanelTakeoffLandFocus) return 'pulse';
+      return '';
+    },
+
     landBtnClass: function () {
       const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
       if (!planeSel) return '';
+
       let classes = getClassSize(this.screenSize);
-      if (this.planeSelected.landing) classes += ' is-landing';
+      if (this.planeSelected.landing) {
+        classes += ' is-landing';
+      }
+      if (this.focusObj?.isControlPanelTakeoffLandFocus) {
+        classes += ' pulse';
+      }
       return classes;
     },
 
     holdHandoffBtnClass: function () {
       const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
       if (!planeSel) return '';
+
       let classes = getClassSize(this.screenSize);
-      if (this.planeSelected.isHolding || this.planeSelected.isHandoff)
+      if (this.planeSelected.isHolding || this.planeSelected.isHandoff) {
         classes += ' is-holdhandoff';
+      }
+      if (this.focusObj?.isControlPanelHoldHandoffFocus) {
+        classes += ' pulse';
+      }
       return classes;
     },
 
@@ -542,6 +559,7 @@ export default {
     outline-width: 2px;
   }
 
+  position: relative;
   width: 55px;
   height: 40px;
   background-color: #2c5c81;
@@ -574,6 +592,30 @@ export default {
 
   &[disabled] {
     box-shadow: none;
+  }
+}
+
+.btn-info-panel button.pulse::before {
+  content: '';
+  animation: focus-pulse 1.4s infinite linear;
+
+  position: absolute;
+  top: -4px;
+  left: -3px;
+  width: 100%;
+  height: 100%;
+  border: 4px solid white;
+  border-radius: 12px;
+
+  @keyframes focus-pulse {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1.2);
+      opacity: 0;
+    }
   }
 }
 

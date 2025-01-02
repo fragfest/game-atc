@@ -1,32 +1,36 @@
 <template>
   <div class="circle-inputs" :class="sizeClass">
-    <InputField
-      id="inputHeading"
-      class="heading"
-      :focus="focusHeading"
-      :isDisabled="isDisabledHeading"
-      :value="heading"
-      v-model="inputHeading"
-      @inputEvent="inputEventHeading"
-      @inputClick="inputClick"
-      @inputKeyDown="inputHeadingKeyDown"
-    >
-      <span>hdg</span>
-    </InputField>
+    <div class="input" :class="headingPulseClass">
+      <InputField
+        id="inputHeading"
+        class="heading"
+        :focus="focusHeading"
+        :isDisabled="isDisabledHeading"
+        :value="heading"
+        v-model="inputHeading"
+        @inputEvent="inputEventHeading"
+        @inputClick="inputClick"
+        @inputKeyDown="inputHeadingKeyDown"
+      >
+        <span>hdg</span>
+      </InputField>
+    </div>
 
-    <InputField
-      id="inputAltitude"
-      class="altitude"
-      :focus="focusAltitude"
-      :isDisabled="isDisabled"
-      :value="altitude"
-      v-model="inputAltitude"
-      @inputEvent="inputEventAltitude"
-      @inputClick="inputClick"
-      @inputKeyDown="inputAltitudeKeyDown"
-    >
-      <span>alt <small>x100</small></span>
-    </InputField>
+    <div class="input" :class="altitudePulseClass">
+      <InputField
+        id="inputAltitude"
+        class="altitude"
+        :focus="focusAltitude"
+        :isDisabled="isDisabled"
+        :value="altitude"
+        v-model="inputAltitude"
+        @inputEvent="inputEventAltitude"
+        @inputClick="inputClick"
+        @inputKeyDown="inputAltitudeKeyDown"
+      >
+        <span>alt <small>x100</small></span>
+      </InputField>
+    </div>
 
     <InputField
       id="inputSpeed"
@@ -70,6 +74,7 @@ export default {
     sizeClass: { type: String, required: true },
     planes: { type: Object, required: true },
     planeSelected: { type: Object, required: true },
+    focusObj: { type: Object },
   },
 
   emits: ['updatedHeadingEv', 'updatedAltitudeEv'],
@@ -167,6 +172,16 @@ export default {
       const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
       if (!planeSel) return '';
       return leftPadZeros(Math.floor(planeSel.altitude / 100).toString());
+    },
+
+    headingPulseClass: function () {
+      if (this.focusObj?.isControlPanelHeadingFocus) return 'pulse';
+      return '';
+    },
+
+    altitudePulseClass: function () {
+      if (this.focusObj?.isControlPanelAltitudeFocus) return 'pulse';
+      return '';
     },
 
     speed: function () {
@@ -327,5 +342,36 @@ export default {
 .circle-inputs.small {
   left: 70px;
   top: 30px;
+}
+
+.circle-inputs .input {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.circle-inputs .input.pulse::before {
+  pointer-events: none;
+  content: '';
+  animation: focus-pulse 1.4s infinite linear;
+
+  position: absolute;
+  top: -4px;
+  left: -3px;
+  width: 100%;
+  height: 100%;
+  border: 4px solid white;
+  border-radius: 12px;
+
+  @keyframes focus-pulse {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1.2);
+      opacity: 0;
+    }
+  }
 }
 </style>

@@ -1,10 +1,5 @@
-import { ElapsedTimes } from './typesTutorial';
-import { DestinationType, FocusCircleType } from '../types';
-import {
-  controlPanelAltitude,
-  flightStripQueue,
-  controlPanelTakeoff,
-} from './focusCircleTutorial';
+import { ElapsedTimes, resetFocus } from './utilsTutorial';
+import { DestinationType } from '../types';
 
 let event = '';
 const Events = Object.freeze({
@@ -58,6 +53,7 @@ export const stageDeparture = (
 
   const isDeparturePlaneSelected =
     planeSelected?.destinationType === DestinationType.Departure;
+
   const isReadyFirstInput = elapsedTime > ElapsedTimes.DepartureFirstInputMs;
 
   if (
@@ -65,8 +61,8 @@ export const stageDeparture = (
     event === Events.WaitForSelected0 &&
     !objEventCB.isPlaneSelected
   ) {
-    state.focusCircleType = FocusCircleType.Rectangle;
-    state.focusCircle = flightStripQueue(screenSize);
+    resetFocus(state.focusObj);
+    state.focusObj.isFlightStripDepFocus = true;
     setGameLoopStateFn(false);
   }
 
@@ -77,28 +73,28 @@ export const stageDeparture = (
 
   if (event === Events.WaitForInput0 && isSetCheckmarkTaxiQueue) {
     event = Events.WaitForInput1;
-    state.focusCircleType = FocusCircleType.Rectangle;
-    state.focusCircle = controlPanelTakeoff(screenSize);
+    resetFocus(state.focusObj);
+    state.focusObj.isControlPanelTakeoffLandFocus = true;
   }
 
   if (event === Events.WaitForInput1 && objEventCB.buttonTakeoff) {
     event = Events.WaitForInput2;
-    state.focusCircleType = FocusCircleType.Rectangle;
-    state.focusCircle = controlPanelAltitude(screenSize);
+    resetFocus(state.focusObj);
+    state.focusObj.isControlPanelAltitudeFocus = true;
     isSetCheckmarkTakeoff = true;
   }
 
   if (event === Events.WaitForInput2 && objEventCB.altitudeValue) {
     if (objEventCB.altitudeValue >= 6000) {
       event = Events.WaitForInput3;
-      state.focusCircleType = FocusCircleType.Rectangle;
-      state.focusCircle = controlPanelTakeoff(screenSize);
+      resetFocus(state.focusObj);
+      state.focusObj.isControlPanelHoldHandoffFocus = true;
       isSetCheckmarkAltitude = true;
     }
   }
 
   if (event === Events.WaitForInput3 && objEventCB.buttonHandoff) {
-    state.focusCircleType = null;
+    resetFocus(state.focusObj);
     isSetCheckmarkHandoff = true;
   }
 

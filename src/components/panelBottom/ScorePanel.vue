@@ -1,6 +1,6 @@
 <template>
   <div class="score-panel" :class="sizeClass">
-    <div class="score-info">
+    <div class="score-info" :class="scoreInfoClass">
       <div class="score-row" :class="sizeClass">
         <span class="margin-top font-large badge blue">departures</span>
         <div :class="departuresPulseClass">
@@ -78,12 +78,13 @@ import { getGoals } from '../../js/game/victory';
 export default {
   name: 'ScorePanel',
 
+  props: {
+    hasFocusPulse: { type: Boolean },
+  },
+
   data() {
     return {
       screenSize: '',
-
-      focusType: null,
-      focusCircle: {},
 
       scoreTotal: 0,
       score: {
@@ -129,7 +130,7 @@ export default {
           clearTimeout(this.departuresTimeoutId);
           this.departuresTimeoutId = null;
         }
-        this.departuresPulseClass = 'pulse';
+        this.departuresPulseClass = 'pulse-green';
         this.departuresPointsClass = 'fade-out';
         this.departuresTimeoutId = setTimeout(() => {
           this.departuresPulseClass = '';
@@ -142,7 +143,7 @@ export default {
           clearTimeout(this.arrivalsTimeoutId);
           this.arrivalsTimeoutId = null;
         }
-        this.arrivalsPulseClass = 'pulse';
+        this.arrivalsPulseClass = 'pulse-green';
         this.arrivalsPointsClass = 'fade-out';
         this.arrivalsTimeoutId = setTimeout(() => {
           this.arrivalsPulseClass = '';
@@ -196,6 +197,10 @@ export default {
       return getClassSize(this.screenSize);
     },
 
+    scoreInfoClass: function () {
+      return this.hasFocusPulse ? 'pulse-score' : '';
+    },
+
     turbulenceDisplay: function () {
       if (this.score.turbulence > 999) return '999+';
       return Math.floor(this.score.turbulence);
@@ -207,19 +212,6 @@ export default {
           ? this.score.conflict
           : this.goals.Conflict;
       return Math.floor(conflict);
-    },
-
-    focusCircleTop: function () {
-      return this.focusCircle?.top;
-    },
-    focusCircleLeft: function () {
-      return this.focusCircle?.left;
-    },
-    focusCircleWidth: function () {
-      return this.focusCircle?.width;
-    },
-    focusCircleHeight: function () {
-      return this.focusCircle?.height;
     },
   },
 };
@@ -349,6 +341,7 @@ export default {
 // END score-row
 
 @mixin pulse-mixin {
+  pointer-events: none;
   content: '';
   width: 0px;
   height: 0px;
@@ -359,31 +352,44 @@ export default {
   transform: translate(-50%, -50%);
 }
 
-.pulse {
-  position: relative;
-}
-.pulse::after {
-  @include pulse-mixin;
-  border: 4px solid #01b201;
-  animation: 1.4s pulse 0s 4 forwards;
+// animation ////////////////////////////////////////////////////////
+
+.score-row {
+  .pulse-green {
+    position: relative;
+  }
+  .pulse-green::after {
+    @include pulse-mixin;
+    border: 4px solid #01b201;
+    animation: 1.4s pulse 0s 4 forwards;
+  }
+
+  .pulse-red {
+    position: relative;
+  }
+  .pulse-red::after {
+    @include pulse-mixin;
+    border: 4px solid #af0202;
+    animation: 1.4s pulse 0s 4 forwards;
+  }
+
+  .pulse-infinite {
+    position: relative;
+  }
+  .pulse-infinite::after {
+    @include pulse-mixin;
+    border: 4px solid #af0202;
+    animation: 1.4s pulse 0s infinite;
+  }
 }
 
-.pulse-red {
+.pulse-score {
   position: relative;
 }
-.pulse-red::after {
+.pulse-score::after {
   @include pulse-mixin;
-  border: 4px solid #af0202;
-  animation: 1.4s pulse 0s 4 forwards;
-}
-
-.pulse-infinite {
-  position: relative;
-}
-.pulse-infinite::after {
-  @include pulse-mixin;
-  border: 4px solid #af0202;
-  animation: 1.4s pulse 0s infinite;
+  border: 4px solid white;
+  animation: 1.4s pulse-score 0s infinite;
 }
 
 @keyframes fade-out-red {
@@ -405,6 +411,24 @@ export default {
   100% {
     color: black;
     background-image: linear-gradient(to right, #cffccf, #eefdee);
+  }
+}
+
+@keyframes pulse-score {
+  0% {
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+  }
+  20% {
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+  }
+  100% {
+    width: 114%;
+    height: 114%;
+    opacity: 0;
   }
 }
 
