@@ -66,7 +66,7 @@ const getRndIndex = (total) => Math.floor(Math.random() * total);
 const isNotSpawned = (spawnedArr) => (obj) =>
   !spawnedArr.find((x) => x.flight === obj.flight);
 
-// NOTE time is being patched to contain {number} seconds
+// time is being patched to contain {number} seconds
 const flightArrival = (flightModule, spawned) => {
   const unspawned = flightModule.flightsArrival.filter(isNotSpawned(spawned));
   const total = unspawned.length;

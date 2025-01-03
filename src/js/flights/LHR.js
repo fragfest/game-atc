@@ -1,7 +1,6 @@
 import { Airframes } from '../aircraft/airframe';
 import { DestinationType } from '../types';
 
-// NOTE time is being patched to contain {number} seconds
 export const flightsArrival = [
   {
     type: DestinationType.Arrival,
@@ -145,7 +144,6 @@ export const flightsArrival = [
   },
 ];
 
-// NOTE time is being patched to contain {number} seconds
 export const flightsDeparture = [
   {
     type: DestinationType.Departure,

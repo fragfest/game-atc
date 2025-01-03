@@ -1,7 +1,7 @@
 import { setGoal } from '../victory';
 import { getFinalLevel } from '../../levels/getLevel';
 
-// NOTE: key & values must match
+// key & values must match
 export const ScoreEvents = Object.freeze({
   ScoreEV: 'ScoreEV',
 });
@@ -255,7 +255,7 @@ const setScore = (score) => {
  * @param {Score} score
  */
 const publishScore = (score) => {
-  // NOTE ScoreEvents unused
+  // ScoreEvents unused
   const scoreEvent = ScoreEvents.ScoreEV;
   if (!ScoreEvents[scoreEvent])
     throw new Error('unknown score event: ' + scoreEvent);

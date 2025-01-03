@@ -5,7 +5,7 @@ import { ScoreEvents, subscribeScore } from './score/score.js';
  * @typedef {import('./score/score.js').Score} Score
  */
 
-// NOTE: key & values must match
+// key & values must match
 export const VictoryEvents = Object.freeze({
   Success: 'Success',
   Failed: 'Failed',

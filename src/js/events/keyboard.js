@@ -1,4 +1,4 @@
-// NOTE: key & values must match
+// key & values must match
 export const KeyboardEvents = Object.freeze({
   KeyboardArrowDownEV: 'KeyboardArrowDownEV',
   KeyboardArrowUpEV: 'KeyboardArrowUpEV',

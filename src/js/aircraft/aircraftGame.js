@@ -80,7 +80,6 @@ export const createAircraftRndDestinationType = (
     height,
     canvasObjEntity,
     canvasObjText,
-    canvasObjHeading,
     canvasEntityEl,
     flightObj,
     clickCB,
@@ -96,7 +95,6 @@ export const createAircraftRndDestinationType = (
   const canvasObjs = {
     canvasObjEntity,
     canvasObjText,
-    canvasObjHeading,
     canvasEntityEl,
     width,
     height,
@@ -136,14 +134,8 @@ const createAircraftArrival = (
   airport,
   clickCB
 ) => {
-  const {
-    canvasObjEntity,
-    canvasObjText,
-    canvasObjHeading,
-    canvasEntityEl,
-    width,
-    height,
-  } = canvasObjs;
+  const { canvasObjEntity, canvasObjText, canvasEntityEl, width, height } =
+    canvasObjs;
 
   const runwayTitleRnd = getRunwayRnd(DestinationType.Arrival, airport);
   const runway = entityManagerArr.find((x) => x.title === runwayTitleRnd);
@@ -163,7 +155,6 @@ const createAircraftArrival = (
     flightObj,
     canvasObjEntity,
     canvasObjText,
-    canvasObjHeading,
     canvasEntityEl,
     {
       x: newPlane.x,
@@ -191,8 +182,7 @@ const createAircraftDeparture = (
   airport,
   clickCB
 ) => {
-  const { canvasObjEntity, canvasObjText, canvasObjHeading, canvasEntityEl } =
-    canvasObjs;
+  const { canvasObjEntity, canvasObjText, canvasEntityEl } = canvasObjs;
   const runwayTitleRnd = getRunwayRnd(DestinationType.Departure, airport);
   const runway = entityManagerArr.find((x) => x.title === runwayTitleRnd);
 
@@ -213,7 +203,6 @@ const createAircraftDeparture = (
     flightObj,
     canvasObjEntity,
     canvasObjText,
-    canvasObjHeading,
     canvasEntityEl,
     {
       x: newPlane.x,

@@ -36,7 +36,6 @@ export default class Aircraft {
     flightObj,
     entityLayerObj,
     textLayerObj,
-    headingLayerObj,
     htmlDiv,
     positionObj,
     planeObj
@@ -48,7 +47,6 @@ export default class Aircraft {
     this.canvasWidth = entityLayerObj.width;
     this.canvasHeight = entityLayerObj.height;
     this.textLayerObj = textLayerObj;
-    this.headingLayerObj = headingLayerObj; // TODO remove unused
     this.positionObj = positionObj;
 
     this.direction = Direction.None;

@@ -88,7 +88,6 @@ const createPlaneDepartureStage = ({
   screenSize,
   canvasObjEntity,
   canvasObjText,
-  canvasObjHeading,
   canvasEntityEl,
   clickCB,
   entityManagerArr,
@@ -113,7 +112,6 @@ const createPlaneDepartureStage = ({
     flight,
     canvasObjEntity,
     canvasObjText,
-    canvasObjHeading,
     canvasEntityEl,
     {
       x: newPlane.x,
@@ -139,7 +137,6 @@ const createPlaneArrivalStage = ({
   screenSize,
   canvasObjEntity,
   canvasObjText,
-  canvasObjHeading,
   canvasEntityEl,
   clickCB,
   positionObj,
@@ -156,7 +153,6 @@ const createPlaneArrivalStage = ({
     flight,
     canvasObjEntity,
     canvasObjText,
-    canvasObjHeading,
     canvasEntityEl,
     positionObj,
     { destinationType, airframeObj, waypoint, runway, airport }

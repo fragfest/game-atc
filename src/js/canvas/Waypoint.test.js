@@ -97,7 +97,6 @@ describe('Waypoint', () => {
           flightObj,
           entityLayerObj,
           textLayerObj,
-          {},
           htmlDiv,
           positionObj,
           planeObj
@@ -180,7 +179,6 @@ describe('Waypoint', () => {
           flightObj,
           entityLayerObj,
           textLayerObj,
-          {},
           htmlDiv,
           positionObj,
           planeObj

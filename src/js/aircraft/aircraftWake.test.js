@@ -15,7 +15,6 @@ const testPlane = ({ x, y, altitude, heading }) => {
       fillText: () => jest.fn(),
     },
   };
-  const headingLayerObj = {};
   const htmlDiv = global.document.createElement('div');
   const positionObj = {
     heading,
@@ -32,7 +31,6 @@ const testPlane = ({ x, y, altitude, heading }) => {
     flightObj,
     entityLayerObj,
     textLayerObj,
-    headingLayerObj,
     htmlDiv,
     positionObj,
     planeObj
