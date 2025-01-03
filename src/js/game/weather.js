@@ -216,9 +216,9 @@ const level5 = (weatherArgs) => {
 
   const rainOnDeparture = addTurbulence(weatherArgs, createLargeRain1, hover);
   rainOnDeparture({
-    x: 0.08 * width,
+    x: 0.05 * width,
     y: 0.45 * height,
-    radius: width / 11,
+    radius: width / 14,
   });
   const rainDriftOnApproach = addTurbulence(
     weatherArgs,
@@ -254,13 +254,13 @@ const level6 = (weatherArgs) => {
   rainNorth1({
     x: 0.35 * width,
     y: 0 * height,
-    radius: width / 12,
+    radius: width / 13,
   });
   const rainNorth2 = addTurbulence(weatherArgs, createLargeRain2, driftE);
   rainNorth2({
     x: 0.38 * width,
     y: 0.22 * height,
-    radius: width / 12,
+    radius: width / 13,
   });
   const rainSouth1 = addTurbulence(weatherArgs, createLargeRain1, hover);
   rainSouth1({

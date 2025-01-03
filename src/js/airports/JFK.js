@@ -91,13 +91,13 @@ const runways = (runway, screenSize) => {
     case ScreenSizes.Large:
       runwayWidth = 4;
       // 22L
-      xOffset22L = 343;
-      yOffset22L = 92;
+      xOffset22L = 345;
+      yOffset22L = 98;
       length22L = 52;
       titlePosition22L = { x: 8, y: 12 };
       // 22R
       xOffset22R = 330;
-      yOffset22R = 87;
+      yOffset22R = 90;
       length22R = 64;
       titlePosition22R = { x: -36, y: 6 };
       break;
@@ -105,13 +105,13 @@ const runways = (runway, screenSize) => {
     case ScreenSizes.Small:
       runwayWidth = 2.2;
       // 22L
-      xOffset22L = 252;
-      yOffset22L = 74;
+      xOffset22L = 254;
+      yOffset22L = 78;
       length22L = 30;
       titlePosition22L = { x: 6, y: 8 };
       // 22R
-      xOffset22R = 244;
-      yOffset22R = 69;
+      xOffset22R = 245;
+      yOffset22R = 72;
       length22R = 42;
       titlePosition22R = { x: -26, y: -4 };
       break;

@@ -76,14 +76,16 @@ const runways = (runway, screenSize) => {
   const width = getGameSize(screenSize).width;
   const height = getGameSize(screenSize).height;
   let widthRunway = 4;
-  if (screenSize === ScreenSizes.Small) widthRunway = 2.8;
+  let length = 65;
+  if (screenSize === ScreenSizes.Small) widthRunway = 3;
+  if (screenSize === ScreenSizes.Small) length = 50;
 
   if (runway === Runways.TwentysixRight) {
     return {
-      x: 0.319 * width,
-      y: 0.585 * height,
+      x: 0.316 * width,
+      y: 0.563 * height,
       heading: 260,
-      length: 65,
+      length: length,
       width: widthRunway,
       titlePosition: { x: 4, y: -14 },
     };
@@ -92,11 +94,11 @@ const runways = (runway, screenSize) => {
   if (runway === Runways.TwentysixLeft) {
     return {
       x: 0.327 * width,
-      y: 0.633 * height,
+      y: 0.614 * height,
       heading: 260,
-      length: 70,
+      length: length + 5,
       width: widthRunway,
-      titlePosition: { x: 10, y: 16 },
+      titlePosition: { x: 4, y: 16 },
     };
   }
 };
@@ -104,6 +106,8 @@ const runways = (runway, screenSize) => {
 const waypoints = (waypoint, screenSize) => {
   const width = getGameSize(screenSize).width;
   const height = getGameSize(screenSize).height;
+  let borderPadding = 50;
+  if (screenSize === ScreenSizes.Small) borderPadding = 30;
 
   switch (waypoint) {
     case WaypointArrivals.GRIZZ:
@@ -133,7 +137,7 @@ const waypoints = (waypoint, screenSize) => {
     case WaypointDepartures.VARSY:
       return {
         type: WaypointType.Departure,
-        x: 50,
+        x: borderPadding,
         y: 50,
       };
 
@@ -141,13 +145,13 @@ const waypoints = (waypoint, screenSize) => {
       return {
         type: WaypointType.Departure,
         x: 0.6 * width,
-        y: 50,
+        y: borderPadding,
       };
 
     case WaypointDepartures.FRASE:
       return {
         type: WaypointType.Departure,
-        x: width - 50,
+        x: width - borderPadding - 10,
         y: 0.2 * height,
       };
 
@@ -155,7 +159,7 @@ const waypoints = (waypoint, screenSize) => {
       return {
         type: WaypointType.Departure,
         x: 0.7 * width,
-        y: height - 30,
+        y: height - borderPadding,
       };
   }
 };

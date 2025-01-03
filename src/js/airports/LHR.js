@@ -81,169 +81,91 @@ export const getWaypoint = (waypoint, screenSize) => {
 const runways = (runway, screenSize) => {
   const width = getGameSize(screenSize).width;
   const height = getGameSize(screenSize).height;
-  let xOffset = 0;
-  let yOffset = 0;
-  let length = 0;
-  let runwayWidth = 0;
-  let titlePosition27L = { x: 0, y: 0 };
-  let titlePosition27R = { x: 0, y: 0 };
+  let runwayWidth = 4;
+  let length = 60;
+  if (screenSize === ScreenSizes.Small) runwayWidth = 2.6;
+  if (screenSize === ScreenSizes.Small) length = 40;
 
-  switch (screenSize) {
-    case ScreenSizes.Large:
-      xOffset = -140;
-      yOffset = 26;
-      length = 60;
-      runwayWidth = 4;
-      titlePosition27L = { x: 0, y: 16 };
-      titlePosition27R = { x: 0, y: -8 };
-      break;
-    case ScreenSizes.Small:
-      xOffset = -105;
-      yOffset = 18;
-      length = 40;
-      runwayWidth = 1.6;
-      titlePosition27L = { x: 0, y: 11 };
-      titlePosition27R = { x: 0, y: -5 };
-      break;
+  if (runway === Runways.TwoSevenRight) {
+    return {
+      x: 0.318 * width,
+      y: 0.507 * height,
+      heading: 270,
+      length,
+      width: runwayWidth,
+      titlePosition: { x: 0, y: -10 },
+    };
   }
-
-  switch (runway) {
-    case Runways.TwoSevenRight:
-      return {
-        x: width / 2 + xOffset,
-        y: height / 2 + yOffset,
-        heading: 270,
-        length,
-        width: runwayWidth,
-        titlePosition: titlePosition27R,
-      };
-    case Runways.TwoSevenLeft:
-      return {
-        x: width / 2 + xOffset,
-        y: height / 2 + 18 + yOffset,
-        heading: 270,
-        length,
-        width: runwayWidth,
-        titlePosition: titlePosition27L,
-      };
+  if (runway === Runways.TwoSevenLeft) {
+    return {
+      x: 0.318 * width,
+      y: 0.534 * height,
+      heading: 270,
+      length,
+      width: runwayWidth,
+      titlePosition: { x: 0, y: 16 },
+    };
   }
 };
 
 const waypoints = (waypoint, screenSize) => {
   const width = getGameSize(screenSize).width;
   const height = getGameSize(screenSize).height;
+  let borderPadding = 50;
+  if (screenSize === ScreenSizes.Small) borderPadding = 30;
 
-  if (screenSize === ScreenSizes.Large) {
-    switch (waypoint) {
-      case WaypointArrivals.BNN:
-        return {
-          holdingPosition: HoldingPosition.North,
-          type: WaypointType.Arrival,
-          x: width / 2 - 215,
-          y: height / 2 - 155,
-        };
-      case WaypointArrivals.OCK:
-        return {
-          holdingPosition: HoldingPosition.South,
-          type: WaypointType.Arrival,
-          x: 465,
-          y: height - 160,
-        };
-      case WaypointArrivals.LAM:
-        return {
-          holdingPosition: HoldingPosition.North,
-          type: WaypointType.Arrival,
-          x: width / 2 + 400,
-          y: height / 2 - 150,
-        };
-      case WaypointArrivals.BIG:
-        return {
-          holdingPosition: HoldingPosition.South,
-          type: WaypointType.Arrival,
-          x: width / 2 + 350,
-          y: height / 2 + 160,
-        };
-      case WaypointDepartures.DET:
-        return {
-          type: WaypointType.Departure,
-          x: width / 2 + 150,
-          y: height - 28,
-        };
-      case WaypointDepartures.MID:
-        return {
-          type: WaypointType.Departure,
-          x: 270,
-          y: height - 42,
-        };
-      case WaypointDepartures.CPT:
-        return {
-          type: WaypointType.Departure,
-          x: 50,
-          y: height / 2 - 45,
-        };
-      case WaypointDepartures.BPK:
-        return {
-          type: WaypointType.Departure,
-          x: width / 2 + 70,
-          y: 50,
-        };
-    }
-  }
-
-  if (screenSize === ScreenSizes.Small) {
-    switch (waypoint) {
-      case WaypointArrivals.BNN:
-        return {
-          holdingPosition: HoldingPosition.North,
-          type: WaypointType.Arrival,
-          x: width / 2 - 160,
-          y: height / 2 - 118,
-        };
-      case WaypointArrivals.OCK:
-        return {
-          holdingPosition: HoldingPosition.South,
-          type: WaypointType.Arrival,
-          x: 350,
-          y: height - 120,
-        };
-      case WaypointArrivals.LAM:
-        return {
-          holdingPosition: HoldingPosition.North,
-          type: WaypointType.Arrival,
-          x: width / 2 + 290,
-          y: height / 2 - 112,
-        };
-      case WaypointArrivals.BIG:
-        return {
-          holdingPosition: HoldingPosition.South,
-          type: WaypointType.Arrival,
-          x: width / 2 + 260,
-          y: height / 2 + 115,
-        };
-      case WaypointDepartures.DET:
-        return {
-          type: WaypointType.Departure,
-          x: width / 2 + 112,
-          y: height - 22,
-        };
-      case WaypointDepartures.MID:
-        return {
-          type: WaypointType.Departure,
-          x: 202,
-          y: height - 30,
-        };
-      case WaypointDepartures.CPT:
-        return {
-          type: WaypointType.Departure,
-          x: 39,
-          y: height / 2 - 33,
-        };
-      case WaypointDepartures.BPK:
-        return {
-          type: WaypointType.Departure,
-          x: width / 2 + 60,
-          y: 35,
-        };
-    }
+  switch (waypoint) {
+    case WaypointArrivals.BNN:
+      return {
+        holdingPosition: HoldingPosition.North,
+        type: WaypointType.Arrival,
+        x: 0.3 * width,
+        y: 0.32 * height,
+      };
+    case WaypointArrivals.OCK:
+      return {
+        holdingPosition: HoldingPosition.South,
+        type: WaypointType.Arrival,
+        x: 0.35 * width,
+        y: 0.8 * height,
+      };
+    case WaypointArrivals.LAM:
+      return {
+        holdingPosition: HoldingPosition.North,
+        type: WaypointType.Arrival,
+        x: 0.8 * width,
+        y: 0.31 * height,
+      };
+    case WaypointArrivals.BIG:
+      return {
+        holdingPosition: HoldingPosition.South,
+        type: WaypointType.Arrival,
+        x: 0.77 * width,
+        y: 0.7 * height,
+      };
+    case WaypointDepartures.DET:
+      return {
+        type: WaypointType.Departure,
+        x: 0.6 * width,
+        y: height - borderPadding,
+      };
+    case WaypointDepartures.MID:
+      return {
+        type: WaypointType.Departure,
+        x: 0.2 * width,
+        y: height - borderPadding,
+      };
+    case WaypointDepartures.CPT:
+      return {
+        type: WaypointType.Departure,
+        x: borderPadding,
+        y: 0.3 * height,
+      };
+    case WaypointDepartures.BPK:
+      return {
+        type: WaypointType.Departure,
+        x: 0.55 * width,
+        y: borderPadding,
+      };
   }
 };

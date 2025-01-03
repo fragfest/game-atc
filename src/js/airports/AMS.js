@@ -152,8 +152,8 @@ const waypoints = (waypoint, screenSize) => {
         return {
           holdingPosition: HoldingPosition.South,
           type: WaypointType.Arrival,
-          x: 0.78 * width,
-          y: 0.5 * height,
+          x: 0.76 * width,
+          y: 0.6 * height,
         };
 
       case WaypointDepartures.BERGI:
@@ -193,14 +193,14 @@ const waypoints = (waypoint, screenSize) => {
         return {
           holdingPosition: HoldingPosition.South,
           type: WaypointType.Arrival,
-          x: 0.78 * width,
-          y: 0.5 * height,
+          x: 0.76 * width,
+          y: 0.6 * height,
         };
 
       case WaypointDepartures.BERGI:
         return {
           type: WaypointType.Departure,
-          x: 40,
+          x: 30,
           y: 0.2 * height,
         };
 
@@ -215,7 +215,7 @@ const waypoints = (waypoint, screenSize) => {
         return {
           type: WaypointType.Departure,
           x: 0.9 * width,
-          y: 40,
+          y: 30,
         };
     }
   }
