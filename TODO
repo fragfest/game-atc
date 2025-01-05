@@ -35,9 +35,10 @@ ATCv0.1.3:
     ✔ Flight Quality - wake turbulence @started(24-10-16 13:19) @done(24-11-27 20:49) @lasted(6w8h30m54s)
     ✔ Animations: consider for flightstrip, scorePanel @started(24-12-03 16:50) @done(24-12-09 12:03) @lasted(5d19h13m49s)
     ✔ Level intro prompt: airport name, scenario description @started(24-12-09 15:27) @done(24-12-09 20:17) @lasted(4h50m45s)
-    ☐ More airports @started(24-12-12 22:02)
+    ✔ More airports (+5) @started(24-12-12 22:02) @done(25-01-03 06:55) @lasted(3w8h53m11s)
     ☐ More levels
     ☐ Custom play level
+    ☐ More airports (+5)
     ☐ More badges
     ☐ More airframe profile images
     ☐ difficulty setting that changes delay timers
@@ -56,6 +57,7 @@ ATCv0.1.3:
     ☐ panelBottom responsive i.e. message tip box is bigger
     ☐ small scorePanel make smaller
     ☐ Warn with message on mobile
+    ☐ Asset copyright attribution text
 
 ATCv0.1.2:
   Bugs:

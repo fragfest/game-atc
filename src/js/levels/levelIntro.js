@@ -124,7 +124,7 @@ export const getIntro = (gameLevel) => {
         displayTimeMs: 20000,
         width: 0.72,
         levelNum: gameLevel,
-        airportHeading: `New York (JFK)`,
+        airportHeading: `New York International (JFK)`,
         airportSubheading: `Southbound Operations - quiet day, weather: clear`,
         text1: `Welcome to New York,&nbsp;<b>Controller</b>! We have a quiet shift for you to get accustomed to new flight operations.`,
       };
@@ -135,7 +135,7 @@ export const getIntro = (gameLevel) => {
         displayTimeMs: 20000,
         width: 0.72,
         levelNum: gameLevel,
-        airportHeading: `Tokyo (HND)`,
+        airportHeading: `Tokyo Haneda (HND)`,
         airportSubheading: `South Wind Operations - quiet day, weather: clear`,
         text1: `Welcome to Tokyo,&nbsp;<b>Controller</b>! We have a quiet shift for you to get accustomed to new flight operations.`,
       };
@@ -146,7 +146,7 @@ export const getIntro = (gameLevel) => {
         displayTimeMs: 20000,
         width: 0.72,
         levelNum: gameLevel,
-        airportHeading: `Amsterdam (AMS)`,
+        airportHeading: `Amsterdam Schiphol (AMS)`,
         airportSubheading: `South Wind Operations - quiet day, weather: clear`,
         text1: `Welcome to Amsterdam,&nbsp;<b>Controller</b>! We have a quiet shift for you to get accustomed to new flight operations.`,
       };
@@ -165,7 +165,7 @@ export const getIntro = (gameLevel) => {
         displayTimeMs: 20000,
         width: 0.72,
         levelNum: gameLevel,
-        airportHeading: `Vancouver (YVR)`,
+        airportHeading: `Vancouver International (YVR)`,
         airportSubheading: `West Wind Operations - quiet day, weather: clear`,
         text1: `Welcome to Vancouver,&nbsp;<b>Controller</b>! We have a quiet shift for you to get accustomed to new flight operations.`,
       };

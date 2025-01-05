@@ -2,7 +2,7 @@ import { createApp } from 'vue';
 import { createRouter, createWebHashHistory } from 'vue-router';
 
 import App from './App';
-import HomeLanding from './components/HomeLanding';
+import HomeLanding from './components/homeLanding/HomeLanding';
 import Game from './components/Game';
 
 const routes = [

@@ -42,34 +42,8 @@
 
         <div class="row-history-badges">
           <div v-if="showHistory" class="history-record" :class="screenSize">
-            <h3>levels</h3>
-            <div
-              v-for="(record, index) in historyRecordArr"
-              :key="index"
-              class="row"
-            >
-              <p v-if="!record.level" class="lightgreen">training</p>
-              <p v-if="record.level" class="lightgreen">
-                level {{ record.level }}
-              </p>
-              <p v-if="record.level" class="gold">
-                {{ record.historyScore.scoreTotal }}
-              </p>
-              <div class="button-restart">
-                <button
-                  class="history-col-width"
-                  @click="onRetryClick(record.level)"
-                >
-                  <h3>retry</h3>
-                </button>
-              </div>
-            </div>
-            <hr v-if="levelsTotal" />
-            <div v-if="levelsTotal" class="row">
-              <p>total</p>
-              <p class="gold">{{ levelsTotal }}</p>
-              <div class="history-col-width"></div>
-            </div>
+            <h2>locations</h2>
+            <HistoryAirports></HistoryAirports>
           </div>
 
           <div class="badges">
@@ -87,26 +61,28 @@
 </template>
 
 <script>
-import { getFinalLevel } from '../js/levels/getLevel';
+import { getFinalLevel } from '../../js/levels/getLevel';
 import {
   setup as setupScore,
   levelRetry,
   getHistoryRecords,
-} from '../js/game/score/score';
-import { getHighestLevelCompleted } from '../js/game/score/score';
+} from '../../js/game/score/score';
+import { getHighestLevelCompleted } from '../../js/game/score/score';
 import {
   calculateScreenSize,
   setScreenSize,
   ScreenSizes,
   getScreenSize,
-} from '../js/utils';
-import { isAchievedBlueSky } from '../js/game/score/badges';
+} from '../../js/utils';
+import { isAchievedBlueSky } from '../../js/game/score/badges';
 
-import BadgesDisplay from './badges/BadgesDisplay';
-import CyberBox from './common/CyberBox';
+import HistoryAirports from './HistoryAirports';
+import BadgesDisplay from '../badges/BadgesDisplay';
+import CyberBox from '../common/CyberBox';
 
 export default {
   components: {
+    HistoryAirports,
     BadgesDisplay,
     CyberBox,
   },
@@ -127,16 +103,6 @@ export default {
   },
 
   computed: {
-    levelsTotal: function () {
-      const score = (record) => record?.historyScore?.scoreTotal;
-
-      const records = getHistoryRecords().filter((obj) => obj.level > 0);
-      const total = records.reduce((acc, val) => acc + score(val), 0);
-      if (total > 99999) return '99,999+';
-      if (total <= 0) return '';
-      return total.toLocaleString('en-CA');
-    },
-
     badgeSize: function () {
       if (this.screenSize === ScreenSizes.Small) return 34;
       return 60;
@@ -178,11 +144,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-hr {
-  width: 100%;
-}
-
+<style lang="scss">
 .white {
   color: white;
 }
@@ -192,17 +154,9 @@ hr {
 .gold {
   color: gold;
 }
+
 .font-mono {
   font-family: monospace;
-}
-
-.version {
-  position: absolute;
-  left: 94vw;
-  top: 96vh;
-  font-size: 14px;
-  font-weight: 500;
-  color: darkblue;
 }
 
 // home ////////////////////////////////////////////////////
@@ -210,23 +164,34 @@ hr {
 .home.small {
   section {
     font-size: 18px;
+    min-height: 600px;
   }
 }
-// small END ///////////////////////
 
 .home {
   display: flex;
   flex-direction: column;
-  height: 99.7vh;
+  position: relative;
+  min-height: 99.7vh;
 
   background-image: url('/public/img/sky.jpg');
   background-size: cover;
   cursor: default;
 }
 
+.home .version {
+  position: absolute;
+  right: 1%;
+  bottom: 1%;
+  font-size: 14px;
+  font-weight: 500;
+  color: darkblue;
+}
+
 .home section {
   display: flex;
   min-width: 800px;
+  min-height: 800px;
 
   padding: 20px 40px;
   margin: 8% 2%;
@@ -252,12 +217,6 @@ hr {
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-}
-
-.home section .content h2 {
-  font-size: 32px;
-  color: rgb(28, 28, 28);
-  margin: 0;
 }
 
 .home section .content h3 {
@@ -329,6 +288,7 @@ hr {
 }
 .row-history-badges {
   display: flex;
+  flex-wrap: wrap;
   margin-top: 40px;
   column-gap: 5%;
   row-gap: 40px;
@@ -338,76 +298,26 @@ hr {
 // small ///////////////////////
 .history-record.small {
   min-width: 240px;
-
-  .history-col-width {
-    width: 60px;
-  }
-
-  .button-restart button {
-    height: 24px;
-  }
-  .button-restart button h3 {
-    font-size: 16px;
-  }
 }
-// small END ///////////////////////
-
 .history-record {
   display: flex;
   flex-direction: column;
+
   min-width: 280px;
-
-  background-color: #2c5c816f;
-  border: 1px solid #24b3c9;
-  border-radius: 8px;
-  padding: 6px 18px;
+  padding-left: 18px;
+  padding-right: 18px;
+  padding-top: 6px;
+  padding-bottom: 18px;
 }
 
-.history-record h3 {
-  text-align: center;
-  margin-top: 0;
-  margin-bottom: 8px;
-  border-bottom: 1px solid white;
+// badges /////////////////////////////////////////////
+// small ////////////////////
+.home.small .row-history-badges .badges .container {
+  width: 220px;
 }
-
-.history-record .history-col-width {
-  width: 80px;
-}
-
-.history-record .row {
+.row-history-badges .badges .container {
   display: flex;
-  justify-content: space-between;
-}
-
-.history-record .button-restart {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.history-record .button-restart button {
-  height: 30px;
-  border-radius: 4px;
-  box-shadow: 4px 2px 2px #000000a0;
-  background-color: lightgreen;
-  border: 1px solid white;
-}
-
-.history-record .button-restart button h3 {
-  color: rgb(28, 28, 28);
-  font-size: 20px;
-  margin-bottom: 0;
-  border: none;
-}
-
-.history-record .button-restart button:hover {
-  cursor: pointer;
-  background-color: rgb(119, 201, 119);
-}
-
-.history-record .button-restart button:active {
-  position: relative;
-  left: 2px;
-  box-shadow: none;
+  flex-wrap: wrap;
+  width: 320px;
 }
 </style>

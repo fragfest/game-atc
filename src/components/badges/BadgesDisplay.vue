@@ -156,6 +156,9 @@ export default {
   }
 }
 
+.container.small .badges {
+  padding: 8px 8px;
+}
 .container .badges {
   display: flex;
   column-gap: 12px;
@@ -186,11 +189,19 @@ export default {
     forwards;
 }
 
+.container.small .badges-desc {
+  h3 {
+    font-size: 14px;
+  }
+  p {
+    font-size: 11px;
+  }
+}
 .container .badges-desc {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   font-family: monospace;
-  width: 420px;
 
   h3 {
     margin: 8px;
