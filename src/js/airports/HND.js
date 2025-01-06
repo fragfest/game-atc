@@ -99,56 +99,6 @@ const runways = (runway, screenSize) => {
     lengthShort = 30;
   }
 
-  // switch (screenSize) {
-  //   case ScreenSizes.Large:
-  //     runwayWidth = 4;
-  //     // 22
-  //     xOffset22 = 12;
-  //     yOffset22 = 36;
-  //     length22 = 44;
-  //     titlePosition22 = { x: -10, y: -4 };
-  //     // 23
-  //     xOffset23 = 74;
-  //     yOffset23 = 81;
-  //     length23 = 44;
-  //     titlePosition23 = { x: 6, y: 12 };
-  //     // 16L
-  //     xOffset16L = 21;
-  //     yOffset16L = 38;
-  //     length16L = 55;
-  //     titlePosition16L = { x: 16, y: 16 };
-  //     // 16R
-  //     xOffset16R = 4;
-  //     yOffset16R = 48;
-  //     length16R = 55;
-  //     titlePosition16R = { x: -12, y: 40 };
-  //     break;
-
-  //   case ScreenSizes.Small:
-  //     runwayWidth = 2.2;
-  //     // 22
-  //     xOffset22 = 7;
-  //     yOffset22 = 30;
-  //     length22 = 30;
-  //     titlePosition22 = { x: -6, y: -5 };
-  //     // 23
-  //     xOffset23 = 54;
-  //     yOffset23 = 62;
-  //     length23 = 30;
-  //     titlePosition23 = { x: 4, y: 10 };
-  //     // 16L
-  //     xOffset16L = 15;
-  //     yOffset16L = 29;
-  //     length16L = 40;
-  //     titlePosition16L = { x: 14, y: 16 };
-  //     // 16R
-  //     xOffset16R = 0;
-  //     yOffset16R = 36;
-  //     length16R = 40;
-  //     titlePosition16R = { x: -10, y: 30 };
-  //     break;
-  // }
-
   if (runway === Runways.TwentyTwo) {
     return {
       x: 0.553 * width,

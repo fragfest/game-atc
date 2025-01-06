@@ -49,3 +49,12 @@ export const getAirportByLevel = (gameLevel) => {
 
   throw new Error('unknown level: ' + gameLevel);
 };
+
+export const getCityByAirport = (airport) => {
+  if (airport === Airport.LondonLHR) return 'london';
+  if (airport === Airport.NewYorkJFK) return 'new york';
+  if (airport === Airport.TokyoHND) return 'tokyo';
+  if (airport === Airport.AmsterdamAMS) return 'amsterdam';
+  if (airport === Airport.VancouverYVR) return 'vancouver';
+  return '';
+};

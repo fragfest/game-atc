@@ -10,8 +10,8 @@
           <div>
             <h3 v-if="isGameComplete">all levels completed!</h3>
             <h3 v-else-if="levelComplete">
-              <span>levels complete &nbsp;&nbsp;</span>
-              <span class="font-mono white">
+              <span>level&nbsp;&nbsp;</span>
+              <span class="font-mono white no-wrap">
                 {{ levelComplete }} / {{ finalLevel }}
               </span>
             </h3>
@@ -47,6 +47,7 @@
           </div>
 
           <div class="badges">
+            <h2>achievements</h2>
             <BadgesDisplay :size="badgeSize" :bluesky="bluesky" />
           </div>
         </div>
@@ -158,6 +159,9 @@ export default {
 .font-mono {
   font-family: monospace;
 }
+.no-wrap {
+  text-wrap: nowrap;
+}
 
 // home ////////////////////////////////////////////////////
 // small ///////////////////////
@@ -246,9 +250,10 @@ export default {
 .grid-score-buttons .button-start button h2 {
   font-size: 34px;
   font-family: monospace;
+  margin-top: 0px;
   margin-bottom: 2px;
 
-  background: linear-gradient(to bottom, white 00%, limegreen 100%);
+  background: linear-gradient(to bottom, white 0%, limegreen 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -289,9 +294,17 @@ export default {
 .row-history-badges {
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-around;
   margin-top: 40px;
   column-gap: 5%;
   row-gap: 40px;
+
+  h2 {
+    background: linear-gradient(to bottom, white 0%, limegreen 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
 }
 
 // history-record ////////////////////////////////////////
