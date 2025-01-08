@@ -38,6 +38,23 @@ export const convHdgRadToThreeDigits = (rad) => {
 };
 
 // UTIL //////////////////////////////////////////////////////////////////
+
+export const createInterceptHeading = (src, dest) => {
+  const x = dest.x - src.x;
+  const y = dest.y - src.y;
+
+  // src in SE
+  if (x < 0 && y < 0) return Math.PI + Math.atan(y / x);
+  // src in NE
+  if (x < 0 && y > 0) return Math.PI + Math.atan(y / x);
+  // src in NW
+  if (x > 0 && y > 0) return Math.atan(y / x);
+  // src in SW
+  if (x > 0 && y < 0) return convertToPosRad(Math.atan(y / x));
+
+  return 0;
+};
+
 /**
  * @param {number} hdgRad heading to check (radians)
  * @param {number} arcCentreHdgRad centre line heading (radians)
@@ -46,8 +63,17 @@ export const convHdgRadToThreeDigits = (rad) => {
  */
 export const isHeadingWithinArc = (hdgRad, arcCentreHdgRad, arcAngleDeg) => {
   const arcAngle = deg2Rad(arcAngleDeg);
-  const angleWithinLeftArc = hdgRad >= arcCentreHdgRad - arcAngle;
-  const angleWithinRightArc = hdgRad <= arcCentreHdgRad + arcAngle;
+  let centre = arcCentreHdgRad;
+  let hdg = hdgRad;
+  if (hdg > Math.PI) {
+    hdg = -1 * (2 * Math.PI - hdg);
+  }
+  if (centre > Math.PI) {
+    centre = -1 * (2 * Math.PI - centre);
+  }
+
+  const angleWithinLeftArc = hdg >= centre - arcAngle;
+  const angleWithinRightArc = hdg <= centre + arcAngle;
   return angleWithinLeftArc && angleWithinRightArc;
 };
 

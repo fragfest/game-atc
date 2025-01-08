@@ -1,8 +1,60 @@
 import { describe, beforeEach, test, expect } from '@jest/globals';
-import { degreesToRad, isHeadingWithinArc } from './utils';
+import {
+  convertToPosRad,
+  createInterceptHeading,
+  degreesToRad,
+  isHeadingWithinArc,
+} from './utils';
+
+const hdg = (deg) => convertToPosRad(degreesToRad(deg));
 
 describe('util', () => {
-  describe('isAngleWithinArc', () => {
+  describe('createInterceptHeading', () => {
+    let src = { x: 0, y: 0 };
+    let dest = { x: 0, y: 0 };
+
+    describe('when source is SE from destination', () => {
+      beforeEach(() => {
+        src = { x: 150, y: 150 };
+        dest = { x: 100, y: 100 };
+      });
+      test('then intercept heading should return 315', () => {
+        expect(createInterceptHeading(src, dest)).toEqual(hdg(315));
+      });
+    });
+
+    describe('when source is NE from destination', () => {
+      beforeEach(() => {
+        src = { x: 150, y: 50 };
+        dest = { x: 100, y: 100 };
+      });
+      test('then intercept heading should return 225', () => {
+        expect(createInterceptHeading(src, dest)).toEqual(hdg(225));
+      });
+    });
+
+    describe('when source is NW from destination', () => {
+      beforeEach(() => {
+        src = { x: 50, y: 50 };
+        dest = { x: 100, y: 100 };
+      });
+      test('then intercept heading should return 135', () => {
+        expect(createInterceptHeading(src, dest)).toEqual(hdg(135));
+      });
+    });
+
+    describe('when source is SW from destination', () => {
+      beforeEach(() => {
+        src = { x: 50, y: 150 };
+        dest = { x: 100, y: 100 };
+      });
+      test('then intercept heading should return 45', () => {
+        expect(createInterceptHeading(src, dest)).toEqual(hdg(45));
+      });
+    });
+  });
+
+  describe('isHeadingWithinArc', () => {
     let hdg = 0;
     let arcCentre = 0;
     let arc = 0;
@@ -168,6 +220,36 @@ describe('util', () => {
           });
           test('should return false', () => {
             expect(isHeadingWithinArc(hdg, arcCentre, arc)).toBeFalsy();
+          });
+        });
+      });
+
+      describe('when arc centre 005deg', () => {
+        beforeEach(() => {
+          arcCentre = degreesToRad(5);
+        });
+
+        describe('then heading 360', () => {
+          beforeEach(() => {
+            hdg = degreesToRad(360);
+          });
+          test('should return true', () => {
+            expect(isHeadingWithinArc(hdg, arcCentre, arc)).toBeTruthy();
+          });
+        });
+      });
+
+      describe('when arc centre 90deg', () => {
+        beforeEach(() => {
+          arcCentre = degreesToRad(90);
+        });
+
+        describe('then heading 85', () => {
+          beforeEach(() => {
+            hdg = degreesToRad(85);
+          });
+          test('should return true', () => {
+            expect(isHeadingWithinArc(hdg, arcCentre, arc)).toBeTruthy();
           });
         });
       });

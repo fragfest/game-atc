@@ -41,12 +41,12 @@
         <!-- END grid-score-buttons -->
 
         <div class="row-history-badges">
-          <div v-if="showHistory" class="history-record" :class="screenSize">
+          <div class="history-record" :class="screenSize">
             <h2>locations</h2>
             <HistoryAirports></HistoryAirports>
           </div>
 
-          <div class="badges">
+          <div v-if="showHistory" class="badges">
             <h2>achievements</h2>
             <BadgesDisplay :size="badgeSize" :bluesky="bluesky" />
           </div>

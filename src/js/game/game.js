@@ -250,8 +250,8 @@ const spawnAircraftRnd =
     const plane = createAircraftFn();
     if (!plane) return;
 
-    const planeClose = entityManagerArr.find(isCloseToNewPlane(plane));
-    const weatherClose = entityManagerArr.find(isCloseToWeather(plane));
+    const planeClose = !!entityManagerArr.find(isCloseToNewPlane(plane));
+    const weatherClose = !!entityManagerArr.find(isCloseToWeather(plane));
     if (isArrival(plane) && (planeClose || weatherClose)) {
       plane.destroy();
       return;

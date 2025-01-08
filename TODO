@@ -18,7 +18,7 @@ Wishlist:
   ☐ Touchdown sound (tyre screech)
 ATCv0.1.3:
   Bugs:
-    ☐ AMS level runway 18R does not trigger landing west of centre line
+    ✔ AMS level runway 18R does not trigger landing west of centre line @started(25-01-06 17:09) @done(25-01-08 02:34) @lasted(1d9h25m33s)
     ✔ badge awarded in popup even if current level failed @started(24-11-27 20:58) @done(24-11-28 23:01) @lasted(1d2h3m45s)
     ✔ browser popup "are you sure you want to leave" appears on homepage post-game @done(24-09-11 06:35)
     ✔ small screen plane icon alignment @done(24-09-06 06:20)
@@ -37,7 +37,7 @@ ATCv0.1.3:
     ✔ Animations: consider for flightstrip, scorePanel @started(24-12-03 16:50) @done(24-12-09 12:03) @lasted(5d19h13m49s)
     ✔ Level intro prompt: airport name, scenario description @started(24-12-09 15:27) @done(24-12-09 20:17) @lasted(4h50m45s)
     ✔ More airports (+5) @started(24-12-12 22:02) @done(25-01-03 06:55) @lasted(3w8h53m11s)
-    ☐ More levels
+    ☐ More levels @started(25-01-08 14:37)
     ☐ Custom play level
     ☐ More airports (+5)
     ☐ More badges
@@ -55,6 +55,7 @@ ATCv0.1.3:
     ✔ Add button for background sounds @done(24-12-29 14:25)
     ☐ Clear indication Badge has not been achieved i.e. grey description
     ☐ Faster altitude decrease than increase
+    ☐ Consider allowing plane spawn near waypoints
     ☐ Slower landing rollouts (takeoffs too?)
     ☐ panelBottom responsive i.e. message tip box is bigger
     ☐ small scorePanel make smaller

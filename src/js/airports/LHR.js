@@ -127,39 +127,39 @@ const waypoints = (waypoint, screenSize) => {
         holdingPosition: HoldingPosition.South,
         type: WaypointType.Arrival,
         x: 0.35 * width,
-        y: 0.8 * height,
+        y: 0.7 * height,
       };
     case WaypointArrivals.LAM:
       return {
         holdingPosition: HoldingPosition.North,
         type: WaypointType.Arrival,
-        x: 0.8 * width,
+        x: 0.75 * width,
         y: 0.31 * height,
       };
     case WaypointArrivals.BIG:
       return {
         holdingPosition: HoldingPosition.South,
         type: WaypointType.Arrival,
-        x: 0.77 * width,
+        x: 0.7 * width,
         y: 0.7 * height,
       };
     case WaypointDepartures.DET:
       return {
         type: WaypointType.Departure,
-        x: 0.6 * width,
+        x: 0.7 * width,
         y: height - borderPadding,
       };
     case WaypointDepartures.MID:
       return {
         type: WaypointType.Departure,
-        x: 0.2 * width,
+        x: 0.3 * width,
         y: height - borderPadding,
       };
     case WaypointDepartures.CPT:
       return {
         type: WaypointType.Departure,
         x: borderPadding,
-        y: 0.3 * height,
+        y: 0.2 * height,
       };
     case WaypointDepartures.BPK:
       return {

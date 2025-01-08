@@ -2,11 +2,12 @@ import { describe, beforeEach, test, expect } from '@jest/globals';
 import { getHeadingToEntity } from './entity';
 import { degreesToRad } from './utils';
 
+const hdg = (deg) => degreesToRad(deg);
+
 describe('entity', () => {
   describe('getHeadingToEntity', () => {
     let entitySrc;
     let entityDest;
-    const hdg = (deg) => degreesToRad(deg);
 
     describe('when entityDest in NE direction', () => {
       beforeEach(() => {

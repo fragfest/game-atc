@@ -2,6 +2,7 @@ import { isAircraft, Direction, RunwayType } from '../types';
 import {
   convertToSmallDegrees,
   convHdgRadToThreeDigits,
+  createInterceptHeading,
   degreesToRad,
   getScreenSize,
   inputHeadingToRad,
@@ -169,7 +170,7 @@ export default class Runway {
       }
 
       // console.log(entity.title + ' :: intercept glidepath ');
-      const interceptHeading = Math.atan(distObj.y / distObj.x) + Math.PI;
+      const interceptHeading = createInterceptHeading(entity, this);
       entity.setHeadingTarget(interceptHeading, true, false, Direction.None);
       updateSpeedAlt(this, entity, distToRunway);
     });
