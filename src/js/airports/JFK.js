@@ -150,46 +150,46 @@ const waypoints = (waypoint, screenSize) => {
         return {
           holdingPosition: HoldingPosition.North,
           type: WaypointType.Arrival,
-          x: width - 250,
-          y: height / 2 - 180,
+          x: 0.8 * width,
+          y: 0.27 * height,
         };
       case WaypointArrivals.LENDY:
         return {
           holdingPosition: HoldingPosition.South,
           type: WaypointType.Arrival,
-          x: width / 4 + 250,
-          y: height / 2 - 280,
+          x: 0.43 * width,
+          y: 0.16 * height,
         };
       case WaypointArrivals.KMCHI:
         return {
           holdingPosition: HoldingPosition.North,
           type: WaypointType.Arrival,
-          x: width / 2 - 70,
-          y: height - 240,
+          x: 0.45 * width,
+          y: 0.7 * height,
         };
       case WaypointDepartures.NORTH:
         return {
           type: WaypointType.Departure,
-          x: width - 200,
+          x: 0.85 * width,
           y: 50,
         };
       case WaypointDepartures.SOUTH:
         return {
           type: WaypointType.Departure,
-          x: width / 2 - 20,
-          y: height - 30,
+          x: 0.4 * width,
+          y: height - 50,
         };
       case WaypointDepartures.SHIPP:
         return {
           type: WaypointType.Departure,
-          x: width - 70,
-          y: height - 50,
+          x: 0.95 * width,
+          y: height - 60,
         };
       case WaypointDepartures.SBJ:
         return {
           type: WaypointType.Departure,
-          x: 40,
-          y: height / 2,
+          x: 50,
+          y: 0.5 * height,
         };
     }
   }
@@ -200,46 +200,46 @@ const waypoints = (waypoint, screenSize) => {
         return {
           holdingPosition: HoldingPosition.North,
           type: WaypointType.Arrival,
-          x: width - 190,
-          y: height / 2 - 130,
+          x: 0.8 * width,
+          y: 0.27 * height,
         };
       case WaypointArrivals.LENDY:
         return {
           holdingPosition: HoldingPosition.South,
           type: WaypointType.Arrival,
-          x: width / 4 + 190,
-          y: height / 2 - 210,
+          x: 0.43 * width,
+          y: 0.16 * height,
         };
       case WaypointArrivals.KMCHI:
         return {
           holdingPosition: HoldingPosition.North,
           type: WaypointType.Arrival,
-          x: width / 2 - 50,
-          y: height - 180,
+          x: 0.45 * width,
+          y: 0.7 * height,
         };
       case WaypointDepartures.NORTH:
         return {
           type: WaypointType.Departure,
-          x: width - 150,
-          y: 40,
+          x: 0.85 * width,
+          y: 30,
         };
       case WaypointDepartures.SOUTH:
         return {
           type: WaypointType.Departure,
-          x: width / 2 - 10,
+          x: 0.4 * width,
           y: height - 30,
         };
       case WaypointDepartures.SHIPP:
         return {
           type: WaypointType.Departure,
-          x: width - 60,
-          y: height - 40,
+          x: 0.95 * width,
+          y: height - 45,
         };
       case WaypointDepartures.SBJ:
         return {
           type: WaypointType.Departure,
           x: 30,
-          y: height / 2,
+          y: 0.5 * height,
         };
     }
   }

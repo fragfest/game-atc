@@ -37,17 +37,17 @@ export const getLevelObj = () => {
   };
 };
 
-export const getFinalLevel = () => 10;
+export const getFinalLevel = () => 20;
 
 export const getAirportByLevel = (gameLevel) => {
   if (gameLevel === 0) return Airport.LondonLHR;
   if (gameLevel >= 1 && gameLevel <= 6) return Airport.LondonLHR;
-  if (gameLevel === 7) return Airport.NewYorkJFK;
-  if (gameLevel === 8) return Airport.TokyoHND;
-  if (gameLevel === 9) return Airport.AmsterdamAMS;
-  if (gameLevel === 10) return Airport.VancouverYVR;
+  if (gameLevel >= 7 && gameLevel <= 11) return Airport.NewYorkJFK;
+  // if (gameLevel === 9) return Airport.TokyoHND;
+  // if (gameLevel === 10) return Airport.AmsterdamAMS;
+  // if (gameLevel === 11) return Airport.VancouverYVR;
 
-  throw new Error('unknown level: ' + gameLevel);
+  // throw new Error('unknown level: ' + gameLevel);
 };
 
 export const getCityByAirport = (airport) => {

@@ -6,11 +6,11 @@ import * as utils from '../utils.js';
 import { Airport } from '../airports/airports.js';
 
 describe('Level', () => {
-  let airport;
-  let entityManagerArr, goals, score, level;
-  let getChanceFn, aircraftFn;
+  describe('Departures only, Arrivals only', () => {
+    let airport;
+    let entityManagerArr, goals, score, level;
+    let getChanceFn, aircraftFn;
 
-  describe('level 1 & 2', () => {
     beforeEach(() => {
       jest.spyOn(types, 'isAircraft').mockImplementation(() => true);
       jest.spyOn(scoreJs, 'getScore').mockImplementation(() => ({ level }));
@@ -22,7 +22,7 @@ describe('Level', () => {
       aircraftFn = jest.fn(() => true);
     });
 
-    describe('level 1', () => {
+    describe('spawnDeparturesOnly', () => {
       beforeEach(() => {
         level = 1;
       });
@@ -75,7 +75,7 @@ describe('Level', () => {
       });
     });
 
-    describe('level 2', () => {
+    describe('spawnArrivalsOnly', () => {
       beforeEach(() => {
         level = 2;
       });
@@ -128,137 +128,271 @@ describe('Level', () => {
     });
   });
 
-  describe('level 3', () => {
+  describe('Departures & Arrivals', () => {
+    let airport;
+    let entityManagerArr, goals, score, level;
+    let getChanceFn, aircraftFn;
+
     beforeEach(() => {
+      jest.spyOn(types, 'isAircraft').mockImplementation(() => true);
+      jest.spyOn(scoreJs, 'getScore').mockImplementation(() => ({ level }));
       jest.spyOn(utils, 'getDepartureCount').mockImplementation(() => 2);
       jest.spyOn(utils, 'getArrivalCount').mockImplementation(() => 2);
 
-      level = 3;
-      airport = Airport.LondonLHR;
       entityManagerArr = [
         { destinationType: types.DestinationType.Departure },
         { destinationType: types.DestinationType.Departure },
         { destinationType: types.DestinationType.Arrival },
         { destinationType: types.DestinationType.Arrival },
       ];
-      goals = { Arrivals: 8, Departures: 8 };
       getChanceFn = jest.fn(() => 0.123);
       aircraftFn = jest.fn(() => true);
     });
 
-    test('spawn complete', () => {
-      score = { arrivals: 8, departures: 8 };
-      callAircraftFnByLevel({
-        entityManagerArr,
-        goals,
-        score,
-        getChanceFn,
-        aircraftFn,
+    describe('spawnBalanced', () => {
+      beforeEach(() => {
+        level = 3;
+        goals = { Arrivals: 8, Departures: 8 };
+        airport = Airport.LondonLHR;
       });
 
-      expect(getChanceFn).not.toHaveBeenCalled();
-      expect(aircraftFn).not.toHaveBeenCalled();
+      test('spawn complete', () => {
+        score = { arrivals: 8, departures: 8 };
+        callAircraftFnByLevel({
+          entityManagerArr,
+          goals,
+          score,
+          getChanceFn,
+          aircraftFn,
+        });
+
+        expect(getChanceFn).not.toHaveBeenCalled();
+        expect(aircraftFn).not.toHaveBeenCalled();
+      });
+
+      test('lowCount spawn departure', () => {
+        jest.spyOn(utils, 'getDepartureCount').mockImplementation(() => 1);
+        score = { arrivals: 2, departures: 1 };
+        callAircraftFnByLevel({
+          entityManagerArr,
+          goals,
+          score,
+          getChanceFn,
+          aircraftFn,
+        });
+
+        expect(getChanceFn).toHaveBeenCalledWith(0.5);
+        expect(aircraftFn).toHaveBeenCalledWith(
+          0.123,
+          1,
+          { time: 1080 },
+          airport
+        );
+      });
+
+      test('lowCount spawn arrival', () => {
+        jest.spyOn(utils, 'getArrivalCount').mockImplementation(() => 1);
+        score = { arrivals: 1, departures: 2 };
+        callAircraftFnByLevel({
+          entityManagerArr,
+          goals,
+          score,
+          getChanceFn,
+          aircraftFn,
+        });
+
+        expect(getChanceFn).toHaveBeenCalledWith(0.5);
+        expect(aircraftFn).toHaveBeenCalledWith(
+          0.123,
+          0,
+          { time: 1080 },
+          airport
+        );
+      });
+
+      test('not lowCount spawn random', () => {
+        const arrLarge = [...entityManagerArr];
+        arrLarge.push({ destinationType: types.DestinationType.Departure });
+        jest.spyOn(utils, 'getArrivalCount').mockImplementation(() => 2);
+        jest.spyOn(utils, 'getDepartureCount').mockImplementation(() => 3);
+        score = { arrivals: 2, departures: 3 };
+        callAircraftFnByLevel({
+          entityManagerArr: arrLarge,
+          goals,
+          score,
+          getChanceFn,
+          aircraftFn,
+        });
+
+        expect(getChanceFn).toHaveBeenCalledWith(0.03);
+        expect(aircraftFn).toHaveBeenCalledWith(
+          0.123,
+          0.4,
+          { time: 1080 },
+          airport
+        );
+      });
+
+      test('when all departures done, spawn arrivals', () => {
+        score = { arrivals: 1, departures: 8 };
+        callAircraftFnByLevel({
+          entityManagerArr,
+          goals,
+          score,
+          getChanceFn,
+          aircraftFn,
+        });
+
+        expect(getChanceFn).toHaveBeenCalledWith(0.5);
+        expect(aircraftFn).toHaveBeenCalledWith(
+          0.123,
+          0,
+          { time: 1080 },
+          airport
+        );
+      });
+
+      test('when all arrivals done, spawn departures', () => {
+        score = { arrivals: 8, departures: 1 };
+        callAircraftFnByLevel({
+          entityManagerArr,
+          goals,
+          score,
+          getChanceFn,
+          aircraftFn,
+        });
+
+        expect(getChanceFn).toHaveBeenCalledWith(0.5);
+        expect(aircraftFn).toHaveBeenCalledWith(
+          0.123,
+          1,
+          { time: 1080 },
+          airport
+        );
+      });
     });
 
-    test('lowCount spawn departure', () => {
-      jest.spyOn(utils, 'getDepartureCount').mockImplementation(() => 1);
-      score = { arrivals: 2, departures: 1 };
-      callAircraftFnByLevel({
-        entityManagerArr,
-        goals,
-        score,
-        getChanceFn,
-        aircraftFn,
+    describe('spawnMoreArrivals', () => {
+      beforeEach(() => {
+        level = 10;
+        goals = { Arrivals: 18, Departures: 8 };
+        airport = Airport.NewYorkJFK;
       });
 
-      expect(getChanceFn).toHaveBeenCalledWith(0.5);
-      expect(aircraftFn).toHaveBeenCalledWith(
-        0.123,
-        1,
-        { time: 1080 },
-        airport
-      );
-    });
+      test('spawn complete', () => {
+        score = { arrivals: 18, departures: 8 };
+        callAircraftFnByLevel({
+          entityManagerArr,
+          goals,
+          score,
+          getChanceFn,
+          aircraftFn,
+        });
 
-    test('lowCount spawn arrival', () => {
-      jest.spyOn(utils, 'getArrivalCount').mockImplementation(() => 1);
-      score = { arrivals: 1, departures: 2 };
-      callAircraftFnByLevel({
-        entityManagerArr,
-        goals,
-        score,
-        getChanceFn,
-        aircraftFn,
+        expect(getChanceFn).not.toHaveBeenCalled();
+        expect(aircraftFn).not.toHaveBeenCalled();
       });
 
-      expect(getChanceFn).toHaveBeenCalledWith(0.5);
-      expect(aircraftFn).toHaveBeenCalledWith(
-        0.123,
-        0,
-        { time: 1080 },
-        airport
-      );
-    });
+      test('lowCount spawn departure', () => {
+        jest.spyOn(utils, 'getDepartureCount').mockImplementation(() => 1);
+        score = { arrivals: 2, departures: 1 };
+        callAircraftFnByLevel({
+          entityManagerArr,
+          goals,
+          score,
+          getChanceFn,
+          aircraftFn,
+        });
 
-    test('not lowCount spawn random', () => {
-      const arrLarge = [...entityManagerArr];
-      arrLarge.push({ destinationType: types.DestinationType.Departure });
-      jest.spyOn(utils, 'getArrivalCount').mockImplementation(() => 2);
-      jest.spyOn(utils, 'getDepartureCount').mockImplementation(() => 3);
-      score = { arrivals: 2, departures: 3 };
-      callAircraftFnByLevel({
-        entityManagerArr: arrLarge,
-        goals,
-        score,
-        getChanceFn,
-        aircraftFn,
+        expect(getChanceFn).toHaveBeenCalledWith(0.5);
+        expect(aircraftFn).toHaveBeenCalledWith(
+          0.123,
+          1,
+          { time: 1200 },
+          airport
+        );
       });
 
-      expect(getChanceFn).toHaveBeenCalledWith(0.03);
-      expect(aircraftFn).toHaveBeenCalledWith(
-        0.123,
-        0.4,
-        { time: 1080 },
-        airport
-      );
-    });
+      test('lowCount spawn arrival', () => {
+        jest.spyOn(utils, 'getArrivalCount').mockImplementation(() => 1);
+        score = { arrivals: 1, departures: 2 };
+        callAircraftFnByLevel({
+          entityManagerArr,
+          goals,
+          score,
+          getChanceFn,
+          aircraftFn,
+        });
 
-    test('when all departures done, spawn arrivals', () => {
-      score = { arrivals: 1, departures: 8 };
-      callAircraftFnByLevel({
-        entityManagerArr,
-        goals,
-        score,
-        getChanceFn,
-        aircraftFn,
+        expect(getChanceFn).toHaveBeenCalledWith(0.5);
+        expect(aircraftFn).toHaveBeenCalledWith(
+          0.123,
+          0,
+          { time: 1200 },
+          airport
+        );
       });
 
-      expect(getChanceFn).toHaveBeenCalledWith(0.5);
-      expect(aircraftFn).toHaveBeenCalledWith(
-        0.123,
-        0,
-        { time: 1080 },
-        airport
-      );
-    });
+      test('not lowCount spawn random', () => {
+        const arrLarge = [...entityManagerArr];
+        arrLarge.push({ destinationType: types.DestinationType.Departure });
+        jest.spyOn(utils, 'getArrivalCount').mockImplementation(() => 2);
+        jest.spyOn(utils, 'getDepartureCount').mockImplementation(() => 3);
+        score = { arrivals: 2, departures: 3 };
+        callAircraftFnByLevel({
+          entityManagerArr: arrLarge,
+          goals,
+          score,
+          getChanceFn,
+          aircraftFn,
+        });
 
-    test('when all arrivals done, spawn departures', () => {
-      score = { arrivals: 8, departures: 1 };
-      callAircraftFnByLevel({
-        entityManagerArr,
-        goals,
-        score,
-        getChanceFn,
-        aircraftFn,
+        expect(getChanceFn).toHaveBeenCalledWith(0.03);
+        expect(aircraftFn).toHaveBeenCalledWith(
+          0.123,
+          0.04,
+          { time: 1200 },
+          airport
+        );
       });
 
-      expect(getChanceFn).toHaveBeenCalledWith(0.5);
-      expect(aircraftFn).toHaveBeenCalledWith(
-        0.123,
-        1,
-        { time: 1080 },
-        airport
-      );
+      test('when all departures done, spawn arrivals', () => {
+        score = { arrivals: 1, departures: 8 };
+        callAircraftFnByLevel({
+          entityManagerArr,
+          goals,
+          score,
+          getChanceFn,
+          aircraftFn,
+        });
+
+        expect(getChanceFn).toHaveBeenCalledWith(0.5);
+        expect(aircraftFn).toHaveBeenCalledWith(
+          0.123,
+          0,
+          { time: 1200 },
+          airport
+        );
+      });
+
+      test('when all arrivals done, spawn departures', () => {
+        score = { arrivals: 8, departures: 1 };
+        callAircraftFnByLevel({
+          entityManagerArr,
+          goals,
+          score,
+          getChanceFn,
+          aircraftFn,
+        });
+
+        expect(getChanceFn).toHaveBeenCalledWith(0.5);
+        expect(aircraftFn).toHaveBeenCalledWith(
+          0.123,
+          1,
+          { time: 1200 },
+          airport
+        );
+      });
     });
   });
 });

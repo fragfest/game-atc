@@ -189,31 +189,44 @@ export const getGoalsByLevel = () => {
     }
     if (gameLevel === 8) {
       return {
-        Arrivals: 8,
-        Departures: 8,
+        Arrivals: 12,
+        Departures: 12,
         Failed: 2,
         Conflict: 30,
-        SpawnRate: 1,
+        SpawnRate: 2,
         Delayed: 3,
       };
     }
+
     if (gameLevel === 9) {
       return {
-        Arrivals: 8,
-        Departures: 8,
+        Arrivals: 12,
+        Departures: 12,
         Failed: 2,
         Conflict: 30,
-        SpawnRate: 1,
+        SpawnRate: 1.5,
         Delayed: 3,
       };
     }
+
     if (gameLevel === 10) {
       return {
-        Arrivals: 8,
+        Arrivals: 18,
         Departures: 8,
         Failed: 2,
         Conflict: 30,
-        SpawnRate: 1,
+        SpawnRate: 1.2,
+        Delayed: 3,
+      };
+    }
+
+    if (gameLevel === 11) {
+      return {
+        Arrivals: 12,
+        Departures: 12,
+        Failed: 2,
+        Conflict: 30,
+        SpawnRate: 1.5,
         Delayed: 3,
       };
     }

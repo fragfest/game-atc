@@ -53,14 +53,15 @@ export const getSpawnByGameLevel = (gameLevel) => {
     const airport = getAirportByLevel(gameLevel);
     if (gameLevel === 1) return spawnDeparturesOnly(spawnArg, airport);
     if (gameLevel === 2) return spawnArrivalsOnly(spawnArg, airport);
-    if (gameLevel === 3) return spawnLevel1(spawnArg, airport);
-    if (gameLevel === 4) return spawnLevel1(spawnArg, airport);
-    if (gameLevel === 5) return spawnLevel1(spawnArg, airport);
-    if (gameLevel === 6) return spawnLevel1(spawnArg, airport);
-    if (gameLevel === 7) return spawnLevel1(spawnArg, airport);
-    if (gameLevel === 8) return spawnLevel1(spawnArg, airport);
-    if (gameLevel === 9) return spawnLevel1(spawnArg, airport);
-    if (gameLevel === 10) return spawnLevel1(spawnArg, airport);
+    if (gameLevel === 3) return spawnBalanced(spawnArg, airport);
+    if (gameLevel === 4) return spawnBalanced(spawnArg, airport);
+    if (gameLevel === 5) return spawnBalanced(spawnArg, airport);
+    if (gameLevel === 6) return spawnBalanced(spawnArg, airport);
+    if (gameLevel === 7) return spawnBalanced(spawnArg, airport);
+    if (gameLevel === 8) return spawnBalanced(spawnArg, airport);
+    if (gameLevel === 9) return spawnBalanced(spawnArg, airport);
+    if (gameLevel === 10) return spawnMoreArrivals(spawnArg, airport);
+    if (gameLevel === 11) return spawnBalanced(spawnArg, airport);
 
     throw new Error('unknown level: ' + gameLevel);
   };
@@ -73,6 +74,7 @@ const highChance = 0.1;
 const veryHighChance = 0.5;
 const guaranteedChance = 1;
 const chanceDepartureBase = 0.4;
+const chanceDepartureHigh = chanceDepartureBase / 10;
 
 /**
  * @param {LevelArg} arg
@@ -117,9 +119,11 @@ export const spawnArrivalsOnly = (arg, airport) => {
 /**
  * @param {LevelArg} arg
  * @param {Airport} airport
+ * @param {Number} chanceDeparture
+ * @param {Number} time flight timer in seconds
  * @returns none
  */
-export const spawnLevel1 = (arg, airport) => {
+export const spawnBalancedCommon = (arg, airport, chanceDeparture, time) => {
   const { entityManagerArr, goals, score, getChanceFn, aircraftFn } = arg;
   const count = entityManagerArr.filter(isAircraft).length;
   const departureCount = getDepartureCount(entityManagerArr);
@@ -132,7 +136,7 @@ export const spawnLevel1 = (arg, airport) => {
     score
   );
   const lowCount = 4;
-  const flightObj = { time: 18 * 60 };
+  const flightObj = { time };
 
   if (areAllSpawned) return;
 
@@ -167,7 +171,29 @@ export const spawnLevel1 = (arg, airport) => {
   }
 
   // not a lowCount && both Arrivals + Departures remaining
-  aircraftFn(getChanceFn(chance), chanceDepartureBase, flightObj, airport);
+  aircraftFn(getChanceFn(chance), chanceDeparture, flightObj, airport);
+};
+
+/**
+ * @param {LevelArg} arg
+ * @param {Airport} airport
+ * @returns none
+ */
+export const spawnBalanced = (arg, airport) => {
+  const chanceDeparture = chanceDepartureBase;
+  const time = 18 * 60;
+  spawnBalancedCommon(arg, airport, chanceDeparture, time);
+};
+
+/**
+ * @param {LevelArg} arg
+ * @param {Airport} airport
+ * @returns none
+ */
+export const spawnMoreArrivals = (arg, airport) => {
+  const chanceDeparture = chanceDepartureHigh;
+  const time = 20 * 60;
+  spawnBalancedCommon(arg, airport, chanceDeparture, time);
 };
 
 ////////////////////////////////////////////////////////////////////////

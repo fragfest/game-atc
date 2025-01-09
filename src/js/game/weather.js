@@ -103,18 +103,69 @@ export const getWeatherLevelByGameLevel = (gameLevel) => {
     if (gameLevel === 4) return level4(weatherArgs);
     if (gameLevel === 5) return level5(weatherArgs);
     if (gameLevel === 6) return level6(weatherArgs);
-    // TODO create more weather levels
-    if (gameLevel === 7) return level1(weatherArgs);
-    if (gameLevel === 8) return level1(weatherArgs);
-    if (gameLevel === 9) return level1(weatherArgs);
-    if (gameLevel === 10) return level1(weatherArgs);
+    if (gameLevel === 7) return level7(weatherArgs);
+    if (gameLevel === 8) return level8(weatherArgs);
+    if (gameLevel === 9) {
+      level1(weatherArgs);
+      turbulenceLight1(weatherArgs);
+      return;
+    }
+    if (gameLevel === 10) return level2(weatherArgs);
+    if (gameLevel === 11) {
+      level3(weatherArgs);
+      turbulenceHeavy1(weatherArgs);
+      return;
+    }
 
     throw new Error('unknown level: ' + gameLevel);
   };
   return weatherFn;
 };
 
+// TODO additional turbulent levels: 9, 11
 export const getTurbulenceLevels = () => [5, 6];
+
+////////////////////////////////////////////////////////////////////////
+// PRIVATE
+////////////////////////////////////////////////////////////////////////
+
+const turbulenceHeavy1 = (weatherArgs) => {
+  const { width, height } = weatherArgs;
+  const rainLargeLeft = addTurbulence(weatherArgs, createLargeRain2, driftESE);
+  rainLargeLeft({
+    x: 0 * width,
+    y: 0.1 * height,
+    radius: width / 12,
+  });
+  const rainSmallLeft = addTurbulence(weatherArgs, createLargeRain1, driftESE);
+  rainSmallLeft({
+    x: -0.05 * width,
+    y: 0.25 * height,
+    radius: width / 12,
+  });
+  const rainMidLeft = addTurbulence(weatherArgs, createLargeRain1, hover);
+  rainMidLeft({
+    x: 0.42 * width,
+    y: 0.42 * height,
+    radius: width / 9,
+  });
+};
+
+const turbulenceLight1 = (weatherArgs) => {
+  const { width, height } = weatherArgs;
+  const rainMiddleLarge = addTurbulence(weatherArgs, createLargeRain1, hover);
+  rainMiddleLarge({
+    x: 0.3 * width,
+    y: 0.45 * height,
+    radius: width / 12,
+  });
+  const rainMiddleSmall = addTurbulence(weatherArgs, createLargeRain1, hover);
+  rainMiddleSmall({
+    x: 0.4 * width,
+    y: 0.4 * height,
+    radius: width / 12,
+  });
+};
 
 const level1 = (weatherArgs) => {
   const { width, height } = weatherArgs;
@@ -290,6 +341,54 @@ const level6 = (weatherArgs) => {
   cloud5({ x: 0.15 * width, y: 0.05 * height, radius: width / 15 });
   cloud6({ x: 0.22 * width, y: 0.021 * height, radius: width / 15 });
   cloud7({ x: 0.75 * width, y: 0.8 * height, radius: width / 18 });
+};
+
+const level7 = (args) => {
+  const { width, height } = args;
+  const create = createOneSmallCloud;
+
+  const cloud1 = addInert(args, createTwoSmallClouds, driftENE);
+  const cloud2 = addInert(args, create(CloudType.LightHazeOne), driftENE);
+  const cloud3 = addInert(args, create(CloudType.LightHazeTwo), hover);
+  const cloud4 = addInert(args, create(CloudType.LargeHaze), hover);
+  const cloud5 = addInert(args, create(CloudType.MediumHaze), hover);
+  const cloud6 = addInert(args, create(CloudType.LargeHaze), hover);
+  const cloud7 = addInert(args, create(CloudType.LightHazeOne), hover);
+  const cloud8 = addInert(args, create(CloudType.LightHazeTwo), hover);
+
+  cloud1({ x: 0.25 * width, y: 0.43 * height, radius: width / 14 });
+  cloud2({ x: 0.08 * width, y: 0.4 * height, radius: width / 8 });
+  cloud3({ x: -0.1 * width, y: 0.1 * height, radius: width / 14 });
+  cloud4({ x: -0.17 * width, y: 0.7 * height, radius: width / 10 });
+  cloud5({ x: 0.63 * width, y: 0.79 * height, radius: width / 14 });
+  cloud6({ x: 0.57 * width, y: 0.83 * height, radius: width / 14 });
+  cloud7({ x: 0.3 * width, y: 0.75 * height, radius: width / 16 });
+  cloud8({ x: 0.85 * width, y: 0.3 * height, radius: width / 22 });
+};
+
+const level8 = (args) => {
+  const { width, height } = args;
+  const create = createOneSmallCloud;
+
+  const cloud1 = addInert(args, create(CloudType.MediumRain), driftE);
+  const cloud2 = addInert(args, create(CloudType.LightHazeOne), driftE);
+  const cloud3 = addInert(args, create(CloudType.LargeRain), hover);
+  const cloud4 = addInert(args, create(CloudType.LargeHaze), hover);
+  const cloud5 = addInert(args, create(CloudType.MediumRain), hover);
+  const cloud6 = addInert(args, create(CloudType.MediumRain), hover);
+  const cloud7 = addInert(args, create(CloudType.LightHazeTwo), hover);
+  const cloud8 = addInert(args, create(CloudType.LightHazeOne), hover);
+  const cloud9 = addInert(args, create(CloudType.LightHazeOne), hover);
+
+  cloud1({ x: -0.05 * width, y: 0.43 * height, radius: width / 14 });
+  cloud2({ x: -0.08 * width, y: 0.4 * height, radius: width / 8 });
+  cloud3({ x: 0.4 * width, y: 0.3 * height, radius: width / 14 });
+  cloud4({ x: 0.3 * width, y: 0.28 * height, radius: width / 10 });
+  cloud5({ x: 0.8 * width, y: 0.5 * height, radius: width / 14 });
+  cloud6({ x: 0.75 * width, y: 0.55 * height, radius: width / 14 });
+  cloud7({ x: 0.7 * width, y: 0.9 * height, radius: width / 16 });
+  cloud8({ x: 0.29 * width, y: 0.39 * height, radius: width / 16 });
+  cloud9({ x: 0.35 * width, y: 0.25 * height, radius: width / 16 });
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -505,6 +604,14 @@ const createLargeRain1 = (ctx, div, x, y, width) => {
 // eslint-disable-next-line
 const hover = (width, height) => (x, y) => ({ x: 0, y: 0 });
 
+const driftENE = (width, height) => (x, y) => {
+  if (x > width + 100 || x < -100 || y > height + 100 || y < -100) {
+    return { x: 0, y: 0 };
+  }
+  if (getScreenSize() === ScreenSizes.Large) return { x: 0.01, y: -0.005 };
+  if (getScreenSize() === ScreenSizes.Small) return { x: 0.007, y: -0.0035 };
+};
+
 const driftESE = (width, height) => (x, y) => {
   if (x > width + 100 || x < -100 || y > height + 100 || y < -100) {
     return { x: 0, y: 0 };
@@ -544,7 +651,6 @@ const addCloud = (div, x, y, height, cloudType) => {
   if (cloudType === CloudType.LargeScattered) {
     src = 'cloud-eight.png';
     height = 1.6 * height;
-    filter = '';
     opacity = 0.8;
   }
   if (cloudType === CloudType.LightHazeOne) {

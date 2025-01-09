@@ -132,44 +132,92 @@ export const getIntro = (gameLevel) => {
 
     if (gameLevel === 8) {
       return {
-        displayTimeMs: 20000,
+        displayTimeMs: 16000,
         width: 0.72,
         levelNum: gameLevel,
-        airportHeading: `Tokyo Haneda (HND)`,
-        airportSubheading: `South Wind Operations - quiet day, weather: clear`,
-        text1: `Welcome to Tokyo,&nbsp;<b>Controller</b>! We have a quiet shift for you to get accustomed to new flight operations.`,
+        airportHeading: `New York International (JFK)`,
+        airportSubheading: `Southbound Operations - weather: clear`,
+        text1: `A typical busy day at JFK, at least the weather forecast is clear.`,
       };
     }
 
+    // TODO introduce emergency here
     if (gameLevel === 9) {
       return {
-        displayTimeMs: 20000,
+        displayTimeMs: 16000,
         width: 0.72,
         levelNum: gameLevel,
-        airportHeading: `Amsterdam Schiphol (AMS)`,
-        airportSubheading: `South Wind Operations - quiet day, weather: clear`,
-        text1: `Welcome to Amsterdam,&nbsp;<b>Controller</b>! We have a quiet shift for you to get accustomed to new flight operations.`,
+        airportHeading: `New York International (JFK)`,
+        airportSubheading: `Southbound Operations - weather: moderate`,
+        text1: `Moderate weather has moved into the area. traffic will be reasonable as long as nothing unexpected happens.`,
       };
     }
 
     if (gameLevel === 10) {
-      // return {
-      //   displayTimeMs: 1000,
-      //   width: 0.72,
-      //   levelNum: gameLevel,
-      //   airportHeading: ``,
-      //   airportSubheading: ``,
-      //   text1: ``,
-      // };
       return {
-        displayTimeMs: 20000,
+        displayTimeMs: 16000,
         width: 0.72,
         levelNum: gameLevel,
-        airportHeading: `Vancouver International (YVR)`,
-        airportSubheading: `West Wind Operations - quiet day, weather: clear`,
-        text1: `Welcome to Vancouver,&nbsp;<b>Controller</b>! We have a quiet shift for you to get accustomed to new flight operations.`,
+        airportHeading: `New York International (JFK)`,
+        airportSubheading: `Southbound Operations - weather: clear`,
+        text1: `Delays at other airports have resulted in an incoming traffic spike. We trust in your abilities to manage the mayhem, good luck <b>Controller</b>.`,
       };
     }
+
+    if (gameLevel === 11) {
+      return {
+        displayTimeMs: 16000,
+        width: 0.72,
+        levelNum: gameLevel,
+        airportHeading: `New York International (JFK)`,
+        airportSubheading: `Southbound Operations - weather: heavy`,
+        text1: `A large weather system is present. Keeping pilots and passengers happy will be tricky`,
+      };
+    }
+
+    // TODO remove below
+
+    // return {
+    //   displayTimeMs: 1000,
+    //   width: 0.72,
+    //   levelNum: gameLevel,
+    //   airportHeading: ``,
+    //   airportSubheading: ``,
+    //   text1: ``,
+    // };
+
+    // if (gameLevel === 8) {
+    //   return {
+    //     displayTimeMs: 20000,
+    //     width: 0.72,
+    //     levelNum: gameLevel,
+    //     airportHeading: `Tokyo Haneda (HND)`,
+    //     airportSubheading: `South Wind Operations - quiet day, weather: clear`,
+    //     text1: `Welcome to Tokyo,&nbsp;<b>Controller</b>! We have a quiet shift for you to get accustomed to new flight operations.`,
+    //   };
+    // }
+
+    // if (gameLevel === 9) {
+    //   return {
+    //     displayTimeMs: 20000,
+    //     width: 0.72,
+    //     levelNum: gameLevel,
+    //     airportHeading: `Amsterdam Schiphol (AMS)`,
+    //     airportSubheading: `South Wind Operations - quiet day, weather: clear`,
+    //     text1: `Welcome to Amsterdam,&nbsp;<b>Controller</b>! We have a quiet shift for you to get accustomed to new flight operations.`,
+    //   };
+    // }
+
+    // if (gameLevel === 10) {
+    //   return {
+    //     displayTimeMs: 20000,
+    //     width: 0.72,
+    //     levelNum: gameLevel,
+    //     airportHeading: `Vancouver International (YVR)`,
+    //     airportSubheading: `West Wind Operations - quiet day, weather: clear`,
+    //     text1: `Welcome to Vancouver,&nbsp;<b>Controller</b>! We have a quiet shift for you to get accustomed to new flight operations.`,
+    //   };
+    // }
 
     throw new Error('unknown level: ' + gameLevel);
   };
