@@ -117,6 +117,7 @@ export const getGoalsByLevel = () => {
         Delayed: 4,
       };
     }
+
     if (gameLevel === 1) {
       return {
         Arrivals: 0,
@@ -127,6 +128,7 @@ export const getGoalsByLevel = () => {
         Delayed: 6,
       };
     }
+
     if (gameLevel === 2) {
       return {
         Arrivals: 8,
@@ -137,6 +139,7 @@ export const getGoalsByLevel = () => {
         Delayed: 6,
       };
     }
+
     if (gameLevel === 3) {
       return {
         Arrivals: 8,
@@ -147,6 +150,7 @@ export const getGoalsByLevel = () => {
         Delayed: 6,
       };
     }
+
     if (gameLevel === 4) {
       return {
         Arrivals: 12,
@@ -157,6 +161,7 @@ export const getGoalsByLevel = () => {
         Delayed: 4,
       };
     }
+
     if (gameLevel === 5) {
       return {
         Arrivals: 12,
@@ -167,6 +172,7 @@ export const getGoalsByLevel = () => {
         Delayed: 3,
       };
     }
+
     if (gameLevel === 6) {
       return {
         Arrivals: 12,
@@ -177,6 +183,7 @@ export const getGoalsByLevel = () => {
         Delayed: 3,
       };
     }
+
     if (gameLevel === 7) {
       return {
         Arrivals: 8,
@@ -187,6 +194,7 @@ export const getGoalsByLevel = () => {
         Delayed: 3,
       };
     }
+
     if (gameLevel === 8) {
       return {
         Arrivals: 12,
@@ -221,6 +229,73 @@ export const getGoalsByLevel = () => {
     }
 
     if (gameLevel === 11) {
+      return {
+        Arrivals: 12,
+        Departures: 12,
+        Failed: 2,
+        Conflict: 30,
+        SpawnRate: 1.5,
+        Delayed: 3,
+      };
+    }
+
+    if (gameLevel === 12) {
+      return {
+        Arrivals: 8,
+        Departures: 8,
+        Failed: 2,
+        Conflict: 30,
+        SpawnRate: 1,
+        Delayed: 3,
+      };
+    }
+
+    if (gameLevel === 13) {
+      return {
+        Arrivals: 12,
+        Departures: 12,
+        Failed: 2,
+        Conflict: 30,
+        SpawnRate: 2,
+        Delayed: 3,
+      };
+    }
+
+    if (gameLevel === 14) {
+      return {
+        Arrivals: 12,
+        Departures: 12,
+        Failed: 2,
+        Conflict: 30,
+        SpawnRate: 1.5,
+        Delayed: 3,
+      };
+    }
+
+    if (gameLevel === 15) {
+      return {
+        Arrivals: 14,
+        Departures: 14,
+        Failed: 2,
+        Conflict: 30,
+        SpawnRate: 1.2,
+        Delayed: 3,
+      };
+    }
+
+    if (gameLevel === 16) {
+      return {
+        Arrivals: 12,
+        Departures: 12,
+        Failed: 2,
+        Conflict: 30,
+        SpawnRate: 1.2,
+        Delayed: 3,
+      };
+    }
+
+    // TODO
+    if (gameLevel === 17) {
       return {
         Arrivals: 12,
         Departures: 12,

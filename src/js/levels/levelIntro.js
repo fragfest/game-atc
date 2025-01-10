@@ -125,7 +125,7 @@ export const getIntro = (gameLevel) => {
         width: 0.72,
         levelNum: gameLevel,
         airportHeading: `New York International (JFK)`,
-        airportSubheading: `Southbound Operations - quiet day, weather: clear`,
+        airportSubheading: `Southbound Operations - weather: clear`,
         text1: `Welcome to New York,&nbsp;<b>Controller</b>! We have a quiet shift for you to get accustomed to new flight operations.`,
       };
     }
@@ -175,6 +175,62 @@ export const getIntro = (gameLevel) => {
       };
     }
 
+    if (gameLevel === 12) {
+      return {
+        displayTimeMs: 20000,
+        width: 0.72,
+        levelNum: gameLevel,
+        airportHeading: `Tokyo Haneda (HND)`,
+        airportSubheading: `South Wind Operations - weather: clear`,
+        text1: `Welcome to Tokyo,&nbsp;<b>Controller</b>! We have a quiet shift for you to get accustomed to new flight operations.`,
+      };
+    }
+
+    if (gameLevel === 13) {
+      return {
+        displayTimeMs: 16000,
+        width: 0.72,
+        levelNum: gameLevel,
+        airportHeading: `Tokyo Haneda (HND)`,
+        airportSubheading: `South Wind Operations - weather: clear`,
+        text1: `Let's keep those runways busy and our customers happy.`,
+      };
+    }
+
+    if (gameLevel === 14) {
+      return {
+        displayTimeMs: 16000,
+        width: 0.72,
+        levelNum: gameLevel,
+        airportHeading: `Tokyo Haneda (HND)`,
+        airportSubheading: `South Wind Operations - weather: moderate`,
+        text1: `Some scattered weather. Avoid turbulence so we can give our customers a smooth ride.`,
+      };
+    }
+
+    // TODO cause emergency here
+    if (gameLevel === 15) {
+      return {
+        displayTimeMs: 16000,
+        width: 0.72,
+        levelNum: gameLevel,
+        airportHeading: `Tokyo Haneda (HND)`,
+        airportSubheading: `South Wind Operations - weather: moderate`,
+        text1: `An unremarkable day orchestrating a typical sky over the Greater Tokyo Area.`,
+      };
+    }
+
+    if (gameLevel === 16) {
+      return {
+        displayTimeMs: 16000,
+        width: 0.72,
+        levelNum: gameLevel,
+        airportHeading: `Tokyo Haneda (HND)`,
+        airportSubheading: `South Wind Operations - weather: severe`,
+        text1: `We have lingering turbulent weather from the last typhoon. If possible, navigate around all the remaining pockets of weather`,
+      };
+    }
+
     // TODO remove below
 
     // return {
@@ -185,17 +241,6 @@ export const getIntro = (gameLevel) => {
     //   airportSubheading: ``,
     //   text1: ``,
     // };
-
-    // if (gameLevel === 8) {
-    //   return {
-    //     displayTimeMs: 20000,
-    //     width: 0.72,
-    //     levelNum: gameLevel,
-    //     airportHeading: `Tokyo Haneda (HND)`,
-    //     airportSubheading: `South Wind Operations - quiet day, weather: clear`,
-    //     text1: `Welcome to Tokyo,&nbsp;<b>Controller</b>! We have a quiet shift for you to get accustomed to new flight operations.`,
-    //   };
-    // }
 
     // if (gameLevel === 9) {
     //   return {
