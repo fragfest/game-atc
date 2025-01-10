@@ -267,21 +267,24 @@ export const getIntro = (gameLevel) => {
     // TODO cause emergency here
     if (gameLevel === 20) {
       return {
-        displayTimeMs: 1000,
+        displayTimeMs: 16000,
         width: 0.72,
         levelNum: gameLevel,
-        airportHeading: ``,
-        airportSubheading: ``,
-        text1: ``,
+        airportHeading: `Amsterdam Schiphol (AMS)`,
+        airportSubheading: `Southbound Operations - weather: minor`,
+        text1: `Just need to avoid a small weather cell moving through the area.`,
       };
-      // return {
-      //   displayTimeMs: 16000,
-      //   width: 0.72,
-      //   levelNum: gameLevel,
-      //   airportHeading: `Amsterdam Schiphol (AMS)`,
-      //   airportSubheading: `Southbound Operations - weather: minor`,
-      //   text1: `Just need to avoid a small weather cell moving through the area.`,
-      // };
+    }
+
+    if (gameLevel === 21) {
+      return {
+        displayTimeMs: 16000,
+        width: 0.72,
+        levelNum: gameLevel,
+        airportHeading: `Amsterdam Schiphol (AMS)`,
+        airportSubheading: `Southbound Operations - weather: clear`,
+        text1: `With your magic touch, <b>Controller</b>, we hope to improve our on-time percentage and keep our demanding customers satisfied.`,
+      };
     }
 
     // TODO remove below
@@ -294,6 +297,8 @@ export const getIntro = (gameLevel) => {
     //   airportSubheading: ``,
     //   text1: ``,
     // };
+
+    // Just another day taming the maelstrom
 
     // if (gameLevel === 10) {
     //   return {

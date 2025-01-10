@@ -153,6 +153,9 @@ export const getWeatherLevelByGameLevel = (gameLevel) => {
       turbulenceVeryLight1(weatherArgs);
       return;
     }
+    if (gameLevel === 21) return level5(weatherArgs);
+
+    // YVR
 
     throw new Error('unknown level: ' + gameLevel);
   };
@@ -323,7 +326,7 @@ const turbulenceVeryLight1 = (weatherArgs) => {
   rainOnDeparture({
     x: 0.35 * width,
     y: 0.65 * height,
-    radius: width / 14,
+    radius: width / 16,
   });
 };
 

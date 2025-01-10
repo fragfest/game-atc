@@ -51,26 +51,32 @@ export const callAircraftFnByLevel = (arg) => {
 export const getSpawnByGameLevel = (gameLevel) => {
   const spawnFn = (spawnArg) => {
     const airport = getAirportByLevel(gameLevel);
+    // LHR
     if (gameLevel === 1) return spawnDeparturesOnly(spawnArg, airport);
     if (gameLevel === 2) return spawnArrivalsOnly(spawnArg, airport);
     if (gameLevel === 3) return spawnBalanced(spawnArg, airport);
     if (gameLevel === 4) return spawnBalanced(spawnArg, airport);
     if (gameLevel === 5) return spawnBalanced(spawnArg, airport);
     if (gameLevel === 6) return spawnBalanced(spawnArg, airport);
+    // JFK
     if (gameLevel === 7) return spawnBalanced(spawnArg, airport);
     if (gameLevel === 8) return spawnBalanced(spawnArg, airport);
     if (gameLevel === 9) return spawnBalanced(spawnArg, airport);
     if (gameLevel === 10) return spawnMoreArrivals(spawnArg, airport);
     if (gameLevel === 11) return spawnBalanced(spawnArg, airport);
+    // HND
     if (gameLevel === 12) return spawnBalanced(spawnArg, airport);
     if (gameLevel === 13) return spawnBalanced(spawnArg, airport);
     if (gameLevel === 14) return spawnBalanced(spawnArg, airport);
     if (gameLevel === 15) return spawnBalanced(spawnArg, airport);
     if (gameLevel === 16) return spawnBalanced(spawnArg, airport);
+    // AMS
     if (gameLevel === 17) return spawnBalanced(spawnArg, airport);
     if (gameLevel === 18) return spawnBalanced(spawnArg, airport);
     if (gameLevel === 19) return spawnMoreArrivals(spawnArg, airport);
     if (gameLevel === 20) return spawnBalanced(spawnArg, airport);
+    if (gameLevel === 21) return spawnBalanced(spawnArg, airport);
+    // YVR
 
     throw new Error('unknown level: ' + gameLevel);
   };
