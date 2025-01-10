@@ -97,6 +97,7 @@ export const getWeatherLevelByGameLevel = (gameLevel) => {
       entityManagerArr,
     };
 
+    // LHR
     if (gameLevel === 1) return level1(weatherArgs);
     if (gameLevel === 2) return level2(weatherArgs);
     if (gameLevel === 3) return level3(weatherArgs);
@@ -111,6 +112,7 @@ export const getWeatherLevelByGameLevel = (gameLevel) => {
       turbulenceHeavy1;
     }
 
+    // JFK
     if (gameLevel === 7) return level7(weatherArgs);
     if (gameLevel === 8) return level8(weatherArgs);
     if (gameLevel === 9) {
@@ -125,6 +127,7 @@ export const getWeatherLevelByGameLevel = (gameLevel) => {
       return;
     }
 
+    // HND
     if (gameLevel === 12) return level4(weatherArgs);
     if (gameLevel === 13) return level5(weatherArgs);
     if (gameLevel === 14) {
@@ -139,12 +142,22 @@ export const getWeatherLevelByGameLevel = (gameLevel) => {
       return;
     }
 
+    // AMS
+    if (gameLevel === 17) return level8(weatherArgs);
+    if (gameLevel === 18) return level1(weatherArgs);
+    if (gameLevel === 19) return level3(weatherArgs);
+    if (gameLevel === 20) {
+      level4(weatherArgs);
+      turbulenceVeryLight1(weatherArgs);
+      return;
+    }
+
     throw new Error('unknown level: ' + gameLevel);
   };
   return weatherFn;
 };
 
-// TODO additional turbulent levels: 9, 11, 14, 16
+// TODO additional turbulent levels: 9, 11, 14, 16, 20
 export const getTurbulenceLevels = () => [5, 6];
 
 ////////////////////////////////////////////////////////////////////////
@@ -295,6 +308,20 @@ const turbulenceLight1 = (weatherArgs) => {
     x: 0.5 * width,
     y: 0.3 * height,
     radius: width / 16,
+  });
+};
+
+const turbulenceVeryLight1 = (weatherArgs) => {
+  const { width, height } = weatherArgs;
+  const rainOnDeparture = addTurbulence(
+    weatherArgs,
+    createLargeRain1,
+    driftENE
+  );
+  rainOnDeparture({
+    x: 0.35 * width,
+    y: 0.65 * height,
+    radius: width / 14,
   });
 };
 
@@ -768,7 +795,7 @@ const addCloud = (div, x, y, height, cloudType) => {
   }
   if (cloudType === CloudType.LargeRain) {
     src = 'cloud-five.png';
-    filter = 'brightness(0.8)';
+    filter = 'blur(3px) brightness(0.8)';
     opacity = 0.8;
   }
   if (cloudType === CloudType.ExtraLargeRain) {

@@ -231,6 +231,59 @@ export const getIntro = (gameLevel) => {
       };
     }
 
+    if (gameLevel === 17) {
+      return {
+        displayTimeMs: 20000,
+        width: 0.72,
+        levelNum: gameLevel,
+        airportHeading: `Amsterdam Schiphol (AMS)`,
+        airportSubheading: `Southbound Operations - weather: clear`,
+        text1: `Welcome to Amsterdam,&nbsp;<b>Controller</b>! We have a quiet shift for you to get accustomed to new flight operations.`,
+      };
+    }
+
+    if (gameLevel === 18) {
+      return {
+        displayTimeMs: 16000,
+        width: 0.72,
+        levelNum: gameLevel,
+        airportHeading: `Amsterdam Schiphol (AMS)`,
+        airportSubheading: `Southbound Operations - weather: clear`,
+        text1: `Let's keep those runways busy and our customers happy.`,
+      };
+    }
+
+    if (gameLevel === 19) {
+      return {
+        displayTimeMs: 16000,
+        width: 0.72,
+        levelNum: gameLevel,
+        airportHeading: `Amsterdam Schiphol (AMS)`,
+        airportSubheading: `Southbound Operations - weather: clear`,
+        text1: `Delays across Europe are leading to high numbers of arrivals. We heard you're the best don't let us down, <b>Controller</b>!`,
+      };
+    }
+
+    // TODO cause emergency here
+    if (gameLevel === 20) {
+      return {
+        displayTimeMs: 1000,
+        width: 0.72,
+        levelNum: gameLevel,
+        airportHeading: ``,
+        airportSubheading: ``,
+        text1: ``,
+      };
+      // return {
+      //   displayTimeMs: 16000,
+      //   width: 0.72,
+      //   levelNum: gameLevel,
+      //   airportHeading: `Amsterdam Schiphol (AMS)`,
+      //   airportSubheading: `Southbound Operations - weather: minor`,
+      //   text1: `Just need to avoid a small weather cell moving through the area.`,
+      // };
+    }
+
     // TODO remove below
 
     // return {
@@ -241,17 +294,6 @@ export const getIntro = (gameLevel) => {
     //   airportSubheading: ``,
     //   text1: ``,
     // };
-
-    // if (gameLevel === 9) {
-    //   return {
-    //     displayTimeMs: 20000,
-    //     width: 0.72,
-    //     levelNum: gameLevel,
-    //     airportHeading: `Amsterdam Schiphol (AMS)`,
-    //     airportSubheading: `South Wind Operations - quiet day, weather: clear`,
-    //     text1: `Welcome to Amsterdam,&nbsp;<b>Controller</b>! We have a quiet shift for you to get accustomed to new flight operations.`,
-    //   };
-    // }
 
     // if (gameLevel === 10) {
     //   return {

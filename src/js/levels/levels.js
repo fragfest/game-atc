@@ -67,6 +67,10 @@ export const getSpawnByGameLevel = (gameLevel) => {
     if (gameLevel === 14) return spawnBalanced(spawnArg, airport);
     if (gameLevel === 15) return spawnBalanced(spawnArg, airport);
     if (gameLevel === 16) return spawnBalanced(spawnArg, airport);
+    if (gameLevel === 17) return spawnBalanced(spawnArg, airport);
+    if (gameLevel === 18) return spawnBalanced(spawnArg, airport);
+    if (gameLevel === 19) return spawnMoreArrivals(spawnArg, airport);
+    if (gameLevel === 20) return spawnBalanced(spawnArg, airport);
 
     throw new Error('unknown level: ' + gameLevel);
   };
