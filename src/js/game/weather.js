@@ -1,5 +1,6 @@
 // import { getLevelObj } from '../levels/levels';
 import { getLevelObj } from '../levels/getLevel';
+import { isAirborne } from '../types';
 import { getScreenSize, ScreenSizes, isWithinDist } from '../utils';
 
 export const WeatherType = Object.freeze({
@@ -75,6 +76,7 @@ export const isInWeather = (entityObj) => (weatherEntity) => {
     y: weatherEntity?.centerXY?.y,
   };
   return (
+    isAirborne(entityObj) &&
     isTurbulence(weatherEntity) &&
     isWithinDist(weatherEntity.radius, entityObj, weatherObjXY)
   );
