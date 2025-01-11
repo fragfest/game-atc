@@ -8,7 +8,9 @@
         <div class="grid-score-buttons">
           <!-- column left -->
           <div>
-            <h3 v-if="isGameComplete">all levels completed!</h3>
+            <h2 v-if="isGameComplete" class="hdr-green">
+              all levels completed!
+            </h2>
             <h3 v-else-if="levelComplete">
               <span>level&nbsp;&nbsp;</span>
               <span class="font-mono white no-wrap">
@@ -155,10 +157,17 @@ export default {
 .gold {
   color: gold;
 }
+.hdr-green {
+  background: linear-gradient(to bottom, white 0%, limegreen 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
 
 .font-mono {
   font-family: monospace;
 }
+
 .no-wrap {
   text-wrap: nowrap;
 }

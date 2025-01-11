@@ -88,11 +88,11 @@ export const getMapEntities = () => {
 const runways = (runway, screenSize) => {
   const width = getGameSize(screenSize).width;
   const height = getGameSize(screenSize).height;
-  let runwayWidth = 4;
+  let runwayWidth = 6.2;
   let lengthLong = 55;
   let lengthShort = 44;
   if (screenSize === ScreenSizes.Small) {
-    runwayWidth = 2.2; // 2.6
+    runwayWidth = 4.6;
   }
   if (screenSize === ScreenSizes.Small) {
     lengthLong = 40;
@@ -106,7 +106,7 @@ const runways = (runway, screenSize) => {
       heading: 222,
       length: lengthShort,
       width: runwayWidth,
-      titlePosition: { x: -20, y: 0 },
+      titlePosition: { x: -9, y: -1 },
     };
   }
 

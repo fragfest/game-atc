@@ -112,6 +112,7 @@ export const getWeatherLevelByGameLevel = (gameLevel) => {
     if (gameLevel === 6) {
       level6(weatherArgs);
       turbulenceHeavy1;
+      return;
     }
 
     // JFK

@@ -81,9 +81,9 @@ export const getWaypoint = (waypoint, screenSize) => {
 const runways = (runway, screenSize) => {
   const width = getGameSize(screenSize).width;
   const height = getGameSize(screenSize).height;
-  let runwayWidth = 4;
+  let runwayWidth = 6.2;
   let length = 60;
-  if (screenSize === ScreenSizes.Small) runwayWidth = 2.6;
+  if (screenSize === ScreenSizes.Small) runwayWidth = 4.6;
   if (screenSize === ScreenSizes.Small) length = 40;
 
   if (runway === Runways.TwoSevenRight) {

@@ -86,8 +86,8 @@ export const getMapEntities = () => {
 const runways = (runway, screenSize) => {
   const width = getGameSize(screenSize).width;
   const height = getGameSize(screenSize).height;
-  let widthRunway = 4;
-  if (screenSize === ScreenSizes.Small) widthRunway = 2.8;
+  let widthRunway = 6.2;
+  if (screenSize === ScreenSizes.Small) widthRunway = 4.6;
 
   if (runway === Runways.EighteenRight) {
     return {
@@ -96,7 +96,7 @@ const runways = (runway, screenSize) => {
       heading: 183,
       length: 65,
       width: widthRunway,
-      titlePosition: { x: -32, y: 10 },
+      titlePosition: { x: -28, y: 0 },
     };
   }
 
@@ -107,7 +107,7 @@ const runways = (runway, screenSize) => {
       heading: 183,
       length: 65,
       width: widthRunway,
-      titlePosition: { x: -32, y: 14 },
+      titlePosition: { x: -28, y: 10 },
     };
   }
 
@@ -118,7 +118,7 @@ const runways = (runway, screenSize) => {
       heading: 183,
       length: 65,
       width: widthRunway,
-      titlePosition: { x: -32, y: 10 },
+      titlePosition: { x: -26, y: 4 },
     };
   }
 
@@ -129,7 +129,7 @@ const runways = (runway, screenSize) => {
       heading: 238,
       length: 65,
       width: widthRunway,
-      titlePosition: { x: -22, y: 4 },
+      titlePosition: { x: -10, y: -2 },
     };
   }
 };

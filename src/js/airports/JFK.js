@@ -89,7 +89,7 @@ const runways = (runway, screenSize) => {
 
   switch (screenSize) {
     case ScreenSizes.Large:
-      runwayWidth = 4;
+      runwayWidth = 6.2;
       // 22L
       xOffset22L = 345;
       yOffset22L = 98;
@@ -103,7 +103,7 @@ const runways = (runway, screenSize) => {
       break;
 
     case ScreenSizes.Small:
-      runwayWidth = 2.2;
+      runwayWidth = 4.6;
       // 22L
       xOffset22L = 254;
       yOffset22L = 78;

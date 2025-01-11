@@ -63,7 +63,7 @@ export default class Runway {
       );
       this.ctx.restore();
     };
-    img.src = '/img/runway.png';
+    img.src = '/img/runway.svg';
 
     this.ctx.fillStyle = 'greenyellow';
     this.ctx.font = this.isSmall ? '10px Arial' : '12px Arial';
