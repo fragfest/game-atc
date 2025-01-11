@@ -45,9 +45,9 @@ export const getAirportByLevel = (gameLevel) => {
   if (gameLevel >= 7 && gameLevel <= 11) return Airport.NewYorkJFK;
   if (gameLevel >= 12 && gameLevel <= 16) return Airport.TokyoHND;
   if (gameLevel >= 17 && gameLevel <= 21) return Airport.AmsterdamAMS;
-  // if (gameLevel === 22) return Airport.VancouverYVR;
+  if (gameLevel >= 22 && gameLevel <= 26) return Airport.VancouverYVR;
 
-  // throw new Error('unknown level: ' + gameLevel);
+  throw new Error('unknown level: ' + gameLevel);
 };
 
 export const getCityByAirport = (airport) => {

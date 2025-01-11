@@ -156,18 +156,106 @@ export const getWeatherLevelByGameLevel = (gameLevel) => {
     if (gameLevel === 21) return level5(weatherArgs);
 
     // YVR
+    if (gameLevel === 22) return level6(weatherArgs);
+    if (gameLevel === 23) return level7(weatherArgs);
+    if (gameLevel === 24) {
+      level8(weatherArgs);
+      turbulenceVeryLight2(weatherArgs);
+      return;
+    }
+    if (gameLevel === 25) {
+      level1(weatherArgs);
+      turbulenceVeryLight3(weatherArgs);
+      return;
+    }
+    if (gameLevel === 26) {
+      level3(weatherArgs);
+      turbulenceHeavy4(weatherArgs);
+      return;
+    }
 
     throw new Error('unknown level: ' + gameLevel);
   };
   return weatherFn;
 };
 
-// TODO additional turbulent levels: 9, 11, 14, 16, 20
+// TODO additional turbulent levels: 9, 11, 14, 16, 20, 24, 25, 26
 export const getTurbulenceLevels = () => [5, 6];
 
 ////////////////////////////////////////////////////////////////////////
 // PRIVATE
 ////////////////////////////////////////////////////////////////////////
+
+const turbulenceHeavy4 = (weatherArgs) => {
+  const { width, height } = weatherArgs;
+
+  const leftNorth = addTurbulence(weatherArgs, createLargeRain1, hover);
+  leftNorth({
+    x: 0.22 * width,
+    y: -0.05 * height,
+    radius: width / 12,
+  });
+  const leftMiddle1 = addTurbulence(weatherArgs, createLargeRain2, hover);
+  leftMiddle1({
+    x: 0.15 * width,
+    y: 0.22 * height,
+    radius: width / 12,
+  });
+  const leftSmall1 = addTurbulence(weatherArgs, createLargeRain1, hover);
+  leftSmall1({
+    x: 0.1 * width,
+    y: 0.45 * height,
+    radius: width / 22,
+  });
+  const leftSmall2 = addTurbulence(weatherArgs, createLargeRain2, hover);
+  leftSmall2({
+    x: 0.1 * width,
+    y: 0.7 * height,
+    radius: width / 22,
+  });
+  const leftSmall3 = addTurbulence(weatherArgs, createLargeRain1, hover);
+  leftSmall3({
+    x: 0.3 * width,
+    y: 0.65 * height,
+    radius: width / 22,
+  });
+  const leftSmall4 = addTurbulence(weatherArgs, createLargeRain2, hover);
+  leftSmall4({
+    x: 0.45 * width,
+    y: 0.85 * height,
+    radius: width / 20,
+  });
+  const centre1 = addTurbulence(weatherArgs, createLargeRain1, hover);
+  centre1({
+    x: 0.58 * width,
+    y: 0.36 * height,
+    radius: width / 14,
+  });
+  const centre2 = addTurbulence(weatherArgs, createLargeRain2, hover);
+  centre2({
+    x: 0.45 * width,
+    y: 0.25 * height,
+    radius: width / 18,
+  });
+  const centre3 = addTurbulence(weatherArgs, createLargeRain1, hover);
+  centre3({
+    x: 0.71 * width,
+    y: 0.37 * height,
+    radius: width / 18,
+  });
+  const rightSmall1 = addTurbulence(weatherArgs, createLargeRain1, hover);
+  rightSmall1({
+    x: 0.9 * width,
+    y: 0.25 * height,
+    radius: width / 22,
+  });
+  const rightSmall2 = addTurbulence(weatherArgs, createLargeRain2, hover);
+  rightSmall2({
+    x: 0.85 * width,
+    y: 0.45 * height,
+    radius: width / 24,
+  });
+};
 
 const turbulenceHeavy3 = (weatherArgs) => {
   const { width, height } = weatherArgs;
@@ -312,6 +400,26 @@ const turbulenceLight1 = (weatherArgs) => {
   rainDriftOnApproach({
     x: 0.5 * width,
     y: 0.3 * height,
+    radius: width / 16,
+  });
+};
+
+const turbulenceVeryLight3 = (weatherArgs) => {
+  const { width, height } = weatherArgs;
+  const rainOnDeparture = addTurbulence(weatherArgs, createLargeRain1, hover);
+  rainOnDeparture({
+    x: 0.85 * width,
+    y: 0.4 * height,
+    radius: width / 14,
+  });
+};
+
+const turbulenceVeryLight2 = (weatherArgs) => {
+  const { width, height } = weatherArgs;
+  const rainOnDeparture = addTurbulence(weatherArgs, createLargeRain2, driftE);
+  rainOnDeparture({
+    x: 0.15 * width,
+    y: 0.65 * height,
     radius: width / 16,
   });
 };

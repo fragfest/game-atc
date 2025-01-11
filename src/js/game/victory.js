@@ -107,6 +107,7 @@ const Goals = {
  */
 export const getGoalsByLevel = () => {
   return (gameLevel) => {
+    // LHR
     if (gameLevel === 0) {
       return {
         Arrivals: 1,
@@ -184,6 +185,7 @@ export const getGoalsByLevel = () => {
       };
     }
 
+    // JFK
     if (gameLevel === 7) {
       return {
         Arrivals: 8,
@@ -239,6 +241,7 @@ export const getGoalsByLevel = () => {
       };
     }
 
+    // HND
     if (gameLevel === 12) {
       return {
         Arrivals: 8,
@@ -294,6 +297,7 @@ export const getGoalsByLevel = () => {
       };
     }
 
+    // AMS
     if (gameLevel === 17) {
       return {
         Arrivals: 8,
@@ -349,14 +353,58 @@ export const getGoalsByLevel = () => {
       };
     }
 
-    // TODO
+    // YVR
     if (gameLevel === 22) {
+      return {
+        Arrivals: 8,
+        Departures: 8,
+        Failed: 2,
+        Conflict: 30,
+        SpawnRate: 1,
+        Delayed: 2,
+      };
+    }
+
+    if (gameLevel === 23) {
       return {
         Arrivals: 12,
         Departures: 12,
         Failed: 2,
         Conflict: 30,
-        SpawnRate: 2,
+        SpawnRate: 1.5,
+        Delayed: 2,
+      };
+    }
+
+    if (gameLevel === 24) {
+      return {
+        Arrivals: 14,
+        Departures: 14,
+        Failed: 2,
+        Conflict: 30,
+        SpawnRate: 1.5,
+        Delayed: 2,
+      };
+    }
+
+    if (gameLevel === 25) {
+      return {
+        Arrivals: 14,
+        Departures: 8,
+        Failed: 2,
+        Conflict: 30,
+        SpawnRate: 1.5,
+        Delayed: 2,
+      };
+    }
+
+    if (gameLevel === 26) {
+      return {
+        Arrivals: 14,
+        Departures: 14,
+        Failed: 2,
+        Conflict: 30,
+        SpawnRate: 1.2,
         Delayed: 2,
       };
     }

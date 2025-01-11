@@ -287,7 +287,61 @@ export const getIntro = (gameLevel) => {
       };
     }
 
-    // TODO remove below
+    if (gameLevel === 22) {
+      return {
+        displayTimeMs: 20000,
+        width: 0.72,
+        levelNum: gameLevel,
+        airportHeading: `Vancouver International (YVR)`,
+        airportSubheading: `West Wind Operations - weather: clear`,
+        text1: `Welcome to Vancouver,&nbsp;<b>Controller</b>! We have a quiet shift for you to get accustomed to new flight operations.`,
+      };
+    }
+
+    if (gameLevel === 23) {
+      return {
+        displayTimeMs: 16000,
+        width: 0.72,
+        levelNum: gameLevel,
+        airportHeading: `Vancouver International (YVR)`,
+        airportSubheading: `West Wind Operations - weather: clear`,
+        text1: `Busy runways with short delays help keep our paying airline and passenger customers content.`,
+      };
+    }
+
+    if (gameLevel === 24) {
+      return {
+        displayTimeMs: 16000,
+        width: 0.72,
+        levelNum: gameLevel,
+        airportHeading: `Vancouver International (YVR)`,
+        airportSubheading: `West Wind Operations - weather: minor`,
+        text1: `Only some light rain is moving through the area.`,
+      };
+    }
+
+    // TODO cross-pacific fuel emergency
+    if (gameLevel === 25) {
+      return {
+        displayTimeMs: 16000,
+        width: 0.72,
+        levelNum: gameLevel,
+        airportHeading: `Vancouver International (YVR)`,
+        airportSubheading: `West Wind Operations - weather: minor`,
+        text1: `Lots of traffic including cross-pacific long-haul flights`,
+      };
+    }
+
+    if (gameLevel === 26) {
+      return {
+        displayTimeMs: 16000,
+        width: 0.72,
+        levelNum: gameLevel,
+        airportHeading: `Vancouver International (YVR)`,
+        airportSubheading: `West Wind Operations - weather: severe`,
+        text1: `Typical rainy day in the pacific northwest. We have to contend with many scattered storm cells.`,
+      };
+    }
 
     // return {
     //   displayTimeMs: 1000,
@@ -298,18 +352,8 @@ export const getIntro = (gameLevel) => {
     //   text1: ``,
     // };
 
-    // Just another day taming the maelstrom
-
-    // if (gameLevel === 10) {
-    //   return {
-    //     displayTimeMs: 20000,
-    //     width: 0.72,
-    //     levelNum: gameLevel,
-    //     airportHeading: `Vancouver International (YVR)`,
-    //     airportSubheading: `West Wind Operations - quiet day, weather: clear`,
-    //     text1: `Welcome to Vancouver,&nbsp;<b>Controller</b>! We have a quiet shift for you to get accustomed to new flight operations.`,
-    //   };
-    // }
+    // Phrase ideas ////////////////////////////////////////////////
+    // Another day taming the maelstrom
 
     throw new Error('unknown level: ' + gameLevel);
   };
