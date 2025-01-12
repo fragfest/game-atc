@@ -112,7 +112,7 @@
         </b>
         {{ plane.airline }}
       </p>
-      <div class="img-profile">
+      <div class="img-profile" :style="imgProfileStyle">
         <img :src="airframe.images.profile" />
       </div>
     </div>
@@ -121,7 +121,7 @@
 
 <script>
 import { DestinationType } from '../../js/types';
-import { getClassSize, getScreenSize } from '../../js/utils';
+import { getClassSize, getScreenSize, ScreenSizes } from '../../js/utils';
 import { getAirframe, getPerformance } from '../../js/aircraft/airframe';
 import ProgressSliceEmpty from '../common/ProgressSliceEmpty';
 import ProgressSliceFull from '../common/ProgressSliceFull';
@@ -190,6 +190,23 @@ export default {
       const plane = this.plane;
       if (!plane) return {};
       return getPerformance(plane.airframe);
+    },
+
+    imgProfileStyle: function () {
+      const plane = this.plane;
+      if (!plane) return {};
+      const isSmall = this.screenSize === ScreenSizes.Small ? true : false;
+
+      const bottom = this.airframe.images.padding.bottom;
+      const left = this.airframe.images.padding?.left;
+      const paddingBottom = isSmall ? 0.1 * bottom : bottom;
+      const paddingLeft = isSmall ? 6 : left;
+      const width = isSmall ? '80%' : 'auto';
+      return {
+        width,
+        'padding-left': paddingLeft + 'px',
+        'padding-bottom': paddingBottom + 'px',
+      };
     },
 
     empty0: function () {
@@ -311,6 +328,7 @@ export default {
 // END info-panel small //////////////////
 
 .info-panel {
+  position: relative;
   min-height: 400px;
   padding: 4px 10px;
 
@@ -347,8 +365,10 @@ export default {
 }
 
 .info-panel .img-profile {
+  position: absolute;
+  bottom: 0;
   img {
-    max-width: 100%;
+    width: 100%;
   }
 }
 
