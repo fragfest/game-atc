@@ -27,8 +27,9 @@ export const setup = () => {
  * @param {scoreCB} cb
  */
 export const subscribeVictory = (victoryEvent, cb) => {
-  if (!VictoryEvents[victoryEvent])
+  if (!VictoryEvents[victoryEvent]) {
     throw new Error('unknown victory event: ' + victoryEvent);
+  }
   document.addEventListener(victoryEvent, () => cb());
 };
 

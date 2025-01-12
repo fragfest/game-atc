@@ -4,6 +4,7 @@ Bugs:
 Wishlist:
   ☐ Consider another victory goal based on Flight Quality 
   ☐ More badges
+  ☐ More airports & levels (+5)
   ☐ Custom play level
   ☐ difficulty setting that changes delay timers
   ☐ HomePage show score breakdown perhaps with icons
@@ -20,6 +21,7 @@ Wishlist:
   ☐ 3 miles horizontal for every 1000ft vertical descent
   ☐ Flights have defined arrival sections, departure waypoints
   ☐ Touchdown sound (tyre screech)
+
 ATCv0.1.3:
   Bugs:
     ✔ AMS level runway 18R does not trigger landing west of centre line @started(25-01-06 17:09) @done(25-01-08 02:34) @lasted(1d9h25m33s)
@@ -42,11 +44,9 @@ ATCv0.1.3:
     ✔ Level intro prompt: airport name, scenario description @started(24-12-09 15:27) @done(24-12-09 20:17) @lasted(4h50m45s)
     ✔ More airports (+5) @started(24-12-12 22:02) @done(25-01-03 06:55) @lasted(3w8h53m11s)
     ✔ More levels @started(25-01-08 14:37) @done(25-01-10 21:31) @lasted(2d6h54m50s)
-    ☐ Loading/Splash screen (i.e. while assets download)
+    ☐ Anti-cheat @started(25-01-12 16:45)
     ☐ Online Leaderboard 
-    ☐ Anti-cheat
     ☐ Google Analytics
-    ☐ More airports & levels (+5)
     
   Minor:
     ✔ More flights/airframes @started(24-07-23 22:44) @done(24-07-23 23:40) @lasted(56m29s)
