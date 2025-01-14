@@ -57,6 +57,20 @@
       <div></div>
     </section>
 
+    <div class="attribution">
+      <div class="attribution-list">
+        <a href="https://www.freepik.com" title="freepik" target="_blank">
+          location images by freepik</a
+        >
+        <a
+          href="https://www.flaticon.com/free-animated-icons/rain"
+          title="rain animated icons"
+          target="_blank"
+          >animated icons created by freepik - flaticon</a
+        >
+      </div>
+    </div>
+
     <div class="version">
       <p>{{ version }}</p>
     </div>
@@ -187,6 +201,14 @@ export default {
     font-size: 18px;
     min-height: 600px;
   }
+
+  .attribution {
+    font-size: 12px;
+  }
+
+  .version {
+    font-size: 12px;
+  }
 }
 
 .home {
@@ -198,6 +220,24 @@ export default {
   background-image: url('/public/img/sky.jpg');
   background-size: cover;
   cursor: default;
+}
+
+.home .attribution {
+  position: absolute;
+  left: 1%;
+  bottom: 1%;
+  font-size: 14px;
+  font-weight: 500;
+  color: lightgrey;
+
+  .attribution-list {
+    display: flex;
+    flex-direction: column;
+    a {
+      color: lightgrey;
+      text-decoration: none;
+    }
+  }
 }
 
 .home .version {
