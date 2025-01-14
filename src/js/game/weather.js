@@ -111,7 +111,7 @@ export const getWeatherLevelByGameLevel = (gameLevel) => {
     }
     if (gameLevel === 6) {
       level6(weatherArgs);
-      turbulenceHeavy1;
+      turbulenceHeavy1(weatherArgs);
       return;
     }
 
@@ -325,25 +325,25 @@ const turbulenceHeavy1 = (weatherArgs) => {
   const { width, height } = weatherArgs;
   const rainNorth1 = addTurbulence(weatherArgs, createLargeRain1, driftE);
   rainNorth1({
-    x: 0.35 * width,
+    x: 0.37 * width,
     y: 0 * height,
     radius: width / 13,
   });
   const rainNorth2 = addTurbulence(weatherArgs, createLargeRain2, driftE);
   rainNorth2({
-    x: 0.38 * width,
+    x: 0.4 * width,
     y: 0.22 * height,
     radius: width / 13,
   });
   const rainSouth1 = addTurbulence(weatherArgs, createLargeRain1, hover);
   rainSouth1({
-    x: 0.4 * width,
+    x: 0.37 * width,
     y: 0.75 * height,
     radius: width / 14,
   });
   const rainSouth2 = addTurbulence(weatherArgs, createLargeRain2, hover);
   rainSouth2({
-    x: 0.5 * width,
+    x: 0.42 * width,
     y: 0.6 * height,
     radius: width / 14,
   });
@@ -389,7 +389,7 @@ const turbulenceLight1 = (weatherArgs) => {
   const { width, height } = weatherArgs;
   const rainOnDeparture = addTurbulence(weatherArgs, createLargeRain1, hover);
   rainOnDeparture({
-    x: 0.05 * width,
+    x: 0.03 * width,
     y: 0.45 * height,
     radius: width / 14,
   });
