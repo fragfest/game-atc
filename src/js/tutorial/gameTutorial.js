@@ -266,7 +266,7 @@ const tutorial =
       elapsedTimeWaypoint > ElapsedTimes.WaypointStartMs
     ) {
       const positionObj = {
-        x: canvasObj.width / 1.5,
+        x: canvasObj.width / 1.7,
         y: canvasObj.height / 1.4,
         heading: '090',
         altitude: 6000,

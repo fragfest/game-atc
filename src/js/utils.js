@@ -178,7 +178,7 @@ export const destroyGameLoadAndExit = () => {
   window.close = null;
 };
 
-// DEBUG  /////////////////////////////////////////////////////////////////
+// MISC  //////////////////////////////////////////////////////////
 export const timeDebug = () => debug();
 export const wakeDebug = () => debug();
 export const wakeDanger = () => debug();
