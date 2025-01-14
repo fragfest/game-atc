@@ -244,7 +244,7 @@ const Score = {
   wake: 0,
 };
 
-const debug = true;
+const debug = false;
 
 /**
  * @returns {Score}
