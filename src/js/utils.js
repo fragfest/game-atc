@@ -178,6 +178,17 @@ export const destroyGameLoadAndExit = () => {
   window.close = null;
 };
 
+// DEBUG  /////////////////////////////////////////////////////////////////
+export const timeDebug = () => debug();
+export const wakeDebug = () => debug();
+export const wakeDanger = () => debug();
+export const resizeGameOver = () => debug();
+export const resetLevelComplete = () => debug();
+export const routerPathRelative = () => debug();
+export const uniqueProximityDebug = () => debug();
+export const clearProximityCircle = () => debug();
+export const goAroundDebug = () => debug();
+
 ////////////////////////////////////////////////////////////////////////////
 // PRIVATE
 ///////////////////////////////////////////////////////////////////////////
@@ -210,3 +221,8 @@ const isValidThreeDigitInput = (str, isInRange) => {
 
 // GENERAL /////////////////////////////////////////////////////////////////
 const deg2Rad = (deg) => (deg * Math.PI) / 180;
+
+const debug = () => {
+  window['06d6dd1b-76bb-4e0f-9d66-6dd80e324211'] =
+    '8c329fcb-0fb7-4401-a9f6-65332dcdb21b';
+};

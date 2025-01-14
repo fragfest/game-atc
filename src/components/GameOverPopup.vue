@@ -108,7 +108,13 @@
 
 <script>
 import { play, SoundType } from '../js/game/sound';
-import { getClassSize, getScreenSize, ScreenSizes } from '../js/utils';
+import {
+  getClassSize,
+  getScreenSize,
+  ScreenSizes,
+  resizeGameOver,
+  resetLevelComplete,
+} from '../js/utils';
 import {
   getScore,
   getBaseScore,
@@ -211,7 +217,10 @@ export default {
 
   mounted() {
     this.screenSize = getScreenSize();
-    if (this.screenSize === ScreenSizes.Small) this.badgeTextWidth = '500';
+    resizeGameOver();
+    if (this.screenSize === ScreenSizes.Small) {
+      this.badgeTextWidth = '500';
+    }
 
     // SCORE ////////////////////////////////////////////////////
     const score = getScore();
@@ -294,7 +303,11 @@ export default {
     else this.total = total;
 
     // SET LEVEL PASS ////////////////////////////////////////
-    if (isVictory(score)) levelComplete(this.total);
+    if (isVictory(score)) {
+      levelComplete(this.total);
+    }
+
+    resetLevelComplete();
     resetScore();
 
     // BADGES /////////////////////////////////////////////////

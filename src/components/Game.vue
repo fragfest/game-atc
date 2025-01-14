@@ -488,6 +488,8 @@ export default {
     drawInertElements(imgLayerObj, { screenSize, width, height });
     setupEntities(setupArg, getMapEntities(airport));
 
+    window['06d6dd1b-76bb-4e0f-9d66-6dd80e324211'] =
+      '8c329fcb-0fb7-4401-a9f6-65332dcdb21b';
     resetScore();
 
     // TUTORIAL

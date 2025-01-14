@@ -1,5 +1,10 @@
 import { setGoal } from '../victory';
 import { getFinalLevel } from '../../levels/getLevel';
+import {
+  getScoreBasicSecure,
+  getScoreSecure,
+  setScoreSecure,
+} from './score.secure';
 
 // key & values must match
 export const ScoreEvents = Object.freeze({
@@ -9,8 +14,8 @@ export const ScoreEvents = Object.freeze({
 export const getBaseScore = () => 100;
 
 export const setup = () => {
-  resetScore();
-  const score = getScore();
+  const score = { ...Score };
+
   const highestLevel = getHighestLevelCompleted();
   const nextLevel = highestLevel === null ? 0 : highestLevel + 1;
 
@@ -20,15 +25,8 @@ export const setup = () => {
 };
 
 export const resetScore = () => {
-  const score = getScore();
-  score.departures = 0;
-  score.arrivals = 0;
-  score.failed = 0;
-  score.conflict = 0;
-  score.delayed = 0;
-  score.turbulence = 0;
-  score.wake = 0;
-  setScore(score);
+  const level = _getScore().level;
+  setScore({ ...Score, level });
 };
 
 export const wakePenalty = (newScore) => {
@@ -160,6 +158,17 @@ export const subscribeScore = (scoreEvent, cb) => {
 };
 
 /**
+ * @param {Score} score
+ */
+const publishScore = (score) => {
+  // ScoreEvents unused
+  const scoreEvent = ScoreEvents.ScoreEV;
+  if (!ScoreEvents[scoreEvent])
+    throw new Error('unknown score event: ' + scoreEvent);
+  document.dispatchEvent(new CustomEvent(scoreEvent, { detail: { score } }));
+};
+
+/**
  * @returns {Array.<HistoryRecord>}
  */
 export const getHistoryRecords = () => {
@@ -172,7 +181,6 @@ export const getHistoryRecords = () => {
  * @param {Score}
  */
 
-// PRIVATE //////////////////////////////////////////////////
 let proximityPairs = {};
 
 /**
@@ -236,10 +244,30 @@ const Score = {
   wake: 0,
 };
 
+const debug = true;
+
 /**
  * @returns {Score}
  */
 export const getScore = () => {
+  if (process.env.NODE_ENV === 'production' || debug) {
+    const score = getScoreSecure();
+    return score || { ...Score };
+  }
+
+  const score = JSON.parse(localStorage.getItem('score'));
+  return score || { ...Score };
+};
+
+/**
+ * @returns {Score}
+ */
+const _getScore = () => {
+  if (process.env.NODE_ENV === 'production' || debug) {
+    const score = getScoreBasicSecure();
+    return score || { ...Score };
+  }
+
   const score = JSON.parse(localStorage.getItem('score'));
   return score || { ...Score };
 };
@@ -248,16 +276,10 @@ export const getScore = () => {
  * @param {Score} score
  */
 const setScore = (score) => {
-  localStorage.setItem('score', JSON.stringify(score));
-};
+  if (process.env.NODE_ENV === 'production' || debug) {
+    setScoreSecure(score);
+    return;
+  }
 
-/**
- * @param {Score} score
- */
-const publishScore = (score) => {
-  // ScoreEvents unused
-  const scoreEvent = ScoreEvents.ScoreEV;
-  if (!ScoreEvents[scoreEvent])
-    throw new Error('unknown score event: ' + scoreEvent);
-  document.dispatchEvent(new CustomEvent(scoreEvent, { detail: { score } }));
+  localStorage.setItem('score', JSON.stringify(score));
 };

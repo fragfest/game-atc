@@ -377,7 +377,7 @@ export default {
   gap: 22px;
   padding: 12px 0;
   height: 80px;
-  border-bottom: 1px solid lightgreen;
+  border-bottom: 1px solid white;
 
   h1,
   h2 {

@@ -76,6 +76,7 @@ import {
   setScreenSize,
   ScreenSizes,
   getScreenSize,
+  routerPathRelative,
 } from '../../js/utils';
 import { isAchievedBlueSky } from '../../js/game/score/badges';
 
@@ -121,6 +122,9 @@ export default {
   },
 
   beforeCreate() {
+    window['06d6dd1b-76bb-4e0f-9d66-6dd80e324211'] =
+      '8c329fcb-0fb7-4401-a9f6-65332dcdb21b';
+
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
     const size = calculateScreenSize(windowWidth, windowHeight);
@@ -131,7 +135,9 @@ export default {
     this.screenSize = getScreenSize();
     setupScore();
     this.bluesky = isAchievedBlueSky();
-    if (this.finalLevel === this.levelComplete) this.isGameComplete = true;
+    if (this.finalLevel === this.levelComplete) {
+      this.isGameComplete = true;
+    }
   },
 
   methods: {
@@ -140,6 +146,8 @@ export default {
     },
 
     onRetryClick: function (level) {
+      routerPathRelative();
+
       levelRetry(level);
       this.$router.push({ path: '/game' });
     },

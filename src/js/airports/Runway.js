@@ -9,6 +9,7 @@ import {
   isHeadingWithinArc,
   radToDegrees,
   ScreenSizes,
+  goAroundDebug,
 } from '../utils';
 import { MessageEvents, publishMessage as publish } from '../events/messages';
 import { play, SoundType } from '../game/sound';
@@ -350,6 +351,7 @@ const isTouchedDown = (self) => (entityOther) => {
 };
 
 const updateGoAround = (runwayHeading, entity) => {
+  goAroundDebug();
   entity.setHeadingTarget(runwayHeading, false, false, Direction.None);
   if (entity.speedTarget <= 220) entity.setSpeed(220, false, true);
   if (entity.altitudeTarget <= 2000) entity.setAltitude(2000, false);

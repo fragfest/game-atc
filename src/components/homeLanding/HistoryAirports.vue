@@ -97,7 +97,11 @@ import {
   getAirportByLevel,
   getFinalLevel,
 } from '../../js/levels/getLevel';
-import { getClassSize, getScreenSize } from '../../js/utils';
+import {
+  getClassSize,
+  getScreenSize,
+  routerPathRelative,
+} from '../../js/utils';
 
 const getNextLevel = () => {
   const level = getHighestLevelCompleted();
@@ -176,6 +180,8 @@ export default {
     },
 
     onClickRetry: function (level) {
+      routerPathRelative();
+
       levelRetry(level);
       this.$router.push({ path: '/game' });
     },

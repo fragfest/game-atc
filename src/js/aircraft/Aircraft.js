@@ -9,6 +9,11 @@ import {
   altitudeDisplay,
   isWithinDist,
   accMax,
+  wakeDebug,
+  wakeDanger,
+  timeDebug,
+  uniqueProximityDebug,
+  clearProximityCircle,
 } from '../utils';
 import {
   getTooCloseDistance,
@@ -382,12 +387,15 @@ export default class Aircraft {
   destroy() {
     this.hide();
     _clearTrailPixelsAll(this);
+    clearProximityCircle();
+
     if (this.htmlAircraftDiv) this.htmlAircraftDiv.remove();
     if (this.isFlyingOutOfArea) {
       planeLeaveFail();
       publish(MessageEvents.MessageAllEV, this.title + ' handoff failed');
       return;
     }
+
     if (this.isHandoff) {
       planeHandoffSuccess();
       publish(
@@ -573,7 +581,11 @@ export default class Aircraft {
       this.wakeTimestampMs = timestampMs;
       this.isTurbulenceWake = true;
     } else if (isInWake) {
+      wakeDebug();
       const turbulenceDiff = timestampMs - this.wakeTimestampMs;
+      turbulencePenalty(turbulenceDiff);
+
+      wakeDanger(timestampMs);
       this.wakeTimestampMs = timestampMs;
       const newScore = Number(
         ((maxStrength * turbulenceDiff) / 1000).toFixed(3)
@@ -582,7 +594,6 @@ export default class Aircraft {
       this.wakeMs += turbulenceDiff;
       // newScore wake danger: Caution > 1.2 :: Danger > 2
       wakePenalty(newScore);
-      turbulencePenalty(turbulenceDiff);
     }
   }
 
@@ -656,6 +667,7 @@ export default class Aircraft {
     if (this.time <= 0) {
       this.time = 0;
       if (!this.isDelayed) {
+        timeDebug(true);
         this.setIsDelayed(true);
       }
     } else {
@@ -798,6 +810,9 @@ export default class Aircraft {
         const turbulenceDiff = timestampMs - this.turbulenceTimestampMs;
         this.turbulenceTimestampMs = timestampMs;
         this.turbulenceMs += turbulenceDiff;
+
+        window['06d6dd1b-76bb-4e0f-9d66-6dd80e324211'] =
+          '8c329fcb-0fb7-4401-a9f6-65332dcdb21b';
         turbulencePenalty(turbulenceDiff);
       }
     } else {
@@ -815,6 +830,7 @@ export default class Aircraft {
     this.hasProximityAlert = true;
     const pairFound = uniqueProximityPair(this, planeClose, timestampMs);
     if (pairFound) {
+      uniqueProximityDebug();
       const scoreDecrease = planeProximityPenalty(
         this,
         planeClose,
