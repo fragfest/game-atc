@@ -37,7 +37,11 @@
           </div>
 
           <!-- column right -->
-          <div></div>
+          <div class="leaderboard">
+            <button @click="onLeaderboardClick">
+              <h3>leaderboard</h3>
+            </button>
+          </div>
           <!-- END next grid row -->
         </div>
         <!-- END grid-score-buttons -->
@@ -98,6 +102,20 @@ import HistoryAirports from './HistoryAirports';
 import BadgesDisplay from '../badges/BadgesDisplay';
 import CyberBox from '../common/CyberBox';
 
+import { UserManager } from 'oidc-client-ts';
+
+const cognitoAuthConfig = {
+  authority: 'https://cognito-idp.us-west-1.amazonaws.com/us-west-1_I2oLrzd6B',
+  client_id: '8fhopbpd0l3bjidn4infu0bcn',
+  redirect_uri: 'http://localhost:8080/',
+  response_type: 'code',
+  scope: 'phone openid email',
+};
+
+const userManager = new UserManager({
+  ...cognitoAuthConfig,
+});
+
 export default {
   components: {
     HistoryAirports,
@@ -145,16 +163,42 @@ export default {
     setScreenSize(size);
   },
 
-  mounted() {
+  async mounted() {
     this.screenSize = getScreenSize();
     setupScore();
     this.bluesky = isAchievedBlueSky();
     if (this.finalLevel === this.levelComplete) {
       this.isGameComplete = true;
     }
+
+    const sessionStr = localStorage.getItem('session');
+    if (sessionStr) {
+      this.username = JSON.parse(sessionStr).username;
+      console.log('currently logged in', this.username);
+      return;
+    }
+
+    const url = window.location.href;
+    const user = await userManager.signinCallback(url).catch(() => {});
+
+    if (user) {
+      const session = {
+        accessToken: user.access_token,
+        username: user.profile['cognito:username'],
+      };
+      this.username = session.username;
+
+      console.log('setting session', this.username);
+      localStorage.setItem('session', JSON.stringify(session));
+      return;
+    }
   },
 
   methods: {
+    onLeaderboardClick: function () {
+      this.$router.push({ path: '/leaderboard' });
+    },
+
     onStartClick: function () {
       this.$router.push({ path: '/game' });
     },
@@ -252,7 +296,7 @@ export default {
 .home section {
   display: flex;
   min-width: 800px;
-  min-height: 800px;
+  min-height: 1120px;
 
   padding: 20px 40px;
   margin: 8% 2%;
@@ -389,5 +433,45 @@ export default {
   display: flex;
   flex-wrap: wrap;
   width: 320px;
+}
+
+// leaderboard /////////////////////////////////////////
+.content .leaderboard {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  button {
+    margin-top: 24px;
+    padding: 10px 24px;
+    border: 1px solid lightgreen;
+    border-radius: 8px;
+    box-shadow: 2px 2px 0px #000000a0;
+    background: linear-gradient(to right, #1d3e58, #2d6794);
+  }
+
+  button h3 {
+    margin: 0;
+    font-size: 18px;
+  }
+
+  button:hover {
+    cursor: pointer;
+    background: linear-gradient(to right, #132839, #1d425e);
+  }
+
+  button:active {
+    position: relative;
+    outline: 1px solid white;
+    left: 2px;
+    box-shadow: none;
+  }
+
+  button:focus-visible {
+    position: relative;
+    // left: 2px;
+    outline: 1px solid limegreen;
+    box-shadow: none;
+  }
 }
 </style>
