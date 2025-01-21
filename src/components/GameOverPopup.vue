@@ -302,6 +302,11 @@ export default {
     if (total < 0) this.total = 0;
     else this.total = total;
 
+    // TODO format scores, add this to methods & test
+    // scoreFormat: function (score) {
+    //   return Number(score).toLocaleString('en-CA');
+    // },
+
     // SET LEVEL PASS ////////////////////////////////////////
     if (isVictory(score)) {
       levelComplete(this.total);

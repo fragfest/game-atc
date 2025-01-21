@@ -173,8 +173,8 @@ export default {
 
     const sessionStr = localStorage.getItem('session');
     if (sessionStr) {
-      this.username = JSON.parse(sessionStr).username;
-      console.log('currently logged in', this.username);
+      const usernameDebug = JSON.parse(sessionStr).username;
+      console.log('currently logged in', usernameDebug);
       return;
     }
 
@@ -186,9 +186,8 @@ export default {
         accessToken: user.access_token,
         username: user.profile['cognito:username'],
       };
-      this.username = session.username;
 
-      console.log('setting session', this.username);
+      console.log('setting session', session.username);
       localStorage.setItem('session', JSON.stringify(session));
       return;
     }
@@ -296,6 +295,7 @@ export default {
 .home section {
   display: flex;
   min-width: 800px;
+  max-width: 2600px;
   min-height: 1120px;
 
   padding: 20px 40px;
@@ -382,7 +382,7 @@ export default {
 }
 
 .grid-score-buttons .button-start button:active {
-  border: 4px inset darkgray;
+  border: 4px inset white;
   h2 {
     font-size: 33px;
   }
@@ -469,7 +469,6 @@ export default {
 
   button:focus-visible {
     position: relative;
-    // left: 2px;
     outline: 1px solid limegreen;
     box-shadow: none;
   }

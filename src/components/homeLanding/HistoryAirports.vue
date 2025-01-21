@@ -69,7 +69,7 @@
             </button>
           </div>
           <p v-if="record.level" class="gold">
-            {{ record.historyScore.scoreTotal }}
+            {{ scoreFormat(record.historyScore.scoreTotal) }}
           </p>
         </div>
       </div>
@@ -184,6 +184,10 @@ export default {
 
       levelRetry(level);
       this.$router.push({ path: '/game' });
+    },
+
+    scoreFormat: function (score) {
+      return Number(score).toLocaleString('en-CA');
     },
   },
 
@@ -309,6 +313,8 @@ export default {
     &:active:not(.selected) {
       left: 2px;
       box-shadow: none;
+      border: 2px solid white;
+
       filter: brightness(1);
     }
 
@@ -438,6 +444,7 @@ export default {
 
       button:active {
         position: relative;
+        outline: 1px solid white;
         left: 2px;
         box-shadow: none;
       }
