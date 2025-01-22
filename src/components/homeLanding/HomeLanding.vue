@@ -101,20 +101,7 @@ import { isAchievedBlueSky } from '../../js/game/score/badges';
 import HistoryAirports from './HistoryAirports';
 import BadgesDisplay from '../badges/BadgesDisplay';
 import CyberBox from '../common/CyberBox';
-
-import { UserManager } from 'oidc-client-ts';
-
-const cognitoAuthConfig = {
-  authority: 'https://cognito-idp.us-west-1.amazonaws.com/us-west-1_I2oLrzd6B',
-  client_id: '8fhopbpd0l3bjidn4infu0bcn',
-  redirect_uri: 'http://localhost:8080/',
-  response_type: 'code',
-  scope: 'phone openid email',
-};
-
-const userManager = new UserManager({
-  ...cognitoAuthConfig,
-});
+import { isLoggedIn, loginUsingCallbackUrl } from '../../js/session/session';
 
 export default {
   components: {
@@ -171,24 +158,13 @@ export default {
       this.isGameComplete = true;
     }
 
-    const sessionStr = localStorage.getItem('session');
-    if (sessionStr) {
-      const usernameDebug = JSON.parse(sessionStr).username;
-      console.log('currently logged in', usernameDebug);
-      return;
-    }
-
     const url = window.location.href;
-    const user = await userManager.signinCallback(url).catch(() => {});
-
-    if (user) {
-      const session = {
-        accessToken: user.access_token,
-        username: user.profile['cognito:username'],
-      };
-
-      console.log('setting session', session.username);
-      localStorage.setItem('session', JSON.stringify(session));
+    const isNewLoginSuccess = await loginUsingCallbackUrl(url);
+    if (isNewLoginSuccess) {
+      console.info('login success');
+      return;
+    } else if (isLoggedIn()) {
+      console.info('logged in');
       return;
     }
   },

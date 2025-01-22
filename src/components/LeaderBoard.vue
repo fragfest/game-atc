@@ -58,17 +58,23 @@
 </template>
 
 <script>
+import {
+  getAccessToken,
+  getUsername,
+  isLoggedIn,
+  logout,
+} from '../js/session/session';
 import { UserManager } from 'oidc-client-ts';
 
-async function signOutRedirect() {
-  const clientId = '8fhopbpd0l3bjidn4infu0bcn';
-  const logoutUri = 'http://localhost:8080/';
-  const cognitoDomain =
-    'https://us-west-1i2olrzd6b.auth.us-west-1.amazoncognito.com';
-  window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(
-    logoutUri
-  )}`;
-}
+// async function signOutRedirect() {
+//   const clientId = '8fhopbpd0l3bjidn4infu0bcn';
+//   const logoutUri = 'http://localhost:8080/';
+//   const cognitoDomain =
+//     'https://us-west-1i2olrzd6b.auth.us-west-1.amazoncognito.com';
+//   window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(
+//     logoutUri
+//   )}`;
+// }
 
 const cognitoAuthConfig = {
   authority: 'https://cognito-idp.us-west-1.amazonaws.com/us-west-1_I2oLrzd6B',
@@ -91,37 +97,33 @@ export default {
   },
 
   async mounted() {
-    const sessionStr = localStorage.getItem('session');
-    // const leaderboardArrStr = localStorage.getItem('leaderboard');
-    const leaderboardArrStr = JSON.stringify([
-      { username: 'lowest', score: 1 },
-      { username: 'bla face', score: 12000 },
-    ]);
-
-    if (sessionStr) {
-      this.username = JSON.parse(sessionStr).username;
-    } else {
-      localStorage.removeItem('session');
+    if (!isLoggedIn()) {
       localStorage.removeItem('leaderboard');
       this.leaderboardArr = [];
       return;
     }
 
+    this.username = getUsername();
+
+    const leaderboardArrStr = localStorage.getItem('leaderboard');
+    // const leaderboardArrStr = JSON.stringify([
+    //   { username: 'lowest', score: 1 },
+    //   { username: 'bla face', score: 12000 },
+    // ]);
+
     if (leaderboardArrStr) {
       this.leaderboardArr = JSON.parse(leaderboardArrStr);
     }
 
-    if (sessionStr && !this.leaderboardArr.length) {
-      const token = JSON.parse(sessionStr).accessToken;
+    if (!this.leaderboardArr.length) {
+      const token = getAccessToken();
       const headers = { Authorization: 'Bearer ' + token };
       const resp = await fetch('https://api.carladde.com/default/basic', {
         headers,
       });
 
       if (resp.status !== 200) {
-        this.username = '';
-        localStorage.removeItem('session');
-        localStorage.removeItem('leaderboard');
+        console.warn('GET leaderboard status:', resp.status);
         return;
       }
 
@@ -140,10 +142,11 @@ export default {
     },
 
     signOut: async function () {
-      localStorage.removeItem('session');
       localStorage.removeItem('leaderboard');
       this.leaderboardArr = [];
-      await signOutRedirect();
+      this.username = '';
+      logout();
+      // await signOutRedirect();
     },
 
     scoreFormat: function (score) {
