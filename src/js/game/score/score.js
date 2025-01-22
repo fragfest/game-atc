@@ -1,12 +1,12 @@
 import { setGoal } from '../victory';
 import { getFinalLevel } from '../../levels/getLevel';
 
-// NOTE just importing score.secure fail tests for some strange reason
-// import {
-//   getScoreBasicSecure,
-//   getScoreSecure,
-//   setScoreSecure,
-// } from './score.secure';
+// NOTE just importing score.secure fails tests for some strange reason
+import {
+  getScoreBasicSecure,
+  getScoreSecure,
+  setScoreSecure,
+} from './score.secure';
 
 // key & values must match
 export const ScoreEvents = Object.freeze({
@@ -246,16 +246,16 @@ const Score = {
   wake: 0,
 };
 
-// const debug = false;
+const debug = true;
 
 /**
  * @returns {Score}
  */
 export const getScore = () => {
-  // if (process.env.NODE_ENV === 'production' || debug) {
-  //   const score = getScoreSecure();
-  //   return score || { ...Score };
-  // }
+  if (process.env.NODE_ENV === 'production' || debug) {
+    const score = getScoreSecure();
+    return score || { ...Score };
+  }
 
   const score = JSON.parse(localStorage.getItem('score'));
   return score || { ...Score };
@@ -265,10 +265,10 @@ export const getScore = () => {
  * @returns {Score}
  */
 const _getScore = () => {
-  // if (process.env.NODE_ENV === 'production' || debug) {
-  //   const score = getScoreBasicSecure();
-  //   return score || { ...Score };
-  // }
+  if (process.env.NODE_ENV === 'production' || debug) {
+    const score = getScoreBasicSecure();
+    return score || { ...Score };
+  }
 
   const score = JSON.parse(localStorage.getItem('score'));
   return score || { ...Score };
@@ -278,10 +278,10 @@ const _getScore = () => {
  * @param {Score} score
  */
 const setScore = (score) => {
-  // if (process.env.NODE_ENV === 'production' || debug) {
-  //   setScoreSecure(score);
-  //   return;
-  // }
+  if (process.env.NODE_ENV === 'production' || debug) {
+    setScoreSecure(score);
+    return;
+  }
 
   localStorage.setItem('score', JSON.stringify(score));
 };

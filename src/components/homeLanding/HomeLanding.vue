@@ -95,6 +95,7 @@ import {
   ScreenSizes,
   getScreenSize,
   routerPathRelative,
+  setLogLevel,
 } from '../../js/utils';
 import { isAchievedBlueSky } from '../../js/game/score/badges';
 
@@ -141,9 +142,7 @@ export default {
   },
 
   beforeCreate() {
-    window['06d6dd1b-76bb-4e0f-9d66-6dd80e324211'] =
-      '8c329fcb-0fb7-4401-a9f6-65332dcdb21b';
-
+    setLogLevel();
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
     const size = calculateScreenSize(windowWidth, windowHeight);

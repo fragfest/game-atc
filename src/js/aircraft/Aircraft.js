@@ -14,6 +14,7 @@ import {
   timeDebug,
   uniqueProximityDebug,
   clearProximityCircle,
+  turbulenceCounterReset,
 } from '../utils';
 import {
   getTooCloseDistance,
@@ -807,12 +808,11 @@ export default class Aircraft {
         this.turbulenceTimestampMs = timestampMs;
         this.isTurbulenceWeather = true;
       } else if (isTurbulenceWeather) {
+        turbulenceCounterReset();
         const turbulenceDiff = timestampMs - this.turbulenceTimestampMs;
         this.turbulenceTimestampMs = timestampMs;
         this.turbulenceMs += turbulenceDiff;
 
-        window['06d6dd1b-76bb-4e0f-9d66-6dd80e324211'] =
-          '8c329fcb-0fb7-4401-a9f6-65332dcdb21b';
         turbulencePenalty(turbulenceDiff);
       }
     } else {

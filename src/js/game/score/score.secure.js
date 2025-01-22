@@ -7,7 +7,7 @@ import { EncryptStorage } from 'encrypt-storage';
 let encryptStorage;
 
 // set the key on the global window object in unexpected places
-// prior to calls to setScore() in score.js
+// prior to calling score & history-records localstorage from score.js
 const x = '06d6dd1b-76bb-4e0f-9d66-6dd80e324211';
 
 export const setScoreSecure = (score) => {

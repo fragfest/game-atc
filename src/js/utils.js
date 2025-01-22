@@ -188,6 +188,9 @@ export const routerPathRelative = () => debug();
 export const uniqueProximityDebug = () => debug();
 export const clearProximityCircle = () => debug();
 export const goAroundDebug = () => debug();
+export const turbulenceCounterReset = () => debug();
+export const setLogLevel = () => debug();
+export const setupDebug = () => debug();
 
 ////////////////////////////////////////////////////////////////////////////
 // PRIVATE
