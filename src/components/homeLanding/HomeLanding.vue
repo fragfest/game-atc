@@ -102,7 +102,11 @@ import { isAchievedBlueSky } from '../../js/game/score/badges';
 import HistoryAirports from './HistoryAirports';
 import BadgesDisplay from '../badges/BadgesDisplay';
 import CyberBox from '../common/CyberBox';
-import { isLoggedIn, loginUsingCallbackUrl } from '../../js/session/session';
+import {
+  isLoggedIn,
+  loginUsingCallbackUrl,
+  sendHistory,
+} from '../../js/session/session';
 
 export default {
   components: {
@@ -164,6 +168,9 @@ export default {
       return;
     } else if (isLoggedIn()) {
       console.info('logged in');
+
+      await sendHistory(getHistoryRecords());
+
       return;
     }
   },

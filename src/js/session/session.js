@@ -61,3 +61,24 @@ export const getAccessToken = () => {
   const session = JSON.parse(sessionStr);
   return session.access_token;
 };
+
+export const sendHistory = async (historyRecordsArr) => {
+  const token = getAccessToken();
+  const method = 'PUT';
+  const headers = {
+    Authorization: 'Bearer ' + token,
+    'Content-Type': 'application/json',
+  };
+  const body = JSON.stringify(historyRecordsArr);
+
+  const resp = await fetch('https://api.carladde.com/default/basic', {
+    method,
+    headers,
+    body,
+  });
+
+  if (resp.status !== 200) {
+    console.warn('PUT leaderboard status:', resp.status);
+    return;
+  }
+};
