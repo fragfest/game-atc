@@ -191,6 +191,8 @@ export const goAroundDebug = () => debug();
 export const turbulenceCounterReset = () => debug();
 export const setLogLevel = () => debug();
 export const setupDebug = () => debug();
+export const historyRecordDebug = () => debug();
+export const victoryDebug = () => debug();
 
 ////////////////////////////////////////////////////////////////////////////
 // PRIVATE

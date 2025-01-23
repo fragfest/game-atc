@@ -114,6 +114,7 @@ import {
   ScreenSizes,
   resizeGameOver,
   resetLevelComplete,
+  victoryDebug,
 } from '../js/utils';
 import {
   getScore,
@@ -236,6 +237,7 @@ export default {
 
       this.scoreTotalClass = 'white';
       this.isSuccess = true;
+      victoryDebug(true);
     }
 
     if (isDeparturesSuccess(score.departures)) {

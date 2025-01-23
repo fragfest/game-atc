@@ -127,7 +127,7 @@ export const getGoalsByLevel = () => {
         Failed: 3,
         Conflict: 60,
         SpawnRate: 1,
-        Delayed: 6,
+        Delayed: 4,
       };
     }
 
@@ -138,7 +138,7 @@ export const getGoalsByLevel = () => {
         Failed: 3,
         Conflict: 60,
         SpawnRate: 1,
-        Delayed: 6,
+        Delayed: 4,
       };
     }
 
@@ -160,7 +160,7 @@ export const getGoalsByLevel = () => {
         Failed: 2,
         Conflict: 60,
         SpawnRate: 2,
-        Delayed: 4,
+        Delayed: 5,
       };
     }
 
@@ -171,7 +171,7 @@ export const getGoalsByLevel = () => {
         Failed: 2,
         Conflict: 30,
         SpawnRate: 1.5,
-        Delayed: 3,
+        Delayed: 4,
       };
     }
 

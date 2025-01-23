@@ -1,12 +1,16 @@
 import { setGoal } from '../victory';
 import { getFinalLevel } from '../../levels/getLevel';
+import { historyRecordDebug } from '../../utils';
 
 // NOTE just importing score.secure fails tests for some strange reason
 import {
   getScoreBasicSecure,
   getScoreSecure,
   setScoreSecure,
+  getHistorySecure,
+  setHistorySecure,
 } from './score.secure';
+const debug = true;
 
 // key & values must match
 export const ScoreEvents = Object.freeze({
@@ -56,6 +60,7 @@ export const planeDelayFail = () => {
 export const levelComplete = (scoreTotal) => {
   const score = getScore();
   setHistoryRecord(score.level, { ...score, scoreTotal });
+  historyRecordDebug();
 
   const nextLevel = score.level + 1;
   score.level = nextLevel <= getFinalLevel() ? nextLevel : getFinalLevel();
@@ -174,6 +179,11 @@ const publishScore = (score) => {
  * @returns {Array.<HistoryRecord>}
  */
 export const getHistoryRecords = () => {
+  if (process.env.NODE_ENV === 'production' || debug) {
+    const historyRecords = getHistorySecure();
+    return historyRecords || [];
+  }
+
   const historyRecords = JSON.parse(localStorage.getItem('history-records'));
   return historyRecords || [];
 };
@@ -194,6 +204,13 @@ const removeHistoryRecord = (level) => {
   if (indexRemove === -1) return;
 
   historyRecords.splice(indexRemove, 1);
+
+  if (process.env.NODE_ENV === 'production' || debug) {
+    setHistorySecure(historyRecords);
+    historyRecordDebug();
+
+    return;
+  }
   localStorage.setItem('history-records', JSON.stringify(historyRecords));
 };
 
@@ -206,6 +223,11 @@ const setHistoryRecord = (level, historyScore) => {
 
   const historyRecords = getHistoryRecords();
   historyRecords.push({ v, level, historyScore });
+
+  if (process.env.NODE_ENV === 'production' || debug) {
+    setHistorySecure(historyRecords);
+    return;
+  }
   localStorage.setItem('history-records', JSON.stringify(historyRecords));
 };
 
@@ -245,8 +267,6 @@ const Score = {
   turbulence: 0,
   wake: 0,
 };
-
-const debug = true;
 
 /**
  * @returns {Score}
