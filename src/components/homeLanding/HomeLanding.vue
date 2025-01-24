@@ -173,7 +173,6 @@ export default {
     }
 
     if (isLoggedIn()) {
-      console.info('logged in');
       return;
     }
   },

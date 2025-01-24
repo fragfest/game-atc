@@ -9,6 +9,16 @@ const config = {
   scope: 'phone openid email',
 };
 
+/**
+ * start AWS cognito login. when complete, redirects to homepage
+ */
+export const startLogin = async () => {
+  const userManager = new UserManager({
+    ...config,
+  });
+  await userManager.signinRedirect();
+};
+
 export const isLoggedIn = () => {
   const key = `oidc.user:${config.authority}:${config.client_id}`;
   const sessionStr = sessionStorage.getItem(key);
@@ -32,6 +42,16 @@ export const logout = () => {
   sessionStorage.removeItem(key);
 };
 
+// async function signOutRedirect() {
+//   const clientId = '8fhopbpd0l3bjidn4infu0bcn';
+//   const logoutUri = 'http://localhost:8080/';
+//   const cognitoDomain =
+//     'https://us-west-1i2olrzd6b.auth.us-west-1.amazoncognito.com';
+//   window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(
+//     logoutUri
+//   )}`;
+// }
+
 export const loginUsingCallbackUrl = async (url) => {
   const userManager = new UserManager(config);
   const session = await userManager.signinCallback(url).catch(() => {
@@ -39,8 +59,6 @@ export const loginUsingCallbackUrl = async (url) => {
   });
   if (!session) return false;
 
-  const username = session.profile['cognito:username'];
-  console.info('login callback success', username);
   return true;
 };
 
@@ -96,7 +114,11 @@ export const getAllScores = async (isSkipCache) => {
   return leaderboardArr;
 };
 
-export const sendHistory = async (historyEncryptedStr) => {
+/**
+ * send JWT with history records
+ * @param {String} historyRecordsJwt
+ */
+export const sendHistory = async (historyRecordsJwt) => {
   const token = getAccessToken();
   const method = 'PUT';
   const headers = {
@@ -104,7 +126,7 @@ export const sendHistory = async (historyEncryptedStr) => {
     'Content-Type': 'application/json',
   };
 
-  const body = historyEncryptedStr || '';
+  const body = historyRecordsJwt || '';
 
   const resp = await fetch('https://api.carladde.com/default/basic', {
     method,

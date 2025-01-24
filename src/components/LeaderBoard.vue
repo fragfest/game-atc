@@ -63,30 +63,8 @@ import {
   getUsername,
   isLoggedIn,
   logout,
+  startLogin,
 } from '../js/session/session';
-import { UserManager } from 'oidc-client-ts';
-
-// async function signOutRedirect() {
-//   const clientId = '8fhopbpd0l3bjidn4infu0bcn';
-//   const logoutUri = 'http://localhost:8080/';
-//   const cognitoDomain =
-//     'https://us-west-1i2olrzd6b.auth.us-west-1.amazoncognito.com';
-//   window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(
-//     logoutUri
-//   )}`;
-// }
-
-const cognitoAuthConfig = {
-  authority: 'https://cognito-idp.us-west-1.amazonaws.com/us-west-1_I2oLrzd6B',
-  client_id: '8fhopbpd0l3bjidn4infu0bcn',
-  redirect_uri: 'http://localhost:8080/',
-  response_type: 'code',
-  scope: 'phone openid email',
-};
-
-const userManager = new UserManager({
-  ...cognitoAuthConfig,
-});
 
 export default {
   data() {
@@ -97,9 +75,7 @@ export default {
   },
 
   async mounted() {
-    if (!isLoggedIn()) {
-      return;
-    }
+    if (!isLoggedIn()) return;
 
     this.username = getUsername();
     this.leaderboardArr = await getAllScores();
@@ -110,15 +86,14 @@ export default {
       this.$router.push({ path: '/' });
     },
 
-    signIn: async function () {
-      await userManager.signinRedirect();
+    signIn: function () {
+      startLogin();
     },
 
     signOut: async function () {
       this.leaderboardArr = [];
       this.username = '';
       logout();
-      // await signOutRedirect();
     },
 
     scoreFormat: function (score) {

@@ -144,7 +144,7 @@ import {
   setBadgeBlueSky,
 } from '../js/game/score/badges';
 import CyberBox from './common/CyberBox.vue';
-import { getAllScores, sendHistory } from '../js/session/session';
+import { getAllScores, isLoggedIn, sendHistory } from '../js/session/session';
 
 export default {
   components: {
@@ -311,11 +311,13 @@ export default {
     //   return Number(score).toLocaleString('en-CA');
     // },
 
-    // SET LEVEL PASS ////////////////////////////////////////
+    // LEVEL PASS ////////////////////////////////////////////
     if (isVictory(score)) {
       levelComplete(this.total);
-      sendHistory(getHistoryRecordsSecure());
-      getAllScores(true);
+      if (isLoggedIn()) {
+        sendHistory(getHistoryRecordsSecure());
+        getAllScores(true);
+      }
     }
 
     resetLevelComplete();
