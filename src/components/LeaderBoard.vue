@@ -70,7 +70,7 @@ export default {
   data() {
     return {
       username: '',
-      leaderboardArr: [],
+      leaderboardArr: JSON.parse(localStorage.getItem('leaderboard')),
     };
   },
 

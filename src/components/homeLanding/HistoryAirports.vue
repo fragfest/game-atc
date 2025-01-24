@@ -298,7 +298,7 @@ export default {
   .airports-grid {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    grid-auto-rows: minmax(40px, auto);
+    grid-auto-rows: minmax(200px, auto);
     row-gap: 0px;
     column-gap: 22px;
   }
@@ -311,10 +311,9 @@ export default {
     }
 
     &:active:not(.selected) {
+      outline: 2px solid white;
       left: 2px;
       box-shadow: none;
-      border: 2px solid white;
-
       filter: brightness(1);
     }
 
@@ -323,7 +322,7 @@ export default {
     }
 
     &.selected {
-      border: 2px solid white;
+      outline: 2px solid white;
       box-shadow: none;
       filter: brightness(1);
     }

@@ -111,6 +111,7 @@ export const getAllScores = async (isSkipCache) => {
   }
 
   const leaderboardArr = await resp.json();
+  localStorage.setItem('leaderboard', JSON.stringify(leaderboardArr));
   return leaderboardArr;
 };
 
