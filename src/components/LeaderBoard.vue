@@ -70,12 +70,15 @@ export default {
   data() {
     return {
       username: '',
-      leaderboardArr: JSON.parse(localStorage.getItem('leaderboard')),
+      leaderboardArr: JSON.parse(localStorage.getItem('leaderboard') || '[]'),
     };
   },
 
   async mounted() {
-    if (!isLoggedIn()) return;
+    if (!isLoggedIn()) {
+      this.leaderboardArr = [];
+      return;
+    }
 
     this.username = getUsername();
     this.leaderboardArr = await getAllScores();
@@ -153,6 +156,14 @@ h2 {
       margin: 8px;
     }
 
+    @media (max-width: 600px) {
+      justify-content: flex-end;
+      h1 {
+        margin-right: 10%;
+        font-size: 26px;
+      }
+    }
+
     .header-back {
       position: absolute;
       left: 0;
@@ -168,6 +179,9 @@ h2 {
 
       @media (max-width: 600px) {
         left: -60px;
+        button {
+          width: 52px;
+        }
       }
     }
   }
@@ -176,6 +190,9 @@ h2 {
   // body
   .body {
     margin: 1% 12%;
+    @media (max-width: 600px) {
+      margin: 1% 4%;
+    }
   }
 
   // scores
@@ -236,7 +253,6 @@ h2 {
   // login
   .login {
     display: flex;
-    flex-wrap: wrap;
     column-gap: 20px;
     width: fit-content;
 
@@ -245,6 +261,11 @@ h2 {
     background-color: lightgrey;
     h2 {
       margin: 8px;
+    }
+
+    @media (max-width: 600px) {
+      flex-direction: column;
+      width: 90%;
     }
   }
 
@@ -258,10 +279,22 @@ h2 {
     border-radius: 6px;
 
     h2 {
+      margin: 14px;
       font-size: 28px;
     }
     h3 {
+      margin: 14px;
       font-size: 22px;
+    }
+
+    @media (max-width: 600px) {
+      h2 {
+        margin: 8px;
+        font-size: 22px;
+      }
+      h3 {
+        font-size: 16px;
+      }
     }
 
     button {
@@ -271,6 +304,10 @@ h2 {
       background-color: #1d425e;
       box-shadow: 2px 2px 2px #000000;
       cursor: pointer;
+
+      @media (max-width: 600px) {
+        width: 40%;
+      }
     }
 
     button:hover {
