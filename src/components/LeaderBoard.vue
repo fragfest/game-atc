@@ -98,28 +98,11 @@ export default {
 
   async mounted() {
     if (!isLoggedIn()) {
-      localStorage.removeItem('leaderboard');
-      this.leaderboardArr = [];
       return;
     }
 
     this.username = getUsername();
-
-    const leaderboardArrStr = localStorage.getItem('leaderboard');
-    // const leaderboardArrStr = JSON.stringify([
-    //   { username: 'lowest', score: 1 },
-    //   { username: 'bla face', score: 12000 },
-    // ]);
-
-    if (leaderboardArrStr) {
-      this.leaderboardArr = JSON.parse(leaderboardArrStr);
-    }
-
-    // TODO add some kind of random update calls
-    if (!this.leaderboardArr.length) {
-      this.leaderboardArr = await getAllScores();
-      localStorage.setItem('leaderboard', JSON.stringify(this.leaderboardArr));
-    }
+    this.leaderboardArr = await getAllScores();
   },
 
   methods: {
@@ -132,7 +115,6 @@ export default {
     },
 
     signOut: async function () {
-      localStorage.removeItem('leaderboard');
       this.leaderboardArr = [];
       this.username = '';
       logout();

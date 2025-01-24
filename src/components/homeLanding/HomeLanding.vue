@@ -104,6 +104,7 @@ import HistoryAirports from './HistoryAirports';
 import BadgesDisplay from '../badges/BadgesDisplay';
 import CyberBox from '../common/CyberBox';
 import {
+  getAllScores,
   isLoggedIn,
   loginUsingCallbackUrl,
   sendHistory,
@@ -167,12 +168,13 @@ export default {
     if (isNewLoginSuccess) {
       console.info('login success');
       await sendHistory(getHistoryRecordsSecure());
+      getAllScores(true);
       return;
-    } else if (isLoggedIn()) {
+    }
+
+    if (isLoggedIn()) {
       console.info('logged in');
       return;
-    } else {
-      localStorage.removeItem('leaderboard');
     }
   },
 

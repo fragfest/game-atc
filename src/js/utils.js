@@ -178,22 +178,6 @@ export const destroyGameLoadAndExit = () => {
   window.close = null;
 };
 
-// MISC  //////////////////////////////////////////////////////////
-export const timeDebug = () => debug();
-export const wakeDebug = () => debug();
-export const wakeDanger = () => debug();
-export const resizeGameOver = () => debug();
-export const resetLevelComplete = () => debug();
-export const routerPathRelative = () => debug();
-export const uniqueProximityDebug = () => debug();
-export const clearProximityCircle = () => debug();
-export const goAroundDebug = () => debug();
-export const turbulenceCounterReset = () => debug();
-export const setLogLevel = () => debug();
-export const setupDebug = () => debug();
-export const historyRecordDebug = () => debug();
-export const victoryDebug = () => debug();
-
 ////////////////////////////////////////////////////////////////////////////
 // PRIVATE
 ///////////////////////////////////////////////////////////////////////////
@@ -224,8 +208,23 @@ const isValidThreeDigitInput = (str, isInRange) => {
   return hasOnlyInts && isNotAllZeros && isInRange;
 };
 
-// GENERAL /////////////////////////////////////////////////////////////////
 const deg2Rad = (deg) => (deg * Math.PI) / 180;
+
+// MISC  //////////////////////////////////////////////////////////
+export const timeDebug = () => debug();
+export const wakeDebug = () => debug();
+export const wakeDanger = () => debug();
+export const resizeGameOver = () => debug();
+export const resetLevelComplete = () => debug();
+export const routerPathRelative = () => debug();
+export const uniqueProximityDebug = () => debug();
+export const clearProximityCircle = () => debug();
+export const goAroundDebug = () => debug();
+export const turbulenceCounterReset = () => debug();
+export const setLogLevel = () => debug();
+export const setupDebug = () => debug();
+export const historyRecordDebug = () => debug();
+export const victoryDebug = () => debug();
 
 const debug = () => {
   window['06d6dd1b-76bb-4e0f-9d66-6dd80e324211'] =

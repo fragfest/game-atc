@@ -71,12 +71,17 @@ export const getAccessToken = () => {
 
 /**
  * get list of scores for the leaderboard
+ * @param {Boolean} isSkipCache skip browser cache
  * @returns {Array.<LeaderBoard>}
  */
-export const getAllScores = async () => {
+export const getAllScores = async (isSkipCache) => {
   const token = getAccessToken();
   const method = 'GET';
-  const headers = { Authorization: 'Bearer ' + token };
+  let headers = { Authorization: 'Bearer ' + token };
+  if (isSkipCache) {
+    headers = { ...headers, 'Cache-Control': 'max-age=0' };
+  }
+
   const resp = await fetch('https://api.carladde.com/default/basic', {
     method,
     headers,
@@ -98,6 +103,7 @@ export const sendHistory = async (historyEncryptedStr) => {
     Authorization: 'Bearer ' + token,
     'Content-Type': 'application/json',
   };
+
   const body = historyEncryptedStr || '';
 
   const resp = await fetch('https://api.carladde.com/default/basic', {
@@ -110,6 +116,4 @@ export const sendHistory = async (historyEncryptedStr) => {
     console.error('PUT leaderboard status:', resp.status);
     return;
   }
-
-  localStorage.removeItem('leaderboard');
 };
