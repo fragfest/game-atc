@@ -124,10 +124,15 @@ export const sendHistory = async (historyRecordsJwt) => {
   const method = 'PUT';
   const headers = {
     Authorization: 'Bearer ' + token,
-    'Content-Type': 'application/json',
+    'Content-Type': 'text/plain',
   };
 
+  const isString = typeof historyRecordsJwt === 'string';
   const body = historyRecordsJwt || '';
+  if (!body || !isString) {
+    console.warn('PUT leaderboard not sent');
+    return;
+  }
 
   const resp = await fetch('https://api.carladde.com/default/basic', {
     method,

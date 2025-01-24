@@ -195,7 +195,7 @@ export const getHistoryRecords = () => {
 export const getHistoryRecordsSecure = () => {
   if (process.env.NODE_ENV === 'production' || debug) {
     const recordsJwt = getHistoryJwt();
-    return recordsJwt || '<undefined>';
+    return recordsJwt || '';
   }
 
   const historyRecords = JSON.parse(localStorage.getItem('history-records'));
