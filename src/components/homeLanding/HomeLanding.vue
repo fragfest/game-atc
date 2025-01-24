@@ -87,6 +87,7 @@ import {
   setup as setupScore,
   levelRetry,
   getHistoryRecords,
+  getHistoryRecordsSecure,
 } from '../../js/game/score/score';
 import { getHighestLevelCompleted } from '../../js/game/score/score';
 import {
@@ -165,13 +166,13 @@ export default {
     const isNewLoginSuccess = await loginUsingCallbackUrl(url);
     if (isNewLoginSuccess) {
       console.info('login success');
+      await sendHistory(getHistoryRecordsSecure());
       return;
     } else if (isLoggedIn()) {
       console.info('logged in');
-
-      await sendHistory(getHistoryRecords());
-
       return;
+    } else {
+      localStorage.removeItem('leaderboard');
     }
   },
 

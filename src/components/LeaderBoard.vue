@@ -59,7 +59,7 @@
 
 <script>
 import {
-  getAccessToken,
+  getAllScores,
   getUsername,
   isLoggedIn,
   logout,
@@ -115,19 +115,9 @@ export default {
       this.leaderboardArr = JSON.parse(leaderboardArrStr);
     }
 
+    // TODO add some kind of random update calls
     if (!this.leaderboardArr.length) {
-      const token = getAccessToken();
-      const headers = { Authorization: 'Bearer ' + token };
-      const resp = await fetch('https://api.carladde.com/default/basic', {
-        headers,
-      });
-
-      if (resp.status !== 200) {
-        console.warn('GET leaderboard status:', resp.status);
-        return;
-      }
-
-      this.leaderboardArr = await resp.json();
+      this.leaderboardArr = await getAllScores();
       localStorage.setItem('leaderboard', JSON.stringify(this.leaderboardArr));
     }
   },

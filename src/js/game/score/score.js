@@ -9,6 +9,7 @@ import {
   setScoreSecure,
   getHistorySecure,
   setHistorySecure,
+  getHistoryJwt,
 } from './score.secure';
 const debug = true;
 
@@ -189,6 +190,19 @@ export const getHistoryRecords = () => {
 };
 
 /**
+ * @returns {String}
+ */
+export const getHistoryRecordsSecure = () => {
+  if (process.env.NODE_ENV === 'production' || debug) {
+    const recordsJwt = getHistoryJwt();
+    return recordsJwt || '<undefined>';
+  }
+
+  const historyRecords = JSON.parse(localStorage.getItem('history-records'));
+  return historyRecords || [];
+};
+
+/**
  * @callback scoreCB
  * @param {Score}
  */
@@ -208,7 +222,6 @@ const removeHistoryRecord = (level) => {
   if (process.env.NODE_ENV === 'production' || debug) {
     setHistorySecure(historyRecords);
     historyRecordDebug();
-
     return;
   }
   localStorage.setItem('history-records', JSON.stringify(historyRecords));

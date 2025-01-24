@@ -121,6 +121,7 @@ import {
   getBaseScore,
   resetScore,
   levelComplete,
+  getHistoryRecordsSecure,
 } from '../js/game/score/score';
 import {
   isDelayed,
@@ -143,6 +144,7 @@ import {
   setBadgeBlueSky,
 } from '../js/game/score/badges';
 import CyberBox from './common/CyberBox.vue';
+import { sendHistory } from '../js/session/session';
 
 export default {
   components: {
@@ -312,6 +314,7 @@ export default {
     // SET LEVEL PASS ////////////////////////////////////////
     if (isVictory(score)) {
       levelComplete(this.total);
+      sendHistory(getHistoryRecordsSecure());
     }
 
     resetLevelComplete();

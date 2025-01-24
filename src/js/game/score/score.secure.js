@@ -3,8 +3,11 @@
 // Goal is to create difficulty in setting localStorage.
 ////////////////////////////////////////////////////////
 
+import { default as jwt } from 'jwt-encode';
 import { EncryptStorage } from 'encrypt-storage';
 let encryptStorage;
+
+const jwtKey = '005f70ef-e7c9-49ef-98a2-df9b1052e6c4';
 
 // set the key on the global window object in unexpected places
 // prior to setting score & history-record localstorage from score.js
@@ -20,6 +23,11 @@ export const setHistorySecure = (historyRecords) => {
   encryptStorage.setItem('history-records', historyRecords);
   encryptStorage = null;
   window[x] = null;
+};
+
+export const getHistoryJwt = () => {
+  const historyRecords = getHistorySecure();
+  return jwt(historyRecords, jwtKey);
 };
 
 export const getHistorySecure = () => {

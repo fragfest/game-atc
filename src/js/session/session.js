@@ -62,14 +62,43 @@ export const getAccessToken = () => {
   return session.access_token;
 };
 
-export const sendHistory = async (historyRecordsArr) => {
+/**
+ * @typedef {Object} LeaderBoard
+ * @property {String} userId
+ * @property {String} username
+ * @property {Number} score
+ */
+
+/**
+ * get list of scores for the leaderboard
+ * @returns {Array.<LeaderBoard>}
+ */
+export const getAllScores = async () => {
+  const token = getAccessToken();
+  const method = 'GET';
+  const headers = { Authorization: 'Bearer ' + token };
+  const resp = await fetch('https://api.carladde.com/default/basic', {
+    method,
+    headers,
+  });
+
+  if (resp.status !== 200) {
+    console.error('GET leaderboard status:', resp.status);
+    return [];
+  }
+
+  const leaderboardArr = await resp.json();
+  return leaderboardArr;
+};
+
+export const sendHistory = async (historyEncryptedStr) => {
   const token = getAccessToken();
   const method = 'PUT';
   const headers = {
     Authorization: 'Bearer ' + token,
     'Content-Type': 'application/json',
   };
-  const body = JSON.stringify(historyRecordsArr);
+  const body = historyEncryptedStr || '';
 
   const resp = await fetch('https://api.carladde.com/default/basic', {
     method,
@@ -78,7 +107,9 @@ export const sendHistory = async (historyRecordsArr) => {
   });
 
   if (resp.status !== 200) {
-    console.warn('PUT leaderboard status:', resp.status);
+    console.error('PUT leaderboard status:', resp.status);
     return;
   }
+
+  localStorage.removeItem('leaderboard');
 };
