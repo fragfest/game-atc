@@ -10,10 +10,12 @@ import {
   getHistorySecure,
   setHistorySecure,
   getHistoryJwt,
+  getBadgesArrSecure,
+  setBadgesArrSecure,
+  getBadgesJwt,
 } from './score.secure';
 
-const debug = false;
-export const getDebug = () => debug;
+const debug = true;
 
 // key & values must match
 export const ScoreEvents = Object.freeze({
@@ -176,6 +178,44 @@ const publishScore = (score) => {
   if (!ScoreEvents[scoreEvent])
     throw new Error('unknown score event: ' + scoreEvent);
   document.dispatchEvent(new CustomEvent(scoreEvent, { detail: { score } }));
+};
+
+/**
+ * @returns {Array.<String>}
+ */
+export const getBadgesSecure = () => {
+  if (process.env.NODE_ENV === 'production' || debug) {
+    const badges = getBadgesJwt();
+    return badges || [];
+  }
+
+  const badges = JSON.parse(localStorage.getItem('badges'));
+  return badges || [];
+};
+
+/**
+ * @returns {Array.<String>}
+ */
+export const getBadges = () => {
+  if (process.env.NODE_ENV === 'production' || debug) {
+    const badges = getBadgesArrSecure();
+    return badges || [];
+  }
+
+  const badges = JSON.parse(localStorage.getItem('badges'));
+  return badges || [];
+};
+
+/**
+ * @param {Array.<String>} badges
+ */
+export const setBadges = (badges) => {
+  if (process.env.NODE_ENV === 'production' || debug) {
+    setBadgesArrSecure(badges || []);
+    return;
+  }
+
+  localStorage.setItem('badges', JSON.stringify(badges));
 };
 
 /**

@@ -88,6 +88,7 @@ import {
   levelRetry,
   getHistoryRecords,
   getHistoryRecordsSecure,
+  getBadgesSecure,
 } from '../../js/game/score/score';
 import { getHighestLevelCompleted } from '../../js/game/score/score';
 import {
@@ -167,7 +168,7 @@ export default {
     const isNewLoginSuccess = await loginUsingCallbackUrl(url);
     if (isNewLoginSuccess) {
       console.info('login success');
-      await sendHistory(getHistoryRecordsSecure());
+      await sendHistory(getHistoryRecordsSecure(), getBadgesSecure());
       getAllScores(true);
       return;
     }

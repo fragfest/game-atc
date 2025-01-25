@@ -123,6 +123,7 @@ import {
   resetScore,
   levelComplete,
   getHistoryRecordsSecure,
+  getBadgesSecure,
 } from '../js/game/score/score';
 import {
   isDelayed,
@@ -312,19 +313,6 @@ export default {
     //   return Number(score).toLocaleString('en-CA');
     // },
 
-    // LEVEL PASS ////////////////////////////////////////////
-    if (isVictory(score)) {
-      levelComplete(this.total);
-
-      if (isLoggedIn()) {
-        sendHistory(getHistoryRecordsSecure());
-        getAllScores(true);
-      }
-    }
-
-    resetLevelComplete();
-    resetScore();
-
     // BADGES /////////////////////////////////////////////////
     this.bluesky = isAchievedBlueSky();
     const newBadgeAchieved = isNewAchievementBlueSky();
@@ -364,6 +352,19 @@ export default {
         });
       }, this.okBtnDispTimeSec * 1000);
     }
+
+    // LEVEL PASS ////////////////////////////////////////////
+    if (isVictory(score)) {
+      levelComplete(this.total);
+
+      if (isLoggedIn()) {
+        sendHistory(getHistoryRecordsSecure(), getBadgesSecure());
+        getAllScores(true);
+      }
+    }
+
+    resetLevelComplete();
+    resetScore();
   },
 
   methods: {

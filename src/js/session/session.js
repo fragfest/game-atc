@@ -85,6 +85,7 @@ export const getAccessToken = () => {
  * @property {String} userId
  * @property {String} username
  * @property {Number} score
+ * @property {Array.<String>} badges
  */
 
 /**
@@ -116,23 +117,31 @@ export const getAllScores = async (isSkipCache) => {
 };
 
 /**
- * send JWT with history records
+ * send JWTs to update table: scores
  * @param {String} historyRecordsJwt
+ * @param {String} badgesJwt
  */
-export const sendHistory = async (historyRecordsJwt) => {
+export const sendHistory = async (historyRecordsJwt, badgesJwt) => {
   const token = getAccessToken();
   const method = 'PUT';
   const headers = {
     Authorization: 'Bearer ' + token,
-    'Content-Type': 'text/plain',
+    'Content-Type': 'application/json',
   };
 
-  const isString = typeof historyRecordsJwt === 'string';
-  const body = historyRecordsJwt || '';
-  if (!body || !isString) {
+  const isString = (x) => typeof x === 'string';
+  const history = historyRecordsJwt;
+  const badges = badgesJwt;
+
+  if (!isString(history) || !isString(badges)) {
     console.warn('PUT leaderboard not sent');
     return;
   }
+
+  const body = JSON.stringify({
+    history,
+    badges,
+  });
 
   const resp = await fetch('https://api.carladde.com/default/basic', {
     method,
