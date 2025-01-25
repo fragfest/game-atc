@@ -11,7 +11,9 @@ import {
   setHistorySecure,
   getHistoryJwt,
 } from './score.secure';
-const debug = true;
+
+const debug = false;
+export const getDebug = () => debug;
 
 // key & values must match
 export const ScoreEvents = Object.freeze({

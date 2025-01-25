@@ -115,6 +115,7 @@ import {
   resizeGameOver,
   resetLevelComplete,
   victoryDebug,
+  resetBadgeHistory,
 } from '../js/utils';
 import {
   getScore,
@@ -314,6 +315,7 @@ export default {
     // LEVEL PASS ////////////////////////////////////////////
     if (isVictory(score)) {
       levelComplete(this.total);
+
       if (isLoggedIn()) {
         sendHistory(getHistoryRecordsSecure());
         getAllScores(true);
@@ -326,11 +328,15 @@ export default {
     // BADGES /////////////////////////////////////////////////
     this.bluesky = isAchievedBlueSky();
     const newBadgeAchieved = isNewAchievementBlueSky();
+    if (newBadgeAchieved) {
+      resetBadgeHistory();
+    }
 
     if (newBadgeAchieved) {
       setBadgeBlueSky();
       this.isShowBadgeBox = true;
       play(SoundType.Ding);
+
       if (this.bluesky) {
         this.blueSkyClass = 'badge-new';
         this.isNewBlueSky = true;

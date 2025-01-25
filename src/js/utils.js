@@ -225,6 +225,7 @@ export const setLogLevel = () => debug();
 export const setupDebug = () => debug();
 export const historyRecordDebug = () => debug();
 export const victoryDebug = () => debug();
+export const resetBadgeHistory = () => debug();
 
 const debug = () => {
   window['06d6dd1b-76bb-4e0f-9d66-6dd80e324211'] =

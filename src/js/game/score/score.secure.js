@@ -13,10 +13,33 @@ const jwtKey = '005f70ef-e7c9-49ef-98a2-df9b1052e6c4';
 // prior to setting score & history-record localstorage from score.js
 const x = '06d6dd1b-76bb-4e0f-9d66-6dd80e324211';
 
-export const setHistorySecure = (historyRecords) => {
-  window['06d6dd1b-76bb-4e0f-9d66-6dd80e324211'] =
-    '8c329fcb-0fb7-4401-a9f6-65332dcdb21b';
+export const getBadgesSecure = () => {
+  if (!encryptStorage) {
+    encryptStorage = new EncryptStorage(
+      '8c329fcb-0fb7-4401-a9f6-65332dcdb21b',
+      { prefix: 'atc-ffo' }
+    );
+  }
+  const cipher = encryptStorage.getItem('badges', {
+    prefix: 'atc-ffo',
+  });
+  if (!cipher) return null;
 
+  const badges = encryptStorage.decryptValue(cipher);
+  encryptStorage = null;
+  return badges;
+};
+
+export const setBadgesSecure = (badgesArr) => {
+  if (!encryptStorage) {
+    encryptStorage = new EncryptStorage(window[x], { prefix: 'atc-ffo' });
+  }
+  encryptStorage.setItem('badges', badgesArr);
+  encryptStorage = null;
+  window[x] = null;
+};
+
+export const setHistorySecure = (historyRecords) => {
   if (!encryptStorage) {
     encryptStorage = new EncryptStorage(window[x], { prefix: 'atc-ffo' });
   }

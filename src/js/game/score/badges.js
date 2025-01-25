@@ -1,6 +1,7 @@
 import { getTurbulenceLevels as getWeatherLevels } from '../weather';
-import { getHistoryRecords } from './score';
+import { getDebug, getHistoryRecords } from './score';
 import { isVictory } from '../victory';
+import { getBadgesSecure, setBadgesSecure } from './score.secure';
 
 export const Badges = Object.freeze({
   BlueSky: 'BlueSky',
@@ -42,6 +43,13 @@ export const isNewAchievementBlueSky = () => {
 export const setBadgeBlueSky = () => {
   if (hasHistoryBadgeBlueSky()) return;
 
+  if (process.env.NODE_ENV === 'production' || getDebug()) {
+    const badges = getBadgesSecure() || [];
+    badges.push(Badges.BlueSky);
+    setBadgesSecure(badges);
+    return;
+  }
+
   const badges = JSON.parse(localStorage.getItem('badges')) || [];
   badges.push(Badges.BlueSky);
   localStorage.setItem('badges', JSON.stringify(badges));
@@ -50,6 +58,12 @@ export const setBadgeBlueSky = () => {
 // PRIVATE ////////////////////////////////////////////////////////
 
 const hasHistoryBadgeBlueSky = () => {
-  const badges = JSON.parse(localStorage.getItem('badges')) || [];
+  let badges = [];
+  if (process.env.NODE_ENV === 'production' || getDebug()) {
+    badges = getBadgesSecure() || [];
+  } else {
+    badges = JSON.parse(localStorage.getItem('badges')) || [];
+  }
+
   return !!badges.find((badge) => badge === Badges.BlueSky);
 };
