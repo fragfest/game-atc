@@ -62,6 +62,15 @@ export const loginUsingCallbackUrl = async (url) => {
   return true;
 };
 
+export const getUserId = () => {
+  const key = `oidc.user:${config.authority}:${config.client_id}`;
+  const sessionStr = sessionStorage.getItem(key);
+  if (!sessionStr) return '';
+
+  const session = JSON.parse(sessionStr);
+  return session.profile.sub;
+};
+
 export const getUsername = () => {
   const key = `oidc.user:${config.authority}:${config.client_id}`;
   const sessionStr = sessionStorage.getItem(key);

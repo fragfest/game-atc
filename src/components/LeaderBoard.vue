@@ -43,9 +43,10 @@
           v-for="(item, index) in leaderboardArr"
           :key="index"
           class="scores-row"
+          :class="scoreItemClass(item)"
         >
           <div class="score-user">
-            <h2 class="hdr-green">{{ textFormat(item.username) }}</h2>
+            <h2 class="hdr-white">{{ textFormat(item?.username) }}</h2>
           </div>
           <div class="score-content">
             <BadgesDisplay
@@ -53,7 +54,7 @@
               :size="badgeSize"
               :bluesky="hasBlueSky(item)"
             />
-            <h2 class="w-col hdr-green">{{ scoreFormat(item.score) }}</h2>
+            <h2 class="w-col hdr-green">{{ scoreFormat(item?.score) }}</h2>
           </div>
         </div>
       </div>
@@ -65,6 +66,7 @@
 import { Badges } from '../js/game/score/badges';
 import {
   getAllScores,
+  getUserId,
   getUsername,
   isLoggedIn,
   logout,
@@ -79,8 +81,11 @@ export default {
 
   data() {
     return {
+      userId: getUserId(),
       username: '',
-      leaderboardArr: JSON.parse(localStorage.getItem('leaderboard') || '[]'),
+      leaderboardArr: this.sortArr(
+        JSON.parse(localStorage.getItem('leaderboard') || '[]')
+      ),
     };
   },
 
@@ -91,7 +96,8 @@ export default {
     }
 
     this.username = getUsername();
-    this.leaderboardArr = await getAllScores();
+    const scoresArr = await getAllScores();
+    this.leaderboardArr = this.sortArr(scoresArr || []);
   },
 
   computed: {
@@ -102,6 +108,7 @@ export default {
 
   methods: {
     hasBlueSky: function (item) {
+      if (!item?.badges) return false;
       if (item.badges.find((x) => x === Badges.BlueSky)) return true;
       return false;
     },
@@ -121,12 +128,29 @@ export default {
     },
 
     textFormat: function (text) {
+      if (!text) return '';
       return text.slice(0, 40);
     },
 
     scoreFormat: function (score) {
+      if (!score) return 0;
       if (score > 99999) return '99,999+';
       return Number(score).toLocaleString('en-CA');
+    },
+
+    scoreItemClass: function (item) {
+      if (!item.userId) return '';
+      if (this.userId === item.userId) return 'selected';
+      return '';
+    },
+
+    sortArr: function (leadershipArr) {
+      return leadershipArr.sort((a, b) => {
+        if (a.score === b.score) {
+          return b?.badges?.length - a?.badges?.length;
+        }
+        return b?.score - a?.score;
+      });
     },
   },
 };
@@ -297,6 +321,12 @@ h2 {
       }
     }
   }
+
+  .scores .scores-row.selected {
+    outline: 1px solid rgb(44, 255, 44);
+    background-color: #19354a;
+  }
+
   // END scores
 
   // login
