@@ -1,38 +1,78 @@
 <template>
   <div class="container" :class="sizeClass">
-    <div class="badges">
-      <BlueSky
-        v-if="bluesky"
-        class="badge-achieved"
-        :class="blueSkyClassComputed"
-        :style="badgeStyle"
-        @click="onClickBadgeAchieved('blueSkyClass')"
-        @mouseenter="onMouseEnterBadgeAchieved('bluesky')"
-        @mouseleave="onMouseLeaveBadgeAchieved()"
-      />
-      <BlueSkyGrey
-        v-if="!bluesky"
-        :style="badgeStyle"
-        @mouseenter="onMouseEnterBadgeAchieved('bluesky')"
-        @mouseleave="onMouseLeaveBadgeAchieved()"
-      />
-      <BadgeEmpty
-        :style="badgeStyle"
-        @mouseenter="onMouseEnterBadgeAchieved('none')"
-        @mouseleave="onMouseLeaveBadgeAchieved()"
-      />
-      <BadgeEmpty
-        :style="badgeStyle"
-        @mouseenter="onMouseEnterBadgeAchieved('none')"
-        @mouseleave="onMouseLeaveBadgeAchieved()"
-      />
-      <BadgeEmpty
-        :style="badgeStyle"
-        @mouseenter="onMouseEnterBadgeAchieved('none')"
-        @mouseleave="onMouseLeaveBadgeAchieved()"
-      />
+    <div class="badges" :class="badgesRowClass">
+      <!-- BlueSky -->
+      <ToolTip v-if="bluesky" :disabled="!isLeaderboard">
+        <BlueSky
+          class="badge-achieved"
+          :class="blueSkyClassComputed"
+          :style="badgeStyle"
+          @click="onClickBadgeAchieved('blueSkyClass')"
+          @mouseenter="onMouseEnterBadgeAchieved('bluesky')"
+          @mouseleave="onMouseLeaveBadgeAchieved()"
+        />
+        <template v-slot:hover>
+          <div class="badges-desc">
+            <h3 class="light-green">{{ title('bluesky') }}</h3>
+            <p class="white">{{ desc('bluesky') }}</p>
+          </div>
+        </template>
+      </ToolTip>
+      <ToolTip v-if="!bluesky" :disabled="!isLeaderboard">
+        <BlueSkyGrey
+          :style="badgeStyle"
+          @mouseenter="onMouseEnterBadgeAchieved('bluesky')"
+          @mouseleave="onMouseLeaveBadgeAchieved()"
+        />
+        <template v-slot:hover>
+          <div class="badges-desc">
+            <h3 class="light-green">{{ title('bluesky') }}</h3>
+            <p class="white">{{ desc('bluesky') }}</p>
+          </div>
+        </template>
+      </ToolTip>
+      <!-- END BlueSky -->
+
+      <ToolTip :disabled="!isLeaderboard">
+        <BadgeEmpty
+          :style="badgeStyle"
+          @mouseenter="onMouseEnterBadgeAchieved('none')"
+          @mouseleave="onMouseLeaveBadgeAchieved()"
+        />
+        <template v-slot:hover>
+          <div class="badges-desc">
+            <p class="white">{{ desc('none') }}</p>
+          </div>
+        </template>
+      </ToolTip>
+
+      <ToolTip :disabled="!isLeaderboard">
+        <BadgeEmpty
+          :style="badgeStyle"
+          @mouseenter="onMouseEnterBadgeAchieved('none')"
+          @mouseleave="onMouseLeaveBadgeAchieved()"
+        />
+        <template v-slot:hover>
+          <div class="badges-desc">
+            <p class="white">{{ desc('none') }}</p>
+          </div>
+        </template>
+      </ToolTip>
+
+      <ToolTip :disabled="!isLeaderboard">
+        <BadgeEmpty
+          :style="badgeStyle"
+          @mouseenter="onMouseEnterBadgeAchieved('none')"
+          @mouseleave="onMouseLeaveBadgeAchieved()"
+        />
+        <template v-slot:hover>
+          <div class="badges-desc">
+            <p class="white">{{ desc('none') }}</p>
+          </div>
+        </template>
+      </ToolTip>
     </div>
-    <div v-if="showBadgeDesc" class="badges-desc">
+    <div v-if="!hideBadgeDesc && showBadgeDesc" class="badges-desc">
       <h3 class="light-green">{{ badgeTitle }}</h3>
       <p class="white">{{ badgeDesc }}</p>
     </div>
@@ -44,6 +84,7 @@ import { getClassSize, getScreenSize } from '../../js/utils';
 import BadgeEmpty from './BadgeEmpty.vue';
 import BlueSky from './BlueSky';
 import BlueSkyGrey from './BlueSkyGrey';
+import ToolTip from '../common/ToolTip';
 
 const BadgeTypes = Object.freeze({
   none: { title: '', desc: 'future achievement' },
@@ -56,9 +97,10 @@ export default {
     bluesky: { type: Boolean },
     isNewBlueSky: { type: Boolean },
     isShowDescription: { type: Boolean },
+    isLeaderboard: { type: Boolean },
   },
 
-  components: { BadgeEmpty, BlueSky, BlueSkyGrey },
+  components: { ToolTip, BadgeEmpty, BlueSky, BlueSkyGrey },
 
   data() {
     return {
@@ -76,6 +118,16 @@ export default {
   },
 
   computed: {
+    hideBadgeDesc: function () {
+      if (this.isLeaderboard) return true;
+      return false;
+    },
+
+    badgesRowClass: function () {
+      if (this.isLeaderboard) return 'leaderboard';
+      return '';
+    },
+
     badgeStyle: function () {
       return 'width:' + this.size + 'px';
     },
@@ -104,6 +156,14 @@ export default {
   },
 
   methods: {
+    title: function (badge) {
+      return BadgeTypes[badge].title;
+    },
+
+    desc: function (badge) {
+      return BadgeTypes[badge].desc;
+    },
+
     onMouseEnterBadgeAchieved: function (badgeType) {
       if (badgeType === 'none') {
         this.badgeTitle = BadgeTypes.none.title;
@@ -163,19 +223,33 @@ export default {
   display: flex;
   column-gap: 12px;
   align-items: center;
-  padding: 12px 12px;
+  padding-top: 8px;
+  padding-left: 12px;
+  padding-right: 12px;
 
   background-color: #2c5c81ff;
   border: 1px solid #24b3c9;
   border-radius: 6px;
 }
 
+.container .badges.leaderboard {
+  background-color: transparent;
+  border: none;
+}
+
 .container .badge-expand {
   animation: scale var(--duration-scale) var(--timing-scale) 0s 1 forwards;
+}
+.container.small .badge-expand {
+  animation: scale-small var(--duration-scale) var(--timing-scale) 0s 1 forwards;
 }
 
 .container .badge-collapse {
   animation: shrink var(--duration-scale) var(--timing-scale) 0s 1 forwards;
+}
+.container.small .badge-collapse {
+  animation: shrink-small var(--duration-scale) var(--timing-scale) 0s 1
+    forwards;
 }
 
 .container .badge-achieved {
@@ -186,6 +260,10 @@ export default {
 
 .container .badge-new {
   animation: scale-shrink var(--duration-scale) var(--timing-scale) 8s 1
+    forwards;
+}
+.container.small .badge-new {
+  animation: scale-shrink-small var(--duration-scale) var(--timing-scale) 8s 1
     forwards;
 }
 
@@ -223,6 +301,17 @@ export default {
     transform: scale(1);
   }
 }
+@keyframes shrink-small {
+  0% {
+    transform: scale(4) translate(30%);
+  }
+  20% {
+    transform: scale(1) translate(0);
+  }
+  100% {
+    transform: scale(1) translate(0);
+  }
+}
 
 @keyframes scale {
   0% {
@@ -235,6 +324,17 @@ export default {
     transform: scale(12);
   }
 }
+@keyframes scale-small {
+  0% {
+    transform: scale(1);
+  }
+  20% {
+    transform: scale(4) translate(30%);
+  }
+  100% {
+    transform: scale(4) translate(30%);
+  }
+}
 
 @keyframes scale-shrink {
   0% {
@@ -245,6 +345,20 @@ export default {
   }
   80% {
     transform: scale(12);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes scale-shrink-small {
+  0% {
+    transform: scale(1);
+  }
+  20% {
+    transform: scale(4) translate(30%);
+  }
+  80% {
+    transform: scale(4) translate(30%);
   }
   100% {
     transform: scale(1);

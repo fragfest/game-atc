@@ -51,10 +51,12 @@ main {
   .tooltip .hover {
     visibility: hidden;
     position: absolute;
-    border-radius: 6px;
+
+    width: 240px;
     padding: 6px 12px;
     margin-top: 4px;
     margin-left: 12px;
+    border-radius: 6px;
 
     background-color: black;
     color: white;

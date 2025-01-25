@@ -1,6 +1,6 @@
 <template>
   <svg
-    viewBox="0 0 168.4864 168.03956"
+    viewBox="0 0 168.48642 168.03958"
     version="1.1"
     id="blue-sky"
     xml:space="preserve"

@@ -23,10 +23,10 @@
         </div>
 
         <div v-if="username" class="login-btn">
-          <h3 class="blue">{{ username }}</h3>
+          <h3 class="hdr-white">{{ textFormat(username) }}</h3>
         </div>
         <div v-if="!username" class="login-btn">
-          <h3 class="blue">Sign In to view</h3>
+          <h3 class="hdr-white">Sign In to view</h3>
         </div>
       </div>
 
@@ -34,7 +34,7 @@
         <div class="scores-header">
           <h2 class="hdr-white"></h2>
           <div class="labels-right">
-            <!-- <h2 class="hdr-white">achievements</h2> -->
+            <h2 class="hdr-white">achievements</h2>
             <h2 class="w-col hdr-white">score</h2>
           </div>
         </div>
@@ -45,10 +45,14 @@
           class="scores-row"
         >
           <div class="score-user">
-            <h2 class="hdr-green">{{ item.username }}</h2>
+            <h2 class="hdr-green">{{ textFormat(item.username) }}</h2>
           </div>
           <div class="score-content">
-            <h2 class="hdr-green"></h2>
+            <BadgesDisplay
+              :isLeaderboard="true"
+              :size="badgeSize"
+              :bluesky="hasBlueSky(item)"
+            />
             <h2 class="w-col hdr-green">{{ scoreFormat(item.score) }}</h2>
           </div>
         </div>
@@ -58,6 +62,7 @@
 </template>
 
 <script>
+import { Badges } from '../js/game/score/badges';
 import {
   getAllScores,
   getUsername,
@@ -65,8 +70,13 @@ import {
   logout,
   startLogin,
 } from '../js/session/session';
+import BadgesDisplay from './badges/BadgesDisplay';
 
 export default {
+  components: {
+    BadgesDisplay,
+  },
+
   data() {
     return {
       username: '',
@@ -84,7 +94,18 @@ export default {
     this.leaderboardArr = await getAllScores();
   },
 
+  computed: {
+    badgeSize: function () {
+      return 44;
+    },
+  },
+
   methods: {
+    hasBlueSky: function (item) {
+      if (item.badges.find((x) => x === Badges.BlueSky)) return true;
+      return false;
+    },
+
     goBack: function () {
       this.$router.push({ path: '/' });
     },
@@ -99,7 +120,12 @@ export default {
       logout();
     },
 
+    textFormat: function (text) {
+      return text.slice(0, 40);
+    },
+
     scoreFormat: function (score) {
+      if (score > 99999) return '99,999+';
       return Number(score).toLocaleString('en-CA');
     },
   },
@@ -204,13 +230,14 @@ h2 {
     max-width: 1800px;
   }
 
-  .scores-header {
+  .scores .scores-header {
     display: flex;
     justify-content: flex-end;
 
     padding: 0% 4%;
     border-radius: 6px;
-    background-color: #2a2a2adf;
+    background-color: #2c5c81;
+    border: 1px solid lightgrey;
 
     h2 {
       margin: 26px 4px;
@@ -221,17 +248,27 @@ h2 {
       justify-content: space-between;
       column-gap: 24px;
       text-align: right;
+
+      @media (max-width: 600px) {
+        column-gap: 0;
+      }
     }
   }
 
   .scores .scores-row {
     display: flex;
+    flex-wrap: wrap;
+    word-break: break-all;
     justify-content: space-between;
     align-items: center;
 
     padding: 0% 4%;
     border-radius: 6px;
-    background-color: #2a2a2adf;
+    background-color: #2c5c81;
+
+    @media (max-width: 600px) {
+      padding-left: 8px;
+    }
 
     h2 {
       margin: 4px;
@@ -239,13 +276,25 @@ h2 {
 
     .score-user {
       display: flex;
+      h2 {
+        font-weight: 500;
+      }
     }
 
     .score-content {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       column-gap: 24px;
       text-align: right;
+
+      h2 {
+        font-weight: 500;
+      }
+
+      @media (max-width: 600px) {
+        column-gap: 0;
+      }
     }
   }
   // END scores
@@ -255,10 +304,13 @@ h2 {
     display: flex;
     column-gap: 20px;
     width: fit-content;
+    word-break: break-all;
 
     padding: 4px 14px;
     border-radius: 6px;
-    background-color: lightgrey;
+    background-color: #2c5c81;
+    border: 1px solid lightgrey;
+
     h2 {
       margin: 8px;
     }
@@ -302,7 +354,7 @@ h2 {
       border-radius: 8px;
       border: none;
       background-color: #1d425e;
-      box-shadow: 2px 2px 2px #000000;
+      box-shadow: 4px 0px 3px #292929;
       cursor: pointer;
 
       @media (max-width: 600px) {
@@ -317,7 +369,7 @@ h2 {
     button:active {
       position: relative;
       outline: 1px solid white;
-      left: 2px;
+      left: 4px;
       box-shadow: none;
     }
 
