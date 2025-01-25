@@ -10,25 +10,32 @@
     </div>
 
     <div class="body">
-      <div class="login">
-        <div v-if="!username" class="login-btn">
-          <button @click="signIn">
-            <h2 class="hdr-white">Sign In</h2>
-          </button>
-        </div>
-        <div v-if="username" class="login-btn">
-          <button @click="signOut">
-            <h2 class="hdr-white">Sign Out</h2>
-          </button>
+      <section class="body-top">
+        <div class="login">
+          <div v-if="!username" class="login-btn">
+            <button @click="signIn">
+              <h2 class="hdr-white">Sign In</h2>
+            </button>
+          </div>
+          <div v-if="username" class="login-btn">
+            <button @click="signOut">
+              <h2 class="hdr-white">Sign Out</h2>
+            </button>
+          </div>
+
+          <div v-if="username" class="login-btn">
+            <h3 class="hdr-green">{{ textFormat(username) }}</h3>
+          </div>
+          <div v-if="!username" class="login-btn">
+            <h3 class="hdr-white">Sign In to view</h3>
+          </div>
         </div>
 
-        <div v-if="username" class="login-btn">
-          <h3 class="hdr-white">{{ textFormat(username) }}</h3>
+        <div class="user-rank">
+          <h2 class="hdr-white">your rank:</h2>
+          <h2 class="hdr-green">{{ userRank }}</h2>
         </div>
-        <div v-if="!username" class="login-btn">
-          <h3 class="hdr-white">Sign In to view</h3>
-        </div>
-      </div>
+      </section>
 
       <div v-if="leaderboardArr.length" class="scores">
         <div class="scores-header">
@@ -46,6 +53,7 @@
           :class="scoreItemClass(item)"
         >
           <div class="score-user">
+            <h3 class="hdr-green">{{ item?.rank || '' }}</h3>
             <h2 class="hdr-white">{{ textFormat(item?.username) }}</h2>
           </div>
           <div class="score-content">
@@ -72,6 +80,7 @@ import {
   logout,
   startLogin,
 } from '../js/session/session';
+import { calculateScreenSize, setScreenSize } from '../js/utils';
 import BadgesDisplay from './badges/BadgesDisplay';
 
 export default {
@@ -89,6 +98,13 @@ export default {
     };
   },
 
+  beforeCreate() {
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+    const size = calculateScreenSize(windowWidth, windowHeight);
+    setScreenSize(size);
+  },
+
   async mounted() {
     if (!isLoggedIn()) {
       this.leaderboardArr = [];
@@ -101,6 +117,13 @@ export default {
   },
 
   computed: {
+    userRank: function () {
+      const item = this.leaderboardArr.find(
+        (item) => item.userId === this.userId
+      );
+      return item?.rank || '-';
+    },
+
     badgeSize: function () {
       return 44;
     },
@@ -144,13 +167,20 @@ export default {
       return '';
     },
 
-    sortArr: function (leadershipArr) {
-      return leadershipArr.sort((a, b) => {
+    sortArr: function (arr) {
+      const sorted = arr.sort((a, b) => {
         if (a.score === b.score) {
           return b?.badges?.length - a?.badges?.length;
         }
         return b?.score - a?.score;
       });
+
+      let rank = 1;
+      sorted.forEach((item) => {
+        item.rank = rank;
+        rank++;
+      });
+      return sorted;
     },
   },
 };
@@ -239,9 +269,45 @@ h2 {
 
   // body
   .body {
+    max-width: 1800px;
     margin: 1% 12%;
+
     @media (max-width: 600px) {
       margin: 1% 4%;
+    }
+  }
+
+  section.body-top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    row-gap: 8px;
+  }
+
+  section.body-top .user-rank {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    word-break: break-all;
+
+    width: 260px;
+    padding: 0 15px;
+    border-radius: 6px;
+    outline: 1px solid lightgrey;
+    background-color: #2c5c81;
+
+    h2 {
+      margin: 14px;
+      font-size: 26px;
+    }
+
+    @media (max-width: 600px) {
+      width: 100%;
+      h2 {
+        margin: 8px;
+        font-size: 22px;
+      }
     }
   }
 
@@ -251,7 +317,6 @@ h2 {
     flex-direction: column;
     row-gap: 4px;
     margin: 2% 0;
-    max-width: 1800px;
   }
 
   .scores .scores-header {
@@ -260,7 +325,7 @@ h2 {
 
     padding: 0% 4%;
     border-radius: 6px;
-    background-color: #2c5c81;
+    background-color: #19354a;
     border: 1px solid lightgrey;
 
     h2 {
@@ -300,8 +365,17 @@ h2 {
 
     .score-user {
       display: flex;
+      flex-wrap: wrap;
+      word-break: break-all;
+      align-items: center;
+      gap: 22px;
+
       h2 {
         font-weight: 500;
+      }
+      h3 {
+        margin: 0px;
+        font-size: 22px;
       }
     }
 
@@ -336,7 +410,7 @@ h2 {
     width: fit-content;
     word-break: break-all;
 
-    padding: 4px 14px;
+    padding: 4px 15px;
     border-radius: 6px;
     background-color: #2c5c81;
     border: 1px solid lightgrey;
@@ -347,7 +421,7 @@ h2 {
 
     @media (max-width: 600px) {
       flex-direction: column;
-      width: 90%;
+      width: 100%;
     }
   }
 
