@@ -197,7 +197,7 @@ const tutorial =
     if (isAtStage(Stages.Intro)) {
       const html =
         `Welcome <b>Trainee</b>, <br><br> Before directing real traffic we need you to qualify on the Future Flight Ops system.<br>` +
-        ` Complete all the training scenarios so we feel safe letting you lose on the paying public. <br><br> Good Luck!`;
+        ` Complete all the training scenarios so we feel safe letting you loose on the paying public. <br><br> Good Luck!`;
       state.dialogBox = { top: 0.1, left: 0.1, width: 0.5, html };
       completeStage(Stages.Intro);
       startTimeStageDeparture = elapsedTime;

@@ -1,7 +1,8 @@
 import { default as dayjs } from 'dayjs';
 import { UserManager } from 'oidc-client-ts';
 
-const apiUrl = 'https://api.carladde.com/dev/basic';
+// const apiUrl = 'https://api.carladde.com/prod/atc';
+const apiUrl = 'https://api.carladde.com/dev/atc';
 
 const config = {
   authority: 'https://cognito-idp.us-west-1.amazonaws.com/us-west-1_I2oLrzd6B',
