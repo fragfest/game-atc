@@ -235,8 +235,8 @@ const tutorial =
       elapsedTimeArrival > ElapsedTimes.ArrivalLandStartMs
     ) {
       const positionObj = {
-        x: canvasObj.width / 1.35,
-        y: canvasObj.height / 2,
+        x: 0.7 * canvasObj.width,
+        y: 0.45 * canvasObj.height,
         heading: '240',
         altitude: 5500,
         speed: 220,
