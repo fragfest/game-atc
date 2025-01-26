@@ -2,7 +2,7 @@
   <main>
     <div class="tooltip">
       <slot></slot>
-      <div class="hover" :class="classComputed">
+      <div class="hover" :class="classComputed" :style="styleComputed">
         <slot name="hover"></slot>
       </div>
     </div>
@@ -22,6 +22,7 @@ export default {
         return ['close'].includes(val);
       },
     },
+    width: { type: Number, default: null },
   },
 
   data() {
@@ -35,6 +36,11 @@ export default {
   },
 
   computed: {
+    styleComputed: function () {
+      if (!this.width) return '';
+      return { width: this.width + 'px' };
+    },
+
     classComputed: function () {
       let classStr = '';
       classStr += this.disabled ? 'disabled' : '';
@@ -52,7 +58,6 @@ main {
     visibility: hidden;
     position: absolute;
 
-    width: 240px;
     padding: 6px 12px;
     margin-top: 4px;
     margin-left: 12px;

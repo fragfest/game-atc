@@ -2,7 +2,7 @@
   <div class="container" :class="sizeClass">
     <div class="badges" :class="badgesRowClass">
       <!-- BlueSky -->
-      <ToolTip v-if="bluesky" :disabled="!isLeaderboard">
+      <ToolTip v-if="bluesky" :disabled="!isLeaderboard" :width="width">
         <BlueSky
           class="badge-achieved"
           :class="blueSkyClassComputed"
@@ -18,7 +18,7 @@
           </div>
         </template>
       </ToolTip>
-      <ToolTip v-if="!bluesky" :disabled="!isLeaderboard">
+      <ToolTip v-if="!bluesky" :disabled="!isLeaderboard" :width="width">
         <BlueSkyGrey
           :style="badgeStyle"
           @mouseenter="onMouseEnterBadgeAchieved('bluesky')"
@@ -33,7 +33,7 @@
       </ToolTip>
       <!-- END BlueSky -->
 
-      <ToolTip :disabled="!isLeaderboard">
+      <ToolTip :disabled="!isLeaderboard" :width="width">
         <BadgeEmpty
           :style="badgeStyle"
           @mouseenter="onMouseEnterBadgeAchieved('none')"
@@ -46,7 +46,7 @@
         </template>
       </ToolTip>
 
-      <ToolTip :disabled="!isLeaderboard">
+      <ToolTip :disabled="!isLeaderboard" :width="width">
         <BadgeEmpty
           :style="badgeStyle"
           @mouseenter="onMouseEnterBadgeAchieved('none')"
@@ -59,7 +59,7 @@
         </template>
       </ToolTip>
 
-      <ToolTip :disabled="!isLeaderboard">
+      <ToolTip :disabled="!isLeaderboard" :width="width">
         <BadgeEmpty
           :style="badgeStyle"
           @mouseenter="onMouseEnterBadgeAchieved('none')"
@@ -118,6 +118,11 @@ export default {
   },
 
   computed: {
+    width: function () {
+      if (this.isLeaderboard) return 240;
+      return null;
+    },
+
     hideBadgeDesc: function () {
       if (this.isLeaderboard) return true;
       return false;

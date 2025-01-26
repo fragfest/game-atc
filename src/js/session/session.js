@@ -1,6 +1,8 @@
 import { default as dayjs } from 'dayjs';
 import { UserManager } from 'oidc-client-ts';
 
+const apiUrl = 'https://api.carladde.com/dev/basic';
+
 const config = {
   authority: 'https://cognito-idp.us-west-1.amazonaws.com/us-west-1_I2oLrzd6B',
   client_id: '8fhopbpd0l3bjidn4infu0bcn',
@@ -110,7 +112,7 @@ export const getAllScores = async (isSkipCache) => {
     headers = { ...headers, 'Cache-Control': 'max-age=0' };
   }
 
-  const resp = await fetch('https://api.carladde.com/default/basic', {
+  const resp = await fetch(apiUrl, {
     method,
     headers,
   });
@@ -152,7 +154,7 @@ export const sendHistory = async (historyRecordsJwt, badgesJwt) => {
     badges,
   });
 
-  const resp = await fetch('https://api.carladde.com/default/basic', {
+  const resp = await fetch(apiUrl, {
     method,
     headers,
     body,
