@@ -54,7 +54,10 @@
         >
           <div class="score-user">
             <h3 class="hdr-green">{{ item?.rank || '' }}</h3>
-            <h2 class="hdr-white">{{ textFormat(item?.username) }}</h2>
+            <h2 v-if="isPlayerItem(item)" class="hdr-green">
+              {{ textFormat(item?.username) }}
+            </h2>
+            <h2 v-else class="hdr-white">{{ textFormat(item?.username) }}</h2>
           </div>
           <div class="score-content">
             <BadgesDisplay
@@ -159,6 +162,11 @@ export default {
       if (!score) return 0;
       if (score > 99999) return '99,999+';
       return Number(score).toLocaleString('en-CA');
+    },
+
+    isPlayerItem: function (item) {
+      if (this.userId === item.userId) return true;
+      return false;
     },
 
     scoreItemClass: function (item) {
@@ -397,7 +405,7 @@ h2 {
   }
 
   .scores .scores-row.selected {
-    outline: 1px solid rgb(44, 255, 44);
+    outline: 2px solid rgb(44, 255, 44);
     background-color: #19354a;
   }
 
