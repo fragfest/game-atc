@@ -7,6 +7,9 @@ import { default as jwt } from 'jwt-encode';
 import { EncryptStorage } from 'encrypt-storage';
 let encryptStorage;
 
+///////////////////////////////////////////////////////
+// NOTE copied to ATC-LAMBDA jwt.js
+///////////////////////////////////////////////////////
 const jwtKey = '005f70ef-e7c9-49ef-98a2-df9b1052e6c4';
 
 // set the key on the global window object in unexpected places

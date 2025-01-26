@@ -41,7 +41,7 @@ describe('Level', () => {
         expect(aircraftFn).toHaveBeenCalledWith(
           0.123,
           1,
-          { time: 600 },
+          { time: 660 },
           airport
         );
       });
