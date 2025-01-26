@@ -1,16 +1,31 @@
 import { default as dayjs } from 'dayjs';
 import { UserManager } from 'oidc-client-ts';
 
-// const apiUrl = 'https://api.carladde.com/prod/atc';
-const apiUrl = 'https://api.carladde.com/dev/atc';
+// dev config ///////////////////////////////////////////////////////
+let apiUrl = 'https://api.carladde.com/dev/atc-dev';
 
-const config = {
+let config = {
   authority: 'https://cognito-idp.us-west-1.amazonaws.com/us-west-1_I2oLrzd6B',
   client_id: '8fhopbpd0l3bjidn4infu0bcn',
   redirect_uri: 'http://localhost:8080/',
   response_type: 'code',
   scope: 'phone openid email',
 };
+
+// prod config ///////////////////////////////////////////////////////
+
+if (process.env.NODE_ENV === 'production') {
+  apiUrl = 'https://api.carladde.com/prod/atc';
+
+  config = {
+    authority:
+      'https://cognito-idp.ca-central-1.amazonaws.com/ca-central-1_iYCqfnMjA',
+    client_id: '2hdcodqimttdf885i97mbmjlf',
+    redirect_uri: 'https://atc.carladde.com/',
+    response_type: 'code',
+    scope: 'phone openid email',
+  };
+}
 
 /**
  * start AWS cognito login. when complete, redirects to homepage

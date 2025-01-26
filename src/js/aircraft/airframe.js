@@ -343,7 +343,7 @@ const detailsByAirframe = {
   B737: { make: 'Boeing', airframe: '737-7CT' },
   B38M: { make: 'Boeing', airframe: '737-MAX-8' },
   B39M: { make: 'Boeing', airframe: '737-MAX-9' },
-  B738: { make: 'Boeing', airframe: '737-8K2' },
+  B738: { make: 'Boeing', airframe: '737-800' },
   B763: { make: 'Boeing', airframe: '767-300' },
   B788: { make: 'Boeing', airframe: '787-8' },
   B789: { make: 'Boeing', airframe: '787-9' },

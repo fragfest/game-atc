@@ -5,19 +5,19 @@ import { historyRecordDebug } from '../../utils';
 ////////////////////////////////////////////////////////////////////////
 // NOTE just importing score.secure fails tests for some strange reason
 ////////////////////////////////////////////////////////////////////////
-// import {
-//   getScoreBasicSecure,
-//   getScoreSecure,
-//   setScoreSecure,
-//   getHistorySecure,
-//   setHistorySecure,
-//   getHistoryJwt,
-//   getBadgesArrSecure,
-//   setBadgesArrSecure,
-//   getBadgesJwt,
-// } from './score.secure';
+import {
+  getScoreBasicSecure,
+  getScoreSecure,
+  setScoreSecure,
+  getHistorySecure,
+  setHistorySecure,
+  getHistoryJwt,
+  getBadgesArrSecure,
+  setBadgesArrSecure,
+  getBadgesJwt,
+} from './score.secure';
 
-// const debug = true;
+const debug = false;
 
 // key & values must match
 export const ScoreEvents = Object.freeze({
@@ -186,10 +186,10 @@ const publishScore = (score) => {
  * @returns {Array.<String>}
  */
 export const getBadgesSecure = () => {
-  // if (process.env.NODE_ENV === 'production' || debug) {
-  //   const badges = getBadgesJwt();
-  //   return badges || [];
-  // }
+  if (process.env.NODE_ENV === 'production' || debug) {
+    const badges = getBadgesJwt();
+    return badges || [];
+  }
 
   const badges = JSON.parse(localStorage.getItem('badges'));
   return badges || [];
@@ -199,10 +199,10 @@ export const getBadgesSecure = () => {
  * @returns {Array.<String>}
  */
 export const getBadges = () => {
-  // if (process.env.NODE_ENV === 'production' || debug) {
-  //   const badges = getBadgesArrSecure();
-  //   return badges || [];
-  // }
+  if (process.env.NODE_ENV === 'production' || debug) {
+    const badges = getBadgesArrSecure();
+    return badges || [];
+  }
 
   const badges = JSON.parse(localStorage.getItem('badges'));
   return badges || [];
@@ -212,10 +212,10 @@ export const getBadges = () => {
  * @param {Array.<String>} badges
  */
 export const setBadges = (badges) => {
-  // if (process.env.NODE_ENV === 'production' || debug) {
-  //   setBadgesArrSecure(badges || []);
-  //   return;
-  // }
+  if (process.env.NODE_ENV === 'production' || debug) {
+    setBadgesArrSecure(badges || []);
+    return;
+  }
 
   localStorage.setItem('badges', JSON.stringify(badges));
 };
@@ -224,10 +224,10 @@ export const setBadges = (badges) => {
  * @returns {Array.<HistoryRecord>}
  */
 export const getHistoryRecords = () => {
-  // if (process.env.NODE_ENV === 'production' || debug) {
-  //   const historyRecords = getHistorySecure();
-  //   return historyRecords || [];
-  // }
+  if (process.env.NODE_ENV === 'production' || debug) {
+    const historyRecords = getHistorySecure();
+    return historyRecords || [];
+  }
 
   const historyRecords = JSON.parse(localStorage.getItem('history-records'));
   return historyRecords || [];
@@ -237,10 +237,10 @@ export const getHistoryRecords = () => {
  * @returns {String}
  */
 export const getHistoryRecordsSecure = () => {
-  // if (process.env.NODE_ENV === 'production' || debug) {
-  //   const recordsJwt = getHistoryJwt();
-  //   return recordsJwt || '';
-  // }
+  if (process.env.NODE_ENV === 'production' || debug) {
+    const recordsJwt = getHistoryJwt();
+    return recordsJwt || '';
+  }
 
   const historyRecords = JSON.parse(localStorage.getItem('history-records'));
   return historyRecords || [];
@@ -263,11 +263,11 @@ const removeHistoryRecord = (level) => {
 
   historyRecords.splice(indexRemove, 1);
 
-  // if (process.env.NODE_ENV === 'production' || debug) {
-  //   setHistorySecure(historyRecords);
-  //   historyRecordDebug();
-  //   return;
-  // }
+  if (process.env.NODE_ENV === 'production' || debug) {
+    setHistorySecure(historyRecords);
+    historyRecordDebug();
+    return;
+  }
 
   localStorage.setItem('history-records', JSON.stringify(historyRecords));
 };
@@ -282,10 +282,10 @@ const setHistoryRecord = (level, historyScore) => {
   const historyRecords = getHistoryRecords();
   historyRecords.push({ v, level, historyScore });
 
-  // if (process.env.NODE_ENV === 'production' || debug) {
-  //   setHistorySecure(historyRecords);
-  //   return;
-  // }
+  if (process.env.NODE_ENV === 'production' || debug) {
+    setHistorySecure(historyRecords);
+    return;
+  }
 
   localStorage.setItem('history-records', JSON.stringify(historyRecords));
 };
@@ -331,10 +331,10 @@ const Score = {
  * @returns {Score}
  */
 export const getScore = () => {
-  // if (process.env.NODE_ENV === 'production' || debug) {
-  //   const score = getScoreSecure();
-  //   return score || { ...Score };
-  // }
+  if (process.env.NODE_ENV === 'production' || debug) {
+    const score = getScoreSecure();
+    return score || { ...Score };
+  }
 
   const score = JSON.parse(localStorage.getItem('score'));
   return score || { ...Score };
@@ -344,10 +344,10 @@ export const getScore = () => {
  * @returns {Score}
  */
 const _getScore = () => {
-  // if (process.env.NODE_ENV === 'production' || debug) {
-  //   const score = getScoreBasicSecure();
-  //   return score || { ...Score };
-  // }
+  if (process.env.NODE_ENV === 'production' || debug) {
+    const score = getScoreBasicSecure();
+    return score || { ...Score };
+  }
 
   const score = JSON.parse(localStorage.getItem('score'));
   return score || { ...Score };
@@ -357,10 +357,10 @@ const _getScore = () => {
  * @param {Score} score
  */
 const setScore = (score) => {
-  // if (process.env.NODE_ENV === 'production' || debug) {
-  //   setScoreSecure(score);
-  //   return;
-  // }
+  if (process.env.NODE_ENV === 'production' || debug) {
+    setScoreSecure(score);
+    return;
+  }
 
   localStorage.setItem('score', JSON.stringify(score));
 };

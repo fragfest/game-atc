@@ -2,9 +2,10 @@
 node_modules
 /dist
 
-# local env files
+# local files
 .env.local
 .env.*.local
+*.bak.*
 
 # Log files
 npm-debug.log*
