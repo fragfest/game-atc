@@ -17,7 +17,7 @@ import {
   getBadgesJwt,
 } from './score.secure';
 
-const debug = false;
+const debug = true;
 
 // key & values must match
 export const ScoreEvents = Object.freeze({

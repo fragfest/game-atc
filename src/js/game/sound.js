@@ -25,6 +25,7 @@ export const SoundType = Object.freeze({
   Select: 'Select',
 });
 
+let isSetup = false;
 let isMuted = true;
 let oldScore = null;
 
@@ -39,7 +40,9 @@ export const setup = () => {
   tock = new Audio('/audio/select-tock-short.mp3');
   flick = new Audio('/audio/select-flick.mp3');
   squelch = new Audio('/audio/radio-squelch.mp3');
+
   setMute(true);
+  isSetup = true;
 
   subscribeScore(ScoreEvents.ScoreEV, (score) => {
     if (oldScore) {
@@ -84,6 +87,7 @@ export const destroy = () => {
   tock = null;
   flick = null;
   squelch = null;
+  isSetup = false;
 };
 
 /**
@@ -91,7 +95,6 @@ export const destroy = () => {
  */
 export const setMute = (isMutedArg) => {
   isMuted = !!isMutedArg;
-
   background.muted = isMuted;
   collision.muted = isMuted;
   ding.muted = isMuted;
@@ -108,6 +111,8 @@ export const setMute = (isMutedArg) => {
  * @param {SoundType} soundType
  */
 export const playLoop = (soundType) => {
+  if (!isSetup) return;
+
   if (soundType === SoundType.Background) {
     background.loop = true;
     background.volume = 0.15;
@@ -125,6 +130,8 @@ export const playLoop = (soundType) => {
  * @param {SoundType} soundType
  */
 export const play = (soundType) => {
+  if (!isSetup) return;
+
   if (soundType === SoundType.Ding) {
     return ding.play();
   }
@@ -158,6 +165,8 @@ export const play = (soundType) => {
  * @param {SoundType} soundType
  */
 export const stop = (soundType) => {
+  if (!isSetup) return;
+
   if (soundType === SoundType.Background) {
     background.pause();
     background.currentTime = 0;
