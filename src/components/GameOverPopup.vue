@@ -308,6 +308,11 @@ export default {
     if (total < 0) this.total = 0;
     else this.total = total;
 
+    // LEVEL PASS ////////////////////////////////////////////
+    if (isVictory(score)) {
+      levelComplete(this.total);
+    }
+
     // TODO format scores, add this to methods & test
     // scoreFormat: function (score) {
     //   return Number(score).toLocaleString('en-CA');
@@ -354,14 +359,10 @@ export default {
       }, this.okBtnDispTimeSec * 1000);
     }
 
-    // LEVEL PASS ////////////////////////////////////////////
-    if (isVictory(score)) {
-      levelComplete(this.total);
-
-      if (isLoggedIn()) {
-        sendHistory(getHistoryRecordsSecure(), getBadgesSecure());
-        getAllScores(true);
-      }
+    // UPDATE BACKEND ////////////////////////////////////////
+    if (isLoggedIn()) {
+      sendHistory(getHistoryRecordsSecure(), getBadgesSecure());
+      getAllScores(true);
     }
 
     resetLevelComplete();
