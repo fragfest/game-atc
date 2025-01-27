@@ -2,26 +2,27 @@ Bugs:
   ☐ Training can't be retried. Complete training and hit retry (without refreshing). A blank/frozen game screen appears.
 
 Wishlist:
-  ☐ Consider another victory goal based on Flight Quality 
   ☐ More badges
-  ☐ More airports & levels (+5)
-  ☐ Custom play level
-  ☐ difficulty setting that changes delay timers
-  ☐ Consider allowing plane spawn near waypoints
-  ☐ HomePage show score breakdown perhaps with icons
-  ☐ Restricted areas with min altitude levels
-  ☐ Ground elevation topography & mechanic
-  ☐ Engine contrails
-  ☐ Noise abatement mechanic (max 250kts below 10Kft)
-  ☐ Fuel mechanics
-  ☐ ScorePanel icons instead of text
-  ☐ Flight Quality - weather dangerous
+  ☐ Consider another victory goal based on Flight Quality 
   ☐ Emergency message popup/flighstrip/aircraft & mechanic
   ☐ Crash mechanic i.e. due to emergency
-  ☐ Sound on dialog text spawn
-  ☐ 3 miles horizontal for every 1000ft vertical descent
+  ☐ Federated login (cognito login page style)
+  ☐ Custom play level
+
+  ☐ difficulty setting that changes delay timers
+  ☐ Save & load full history with multi-browser state consolidation
+  ☐ More airports & levels (+5)
+  ☐ Restricted areas with min altitude levels
+  ☐ Noise abatement mechanic (max 250kts below 10Kft)
+  ☐ Fuel mechanics
+  ☐ Flight Quality - weather dangerous
+  ☐ Consider allowing plane spawn near waypoints
+  ☐ HomePage show score breakdown perhaps with icons
+  ☐ ScorePanel icons instead of text
   ☐ Flights have defined arrival sections, departure waypoints
   ☐ Touchdown sound (tyre screech)
+  ☐ Sound on dialog text spawn
+  ☐ redraw aircraft profile silhouettes
 
 ATCv0.1.3:
   Bugs:
@@ -33,6 +34,7 @@ ATCv0.1.3:
     ✔ plane pulse highlight: incorrect flashing sequence (safari) @done(24-07-23 16:31)
     ✔ Excess ShowCircle spawning on failed handoff plane exit @done(24-02-19 06:09)
     ✔ Fix Waypoint.test file import @done(24-02-19 08:27)
+    ☐ New badge animation missing in prod. complete level 6 with turbulence, retry without turbulence. should show new badge animation - atc-ffo:badges missing @started(25-01-27 03:16)
     ☐ Mouse hover glitch over right edge of flightstrip
     
   Major:
@@ -47,9 +49,8 @@ ATCv0.1.3:
     ✔ More airports (+5) @started(24-12-12 22:02) @done(25-01-03 06:55) @lasted(3w8h53m11s)
     ✔ More levels @started(25-01-08 14:37) @done(25-01-10 21:31) @lasted(2d6h54m50s)
     ✔ Anti-cheat @started(25-01-12 16:45) @done(25-01-14 08:41) @lasted(1d15h56m9s)
-    ☐ Online Leaderboard @started(25-01-14 11:56)
+    ✔ Online Leaderboard @started(25-01-14 11:56) @done(25-01-26 17:31) @lasted(1w5d5h35m56s)
     ☐ Add display username for player and leaderboard (instead of cognito username)
-    ☐ Save & load full history with multi-browser state consolidation
     ☐ Google Analytics
     
   Minor:
@@ -61,12 +62,11 @@ ATCv0.1.3:
     ☐ Remove goals from localStorage to avoid easy cheating
     ☐ Clear indication Badge has not been achieved i.e. grey description
     ☐ Badge detailed description & progress towards goal
-    ☐ Faster altitude decrease than increase
+    ☐ Faster altitude decrease than increase (3 miles horizontal for every 1000ft vertical descent)
     ☐ Faster speed decrease than increase
     ☐ Slower landing rollouts (takeoffs too?)
     ☐ panelBottom responsive i.e. message tip box is bigger
     ☐ scorePanel make smaller
-    ☐ redraw aircraft profile silhouettes
     ✔ Asset copyright attribution text @started(25-01-14 09:11) @done(25-01-14 09:34) @lasted(23m1s)
     ☐ warn with message on mobile
     ☐ console copyright message

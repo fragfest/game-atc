@@ -284,7 +284,10 @@ export default {
   min-height: 1120px;
 
   padding: 20px 40px;
-  margin: 8% 2%;
+  margin-top: 1%;
+  margin-bottom: 8%;
+  margin-left: 2%;
+  margin-right: 2%;
   border-radius: 12px;
 
   font-size: 24px;

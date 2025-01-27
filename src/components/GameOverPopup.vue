@@ -316,6 +316,7 @@ export default {
     // BADGES /////////////////////////////////////////////////
     this.bluesky = isAchievedBlueSky();
     const newBadgeAchieved = isNewAchievementBlueSky();
+
     if (newBadgeAchieved) {
       resetBadgeHistory();
     }
