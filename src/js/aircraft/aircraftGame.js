@@ -7,7 +7,7 @@ import {
   randMinMax,
 } from '../utils';
 import { getPerformance } from './airframe';
-import { getGoals } from '../game/victory';
+import { getGoalsByLevel } from '../game/victory';
 import { getScore } from '../game/score/score';
 import { callAircraftFnByLevel } from '../levels/levels';
 import {
@@ -39,8 +39,8 @@ import { getFlightArrival, getFlightDeparture } from '../flights/flights';
  */
 export const spawnPlaneGameTick =
   (canvasObj, entityManagerArr, createAircraftRndFn) => (deltaTimeMs) => {
-    const goals = getGoals();
     const score = getScore();
+    const goals = getGoalsByLevel()(score.level);
     const spawnRate = goals.SpawnRate || 1;
 
     const aircraftFn = (

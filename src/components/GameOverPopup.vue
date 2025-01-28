@@ -132,7 +132,7 @@ import {
   isFailedCondition,
   isConflictCondition,
   isVictory,
-  getGoals,
+  getGoalsByLevel,
 } from '../js/game/victory';
 
 const BadgeTypes = Object.freeze({
@@ -166,25 +166,25 @@ export default {
       okBtnDispTimeSec: 2,
 
       level: 0,
-      departures: '0/' + getGoals().Departures,
+      departures: '',
       departureScore: 0,
       departuresTitleClass: 'bckgrnd-blue',
       departuresScoreClass: 'silver',
-      arrivals: '0/' + getGoals().Arrivals,
+      arrivals: '',
       arrivalScore: 0,
       arrivalsTitleClass: 'bckgrnd-yellow',
       arrivalsScoreClass: 'silver',
-      failed: '0/' + getGoals().Failed,
+      failed: '',
       failedScore: 0,
       failedClass: 'border-red',
       failedPointsClass: 'silver',
       failedScoreClass: 'silver',
-      delays: '0/' + getGoals().Delayed,
+      delays: '',
       delayScore: 0,
       delayClass: 'border-red',
       delayPointsClass: 'silver',
       delayScoreClass: 'silver',
-      conflict: '0/' + getGoals().Conflict,
+      conflict: '',
       conflictScore: 0,
       conflictClass: 'border-red',
       conflictPointsClass: 'silver',
@@ -229,6 +229,7 @@ export default {
 
     // SCORE ////////////////////////////////////////////////////
     const score = getScore();
+    const goal = getGoalsByLevel()(score.level);
 
     if (isVictory(score)) {
       this.failedPointsClass = 'white';
@@ -267,14 +268,14 @@ export default {
     }
 
     const baseScorePass = getBaseScore();
-    const failedScoreMax = getGoals().Failed;
+    const failedScoreMax = goal.Failed;
     const failedScore =
       (failedScoreMax - score.failed) * (baseScorePass / failedScoreMax);
-    const delayedMax = getGoals().Delayed;
+    const delayedMax = goal.Delayed;
     const delayScore =
       (delayedMax - score.delayed) * (baseScorePass / delayedMax);
 
-    const conflictScoreMax = getGoals().Conflict;
+    const conflictScoreMax = goal.Conflict;
     const conflictScore =
       (conflictScoreMax - Math.floor(score.conflict)) *
       (baseScorePass / conflictScoreMax);
@@ -282,13 +283,13 @@ export default {
     const turbulenceScore = turbulence <= 300 ? -1 * turbulence : -300;
 
     this.level = score.level;
-    this.departures = '' + score.departures + '/' + getGoals().Departures;
-    this.arrivals = '' + score.arrivals + '/' + getGoals().Arrivals;
-    this.failed = '' + score.failed + '/' + getGoals().Failed;
-    this.delays = '' + score.delayed + '/' + getGoals().Delayed;
+    this.departures = '' + score.departures + '/' + goal.Departures;
+    this.arrivals = '' + score.arrivals + '/' + goal.Arrivals;
+    this.failed = '' + score.failed + '/' + goal.Failed;
+    this.delays = '' + score.delayed + '/' + goal.Delayed;
     const conflict =
       score.conflict < conflictScoreMax ? score.conflict : conflictScoreMax;
-    this.conflict = '' + Math.floor(conflict) + '/' + getGoals().Conflict;
+    this.conflict = '' + Math.floor(conflict) + '/' + goal.Conflict;
     this.turbulence = Math.floor(score.turbulence);
 
     this.departureScore = isVictory(score) ? baseScorePass : 0;

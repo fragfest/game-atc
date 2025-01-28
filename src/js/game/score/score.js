@@ -1,4 +1,3 @@
-import { setGoal } from '../victory';
 import { getFinalLevel } from '../../levels/getLevel';
 import { historyRecordDebug } from '../../utils';
 
@@ -17,7 +16,8 @@ import {
   getBadgesJwt,
 } from './score.secure';
 
-const debug = true;
+let debug = false;
+export const setDebugUnitTests = () => (debug = false);
 
 // key & values must match
 export const ScoreEvents = Object.freeze({
@@ -34,7 +34,6 @@ export const setup = () => {
 
   score.level = nextLevel <= getFinalLevel() ? nextLevel : getFinalLevel();
   setScore(score);
-  setGoal(score.level);
 };
 
 export const resetScore = () => {
@@ -78,7 +77,6 @@ export const levelRetry = (level) => {
   const score = getScore();
   score.level = level;
   setScore(score);
-  setGoal(score.level);
 };
 
 export const getHighestLevelCompleted = () => {

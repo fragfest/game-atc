@@ -10,6 +10,8 @@ import { Badges, isAchievedBlueSky, isNewAchievementBlueSky } from './badges';
 import * as Score from './score';
 import * as Victory from '../victory';
 
+Score.setDebugUnitTests();
+
 let badges = [];
 global.localStorage = { getItem: jest.fn(() => JSON.stringify(badges)) };
 

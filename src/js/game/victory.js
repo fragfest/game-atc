@@ -1,4 +1,3 @@
-import { getLevelObj } from '../levels/getLevel.js';
 import { ScoreEvents, subscribeScore } from './score/score.js';
 
 /**
@@ -31,17 +30,6 @@ export const subscribeVictory = (victoryEvent, cb) => {
     throw new Error('unknown victory event: ' + victoryEvent);
   }
   document.addEventListener(victoryEvent, () => cb());
-};
-
-export const setGoal = (levelNum) => {
-  const goals = getLevelObj().goalFn(levelNum) || { ...Goals };
-  localStorage.setItem('goals', JSON.stringify(goals));
-};
-
-// TODO replace with getGoalsByLevel()
-export const getGoals = () => {
-  const goals = JSON.parse(localStorage.getItem('goals'));
-  return goals || { ...Goals };
 };
 
 export const isDelayed = (level, delayCount) =>
@@ -93,14 +81,6 @@ export const publishFailed = () => {
  * @property {Number} SpawnRate
  * @property {Number} Delayed
  */
-const Goals = {
-  Arrivals: 0,
-  Departures: 0,
-  Failed: 0,
-  Conflict: 0,
-  SpawnRate: 0,
-  Delayed: 0,
-};
 
 /**
  * @typedef {Function} GoalsFunc

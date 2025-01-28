@@ -71,9 +71,13 @@
 </template>
 
 <script>
-import { ScoreEvents, subscribeScore } from '../../js/game/score/score';
+import {
+  getScore,
+  ScoreEvents,
+  subscribeScore,
+} from '../../js/game/score/score';
 import { getClassSize, getScreenSize } from '../../js/utils';
-import { getGoals } from '../../js/game/victory';
+import { getGoalsByLevel } from '../../js/game/victory';
 
 export default {
   name: 'ScorePanel',
@@ -95,7 +99,13 @@ export default {
         delayed: 0,
         turbulence: 0,
       },
-      goals: getGoals(),
+      goals: {
+        Departures: 0,
+        Arrivals: 0,
+        Failed: 0,
+        Delayed: 0,
+        Conflict: 0,
+      },
 
       departuresPulseClass: '',
       departuresPointsClass: 'green',
@@ -117,6 +127,7 @@ export default {
 
   mounted() {
     this.screenSize = getScreenSize();
+    this.goals = getGoalsByLevel()(getScore().level);
 
     subscribeScore(ScoreEvents.ScoreEV, (score) => {
       this.score = score;
