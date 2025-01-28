@@ -38,38 +38,43 @@ export const setGoal = (levelNum) => {
   localStorage.setItem('goals', JSON.stringify(goals));
 };
 
+// TODO replace with getGoalsByLevel()
 export const getGoals = () => {
   const goals = JSON.parse(localStorage.getItem('goals'));
   return goals || { ...Goals };
 };
 
-export const isDelayed = (delayCount) => delayCount >= getGoals().Delayed;
-export const isDeparturesSuccess = (departuresCount) =>
-  departuresCount >= getGoals().Departures;
-export const isArrivalsSuccess = (arrivalsCount) =>
-  arrivalsCount >= getGoals().Arrivals;
-export const isFailedCondition = (failedCount) =>
-  failedCount >= getGoals().Failed;
-export const isConflictCondition = (conflictCount) =>
-  conflictCount >= getGoals().Conflict;
+export const isDelayed = (level, delayCount) =>
+  delayCount >= getGoalsByLevel()(level).Delayed;
+export const isDeparturesSuccess = (level, departuresCount) =>
+  departuresCount >= getGoalsByLevel()(level).Departures;
+export const isArrivalsSuccess = (level, arrivalsCount) =>
+  arrivalsCount >= getGoalsByLevel()(level).Arrivals;
+export const isFailedCondition = (level, failedCount) =>
+  failedCount >= getGoalsByLevel()(level).Failed;
+export const isConflictCondition = (level, conflictCount) =>
+  conflictCount >= getGoalsByLevel()(level).Conflict;
 
 /**
  * @param {Score} score
  * @returns {Boolean}
  */
-export const isVictory = (score) =>
-  isDeparturesSuccess(score.departures) &&
-  isArrivalsSuccess(score.arrivals) &&
-  !isDefeat(score);
+export const isVictory = (score) => {
+  return (
+    isDeparturesSuccess(score.level, score.departures) &&
+    isArrivalsSuccess(score.level, score.arrivals) &&
+    !isDefeat(score)
+  );
+};
 
 /**
  * @param {Score} score
  * @returns {Boolean}
  */
 export const isDefeat = (score) =>
-  isFailedCondition(score.failed) ||
-  isConflictCondition(score.conflict) ||
-  isDelayed(score.delayed);
+  isFailedCondition(score.level, score.failed) ||
+  isConflictCondition(score.level, score.conflict) ||
+  isDelayed(score.level, score.delayed);
 
 export const publishSuccess = () => {
   document.dispatchEvent(new CustomEvent(VictoryEvents.Success));

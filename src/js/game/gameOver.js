@@ -13,9 +13,9 @@ export const gameOver = (msgPopup, isSuccess) => {
     msgPopup;
 
   const score = getScore();
-  const isFailed = isFailedCondition(score.failed);
-  const isConflict = isConflictCondition(score.conflict);
-  const isDelayedFail = isDelayed(score.delayed);
+  const isFailed = isFailedCondition(score.level, score.failed);
+  const isConflict = isConflictCondition(score.level, score.conflict);
+  const isDelayedFail = isDelayed(score.level, score.delayed);
 
   let title = 'Failure';
   let crossText = 'Exceeded minimum conditions';

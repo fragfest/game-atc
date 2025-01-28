@@ -244,21 +244,21 @@ export default {
       victoryDebug(true);
     }
 
-    if (isDeparturesSuccess(score.departures)) {
+    if (isDeparturesSuccess(score.level, score.departures)) {
       this.departuresScoreClass = 'white';
     }
-    if (isArrivalsSuccess(score.arrivals)) {
+    if (isArrivalsSuccess(score.level, score.arrivals)) {
       this.arrivalsScoreClass = 'white';
     }
-    if (isFailedCondition(score.failed)) {
+    if (isFailedCondition(score.level, score.failed)) {
       this.failedClass = 'bckgrnd-red';
       this.failedPointsClass = 'bckgrnd-red';
     }
-    if (isDelayed(score.delayed)) {
+    if (isDelayed(score.level, score.delayed)) {
       this.delayClass = 'bckgrnd-red';
       this.delayPointsClass = 'bckgrnd-red';
     }
-    if (isConflictCondition(score.conflict)) {
+    if (isConflictCondition(score.level, score.conflict)) {
       this.conflictClass = 'bckgrnd-red';
       this.conflictPointsClass = 'bckgrnd-red';
     }
