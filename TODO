@@ -6,11 +6,10 @@ Wishlist:
   ☐ Consider another victory goal based on Flight Quality 
   ☐ Emergency message popup/flighstrip/aircraft & mechanic
   ☐ Crash mechanic i.e. due to emergency
-  ☐ Federated login (cognito login page style)
+  ☐ Federated login (try cognito login page style)
   ☐ Custom play level
 
   ☐ difficulty setting that changes delay timers
-  ☐ Save & load full history with multi-browser state consolidation
   ☐ More airports & levels (+5)
   ☐ Restricted areas with min altitude levels
   ☐ Noise abatement mechanic (max 250kts below 10Kft)
@@ -35,6 +34,7 @@ ATCv0.1.3:
     ✔ Excess ShowCircle spawning on failed handoff plane exit @done(24-02-19 06:09)
     ✔ Fix Waypoint.test file import @done(24-02-19 08:27)
     ✔ New badge animation missing in prod. complete level 6 with turbulence, retry without turbulence. should show new badge animation - atc-ffo:badges missing @started(25-01-27 03:16) @done(25-01-28 04:45) @lasted(1d1h29m42s)
+    ✔ Leaderboard (prod) badge expand has small badges drawn on top of expanded badges @started(25-01-28 06:44) @done(25-01-28 07:01) @lasted(17m33s)
     ☐ Mouse hover glitch over right edge of flightstrip
     
   Major:
@@ -50,6 +50,7 @@ ATCv0.1.3:
     ✔ More levels @started(25-01-08 14:37) @done(25-01-10 21:31) @lasted(2d6h54m50s)
     ✔ Anti-cheat @started(25-01-12 16:45) @done(25-01-14 08:41) @lasted(1d15h56m9s)
     ✔ Online Leaderboard @started(25-01-14 11:56) @done(25-01-26 17:31) @lasted(1w5d5h35m56s)
+    ☐ Save & load full history with multi-browser state consolidation
     ☐ Add display username for player and leaderboard (instead of cognito username)
     ☐ Google Analytics
     
@@ -59,13 +60,13 @@ ATCv0.1.3:
     ✔ Seperate background atc chatter soundtrack toggle @done(24-12-09 15:24)
     ✔ Add button for background sounds @done(24-12-29 14:25)
     ✔ More airframe profile images @started(25-01-11 13:38) @done(25-01-11 22:26) @lasted(8h48m51s)
-    ☐ Remove goals from localStorage to avoid easy cheating
-    ☐ Clear indication Badge has not been achieved i.e. grey description
+    ✔ Remove goals from localStorage to avoid easy cheating @done(25-01-28 05:15)
     ☐ Badge detailed description & progress towards goal
+    ☐ Clear indication Badge has not been achieved i.e. grey description
     ☐ Faster altitude decrease than increase (3 miles horizontal for every 1000ft vertical descent)
     ☐ Faster speed decrease than increase
     ☐ Slower landing rollouts (takeoffs too?)
-    ☐ panelBottom responsive i.e. message tip box is bigger
+    ☐ panelBottom bigger & responsive i.e. message tip box is bigger
     ☐ scorePanel make smaller
     ✔ Asset copyright attribution text @started(25-01-14 09:11) @done(25-01-14 09:34) @lasted(23m1s)
     ☐ warn with message on mobile

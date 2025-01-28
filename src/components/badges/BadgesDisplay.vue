@@ -258,6 +258,8 @@ export default {
 }
 
 .container .badge-achieved {
+  position: relative;
+  z-index: 1;
   :hover {
     cursor: pointer;
   }
