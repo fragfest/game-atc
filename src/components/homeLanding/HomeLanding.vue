@@ -106,7 +106,6 @@ import BadgesDisplay from '../badges/BadgesDisplay';
 import CyberBox from '../common/CyberBox';
 import {
   getAllScores,
-  isLoggedIn,
   loginUsingCallbackUrl,
   sendHistory,
 } from '../../js/session/session';
@@ -170,10 +169,6 @@ export default {
       console.info('login success');
       await sendHistory(getHistoryRecordsSecure(), getBadgesSecure());
       getAllScores(true);
-      return;
-    }
-
-    if (isLoggedIn()) {
       return;
     }
   },
