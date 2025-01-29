@@ -35,7 +35,7 @@ ATCv0.1.3:
     ✔ Fix Waypoint.test file import @done(24-02-19 08:27)
     ✔ New badge animation missing in prod. complete level 6 with turbulence, retry without turbulence. should show new badge animation - atc-ffo:badges missing @started(25-01-27 03:16) @done(25-01-28 04:45) @lasted(1d1h29m42s)
     ✔ Leaderboard (prod) badge expand has small badges drawn on top of expanded badges @started(25-01-28 06:44) @done(25-01-28 07:01) @lasted(17m33s)
-    ☐ Mouse hover glitch over right edge of flightstrip
+    ✔ Mouse hover glitch over right edge of flightstrip @done(25-01-29 03:45)
     
   Major:
     ✔ Timeslots/delay mechanic @started(24-02-19 16:29) @done(24-07-22 22:04) @lasted(22w4h35m54s)
