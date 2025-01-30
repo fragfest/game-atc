@@ -521,7 +521,8 @@ export default class Aircraft {
   updateAltitude(altitudeOld, altitudeTarget, altitudeChange) {
     const delta = Math.round(altitudeTarget - altitudeOld);
     const altitudeIncrease = altitudeOld + altitudeChange;
-    const altitudeDecrease = altitudeOld - altitudeChange;
+    const altitudeDecrease = altitudeOld - 1.6 * altitudeChange;
+
     if (delta === 0) return altitudeOld;
     else if (delta > 0)
       return altitudeIncrease > altitudeTarget
@@ -536,7 +537,8 @@ export default class Aircraft {
   updateSpeed(speed, speedTarget, speedIncreaseArg, speedDecreaseArg) {
     const delta = Math.round(speedTarget - speed);
     const speedIncrease = speed + speedIncreaseArg;
-    const speedDecrease = speed - speedDecreaseArg;
+    const speedDecrease = speed - 1.6 * speedDecreaseArg;
+
     if (delta === 0) return speed;
     if (delta > 0)
       return speedIncrease > speedTarget ? speedTarget : speedIncrease;
