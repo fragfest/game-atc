@@ -13,21 +13,21 @@
         />
         <template v-slot:hover>
           <div class="badges-desc">
-            <h3 class="light-green">{{ title('bluesky') }}</h3>
-            <p class="white">{{ desc('bluesky') }}</p>
+            <h3 class="light-green">{{ badgeTitle }}</h3>
+            <p class="white">{{ badgeDesc }}</p>
           </div>
         </template>
       </ToolTip>
       <ToolTip v-if="!bluesky" :disabled="!isLeaderboard" :width="width">
         <BlueSkyGrey
           :style="badgeStyle"
-          @mouseenter="onMouseEnterBadgeAchieved('bluesky')"
+          @mouseenter="onMouseEnterBadgeAchieved('bluesky-grey')"
           @mouseleave="onMouseLeaveBadgeAchieved()"
         />
         <template v-slot:hover>
           <div class="badges-desc">
-            <h3 class="light-green">{{ title('bluesky') }}</h3>
-            <p class="white">{{ desc('bluesky') }}</p>
+            <h3 class="light-green">{{ badgeTitle }}</h3>
+            <p class="white">{{ badgeDesc }}</p>
           </div>
         </template>
       </ToolTip>
@@ -41,7 +41,7 @@
         />
         <template v-slot:hover>
           <div class="badges-desc">
-            <p class="white">{{ desc('none') }}</p>
+            <p class="white">{{ badgeDesc }}</p>
           </div>
         </template>
       </ToolTip>
@@ -54,7 +54,7 @@
         />
         <template v-slot:hover>
           <div class="badges-desc">
-            <p class="white">{{ desc('none') }}</p>
+            <p class="white">{{ badgeDesc }}</p>
           </div>
         </template>
       </ToolTip>
@@ -67,14 +67,31 @@
         />
         <template v-slot:hover>
           <div class="badges-desc">
-            <p class="white">{{ desc('none') }}</p>
+            <p class="white">{{ badgeDesc }}</p>
           </div>
         </template>
       </ToolTip>
     </div>
-    <div v-if="!hideBadgeDesc && showBadgeDesc" class="badges-desc">
-      <h3 class="light-green">{{ badgeTitle }}</h3>
-      <p class="white">{{ badgeDesc }}</p>
+
+    <div
+      v-if="!disableBadgeDesc && showBadgeDesc"
+      class="badges-desc"
+      :class="descClass"
+    >
+      <h2>{{ badgeSuccess }}</h2>
+
+      <div class="body">
+        <h3 class="light-green">{{ badgeTitle }}</h3>
+        <p class="white">{{ badgeDesc }}</p>
+      </div>
+
+      <ul v-if="isShowGoals">
+        <li v-for="(goal, index) in badgeGoals" :key="index">
+          <p class="white">
+            <span class="bold light-green">></span> {{ goal }}
+          </p>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -86,9 +103,13 @@ import BlueSky from './BlueSky';
 import BlueSkyGrey from './BlueSkyGrey';
 import ToolTip from '../common/ToolTip';
 
-const BadgeTypes = Object.freeze({
-  none: { title: '', desc: 'future achievement' },
-  bluesky: { title: 'Blue Sky', desc: 'avoid all turbulence' },
+export const BadgeTypes = Object.freeze({
+  none: { title: '', desc: 'future achievement', goals: [] },
+  bluesky: {
+    title: 'Blue Sky',
+    desc: 'avoid all turbulence',
+    goals: ['no wake turbulence', 'no weather turbulence'],
+  },
 });
 
 export default {
@@ -97,6 +118,7 @@ export default {
     bluesky: { type: Boolean },
     isNewBlueSky: { type: Boolean },
     isShowDescription: { type: Boolean },
+    isShowGoals: { type: Boolean },
     isLeaderboard: { type: Boolean },
   },
 
@@ -107,9 +129,12 @@ export default {
       sizeClass: '',
       showBadgeDesc: false,
       badgeDispTimeSec: 8,
+      badgeSuccess: '',
       badgeTitle: '',
       badgeDesc: '',
+      badgeGoals: [],
       blueSkyClass: '',
+      descClass: '',
     };
   },
 
@@ -123,7 +148,7 @@ export default {
       return null;
     },
 
-    hideBadgeDesc: function () {
+    disableBadgeDesc: function () {
       if (this.isLeaderboard) return true;
       return false;
     },
@@ -155,29 +180,36 @@ export default {
       if (this.isNewBlueSky) {
         this.badgeTitle = BadgeTypes.bluesky.title;
         this.badgeDesc = BadgeTypes.bluesky.desc;
+        this.badgeGoals = BadgeTypes.bluesky.goals;
       }
       this.showBadgeDesc = true;
     },
   },
 
   methods: {
-    title: function (badge) {
-      return BadgeTypes[badge].title;
-    },
-
-    desc: function (badge) {
-      return BadgeTypes[badge].desc;
-    },
-
     onMouseEnterBadgeAchieved: function (badgeType) {
       if (badgeType === 'none') {
+        this.badgeSuccess = '';
         this.badgeTitle = BadgeTypes.none.title;
         this.badgeDesc = BadgeTypes.none.desc;
+        this.badgeGoals = BadgeTypes.none.goals;
+        this.descClass = '';
       }
       if (badgeType === 'bluesky') {
+        this.badgeSuccess = 'COMPLETE';
         this.badgeTitle = BadgeTypes.bluesky.title;
         this.badgeDesc = BadgeTypes.bluesky.desc;
+        this.badgeGoals = BadgeTypes.bluesky.goals;
+        this.descClass = '';
       }
+      if (badgeType === 'bluesky-grey') {
+        this.badgeSuccess = 'INCOMPLETE';
+        this.badgeTitle = BadgeTypes.bluesky.title;
+        this.badgeDesc = BadgeTypes.bluesky.desc;
+        this.badgeGoals = BadgeTypes.bluesky.goals;
+        this.descClass = 'desc-grey';
+      }
+
       this.showBadgeDesc = true;
     },
 
@@ -206,12 +238,18 @@ export default {
 .container {
   @include vars;
   --duration-scale: 6s;
+
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
 }
 
 .container {
   display: flex;
   flex-wrap: wrap;
-  gap: 24px;
+  gap: 12px;
 
   .light-green {
     color: lightgreen;
@@ -219,16 +257,17 @@ export default {
   .white {
     color: white;
   }
+  .bold {
+    font-weight: 900;
+  }
 }
 
-.container.small .badges {
-  padding: 8px 8px;
-}
 .container .badges {
   display: flex;
   column-gap: 12px;
   align-items: center;
-  padding-top: 8px;
+  margin: 12px 0;
+  padding-top: 6px;
   padding-left: 12px;
   padding-right: 12px;
 
@@ -240,6 +279,7 @@ export default {
 .container .badges.leaderboard {
   background-color: transparent;
   border: none;
+  margin: 0;
 }
 
 .container .badge-expand {
@@ -274,7 +314,11 @@ export default {
     forwards;
 }
 
+// badges-desc
 .container.small .badges-desc {
+  h2 {
+    font-size: 18px;
+  }
   h3 {
     font-size: 14px;
   }
@@ -282,20 +326,52 @@ export default {
     font-size: 11px;
   }
 }
+
 .container .badges-desc {
   display: flex;
+  flex-direction: column;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: flex-start;
   font-family: monospace;
 
+  .body {
+    display: flex;
+    align-items: center;
+  }
+
+  h2 {
+    margin: 8px;
+    font-size: 22px;
+    background: linear-gradient(to bottom, white 0%, limegreen 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
   h3 {
     margin: 8px;
     font-size: 18px;
   }
   p {
+    margin-bottom: 3px;
     font-size: 14px;
   }
 }
+
+.container .badges-desc.desc-grey {
+  p,
+  h2,
+  h3 {
+    background: linear-gradient(
+      to bottom,
+      rgb(210, 210, 210) 0%,
+      rgb(168, 168, 168) 100%
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+// END badges-desc
 
 @keyframes shrink {
   0% {

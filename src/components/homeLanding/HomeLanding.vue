@@ -54,7 +54,11 @@
 
           <div v-if="showHistory" class="badges">
             <h2>achievements</h2>
-            <BadgesDisplay :size="badgeSize" :bluesky="bluesky" />
+            <BadgesDisplay
+              :size="badgeSize"
+              :isShowGoals="true"
+              :bluesky="bluesky"
+            />
           </div>
         </div>
       </div>
@@ -70,7 +74,7 @@
           href="https://www.flaticon.com/free-animated-icons/rain"
           title="rain animated icons"
           target="_blank"
-          >animated icons created by freepik - flaticon</a
+          >animated icons created by freepik</a
         >
       </div>
     </div>
@@ -222,7 +226,7 @@ export default {
 .home.small {
   section {
     font-size: 18px;
-    min-height: 600px;
+    min-height: 1100px;
   }
 
   .attribution {
@@ -276,7 +280,7 @@ export default {
   display: flex;
   min-width: 800px;
   max-width: 2600px;
-  min-height: 1120px;
+  min-height: 1220px;
 
   padding: 20px 40px;
   margin-top: 1%;
@@ -380,7 +384,6 @@ export default {
   flex-wrap: wrap;
   justify-content: space-around;
   margin-top: 40px;
-  column-gap: 5%;
   row-gap: 40px;
 
   h2 {
@@ -410,7 +413,7 @@ export default {
 // badges /////////////////////////////////////////////
 // small ////////////////////
 .home.small .row-history-badges .badges .container {
-  width: 220px;
+  width: 240px;
 }
 .row-history-badges .badges .container {
   display: flex;

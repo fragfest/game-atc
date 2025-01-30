@@ -24,7 +24,6 @@
           <span v-else> training level</span>
         </div>
       </h1>
-
       <div class="content">
         <div class="item" :class="departuresTitleClass">departures</div>
         <div class="item points" :class="departuresScoreClass">
@@ -135,11 +134,8 @@ import {
   getGoalsByLevel,
 } from '../js/game/victory';
 
-const BadgeTypes = Object.freeze({
-  bluesky: { title: 'Blue Sky', desc: 'avoid all turbulent weather' },
-});
-
 import BadgesDisplay from './badges/BadgesDisplay.vue';
+import { BadgeTypes } from './badges/BadgesDisplay.vue';
 import {
   isAchievedBlueSky,
   isNewAchievementBlueSky,
