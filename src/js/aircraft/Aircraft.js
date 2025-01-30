@@ -555,8 +555,9 @@ export default class Aircraft {
 
     // touch down rollout
     if (this.isTouchedDown) {
-      if (speed > 120) return calcDelta(speedDeltaPerMs * 0.5);
-      return calcDelta(speedDeltaPerMs * 2);
+      if (speed > 120) return calcDelta(speedDeltaPerMs * 0.2);
+      if (speed <= 120 && speed > 60) return calcDelta(speedDeltaPerMs);
+      return calcDelta(speedDeltaPerMs * 1.6);
     }
 
     // takeoff
