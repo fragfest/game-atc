@@ -2,54 +2,6 @@
   <div class="control-panel">
     <!-- btn-info-panel -->
     <div class="btn-info-panel" :class="sizeClass">
-      <div class="btn-container">
-        <div v-show="!isTaxiing && isArrival" class="btn">
-          <ToolTip :disabled="isDisabled">
-            <button
-              class="land"
-              :class="landBtnClass"
-              :disabled="isDisabled"
-              @click="landClick"
-            >
-              <span>land</span>
-            </button>
-            <template v-slot:hover>cleared ILS approach (L)</template>
-          </ToolTip>
-          <ToolTip :disabled="isDisabled">
-            <button
-              class="hold"
-              :class="holdHandoffBtnClass"
-              :disabled="isDisabled"
-              @click="holdClick"
-            >
-              <span>hold</span>
-            </button>
-            <template v-slot:hover>hold at waypoint (H)</template>
-          </ToolTip>
-        </div>
-        <div v-show="!isTaxiing && isDeparture" class="btn">
-          <ToolTip :disabled="isDisabled">
-            <button
-              class="takeoff"
-              :class="holdHandoffBtnClass"
-              :disabled="isDisabled"
-              @click="handoffClick"
-            >
-              <span>handoff</span>
-            </button>
-            <template v-slot:hover>handoff (H)</template>
-          </ToolTip>
-        </div>
-        <div v-show="isTaxiing" class="btn">
-          <ToolTip>
-            <button class="takeoff" @click="takeoffClick" :class="takeoffClass">
-              <span>take off</span>
-            </button>
-            <template v-slot:hover>take off (T)</template>
-          </ToolTip>
-        </div>
-      </div>
-
       <div v-show="planeSelected.id" class="info">
         <div class="row title">
           <span>
@@ -69,10 +21,6 @@
           <span><b>Spd</b></span>
           <span>{{ speed }} kts</span>
         </div>
-      </div>
-
-      <div v-show="planeSelected.id" class="message-panel" :class="sizeClass">
-        <textarea readonly v-model="messagesDisplay"></textarea>
       </div>
     </div>
     <!-- END btn-info-panel -->
@@ -170,7 +118,6 @@ import {
   subscribeMessage as subscribe,
 } from '../../js/events/messages';
 
-import ToolTip from '../common/ToolTip';
 import CircleInputs from './CircleInputs';
 
 /**
@@ -197,7 +144,7 @@ let circleInputs;
 
 export default {
   name: 'ControlPanel',
-  components: { ToolTip, CircleInputs },
+  components: { CircleInputs },
 
   props: {
     // NOTE: planes is needed to trigger a responsive update of component.
@@ -244,51 +191,9 @@ export default {
         this.messages = {};
       }, 8000);
     });
-
-    // subscribe(MessageEvents.MessageAllEV, (msg) => {
-    //   this.messages.unshift({ msg });
-    //   if (this.messages.length > 20) this.messages.splice(-1, 1);
-    // });
-
-    // subscribe(MessageEvents.MessageProximityEV, (msgObj) => {
-    //   const isProximityMsg = (msg) => {
-    //     if (typeof msg === 'string') return false;
-    //     if (!msg.id) return false;
-    //     if (msg.id === msgObj.id) return true;
-    //     return false;
-    //   };
-    //   const objFound = this.messages.find(isProximityMsg);
-    //   const objFoundIndex = this.messages.findIndex(isProximityMsg);
-
-    //   if (objFound) {
-    //     const scoreDecrease = objFound.scoreDecrease + msgObj.scoreDecrease;
-    //     const objNew = {
-    //       id: objFound.id,
-    //       msg: msgObj.msg + ' (' + scoreDecrease + ')',
-    //       scoreDecrease,
-    //     };
-    //     this.messages.splice(objFoundIndex, 1, objNew);
-    //   }
-    //   if (!objFound) {
-    //     this.messages.unshift({
-    //       id: msgObj.id,
-    //       msg: msgObj.msg + ' (' + msgObj.scoreDecrease + ')',
-    //       scoreDecrease: msgObj.scoreDecrease,
-    //     });
-    //   }
-
-    //   if (this.messages.length > 20) this.messages.splice(-1, 1);
-    // });
   },
 
   computed: {
-    messagesDisplay: function () {
-      const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
-      if (!planeSel) return '';
-      if (this.messages?.id !== this.planeSelected.id) return '';
-      return this.messages?.instructions;
-    },
-
     isDeparture: function () {
       const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
       if (!planeSel) return false;
@@ -435,44 +340,6 @@ export default {
   justify-content: flex-end;
   width: 100%;
 }
-
-// message-panel
-.message-panel {
-  width: 280px;
-  max-height: 330px;
-  margin-top: 10px;
-
-  background-color: #2c5c816f;
-  border: 1px solid darkgrey;
-  border-radius: 8px;
-  box-shadow: 3px 3px rgb(0, 84, 84);
-
-  textarea {
-    width: 65%;
-    padding-top: 6px;
-    padding-left: 10px;
-
-    border: none;
-    background: transparent;
-    resize: none;
-    overflow: hidden;
-    color: white;
-    font-size: 14px;
-
-    &:focus-visible {
-      outline: none;
-    }
-  }
-}
-
-.message-panel.small {
-  width: 220px;
-  max-height: 270px;
-  textarea {
-    font-size: 11px;
-  }
-}
-// END message-panel
 
 // btn-info-panel
 .btn-info-panel {
@@ -635,6 +502,7 @@ export default {
 // circle-panel
 .circle-panel {
   width: 220px;
+  // width: 320px;
   margin: 8px;
   position: relative;
   cursor: default;

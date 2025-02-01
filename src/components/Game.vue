@@ -73,9 +73,20 @@
                 :screenSize="screenSize"
                 @showCirclesEv="showCirclesEv"
               ></ButtonPanel>
+              <PlaneControls
+                :planeSelected="aircraftClicked"
+                :planes="planesSorted"
+                :focusObj="focusObj"
+                @compassFocus="compassFocus"
+              ></PlaneControls>
               <ScorePanel
                 :hasFocusPulse="focusObj.isScorePanelFocus"
               ></ScorePanel>
+              <MessagePanel
+                :planeSelected="aircraftClicked"
+                :planes="planesSorted"
+                :focusObj="focusObj"
+              ></MessagePanel>
             </div>
           </div>
           <div class="row-bottom-right">
@@ -124,6 +135,8 @@
 
 import { ref } from 'vue';
 
+import PlaneControls from './panelBottom/PlaneControls';
+import MessagePanel from './panelBottom/MessagePanel';
 import Plane from './canvas/Plane.vue';
 import CyberBox from './common/CyberBox';
 import ButtonPanel from './panelBottom/ButtonPanel';
@@ -206,9 +219,13 @@ let updatedHeadingTutorial_hdgArg = null;
 let updatedAltitudeTutorial_altArg = null;
 let setShowCircles_isShowCirclesArg = null;
 
+let controlPanel;
+
 export default {
   name: 'atc-game',
   components: {
+    PlaneControls,
+    MessagePanel,
     Plane,
     CyberBox,
     FlightStripDeparture,
@@ -315,6 +332,12 @@ export default {
   },
 
   methods: {
+    compassFocus: function (isSet) {
+      if (isSet) {
+        controlPanel.setFocus();
+      }
+    },
+
     hasFocusPulseWaypoint: function (index) {
       return index === this.focusObj.flightStripArrFocusIndex
         ? this.focusObj.isFlightStripArrWaypointFocus
@@ -358,7 +381,7 @@ export default {
   },
 
   mounted() {
-    const controlPanel = this.$refs.controlPanel;
+    controlPanel = this.$refs.controlPanel;
 
     const background = this.$refs.background;
     const layerOne = this.$refs.layerOne;

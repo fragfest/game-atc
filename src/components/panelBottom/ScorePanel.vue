@@ -231,8 +231,6 @@ export default {
 <style lang="scss" scoped>
 // score-panel
 .score-panel {
-  display: flex;
-  justify-content: flex-end;
   width: 100%;
   margin-top: 6px;
   margin-bottom: 10px;

@@ -66,8 +66,8 @@ ATCv0.1.3:
     ✔ Faster altitude decrease than increase (3 miles horizontal for every 1000ft vertical descent) @done(25-01-30 08:45)
     ✔ Faster speed decrease than increase @done(25-01-30 08:45)
     ✔ Slower landing rollouts (takeoffs too?) @done(25-01-30 09:29)
-    ☐ panelBottom bigger & responsive i.e. message tip box is bigger
-    ☐ scorePanel make smaller
+    ☐ panelBottom bigger & responsive i.e. message tip box is bigger @started(25-01-30 14:38)
+    ☐ scorePanel make smaller @started(25-01-30 14:38)
     ✔ Asset copyright attribution text @started(25-01-14 09:11) @done(25-01-14 09:34) @lasted(23m1s)
     ☐ warn with message on mobile
     ☐ console copyright message
