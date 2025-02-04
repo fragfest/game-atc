@@ -1,30 +1,5 @@
 <template>
   <div class="control-panel">
-    <!-- btn-info-panel -->
-    <div class="btn-info-panel" :class="sizeClass">
-      <div v-show="planeSelected.id" class="info">
-        <div class="row title">
-          <span>
-            <b> {{ planeSelected.title }} </b>
-          </span>
-        </div>
-        <hr />
-        <div class="row">
-          <span><b>Hdg</b></span>
-          <span>{{ heading }} &#176;</span>
-        </div>
-        <div class="row">
-          <span><b>Alt</b></span>
-          <span>{{ altitude }} ft</span>
-        </div>
-        <div class="row">
-          <span><b>Spd</b></span>
-          <span>{{ speed }} kts</span>
-        </div>
-      </div>
-    </div>
-    <!-- END btn-info-panel -->
-
     <!-- circle-panel -->
     <div class="circle-panel" :class="sizeClass">
       <CircleInputs
@@ -151,6 +126,7 @@ export default {
     // Then changes to planeSelected will be picked up.
     planeSelected: { type: Object },
     planes: { type: Object },
+    headingRad: { type: Number },
     screenSize: { type: String },
     focusObj: { type: Object },
   },
@@ -277,8 +253,20 @@ export default {
 
   watch: {
     planeSelected(newPlane) {
-      if (!newPlane.id) setCompass((-1 * Math.PI) / 2, (-1 * Math.PI) / 2);
-      if (newPlane.id) setCompass(newPlane.headingRad, null);
+      if (!newPlane.id) {
+        setCompass((-1 * Math.PI) / 2, (-1 * Math.PI) / 2);
+        return;
+      }
+      setCompass(newPlane.headingRad, newPlane.headingTargetRad);
+    },
+
+    headingRad() {
+      const plane = this.planeSelected;
+      if (!plane) return;
+
+      const heading = plane.headingRad ?? null;
+      const target = plane.headingTargetRad ?? null;
+      setCompass(heading, target);
     },
   },
 

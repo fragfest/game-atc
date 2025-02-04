@@ -68,17 +68,18 @@
               :planeSelected="aircraftClicked"
               :planes="planesSorted"
             ></DetailsPanel>
+
             <div class="col">
-              <ButtonPanel
-                :screenSize="screenSize"
-                @showCirclesEv="showCirclesEv"
-              ></ButtonPanel>
               <PlaneControls
                 :planeSelected="aircraftClicked"
                 :planes="planesSorted"
                 :focusObj="focusObj"
                 @compassFocus="compassFocus"
               ></PlaneControls>
+              <PlaneTelemetry
+                :planeSelected="aircraftClicked"
+                :planes="planesSorted"
+              ></PlaneTelemetry>
               <ScorePanel
                 :hasFocusPulse="focusObj.isScorePanelFocus"
               ></ScorePanel>
@@ -89,16 +90,24 @@
               ></MessagePanel>
             </div>
           </div>
+
           <div class="row-bottom-right">
-            <ControlPanel
-              ref="controlPanel"
-              :planeSelected="aircraftClicked"
-              :planes="planesSorted"
-              :screenSize="screenSize"
-              :focusObj="focusObj"
-              @updatedAltitudeEv="updatedAltitudeEv"
-              @updatedHeadingEv="updatedHeadingEv"
-            ></ControlPanel>
+            <div class="col">
+              <ButtonPanel
+                :screenSize="screenSize"
+                @showCirclesEv="showCirclesEv"
+              ></ButtonPanel>
+              <ControlPanel
+                ref="controlPanel"
+                :planeSelected="aircraftClicked"
+                :planes="planesSorted"
+                :headingRad="planeSelHeadingRad"
+                :screenSize="screenSize"
+                :focusObj="focusObj"
+                @updatedAltitudeEv="updatedAltitudeEv"
+                @updatedHeadingEv="updatedHeadingEv"
+              ></ControlPanel>
+            </div>
           </div>
         </div>
       </div>
@@ -135,6 +144,7 @@
 
 import { ref } from 'vue';
 
+import PlaneTelemetry from './panelBottom/PlaneTelemetry';
 import PlaneControls from './panelBottom/PlaneControls';
 import MessagePanel from './panelBottom/MessagePanel';
 import Plane from './canvas/Plane.vue';
@@ -205,11 +215,12 @@ import { getAirportByLevel } from '../js/levels/getLevel';
 let screenSize = ScreenSizes.Large;
 let width = getGameSize(ScreenSizes.Large).width;
 let height = getGameSize(ScreenSizes.Large).height;
+const backgroundOpacity = ref(1);
 
 let gameState = {};
 let entityManagerArr = ref([]);
 let aircraftClicked = ref({});
-const backgroundOpacity = ref(1);
+const planeSelHeadingRad = ref(0);
 
 let msgPopupTop = ref(0.4);
 let msgPopupLeft = ref(0.4);
@@ -224,6 +235,7 @@ let controlPanel;
 export default {
   name: 'atc-game',
   components: {
+    PlaneTelemetry,
     PlaneControls,
     MessagePanel,
     Plane,
@@ -236,7 +248,6 @@ export default {
     GameOverPopup,
     ButtonPanel,
   },
-  props: {},
 
   data() {
     return {
@@ -246,7 +257,10 @@ export default {
       inputAltitude: '',
       inputHeading: '',
       inputSpeed: '',
+
       aircraftClicked,
+      planeSelHeadingRad,
+
       hasPopup: false,
       backgroundImage: '',
 
@@ -478,6 +492,8 @@ export default {
 
       gameUpdateCB: () => {
         gameUpdateEventCB(aircraftClicked, entityManagerArr);
+        this.planeSelHeadingRad = aircraftClicked?.value?.headingRad;
+
         if (isTutorial) {
           tutorialUpdateEventCB(
             this.focusObj,
