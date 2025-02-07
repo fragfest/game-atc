@@ -341,7 +341,7 @@ export default {
 
 .circle-inputs.small {
   left: 70px;
-  top: 30px;
+  top: 34px;
 }
 
 .circle-inputs .input {

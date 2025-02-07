@@ -67,11 +67,10 @@ export default {
 <style lang="scss" scoped>
 .plane-telemetry.small {
   width: 120px;
-  height: 60px;
 
   .info {
     padding: 3px 6px;
-    font-size: 10px;
+    font-size: 11px;
 
     hr {
       border-width: 0.5px;
@@ -87,7 +86,6 @@ export default {
 .plane-telemetry {
   align-content: center;
   width: 160px;
-  height: 124px;
 
   // info
   .info {

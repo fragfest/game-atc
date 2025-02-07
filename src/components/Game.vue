@@ -75,17 +75,19 @@
                 :planes="planesSorted"
                 :focusObj="focusObj"
               ></MessagePanel>
-              <div class="btm-center-row">
-                <PlaneTelemetry
-                  :planeSelected="aircraftClicked"
-                  :planes="planesSorted"
-                ></PlaneTelemetry>
-                <PlaneControls
-                  :planeSelected="aircraftClicked"
-                  :planes="planesSorted"
-                  :focusObj="focusObj"
-                  @compassFocus="compassFocus"
-                ></PlaneControls>
+              <div v-if="screenSize === 'large'">
+                <div class="btm-center-row">
+                  <PlaneTelemetry
+                    :planeSelected="aircraftClicked"
+                    :planes="planesSorted"
+                  ></PlaneTelemetry>
+                  <PlaneControls
+                    :planeSelected="aircraftClicked"
+                    :planes="planesSorted"
+                    :focusObj="focusObj"
+                    @compassFocus="compassFocus"
+                  ></PlaneControls>
+                </div>
               </div>
               <ScorePanel
                 :hasFocusPulse="focusObj.isScorePanelFocus"
@@ -93,7 +95,7 @@
             </div>
           </div>
 
-          <div class="row-bottom-right">
+          <div v-if="screenSize === 'large'" class="row-bottom-right">
             <div class="btm-right-col" :class="screenSize">
               <ButtonPanel
                 :screenSize="screenSize"
@@ -109,6 +111,41 @@
                 @updatedAltitudeEv="updatedAltitudeEv"
                 @updatedHeadingEv="updatedHeadingEv"
               ></ControlPanel>
+            </div>
+          </div>
+
+          <div v-if="screenSize === 'small'" class="row-bottom-right">
+            <div class="btm-right-col" :class="screenSize">
+              <div class="small btm-right-row">
+                <div class="small btm-center-row row-reverse">
+                  <PlaneTelemetry
+                    :planeSelected="aircraftClicked"
+                    :planes="planesSorted"
+                  ></PlaneTelemetry>
+                  <PlaneControls
+                    :planeSelected="aircraftClicked"
+                    :planes="planesSorted"
+                    :focusObj="focusObj"
+                    @compassFocus="compassFocus"
+                  ></PlaneControls>
+                </div>
+                <div class="small col-compass">
+                  <ButtonPanel
+                    :screenSize="screenSize"
+                    @showCirclesEv="showCirclesEv"
+                  ></ButtonPanel>
+                  <ControlPanel
+                    ref="controlPanel"
+                    :screenSize="screenSize"
+                    :planeSelected="aircraftClicked"
+                    :planes="planesSorted"
+                    :headingRad="planeSelHeadingRad"
+                    :focusObj="focusObj"
+                    @updatedAltitudeEv="updatedAltitudeEv"
+                    @updatedHeadingEv="updatedHeadingEv"
+                  ></ControlPanel>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -606,7 +643,8 @@ p {
 }
 
 .btm-center-col.small {
-  padding-top: 22px;
+  padding-top: 16px;
+  min-width: 260px;
 }
 .btm-center-col {
   display: flex;
@@ -616,7 +654,8 @@ p {
 }
 
 .btm-right-col.small {
-  padding-top: 22px;
+  padding-top: 16px;
+  gap: 14px;
 }
 .btm-right-col {
   display: flex;
@@ -626,10 +665,30 @@ p {
   padding-top: 33px;
 }
 
+.btm-right-row.small {
+  display: flex;
+  gap: 14px;
+}
+
+.btm-center-row.small {
+  gap: 12px;
+  padding: 0px;
+}
 .btm-center-row {
   display: flex;
   padding: 4px;
   gap: 24px;
+  height: 124px;
+}
+
+.row-reverse {
+  flex-direction: column-reverse;
+  justify-content: flex-end;
+}
+
+.col-compass.small {
+  display: flex;
+  flex-direction: column;
 }
 
 .row-bottom {

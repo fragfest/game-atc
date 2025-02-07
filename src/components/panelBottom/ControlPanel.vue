@@ -495,7 +495,7 @@ export default {
   cursor: default;
 }
 .circle-panel.small {
-  width: 180px;
+  width: 184px;
   position: relative;
 }
 

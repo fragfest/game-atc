@@ -266,7 +266,7 @@
           />
         </svg>
       </button>
-      <template v-slot:hover>TCAS conflict circles</template>
+      <template v-slot:hover>conflict circles</template>
     </ToolTip>
   </div>
 </template>
@@ -350,7 +350,7 @@ export default {
 <style lang="scss">
 // small
 .button-panel.small {
-  padding-top: 4px;
+  height: 32px;
 
   button.button-aircraft {
     height: 24px;
@@ -368,6 +368,7 @@ export default {
   justify-content: center;
   align-items: center;
   gap: 14px;
+  height: 42px;
 
   button {
     border: none;
@@ -403,17 +404,17 @@ export default {
 
 // small
 .button-panel.small .button-well {
-  gap: 10px;
-  min-width: 58px;
+  gap: 14px;
+  min-width: 64px;
 }
 // END small
 
 .button-panel .button-well {
   display: flex;
   justify-content: flex-end;
-  gap: 16px;
+  gap: 18px;
   padding: 2px 6px;
-  min-width: 86px;
+  min-width: 90px;
   background-color: #2c5c816f;
   border: 1px solid darkgrey;
   border-radius: 4px;

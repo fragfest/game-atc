@@ -173,10 +173,15 @@ export default {
     height: 28px;
     font-size: 12px;
   }
+
+  .btn-container {
+    margin-top: 0;
+  }
 }
 
 .plane-controls {
   min-width: 130px;
+  min-height: 34px;
 
   .btn-container {
     display: flex;
