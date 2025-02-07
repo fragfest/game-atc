@@ -332,8 +332,8 @@ export default {
 
 <style lang="scss">
 .circle-inputs {
-  top: 40px;
-  left: 86px;
+  top: 22%;
+  left: 40%;
   position: absolute;
   display: flex;
   flex-direction: column;

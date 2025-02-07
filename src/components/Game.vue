@@ -69,40 +69,42 @@
               :planes="planesSorted"
             ></DetailsPanel>
 
-            <div class="col">
-              <PlaneControls
-                :planeSelected="aircraftClicked"
-                :planes="planesSorted"
-                :focusObj="focusObj"
-                @compassFocus="compassFocus"
-              ></PlaneControls>
-              <PlaneTelemetry
-                :planeSelected="aircraftClicked"
-                :planes="planesSorted"
-              ></PlaneTelemetry>
-              <ScorePanel
-                :hasFocusPulse="focusObj.isScorePanelFocus"
-              ></ScorePanel>
+            <div class="btm-center-col" :class="screenSize">
               <MessagePanel
                 :planeSelected="aircraftClicked"
                 :planes="planesSorted"
                 :focusObj="focusObj"
               ></MessagePanel>
+              <div class="btm-center-row">
+                <PlaneTelemetry
+                  :planeSelected="aircraftClicked"
+                  :planes="planesSorted"
+                ></PlaneTelemetry>
+                <PlaneControls
+                  :planeSelected="aircraftClicked"
+                  :planes="planesSorted"
+                  :focusObj="focusObj"
+                  @compassFocus="compassFocus"
+                ></PlaneControls>
+              </div>
+              <ScorePanel
+                :hasFocusPulse="focusObj.isScorePanelFocus"
+              ></ScorePanel>
             </div>
           </div>
 
           <div class="row-bottom-right">
-            <div class="col">
+            <div class="btm-right-col" :class="screenSize">
               <ButtonPanel
                 :screenSize="screenSize"
                 @showCirclesEv="showCirclesEv"
               ></ButtonPanel>
               <ControlPanel
                 ref="controlPanel"
+                :screenSize="screenSize"
                 :planeSelected="aircraftClicked"
                 :planes="planesSorted"
                 :headingRad="planeSelHeadingRad"
-                :screenSize="screenSize"
                 :focusObj="focusObj"
                 @updatedAltitudeEv="updatedAltitudeEv"
                 @updatedHeadingEv="updatedHeadingEv"
@@ -114,18 +116,18 @@
 
       <div class="panel-right layer-seven" :style="stylePanelRight">
         <FlightStripDeparture
+          :screenSize="screenSize"
           :planeSelected="aircraftClicked"
           :planes="planesDeparture"
-          :screenSize="screenSize"
           :hasFocusPulse="focusObj.isFlightStripDepFocus"
         ></FlightStripDeparture>
         <ul>
           <li v-for="(plane, index) in planesArrival" :key="index">
             <FlightStrip
+              :screenSize="screenSize"
               :plane="plane"
               :planeSelected="aircraftClicked"
               :planes="planesSorted"
-              :screenSize="screenSize"
               :hasFocusPulse="hasFocusPulse(index)"
               :hasFocusPulseWaypoint="hasFocusPulseWaypoint(index)"
             ></FlightStrip>
@@ -603,18 +605,40 @@ p {
   }
 }
 
-.col {
+.btm-center-col.small {
+  padding-top: 22px;
+}
+.btm-center-col {
   display: flex;
   flex-direction: column;
+  gap: 4px;
+  padding-top: 33px;
+}
+
+.btm-right-col.small {
+  padding-top: 22px;
+}
+.btm-right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  width: 360px;
+  padding-top: 33px;
+}
+
+.btm-center-row {
+  display: flex;
+  padding: 4px;
+  gap: 24px;
 }
 
 .row-bottom {
   display: flex;
-  justify-content: space-around;
   height: 100%;
   margin-top: -3px;
-  border-top: solid 2px teal;
+  padding: 4px;
 
+  border-top: solid 2px teal;
   background-image: linear-gradient(
       rgba(255, 255, 255, 0.1),
       rgba(255, 255, 255, 0.1)
@@ -626,12 +650,15 @@ p {
 
 .row-bottom-left {
   display: flex;
+  justify-content: space-around;
+  gap: 8px;
   width: 100%;
   max-height: 780px;
 }
 
 .row-bottom-right {
   display: flex;
+  gap: 8px;
   max-height: 780px;
 }
 

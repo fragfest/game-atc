@@ -1,5 +1,5 @@
 <template>
-  <div class="plane-controls">
+  <div class="plane-controls" :class="screenSize">
     <div class="btn-container">
       <div v-show="!isTaxiing && isArrival" class="btn">
         <ToolTip :disabled="isDisabled">
@@ -12,7 +12,9 @@
           </button>
           <template v-slot:hover>cleared ILS approach (L)</template>
         </ToolTip>
+      </div>
 
+      <div v-show="!isTaxiing && isArrival" class="btn">
         <ToolTip :disabled="isDisabled">
           <button
             :class="holdHandoffBtnClass"
@@ -69,7 +71,13 @@ export default {
   emits: ['compassFocus'],
 
   data() {
-    return {};
+    return {
+      screenSize: '',
+    };
+  },
+
+  mounted() {
+    this.screenSize = getScreenSize();
   },
 
   computed: {
@@ -160,24 +168,27 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.plane-controls.small {
+  .btn button {
+    height: 28px;
+    font-size: 12px;
+  }
+}
+
 .plane-controls {
-  width: 300px;
-  padding-left: 14px;
-  padding-right: 14px;
-  padding-top: 5px;
-  background-color: #2c5c816f;
-  border: 1px solid darkgrey;
-  border-radius: 8px;
+  min-width: 130px;
 
   .btn-container {
-    height: 60px;
+    display: flex;
+    gap: 14px;
+    margin-top: 6px;
   }
 
   // .btn
   .btn {
     // states
     button.takeoff {
-      width: 80px;
+      width: 120px;
     }
 
     button.is-landing {

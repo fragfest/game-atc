@@ -25,7 +25,6 @@
             <span v-else class="time time-delay">
               <b>DELAYED</b>
             </span>
-            <hr />
             <span class="title">
               <b>{{ plane.title }}</b>
             </span>

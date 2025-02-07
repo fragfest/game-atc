@@ -1,18 +1,12 @@
 <template>
-  <div class="messages">
-    <div class="instructions">
-      <textarea readonly v-model="messagesDisplay">
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Pariatur
-          assumenda asperiores aliquid laboriosam ex temporibus qui nemo, neque
-          soluta velit possimus minus dolor earum.
-        </textarea
-      >
-    </div>
+  <div class="messages" :class="screenSize">
+    <textarea readonly v-model="messagesDisplay"></textarea>
   </div>
 </template>
 
 <script>
 import { MessageEvents, subscribeMessage } from '../../js/events/messages';
+import { getScreenSize } from '../../js/utils';
 
 export default {
   props: {
@@ -22,12 +16,15 @@ export default {
 
   data() {
     return {
+      screenSize: '',
       messages: { type: Object },
       messagesTimeoutId: null,
     };
   },
 
   mounted() {
+    this.screenSize = getScreenSize();
+
     subscribeMessage(MessageEvents.MessageLandingErrorEV, (planeErrorObj) => {
       this.messages = planeErrorObj ?? {};
 
@@ -53,14 +50,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.messages.small {
+  height: 18px;
+  padding-top: 6px;
+
+  textarea {
+    font-size: 11px;
+  }
+}
+
 .messages {
-  width: 300px;
+  height: 30px;
+  margin-left: 4px;
   padding-left: 14px;
   padding-right: 14px;
-  padding-top: 5px;
+  padding-top: 12px;
+
   background-color: #2c5c816f;
-  border: 1px solid darkgrey;
-  border-radius: 8px;
+  border-radius: 4px;
 
   textarea {
     width: 100%;

@@ -58,17 +58,11 @@
         <div class="item score" :class="conflictScoreClass">
           {{ conflictScore }}
         </div>
-        <div v-if="turbulence" class="item" :class="turbulenceClass">
-          turbulence (seconds)
-        </div>
-        <div
-          v-if="turbulence"
-          class="item points"
-          :class="turbulencePointsClass"
-        >
+        <div class="item" :class="turbulenceClass">turbulence (seconds)</div>
+        <div class="item points" :class="turbulencePointsClass">
           {{ turbulence }}
         </div>
-        <div v-if="turbulence" class="item score" :class="turbulenceScoreClass">
+        <div class="item score" :class="turbulenceScoreClass">
           {{ turbulenceScore }}
         </div>
         <div class="item margin-top border-top">SCORE</div>

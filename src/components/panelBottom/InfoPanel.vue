@@ -333,10 +333,10 @@ export default {
   padding: 4px 10px;
 
   background-color: #2c5c816f;
-  border: 1px solid darkgrey;
+  border: 1px solid rgb(215, 215, 215);
   border-top: none;
-  border-bottom-left-radius: 6px;
-  border-bottom-right-radius: 6px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
 }
 
 .info-panel {

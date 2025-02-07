@@ -1,6 +1,6 @@
 <template>
-  <div class="plane-telemetry">
-    <div v-show="planeSelected.id" class="info">
+  <div class="plane-telemetry" :class="screenSize">
+    <div class="info">
       <div class="row title">
         <span>
           <b> {{ planeSelected.title }} </b>
@@ -24,12 +24,22 @@
 </template>
 
 <script>
-import { altitudeDisplay } from '../../js/utils';
+import { altitudeDisplay, getScreenSize } from '../../js/utils';
 
 export default {
   props: {
     planeSelected: { type: Object },
     planes: { type: Object },
+  },
+
+  data() {
+    return {
+      screenSize: '',
+    };
+  },
+
+  mounted() {
+    this.screenSize = getScreenSize();
   },
 
   computed: {
@@ -55,38 +65,41 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.plane-telemetry {
-  width: 300px;
-  padding-left: 14px;
-  padding-right: 14px;
-  padding-top: 5px;
-  background-color: #2c5c816f;
-  border: 1px solid darkgrey;
-  border-radius: 8px;
+.plane-telemetry.small {
+  width: 120px;
+  height: 60px;
 
-  height: 150px;
-  // display: flex;
-  // flex-direction: column;
-  // justify-content: flex-start;
-  // width: 120px;
-  // margin-top: 10px;
-  // margin-right: 16px;
+  .info {
+    padding: 3px 6px;
+    font-size: 10px;
+
+    hr {
+      border-width: 0.5px;
+    }
+
+    .title {
+      font-size: 12px;
+      min-height: 16px;
+    }
+  }
+}
+
+.plane-telemetry {
+  align-content: center;
+  width: 160px;
+  height: 124px;
 
   // info
   .info {
-    color: white;
-    font-size: 16px;
-    margin-top: 12px;
-    margin-left: 2px;
     padding: 6px 10px;
+    font-size: 16px;
+    color: white;
 
     background-color: #2c5c816f;
-    border: 1px solid darkgrey;
-    border-radius: 8px;
-    box-shadow: 3px 3px rgb(0, 84, 84);
+    border-radius: 4px;
 
     hr {
-      margin-top: 4px;
+      margin-top: 2px;
     }
 
     .row {
@@ -96,8 +109,9 @@ export default {
 
     .title {
       justify-content: center;
-      color: lightgreen;
+      min-height: 25px;
       font-size: 18px;
+      color: lightgreen;
     }
   }
   // END info

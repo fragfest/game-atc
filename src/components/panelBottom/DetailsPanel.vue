@@ -78,7 +78,6 @@ export default {
 
 .details-panel {
   width: 540px;
-  margin: 4px 8px;
   cursor: default;
 
   .tabs {

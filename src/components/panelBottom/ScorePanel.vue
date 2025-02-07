@@ -2,54 +2,70 @@
   <div class="score-panel" :class="sizeClass">
     <div class="score-info" :class="scoreInfoClass">
       <div class="score-row" :class="sizeClass">
-        <span class="margin-top font-large badge blue">departures</span>
-        <div :class="departuresPulseClass">
-          <span class="badge badge-score" :class="departuresPointsClass">
+        <div class="badge blue b-top-left-rad">departures</div>
+        <div
+          class="badge badge-score light-blue b-top-right-rad"
+          :class="departuresPointsClass"
+        >
+          <div :class="departuresPulseClass">
             {{ score.departures }}/{{ goals.Departures }}
-          </span>
+          </div>
         </div>
       </div>
       <div class="score-row" :class="sizeClass">
-        <span class="margin-top font-large badge yellow">arrivals</span>
-        <div :class="arrivalsPulseClass">
-          <span class="badge badge-score" :class="arrivalsPointsClass">
+        <div class="badge yellow b-btm-left-rad">arrivals</div>
+        <div
+          class="badge badge-score light-yellow b-btm-right-rad"
+          :class="arrivalsPointsClass"
+        >
+          <div :class="arrivalsPulseClass">
             {{ score.arrivals }}/{{ goals.Arrivals }}
-          </span>
+          </div>
         </div>
       </div>
-      <div class="score-row" :class="sizeClass">
-        <span class="margin-top badge dark-red">
+
+      <div class="score-row margin-top" :class="sizeClass">
+        <div class="badge dark-red b-top-left-rad">
           failed <small>handoffs & landings</small>
-        </span>
-        <div :class="failedPulseClass">
-          <span class="badge badge-score" :class="failedPointsClass">
+        </div>
+        <div
+          class="badge badge-score red b-top-right-rad"
+          :class="failedPointsClass"
+        >
+          <div :class="failedPulseClass">
             {{ score.failed }}/{{ goals.Failed }}
-          </span>
+          </div>
         </div>
       </div>
       <div class="score-row" :class="sizeClass">
-        <span class="margin-top badge dark-red"> delays </span>
-        <div :class="delayedPulseClass">
-          <span class="badge badge-score" :class="delayedPointsClass">
+        <div class="badge dark-red">delays</div>
+        <div class="badge badge-score red" :class="delayedPointsClass">
+          <div :class="delayedPulseClass">
             {{ score.delayed }}/{{ goals.Delayed }}
-          </span>
+          </div>
         </div>
       </div>
       <div class="score-row" :class="sizeClass">
-        <span class="margin-top badge dark-red">
+        <div class="badge dark-red b-btm-left-rad">
           conflict <small>seconds</small>
-        </span>
-        <div :class="conflictPulseClass">
-          <span class="badge badge-score" :class="conflictPointsClass">
+        </div>
+        <div
+          class="badge badge-score red b-btm-right-rad"
+          :class="conflictPointsClass"
+        >
+          <div :class="conflictPulseClass">
             {{ conflictDisplay }}/{{ goals.Conflict }}
-          </span>
+          </div>
         </div>
       </div>
-      <div v-if="turbulenceDisplay" class="score-row" :class="sizeClass">
-        <span class="margin-top badge white">
+
+      <div class="score-row margin-top" :class="sizeClass">
+        <span class="badge white b-top-left-rad b-btm-left-rad">
           turbulence <small>seconds</small>
         </span>
-        <span class="badge badge-score white">{{ turbulenceDisplay }}</span>
+        <span class="badge badge-score white b-top-right-rad b-btm-right-rad">
+          {{ turbulenceDisplay }}
+        </span>
       </div>
 
       <!-- <hr />
@@ -61,7 +77,7 @@
         <span>0</span>
       </div>
       <div class="score-row" :class="sizeClass">
-        <span class="margin-top badge">
+        <span class="badge">
           <b>tin pusher</b> <small>reduce delays</small>
         </span>
         <span>0</span>
@@ -108,10 +124,10 @@ export default {
       },
 
       departuresPulseClass: '',
-      departuresPointsClass: 'green',
+      departuresPointsClass: 'light-blue',
       departuresTimeoutId: null,
       arrivalsPulseClass: '',
-      arrivalsPointsClass: 'green',
+      arrivalsPointsClass: 'light-yellow',
       arrivalsTimeoutId: null,
       failedPulseClass: '',
       failedPointsClass: 'red',
@@ -141,11 +157,11 @@ export default {
           clearTimeout(this.departuresTimeoutId);
           this.departuresTimeoutId = null;
         }
-        this.departuresPulseClass = 'pulse-green';
-        this.departuresPointsClass = 'fade-out';
+        this.departuresPulseClass = 'pulse-blue';
+        this.departuresPointsClass = 'fade-out-blue';
         this.departuresTimeoutId = setTimeout(() => {
           this.departuresPulseClass = '';
-          this.departuresPointsClass = 'green';
+          this.departuresPointsClass = 'light-blue';
         }, 8000);
       }
 
@@ -154,11 +170,11 @@ export default {
           clearTimeout(this.arrivalsTimeoutId);
           this.arrivalsTimeoutId = null;
         }
-        this.arrivalsPulseClass = 'pulse-green';
-        this.arrivalsPointsClass = 'fade-out';
+        this.arrivalsPulseClass = 'pulse-yellow';
+        this.arrivalsPointsClass = 'fade-out-yellow';
         this.arrivalsTimeoutId = setTimeout(() => {
           this.arrivalsPulseClass = '';
-          this.arrivalsPointsClass = 'green';
+          this.arrivalsPointsClass = 'light-yellow';
         }, 8000);
       }
 
@@ -232,9 +248,6 @@ export default {
 // score-panel
 .score-panel {
   width: 100%;
-  margin-top: 6px;
-  margin-bottom: 10px;
-  margin-right: 6px;
   cursor: default;
 }
 
@@ -247,17 +260,32 @@ export default {
 .score-info {
   display: flex;
   flex-direction: column;
-  width: 300px;
-  background-color: #2c5c816f;
-  border: 1px solid darkgrey;
-  border-radius: 8px;
-  padding: 8px 14px;
+  padding: 4px;
+
   color: white;
 
   .white,
   .red,
-  .green {
+  .light-blue,
+  .light-yellow {
     color: black;
+  }
+
+  .margin-top {
+    margin-top: 12px;
+  }
+
+  .b-top-left-rad {
+    border-top-left-radius: 4px;
+  }
+  .b-top-right-rad {
+    border-top-right-radius: 4px;
+  }
+  .b-btm-left-rad {
+    border-bottom-left-radius: 4px;
+  }
+  .b-btm-right-rad {
+    border-bottom-right-radius: 4px;
   }
 }
 
@@ -271,81 +299,78 @@ export default {
   margin-top: 0px;
   margin-bottom: 6px;
 }
+
+// score-info small
+.score-panel.small {
+  .score-info .margin-top {
+    margin-top: 6px;
+  }
+}
 // END score-info
 
 // score-row
 .score-row {
   display: flex;
   justify-content: space-between;
-  align-items: center;
   font-size: 16px;
-
-  .font-large {
-    font-size: 18px;
-  }
-  .margin-top {
-    margin-top: 4px;
-  }
+  max-width: 330px;
 
   .badge {
-    padding: 8px;
-    margin-right: 20px;
-    border-radius: 8px;
-    font-family: Monospace;
+    height: 100%;
+    width: 83%;
+    padding: 6px 8px;
     background-color: darkslategrey;
+    font-family: Monospace;
   }
   .badge-score {
-    min-width: 30px;
-    margin-right: 0px;
-    padding: 2px 4px;
-    border-radius: 4px;
+    width: 17%;
     text-align: right;
   }
 
+  .white {
+    background-image: linear-gradient(to right, #c1c0c0, white);
+  }
   .red {
-    background-image: linear-gradient(to right, #fecece, #fceeee);
+    background-image: linear-gradient(to right, #ff8787, #fddddd);
   }
   .dark-red {
+    color: white;
     background-image: linear-gradient(to right, #4a0000, #af0202);
   }
   .fade-out-red {
+    color: white;
     background-image: linear-gradient(to right, #4a0000, #af0202);
     animation: 10s fade-out-red 0s 1 forwards;
   }
   .yellow {
-    background-image: linear-gradient(to right, #422c03, #bf7f07);
+    background-image: linear-gradient(to right, #432b00, #ac7000);
+  }
+  .light-yellow {
+    background-image: linear-gradient(to right, #ffc75e, #fff1d7);
+  }
+  .fade-out-yellow {
+    color: white;
+    background-image: linear-gradient(to right, #432b00, #ac7000);
+
+    animation: 10s fade-out-yellow 0s 1 forwards;
   }
   .blue {
-    background-image: linear-gradient(to right, #01192b, #408bc5);
+    background-image: linear-gradient(to right, #01192b, #005290);
   }
-  .white {
-    background-image: linear-gradient(to right, #b4b2b2, white);
+  .light-blue {
+    background-image: linear-gradient(to right, #6cbcfa, #d1ebff);
   }
-  .green {
-    background-image: linear-gradient(to right, #cffccf, #eefdee);
-  }
-  .fade-out {
-    background-image: linear-gradient(to right, #008e00, #01b201);
-    animation: 10s fade-out 0s 1 forwards;
+  .fade-out-blue {
+    color: white;
+    background-image: linear-gradient(to right, #01192b, #005290);
+
+    animation: 10s fade-out-blue 0s 1 forwards;
   }
 }
 
 // score-row small
 .score-row.small {
   font-size: 12px;
-
-  .font-large {
-    font-size: 14px;
-  }
-
-  .badge {
-    padding: 6px;
-    border-radius: 4px;
-  }
-  .badge-score {
-    min-width: 20px;
-    padding: 2px 4px;
-  }
 }
 // END score-row
 
@@ -364,12 +389,21 @@ export default {
 // animation ////////////////////////////////////////////////////////
 
 .score-row {
-  .pulse-green {
+  .pulse-blue {
     position: relative;
   }
-  .pulse-green::after {
+  .pulse-blue::after {
     @include pulse-mixin;
-    border: 4px solid #01b201;
+    border: 5px solid #01192b;
+    animation: 1.4s pulse 0s 4 forwards;
+  }
+
+  .pulse-yellow {
+    position: relative;
+  }
+  .pulse-yellow::after {
+    @include pulse-mixin;
+    border: 5px solid #422c03;
     animation: 1.4s pulse 0s 4 forwards;
   }
 
@@ -378,7 +412,7 @@ export default {
   }
   .pulse-red::after {
     @include pulse-mixin;
-    border: 4px solid #af0202;
+    border: 5px solid #4a0000;
     animation: 1.4s pulse 0s 4 forwards;
   }
 
@@ -387,7 +421,7 @@ export default {
   }
   .pulse-infinite::after {
     @include pulse-mixin;
-    border: 4px solid #af0202;
+    border: 5px solid #4a0000;
     animation: 1.4s pulse 0s infinite;
   }
 }
@@ -397,29 +431,40 @@ export default {
 }
 .pulse-score::after {
   @include pulse-mixin;
-  border: 4px solid white;
+  border: 6px solid white;
   animation: 1.4s pulse-score 0s infinite;
 }
 
 @keyframes fade-out-red {
-  90% {
+  70% {
     color: white;
     background-image: linear-gradient(to right, #4a0000, #af0202);
   }
   100% {
     color: black;
-    background-image: linear-gradient(to right, #fecece, #fceeee);
+    background-image: linear-gradient(to right, #ff8787, #fddddd);
   }
 }
 
-@keyframes fade-out {
-  90% {
+@keyframes fade-out-blue {
+  70% {
     color: white;
-    background-image: linear-gradient(to right, #008e00, #01b201);
+    background-image: linear-gradient(to right, #01192b, #005290);
   }
   100% {
     color: black;
-    background-image: linear-gradient(to right, #cffccf, #eefdee);
+    background-image: linear-gradient(to right, #6cbcfa, #d1ebff);
+  }
+}
+
+@keyframes fade-out-yellow {
+  70% {
+    color: white;
+    background-image: linear-gradient(to right, #432b00, #ac7000);
+  }
+  100% {
+    color: black;
+    background-image: linear-gradient(to right, #ffc75e, #fff1d7);
   }
 }
 
@@ -435,26 +480,26 @@ export default {
     opacity: 1;
   }
   100% {
-    width: 114%;
-    height: 114%;
+    width: 120%;
+    height: 120%;
     opacity: 0;
   }
 }
 
 @keyframes pulse {
   0% {
-    width: 50px;
-    height: 20px;
+    width: 120%;
+    height: 120%;
     opacity: 0;
   }
   20% {
-    width: 50px;
-    height: 20px;
+    width: 120%;
+    height: 120%;
     opacity: 1;
   }
   100% {
-    width: 90px;
-    height: 60px;
+    width: 200%;
+    height: 300%;
     opacity: 0;
   }
 }

@@ -365,7 +365,7 @@ export default {
 
 .button-panel {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
   gap: 14px;
 

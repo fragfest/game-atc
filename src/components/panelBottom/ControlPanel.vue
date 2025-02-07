@@ -325,7 +325,7 @@ export default {
 <style lang="scss">
 .control-panel {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   width: 100%;
 }
 
@@ -489,8 +489,7 @@ export default {
 
 // circle-panel
 .circle-panel {
-  width: 220px;
-  // width: 320px;
+  width: 280px;
   margin: 8px;
   position: relative;
   cursor: default;

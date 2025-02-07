@@ -10,7 +10,7 @@
     @keydown.enter="$emit('inputKeyDown')"
     @input="$emit('inputEvent', $event)"
     @click="$emit('inputClick', $event)"
-    :disabled="isDisabled"    
+    :disabled="isDisabled"
     :value="isDisabled ? value : modelValue"
   />
 </template>
@@ -29,17 +29,17 @@ export default {
 
   data() {
     return {
-      classProp: this.class
+      classProp: this.class,
     };
   },
 
   watch: {
     focus(val) {
-      if(val) this.$refs[this.id].focus();
-      else this.$refs[this.id].blur(); 
-    }
+      if (val) this.$refs[this.id].focus();
+      else this.$refs[this.id].blur();
+    },
   },
-}
+};
 </script>
 
 <style lang="scss">
@@ -74,7 +74,7 @@ label {
 }
 
 input {
-  width: 28px;
+  width: 34px;
   margin-left: 8px;
   margin-bottom: 6px;
   padding-top: 1.5px;
@@ -82,12 +82,12 @@ input {
   border-style: none;
 
   cursor: pointer;
-  font-size: 16px;
+  font-size: 20px;
   font-family: sans-serif;
   font-weight: 600;
   background-color: lightgreen;
   color: darkslategrey;
-  
+
   &[disabled] {
     cursor: default;
     background-color: darkslategrey;
@@ -97,9 +97,9 @@ input {
 
 .small {
   label {
-  font-size: 12px;
+    font-size: 12px;
   }
-  
+
   input {
     width: 22px;
     font-size: 12px;
