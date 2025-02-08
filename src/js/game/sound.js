@@ -27,7 +27,7 @@ export const SoundType = Object.freeze({
 
 let isSetup = false;
 let isMuted = true;
-let oldScore = null;
+let oldScore = {};
 
 export const setup = () => {
   background = new Audio('/audio/tower-background.mp3');
@@ -45,20 +45,18 @@ export const setup = () => {
   isSetup = true;
 
   subscribeScore(ScoreEvents.ScoreEV, (score) => {
-    if (oldScore) {
-      if (
-        score.departures > oldScore.departures ||
-        score.arrivals > oldScore.arrivals
-      ) {
-        play(SoundType.Success);
-      }
+    if (
+      score.departures > (oldScore.departures ?? 0) ||
+      score.arrivals > (oldScore.arrivals ?? 0)
+    ) {
+      play(SoundType.Success);
+    }
 
-      if (score.failed > oldScore.failed) {
-        play(SoundType.Fail);
-      }
-      if (score.delayed > oldScore.delayed) {
-        play(SoundType.Fail);
-      }
+    if (score.failed > (oldScore.failed ?? 0)) {
+      play(SoundType.Fail);
+    }
+    if (score.delayed > (oldScore.delayed ?? 0)) {
+      play(SoundType.Fail);
     }
 
     oldScore = { ...score };

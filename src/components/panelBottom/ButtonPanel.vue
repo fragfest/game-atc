@@ -413,8 +413,11 @@ export default {
   display: flex;
   justify-content: flex-end;
   gap: 18px;
-  padding: 2px 6px;
+
   min-width: 90px;
+  padding: 2px 6px;
+  padding-top: 3px;
+
   background-color: #2c5c816f;
   border: 1px solid darkgrey;
   border-radius: 4px;

@@ -271,17 +271,17 @@ const isTurnAngleSmall = (self, plane) => {
 const updateSpeedAlt = (self, aircraft, distToRunway) => {
   let speedTarget = aircraft.speedLanding;
   let altitudeTarget = self.altitudeLanding;
-  if (60 < distToRunway && distToRunway <= 120) {
-    speedTarget += 5;
-    altitudeTarget += 100;
-  }
-  if (120 < distToRunway && distToRunway <= 200) {
+  if (40 < distToRunway && distToRunway <= 80) {
     speedTarget += 10;
-    altitudeTarget += 300;
+    altitudeTarget += 200;
   }
-  if (distToRunway > 200) {
+  if (80 < distToRunway && distToRunway <= 135) {
     speedTarget += 20;
     altitudeTarget += 600;
+  }
+  if (distToRunway > 135) {
+    speedTarget += 40;
+    altitudeTarget += 1000;
   }
 
   if (aircraft.speedTarget > speedTarget) aircraft.setSpeed(speedTarget, true);
