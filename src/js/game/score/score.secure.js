@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 const _0x2c9a5b = _0x45b1;
 (function (_0x2f3ac3, _0x10e703) {
   const _0x11ab1e = _0x45b1,

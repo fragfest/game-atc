@@ -1,6 +1,23 @@
 <template>
   <div class="home" :class="screenSize">
-    <section>
+    <div v-if="isMobile || isTablet">
+      <h1 class="white">ATC - Future Flight Ops</h1>
+      <h1 v-if="isMobile">On mobile?</h1>
+      <h1 v-if="isTablet">On tablet?</h1>
+      <h2 class="">
+        Please use a desktop<br />
+        device to play
+      </h2>
+      <div class="content">
+        <div class="leaderboard">
+          <button @click="onLeaderboardClick">
+            <h3 class="lightgreen">leaderboard</h3>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <section v-if="!isMobile">
       <div class="content">
         <h1 class="title">ATC - Future Flight Ops</h1>
 
@@ -114,6 +131,8 @@ import {
   sendHistory,
 } from '../../js/session/session';
 
+import Bowser from 'bowser';
+
 export default {
   components: {
     HistoryAirports,
@@ -123,6 +142,8 @@ export default {
 
   data() {
     return {
+      isMobile: false,
+      isTablet: false,
       screenSize: '',
       isTutorial: getHighestLevelCompleted() === null,
       levelComplete: getHighestLevelCompleted(),
@@ -160,6 +181,10 @@ export default {
   },
 
   async mounted() {
+    const browsers = Bowser.parse(window.navigator.userAgent);
+    this.isMobile = browsers?.platform?.type === 'mobile' ?? false;
+    this.isTablet = browsers?.platform?.type === 'tablet' ?? false;
+
     this.screenSize = getScreenSize();
     setupScore();
     this.bluesky = isAchievedBlueSky();
