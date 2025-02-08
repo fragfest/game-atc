@@ -161,6 +161,10 @@ export const randMinMax = (min, max) => min + Math.random() * (max - min);
 
 // SETUP /////////////////////////////////////////////////////////////////
 export const setupGameLoadAndExit = () => {
+  window.copyright = () => {
+    console.log('ATC-FFO copyright Carl Adde - carladde.com');
+  };
+
   if (process.env.NODE_ENV === 'production') {
     // browser prompts on reload and close
     window.onbeforeunload = function () {

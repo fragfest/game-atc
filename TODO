@@ -74,7 +74,7 @@ ATCv0.1.3:
     ✔ Asset copyright attribution text @started(25-01-14 09:11) @done(25-01-14 09:34) @lasted(23m1s)
     ✔ arrival glide slope should be steeper @started(25-02-07 16:30) @done(25-02-07 17:19) @lasted(49m29s)
     ✔ warn with message on mobile @started(25-02-07 18:57) @done(25-02-07 19:47) @lasted(50m18s)
-    ☐ console copyright message
+    ✔ console copyright message @done(25-02-07 23:27)
 
 ATCv0.1.2:
   Bugs:
