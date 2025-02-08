@@ -421,7 +421,7 @@ export default {
 
 .info-panel .plane-info hr {
   width: 100%;
-  color: lightgreen;
+  color: white;
   margin: 12px 0px;
 }
 

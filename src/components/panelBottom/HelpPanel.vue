@@ -81,7 +81,7 @@
         <b>wake</b>
         <span>
           Aircraft show a wake symbol when <b>too close behind</b> and
-          <b>within 1000ft</b> of another aircraft. When in a wake, trailing
+          <b>within 1000ft below</b> another aircraft. When in a wake, trailing
           aircraft will incur reduced flight quality and turbulence penalty
           points. Wake strength is based on aircraft size as shown on flight
           strips: Light (L), Medium (M), Heavy (H), Super (J). Smaller aircraft

@@ -98,6 +98,7 @@ export default {
 
     hr {
       margin-top: 2px;
+      color: white;
     }
 
     .row {
