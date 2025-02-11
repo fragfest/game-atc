@@ -110,9 +110,11 @@ export const getAccessToken = () => {
 /**
  * @typedef {Object} LeaderBoard
  * @property {String} userId
+ * @property {String} clientId
  * @property {String} username
  * @property {Number} score
  * @property {Array.<String>} badges
+ * @property {String} date ISO 8601 UTC
  */
 
 /**
@@ -144,11 +146,41 @@ export const getAllScores = async (isSkipCache) => {
 };
 
 /**
+ * get scores across all browsers (clientId) for a user
+ * @param {Boolean} isSkipCache skip browser cache
+ * @param {String} userId
+ * @returns {Array.<LeaderBoard>}
+ */
+export const getScoresByUser = async (isSkipCache, userId) => {
+  const token = getAccessToken();
+  const method = 'GET';
+  let headers = { Authorization: 'Bearer ' + token };
+  if (isSkipCache) {
+    headers = { ...headers, 'Cache-Control': 'max-age=0' };
+  }
+
+  const resp = await fetch(apiUrl + `?userId=${userId}`, {
+    method,
+    headers,
+  });
+
+  if (resp.status !== 200) {
+    console.error('GET leaderboard status:', resp.status);
+    return [];
+  }
+
+  const leaderboardArr = await resp.json();
+  localStorage.setItem('leaderboard', JSON.stringify(leaderboardArr));
+  return leaderboardArr;
+};
+
+/**
  * send JWTs to update table: scores
+ * @param {String} clientId
  * @param {String} historyRecordsJwt
  * @param {String} badgesJwt
  */
-export const sendHistory = async (historyRecordsJwt, badgesJwt) => {
+export const sendHistory = async (clientId, historyRecordsJwt, badgesJwt) => {
   const token = getAccessToken();
   const method = 'PUT';
   const headers = {
@@ -160,12 +192,13 @@ export const sendHistory = async (historyRecordsJwt, badgesJwt) => {
   const history = historyRecordsJwt;
   const badges = badgesJwt;
 
-  if (!isString(history) || !isString(badges)) {
+  if (!isString(clientId) || !isString(history) || !isString(badges)) {
     console.warn('PUT leaderboard not sent');
     return;
   }
 
   const body = JSON.stringify({
+    clientId,
     history,
     badges,
   });

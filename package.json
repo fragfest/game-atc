@@ -17,6 +17,7 @@
     "jwt-encode": "^1.0.1",
     "oidc-client-ts": "^3.1.0",
     "sass-loader": "^13.1.0",
+    "uuid": "^11.0.5",
     "vue": "^3.2.41",
     "vue-router": "^4.1.6"
   },

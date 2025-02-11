@@ -1,5 +1,11 @@
 <template>
   <div class="home" :class="screenSize">
+    <LoginModal
+      v-if="showLoginModal"
+      :loginArr="loginArr"
+      @select="loginSelect"
+    ></LoginModal>
+
     <div v-if="isMobile || isTablet">
       <h1 class="white">ATC - Future Flight Ops</h1>
       <h1 v-if="isMobile">On mobile?</h1>
@@ -122,19 +128,25 @@ import {
 } from '../../js/utils';
 import { isAchievedBlueSky } from '../../js/game/score/badges';
 
+import LoginModal from './LoginModal.vue';
 import HistoryAirports from './HistoryAirports';
 import BadgesDisplay from '../badges/BadgesDisplay';
 import CyberBox from '../common/CyberBox';
 import {
   getAllScores,
+  getScoresByUser,
+  getUserId,
   loginUsingCallbackUrl,
+  logout,
   sendHistory,
 } from '../../js/session/session';
 
 import Bowser from 'bowser';
+import { v4 as uuidv4 } from 'uuid';
 
 export default {
   components: {
+    LoginModal,
     HistoryAirports,
     BadgesDisplay,
     CyberBox,
@@ -142,6 +154,8 @@ export default {
 
   data() {
     return {
+      showLoginModal: false,
+      loginArr: [],
       isMobile: false,
       isTablet: false,
       screenSize: '',
@@ -196,13 +210,53 @@ export default {
     const isNewLoginSuccess = await loginUsingCallbackUrl(url);
     if (isNewLoginSuccess) {
       console.info('login success');
-      await sendHistory(getHistoryRecordsSecure(), getBadgesSecure());
+
+      let clientId = localStorage.getItem('client-id');
+      if (!clientId) {
+        clientId = uuidv4();
+        localStorage.setItem('client-id', clientId);
+      }
+      const userId = getUserId();
+
+      const leaderboardArr = await getScoresByUser(true, userId);
+      this.loginArr = leaderboardArr.filter((board) => {
+        return board.userId === userId;
+      });
+
+      const isMoreThanOne = this.loginArr.length > 1;
+      const isMissingClientId = !this.loginArr.find(
+        (x) => x.clientId === clientId
+      );
+
+      if (isMoreThanOne || (isMoreThanOne && isMissingClientId)) {
+        this.showLoginModal = true;
+        return;
+      }
+
+      await sendHistory(clientId, getHistoryRecordsSecure(), getBadgesSecure());
       getAllScores(true);
       return;
     }
   },
 
   methods: {
+    loginSelect: async function (loginItem) {
+      this.showLoginModal = false;
+
+      if (loginItem === null) {
+        logout();
+        return;
+      }
+
+      localStorage.setItem('client-id', loginItem.clientId);
+      await sendHistory(
+        loginItem.clientId,
+        getHistoryRecordsSecure(),
+        getBadgesSecure()
+      );
+      getAllScores(true);
+    },
+
     onLeaderboardClick: function () {
       this.$router.push({ path: '/leaderboard' });
     },

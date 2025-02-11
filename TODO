@@ -52,7 +52,7 @@ ATCv0.1.3:
     ✔ More levels @started(25-01-08 14:37) @done(25-01-10 21:31) @lasted(2d6h54m50s)
     ✔ Anti-cheat @started(25-01-12 16:45) @done(25-01-14 08:41) @lasted(1d15h56m9s)
     ✔ Online Leaderboard @started(25-01-14 11:56) @done(25-01-26 17:31) @lasted(1w5d5h35m56s)
-    ☐ Save & load full history with multi-browser state consolidation
+    ☐ Save & load full history with multi-browser state consolidation @started(25-02-08 13:45)
     ☐ Add display username for player and leaderboard (instead of cognito username)
     ☐ Mobile & narrow viewport formatted home & leaderboard. Enforce min width to play.
     ☐ Google Analytics

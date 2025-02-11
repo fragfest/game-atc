@@ -116,16 +116,6 @@ export default {
 
     this.username = getUsername();
     const scoresArr = await getAllScores();
-    // const scoresArr = [
-    //   { userId: '1', username: 'user one', score: 300, badges: [] },
-    //   {
-    //     userId: '894999ae-3011-70ce-6245-cbf9345e52e4',
-    //     username: 'user two',
-    //     score: 200,
-    //     badges: ['BlueSky'],
-    //   },
-    //   { userId: '3', username: 'user three', score: 100, badges: [] },
-    // ];
     this.leaderboardArr = this.sortArr(scoresArr || []);
   },
 
@@ -198,7 +188,20 @@ export default {
         item.rank = rank;
         rank++;
       });
-      return sorted;
+
+      const topScoresOnly = [];
+      const prevUserIds = [];
+      sorted.forEach((item) => {
+        if (!prevUserIds.length) {
+          prevUserIds.push(item);
+          topScoresOnly.push(item);
+        } else if (prevUserIds.find((x) => x.userId !== item.userId)) {
+          prevUserIds.push(item);
+          topScoresOnly.push(item);
+        }
+      });
+
+      return topScoresOnly;
     },
   },
 };
