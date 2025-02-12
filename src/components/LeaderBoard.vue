@@ -184,18 +184,16 @@ export default {
       });
 
       let rank = 1;
-      sorted.forEach((item) => {
-        item.rank = rank;
-        rank++;
-      });
-
       const topScoresOnly = [];
       const prevUserIds = [];
+
       sorted.forEach((item) => {
         if (!prevUserIds.length) {
+          item.rank = rank++;
           prevUserIds.push(item);
           topScoresOnly.push(item);
-        } else if (prevUserIds.find((x) => x.userId !== item.userId)) {
+        } else if (!prevUserIds.find((x) => x.userId === item.userId)) {
+          item.rank = rank++;
           prevUserIds.push(item);
           topScoresOnly.push(item);
         }

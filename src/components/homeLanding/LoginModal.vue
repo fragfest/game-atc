@@ -1,29 +1,60 @@
 <template>
   <div class="login-modal">
-    <div class="modal">
+    <div v-if="!isDeleteMode" class="modal">
       <div class="top">
         <div class="header">
-          <h1>Pick History</h1>
-          <p>You have multiple saved scores</p>
+          <h1>Leaderboard Scores</h1>
+          <p>You have score histories in other browsers.</p>
+          <p>The highest score will be shown on the leaderboard.</p>
+          <p>
+            You may <b>delete</b> scores from abandoned browser play sessions
+            here.
+          </p>
         </div>
         <div class="body">
           <ul>
-            <li v-for="(item, index) in loginArr" :key="index">
-              <button @click="select(item)"><h3>select</h3></button>
-              <div class="col">
+            <li class="row" v-for="(item, index) in sortedArr" :key="index">
+              <button class="select red" @click="deleteMode(item)">
+                <h3>delete</h3>
+              </button>
+              <div class="col w-large">
                 <p>{{ time(item) }}</p>
               </div>
               <div class="col">
                 <p>score:</p>
                 <p>{{ item.score ?? 0 }}</p>
               </div>
-              <!-- TODO add delete button -->
             </li>
           </ul>
         </div>
       </div>
       <div class="footer">
-        <button @click="select(null)"><h2>cancel</h2></button>
+        <button class="select" @click="done()"><h2>done</h2></button>
+      </div>
+    </div>
+
+    <div v-if="isDeleteMode" class="modal">
+      <div class="top">
+        <div class="header">
+          <h1>Delete Permanently</h1>
+        </div>
+        <div class="body">
+          <div class="row">
+            <button class="select red" @click="deleteFn(deleteItem)">
+              <h3>delete</h3>
+            </button>
+            <div class="col w-large">
+              <p>{{ time(deleteItem) }}</p>
+            </div>
+            <div class="col">
+              <p>score:</p>
+              <p>{{ deleteItem.score ?? 0 }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer">
+        <button class="select" @click="cancelDelete()"><h2>cancel</h2></button>
       </div>
     </div>
   </div>
@@ -33,6 +64,7 @@
 import { default as utc } from 'dayjs/plugin/utc';
 import { default as relativeTime } from 'dayjs/plugin/relativeTime';
 import { default as dayjs } from 'dayjs';
+import { deleteHistory, getClientId } from '../../js/session/session';
 dayjs.extend(utc);
 dayjs.extend(relativeTime);
 
@@ -40,11 +72,66 @@ export default {
   props: {
     loginArr: { type: Array },
   },
-  emits: ['select'],
+  emits: ['done'],
+
+  data() {
+    return {
+      historyArr: [],
+      isDeleteMode: false,
+      deleteItem: null,
+    };
+  },
+
+  mounted() {
+    this.historyArr = this.loginArr.filter((x) => x.clientId !== getClientId());
+    if (!this.historyArr.length) {
+      this.$emit('done');
+    }
+  },
+
+  computed: {
+    sortedArr: function () {
+      const arr = [...this.historyArr];
+      arr.sort((a, b) => {
+        const dateB = dayjs.utc(b.date);
+        const dateA = dayjs.utc(a.date);
+        if (dateB.isAfter(dateA)) return 1;
+        if (dateA.isAfter(dateB)) return -1;
+        return 0;
+      });
+      return arr;
+    },
+  },
 
   methods: {
-    select: function (loginItem) {
-      this.$emit('select', loginItem);
+    done: function () {
+      this.$emit('done');
+    },
+
+    deleteFn: async function (deleteItem) {
+      deleteHistory(deleteItem.clientId);
+      this.isDeleteMode = false;
+      this.deleteItem = null;
+
+      const index = this.historyArr.findIndex(
+        (x) => x.clientId === deleteItem.clientId
+      );
+      if (index === -1) return;
+
+      this.historyArr.splice(index, 1);
+      if (!this.historyArr.length) {
+        this.$emit('done');
+      }
+    },
+
+    cancelDelete: function () {
+      this.isDeleteMode = false;
+      this.deleteItem = null;
+    },
+
+    deleteMode: function (item) {
+      this.isDeleteMode = true;
+      this.deleteItem = item;
     },
 
     time: function (item) {
@@ -57,6 +144,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.red {
+  background-color: #b30000;
+  color: white;
+}
+
 .login-modal {
   display: flex;
   flex-direction: column;
@@ -76,7 +168,6 @@ export default {
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  word-break: break-all;
 
   width: 80%;
   max-width: 600px;
@@ -98,6 +189,11 @@ export default {
   cursor: default;
 }
 
+.modal p {
+  word-break: normal;
+  margin: 4px;
+}
+
 .modal .top {
   display: flex;
   flex-direction: column;
@@ -109,6 +205,10 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  p {
+    align-self: flex-start;
+  }
 }
 
 .modal .body {
@@ -119,26 +219,39 @@ export default {
   padding-top: 24px;
 }
 
-button {
+button.select {
+  width: 100px;
   padding: 4px 16px;
+
   border: none;
   border-radius: 4px;
   box-shadow: 4px 2px 2px #000000a0;
   background-color: #90ee90;
+
+  h2,
+  h3 {
+    margin: 0;
+    color: rgb(28, 28, 28);
+  }
+
+  &.red {
+    background-color: #b30000;
+    h2,
+    h3 {
+      color: white;
+    }
+  }
 }
 
-button h2,
-h3 {
-  margin: 0;
-  color: rgb(28, 28, 28);
-}
-
-button:hover {
+button.select:hover {
   cursor: pointer;
   background-color: rgb(119, 201, 119);
+  &.red {
+    background-color: #930101;
+  }
 }
 
-button:active {
+button.select:active {
   position: relative;
   outline: 1px solid white;
   left: 2px;
@@ -154,20 +267,22 @@ ul {
   padding-left: 0;
 }
 
-li {
+.row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 32px;
-
-  padding: 0;
+  flex-wrap: wrap;
+  gap: 16px;
 }
 
-li .col {
+.col {
   display: flex;
   justify-content: space-between;
   word-break: normal;
-
   width: 140px;
+
+  &.w-large {
+    width: 180px;
+  }
 }
 </style>

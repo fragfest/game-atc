@@ -3,7 +3,7 @@
     <LoginModal
       v-if="showLoginModal"
       :loginArr="loginArr"
-      @select="loginSelect"
+      @done="onDoneEvent"
     ></LoginModal>
 
     <div v-if="isMobile || isTablet">
@@ -134,15 +134,14 @@ import BadgesDisplay from '../badges/BadgesDisplay';
 import CyberBox from '../common/CyberBox';
 import {
   getAllScores,
+  getClientId,
   getScoresByUser,
   getUserId,
   loginUsingCallbackUrl,
-  logout,
   sendHistory,
 } from '../../js/session/session';
 
 import Bowser from 'bowser';
-import { v4 as uuidv4 } from 'uuid';
 
 export default {
   components: {
@@ -211,49 +210,26 @@ export default {
     if (isNewLoginSuccess) {
       console.info('login success');
 
-      let clientId = localStorage.getItem('client-id');
-      if (!clientId) {
-        clientId = uuidv4();
-        localStorage.setItem('client-id', clientId);
-      }
-      const userId = getUserId();
-
-      const leaderboardArr = await getScoresByUser(true, userId);
-      this.loginArr = leaderboardArr.filter((board) => {
-        return board.userId === userId;
-      });
-
-      const isMoreThanOne = this.loginArr.length > 1;
-      const isMissingClientId = !this.loginArr.find(
-        (x) => x.clientId === clientId
+      await sendHistory(
+        getClientId(),
+        getHistoryRecordsSecure(),
+        getBadgesSecure()
       );
+      this.loginArr = await getScoresByUser(true, getUserId());
 
-      if (isMoreThanOne || (isMoreThanOne && isMissingClientId)) {
+      if (this.loginArr.length > 1) {
         this.showLoginModal = true;
         return;
       }
 
-      await sendHistory(clientId, getHistoryRecordsSecure(), getBadgesSecure());
       getAllScores(true);
       return;
     }
   },
 
   methods: {
-    loginSelect: async function (loginItem) {
+    onDoneEvent: async function () {
       this.showLoginModal = false;
-
-      if (loginItem === null) {
-        logout();
-        return;
-      }
-
-      localStorage.setItem('client-id', loginItem.clientId);
-      await sendHistory(
-        loginItem.clientId,
-        getHistoryRecordsSecure(),
-        getBadgesSecure()
-      );
       getAllScores(true);
     },
 

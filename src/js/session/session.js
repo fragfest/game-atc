@@ -1,5 +1,6 @@
 import { default as dayjs } from 'dayjs';
 import { UserManager } from 'oidc-client-ts';
+import { v4 as uuidv4 } from 'uuid';
 
 // dev config ///////////////////////////////////////////////////////
 let apiUrl = 'https://api.carladde.com/dev/atc-dev';
@@ -87,6 +88,19 @@ export const getUserId = () => {
 
   const session = JSON.parse(sessionStr);
   return session.profile.sub;
+};
+
+export const getClientId = () => {
+  const clientId = localStorage.getItem('client-id');
+  if (clientId) return clientId;
+
+  const newClientId = uuidv4();
+  localStorage.setItem('client-id', newClientId);
+  return newClientId;
+};
+
+export const setClientId = (clientId) => {
+  localStorage.setItem('client-id', clientId);
 };
 
 export const getUsername = () => {
@@ -211,6 +225,39 @@ export const sendHistory = async (clientId, historyRecordsJwt, badgesJwt) => {
 
   if (resp.status !== 200) {
     console.error('PUT leaderboard status:', resp.status);
+    return;
+  }
+};
+
+/**
+ * delete a browser item (clientId) for this user
+ * @param {String} clientId
+ */
+export const deleteHistory = async (clientId) => {
+  const token = getAccessToken();
+  const method = 'DELETE';
+  const headers = {
+    Authorization: 'Bearer ' + token,
+    'Content-Type': 'application/json',
+  };
+
+  const isString = (x) => typeof x === 'string';
+  if (!isString(clientId)) {
+    console.warn('DELETE leaderboard not sent');
+    return;
+  }
+
+  const body = JSON.stringify({
+    clientId,
+  });
+  const resp = await fetch(apiUrl + `?clientId=${clientId}`, {
+    method,
+    headers,
+    body,
+  });
+
+  if (resp.status !== 200) {
+    console.error('DELETE leaderboard status:', resp.status);
     return;
   }
 };
