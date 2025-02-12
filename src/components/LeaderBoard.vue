@@ -57,7 +57,9 @@
             <h2 v-if="isPlayerItem(item)" class="hdr-green">
               {{ textFormat(item?.username) }}
             </h2>
-            <h2 v-else class="hdr-white">{{ textFormat(item?.username) }}</h2>
+            <h2 v-else class="hdr-white">
+              {{ textFormat(item?.username) }}
+            </h2>
           </div>
           <div class="score-content">
             <BadgesDisplay
@@ -74,6 +76,7 @@
 </template>
 
 <script>
+import { ref } from 'vue';
 import { Badges } from '../js/game/score/badges';
 import {
   getAllScores,
@@ -85,6 +88,13 @@ import {
 } from '../js/session/session';
 import { calculateScreenSize, setScreenSize } from '../js/utils';
 import BadgesDisplay from './badges/BadgesDisplay';
+
+const badgeSize = ref(44);
+
+const setBadgeSize = (width) => {
+  if (width <= 1000) return (badgeSize.value = 28);
+  badgeSize.value = 44;
+};
 
 export default {
   components: {
@@ -98,6 +108,7 @@ export default {
       leaderboardArr: this.sortArr(
         JSON.parse(localStorage.getItem('leaderboard') || '[]')
       ),
+      badgeSize,
     };
   },
 
@@ -109,6 +120,11 @@ export default {
   },
 
   async mounted() {
+    window.addEventListener('resize', (event) => {
+      setBadgeSize(event?.target?.innerWidth);
+    });
+    setBadgeSize(window?.innerWidth);
+
     if (!isLoggedIn()) {
       this.leaderboardArr = [];
       return;
@@ -125,10 +141,6 @@ export default {
         (item) => item.userId === this.userId
       );
       return item?.rank || '-';
-    },
-
-    badgeSize: function () {
-      return 44;
     },
   },
 
@@ -155,7 +167,7 @@ export default {
 
     textFormat: function (text) {
       if (!text) return '';
-      return text.slice(0, 40);
+      return text.slice(0, 30);
     },
 
     scoreFormat: function (score) {
@@ -255,7 +267,7 @@ h2 {
       margin: 8px;
     }
 
-    @media (max-width: 600px) {
+    @media (max-width: 1000px) {
       justify-content: flex-end;
       h1 {
         margin-right: 10%;
@@ -276,7 +288,7 @@ h2 {
         margin: 0;
       }
 
-      @media (max-width: 600px) {
+      @media (max-width: 1000px) {
         left: -60px;
         button {
           width: 52px;
@@ -291,7 +303,7 @@ h2 {
     max-width: 1800px;
     margin: 1% 12%;
 
-    @media (max-width: 600px) {
+    @media (max-width: 1000px) {
       margin: 1% 4%;
     }
   }
@@ -301,7 +313,7 @@ h2 {
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    row-gap: 8px;
+    gap: 8px;
   }
 
   section.body-top .user-rank {
@@ -321,7 +333,7 @@ h2 {
       font-size: 26px;
     }
 
-    @media (max-width: 600px) {
+    @media (max-width: 1000px) {
       width: 100%;
       h2 {
         margin: 8px;
@@ -357,8 +369,12 @@ h2 {
       column-gap: 24px;
       text-align: right;
 
-      @media (max-width: 600px) {
+      @media (max-width: 1000px) {
         column-gap: 0;
+        h2 {
+          margin: 8px 4px;
+          font-size: 24px;
+        }
       }
     }
   }
@@ -374,12 +390,15 @@ h2 {
     border-radius: 6px;
     background-color: #2c5c81;
 
-    @media (max-width: 600px) {
-      padding-left: 8px;
-    }
-
     h2 {
       margin: 4px;
+    }
+
+    @media (max-width: 1000px) {
+      padding-left: 8px;
+      h2 {
+        font-size: 22px;
+      }
     }
 
     .score-user {
@@ -409,7 +428,7 @@ h2 {
         font-weight: 500;
       }
 
-      @media (max-width: 600px) {
+      @media (max-width: 1000px) {
         column-gap: 0;
       }
     }
@@ -438,7 +457,7 @@ h2 {
       margin: 8px;
     }
 
-    @media (max-width: 600px) {
+    @media (max-width: 1000px) {
       flex-direction: column;
       width: 100%;
     }
@@ -462,13 +481,14 @@ h2 {
       font-size: 22px;
     }
 
-    @media (max-width: 600px) {
+    @media (max-width: 1000px) {
       h2 {
-        margin: 8px;
-        font-size: 22px;
+        margin: 4px;
+        font-size: 20px;
       }
       h3 {
-        font-size: 16px;
+        margin: 8px;
+        font-size: 18px;
       }
     }
 
@@ -480,7 +500,7 @@ h2 {
       box-shadow: 4px 0px 3px #292929;
       cursor: pointer;
 
-      @media (max-width: 600px) {
+      @media (max-width: 1000px) {
         width: 40%;
       }
     }
