@@ -6,14 +6,11 @@
       @done="onDoneEvent"
     ></LoginModal>
 
-    <div v-if="isMobile || isTablet">
-      <h1 class="white">ATC - Future Flight Ops</h1>
-      <h1 v-if="isMobile">On mobile?</h1>
-      <h1 v-if="isTablet">On tablet?</h1>
-      <h2 class="">
-        Please use a desktop<br />
-        device to play
-      </h2>
+    <div v-if="isMobile || isTablet" class="mobile">
+      <h1 class="hdr-green">ATC - Future Flight Ops</h1>
+      <h2 v-if="isMobile" class="lightgreen">On mobile?</h2>
+      <h2 v-if="isTablet" class="lightgreen">On tablet?</h2>
+      <h3 class="white">Please use a desktop browser to play</h3>
       <div class="content">
         <div class="leaderboard">
           <button @click="onLeaderboardClick">
@@ -274,6 +271,19 @@ export default {
 
 .no-wrap {
   text-wrap: nowrap;
+}
+
+// mobile /////////////////////////////////////////////////
+.home .mobile {
+  display: flex;
+  flex-direction: column;
+
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-bottom: 32px;
+  margin: 5% 8px;
+  border-radius: 8px;
+  background-image: url('/public/img/teal-bckgnd.jpg');
 }
 
 // home ////////////////////////////////////////////////////
