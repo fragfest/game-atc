@@ -99,10 +99,6 @@ export const getClientId = () => {
   return newClientId;
 };
 
-export const setClientId = (clientId) => {
-  localStorage.setItem('client-id', clientId);
-};
-
 export const getUsername = () => {
   const key = `oidc.user:${config.authority}:${config.client_id}`;
   const sessionStr = sessionStorage.getItem(key);
