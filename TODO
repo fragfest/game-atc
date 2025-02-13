@@ -2,13 +2,14 @@ Bugs:
   ☐ Training can't be retried. Complete training and hit retry (without refreshing). A blank/frozen game screen appears.
 
 Wishlist:
+  ☐ save volume, conflict circles settings
   ☐ More badges
   ☐ Consider another victory goal based on Flight Quality 
   ☐ Emergency message popup/flighstrip/aircraft & mechanic
   ☐ Crash mechanic i.e. due to emergency
-  ☐ Federated login (try cognito login page style)
   ☐ Custom play level
   ☐ leaderboard max limit & paged calls
+  ☐ cognito login page style
 
   ☐ difficulty setting that changes delay timers
   ☐ More airports & levels (+5)
@@ -27,7 +28,15 @@ Wishlist:
   ☐ select-flick sound too quiet
   ☐ Add display username for player and leaderboard (instead of cognito username)
 
-ATCv0.1.3:
+v0.1.4:
+  Bugs:
+
+  Major:
+
+  Minor:
+    ☐ Federated login
+
+v0.1.3:
   Bugs:
     ✔ AMS level runway 18R does not trigger landing west of centre line @started(25-01-06 17:09) @done(25-01-08 02:34) @lasted(1d9h25m33s)
     ✔ badge awarded in popup even if current level failed @started(24-11-27 20:58) @done(24-11-28 23:01) @lasted(1d2h3m45s)
@@ -77,7 +86,7 @@ ATCv0.1.3:
     ✔ mobile & narrow viewport leaderboard @started(25-02-12 14:04) @done(25-02-12 16:34) @lasted(2h30m52s)
     ✔ Google Analytics @started(25-02-12 19:32) @done(25-02-12 19:47) @lasted(15m22s)
 
-ATCv0.1.2:
+v0.1.2:
   Bugs:
     ✔ Chances level 1: departures only @done(24-01-14 18:56)
     ✔ Chances level 2: arrivals focused @done(24-01-14 19:18)

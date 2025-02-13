@@ -358,7 +358,9 @@ export default {
     // UPDATE BACKEND ////////////////////////////////////////
     if (isLoggedIn()) {
       sendHistory(getClientId(), getHistoryRecordsSecure(), getBadgesSecure());
-      getAllScores(true);
+      setTimeout(() => {
+        getAllScores(true);
+      }, 10000);
     }
 
     resetLevelComplete();
