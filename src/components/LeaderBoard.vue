@@ -63,6 +63,7 @@
           </div>
           <div class="score-content">
             <BadgesDisplay
+              :isMobile="isMobile"
               :isLeaderboard="true"
               :size="badgeSize"
               :bluesky="hasBlueSky(item)"
@@ -89,6 +90,8 @@ import {
 import { calculateScreenSize, setScreenSize } from '../js/utils';
 import BadgesDisplay from './badges/BadgesDisplay';
 
+import Bowser from 'bowser';
+
 const badgeSize = ref(44);
 
 const setBadgeSize = (width) => {
@@ -103,6 +106,7 @@ export default {
 
   data() {
     return {
+      isMobile: false,
       userId: getUserId(),
       username: '',
       leaderboardArr: this.sortArr(
@@ -124,6 +128,11 @@ export default {
       setBadgeSize(event?.target?.innerWidth);
     });
     setBadgeSize(window?.innerWidth);
+
+    const browsers = Bowser.parse(window.navigator.userAgent);
+    const isMobile = browsers?.platform?.type === 'mobile' ?? false;
+    const isTablet = browsers?.platform?.type === 'tablet' ?? false;
+    this.isMobile = isMobile || isTablet;
 
     if (!isLoggedIn()) {
       this.leaderboardArr = [];

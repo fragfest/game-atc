@@ -114,6 +114,7 @@ export const BadgeTypes = Object.freeze({
 
 export default {
   props: {
+    isMobile: { type: Boolean },
     size: { type: Number, default: 44 },
     bluesky: { type: Boolean },
     isNewBlueSky: { type: Boolean },
@@ -218,6 +219,8 @@ export default {
     },
 
     onClickBadgeAchieved: function (badgeClass) {
+      if (this.isMobile) return;
+
       if (this[badgeClass] === 'badge-expand') {
         this[badgeClass] = 'badge-collapse';
         return;
