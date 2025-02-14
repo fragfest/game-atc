@@ -286,9 +286,11 @@ export default {
 }
 
 .container .badge-expand {
+  z-index: 2;
   animation: scale var(--duration-scale) var(--timing-scale) 0s 1 forwards;
 }
 .container.small .badge-expand {
+  z-index: 2;
   animation: scale-small var(--duration-scale) var(--timing-scale) 0s 1 forwards;
 }
 
@@ -302,7 +304,6 @@ export default {
 
 .container .badge-achieved {
   position: relative;
-  z-index: 1;
   :hover {
     cursor: pointer;
   }

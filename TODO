@@ -30,11 +30,12 @@ Wishlist:
 
 v0.1.4:
   Bugs:
+    ✔ leaderboard BlueSky background badge drawn above expanded badge @done(25-02-13 20:16)
 
   Major:
 
   Minor:
-    ☐ Federated login
+    ☐ federated login
 
 v0.1.3:
   Bugs:
