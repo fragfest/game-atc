@@ -29,7 +29,8 @@ Wishlist:
 
 v0.1.4:
   Bugs:
-    ✔ Complete training and hit retry (without refreshing). A blank/frozen game screen appears. @done(25-02-17 17:57)
+    ✔ intermittent prod freeze (add debug statements & continue to investigate) @done(25-02-18 16:22)
+    ✔ complete training and hit retry (without refreshing). A blank/frozen game screen appears. @done(25-02-17 17:57)
     ✔ leaderboard BlueSky background badge drawn above expanded badge @done(25-02-13 20:16)
 
   Major:
