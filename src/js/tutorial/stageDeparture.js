@@ -36,6 +36,15 @@ export const stageDeparture = (
     objEventCB.altitudeValue = null;
     objEventCB.buttonHandoff = null;
 
+    isSetCheckmarkTaxiQueue = false;
+    isValidCheckmarkTaxiQueue = false;
+    isSetCheckmarkTakeoff = false;
+    isValidCheckmarkTakeoff = false;
+    isSetCheckmarkAltitude = false;
+    isValidCheckmarkAltitude = false;
+    isSetCheckmarkHandoff = false;
+    isValidCheckmarkHandoff = false;
+
     state.dialogBox = { top: 0.1, left: 0.1, width: 0.5, html: '<clear>' };
     setTimeout(() => {
       const html =
@@ -126,6 +135,7 @@ export const stageDeparture = (
     isValidCheckmarkAltitude &&
     isValidCheckmarkHandoff
   ) {
+    event = '';
     completeStageFn();
   }
 

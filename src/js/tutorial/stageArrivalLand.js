@@ -38,6 +38,15 @@ export const stageArrivalLand = (
     objEventCB.headingValue = null;
     objEventCB.buttonLanding = false;
 
+    isSetCheckmarkSelected = false;
+    isValidCheckmarkSelected = false;
+    isSetCheckmarkAltitude = false;
+    isValidCheckmarkAltitude = false;
+    isSetCheckmarkHeading = false;
+    isValidCheckmarkHeading = false;
+    isSetCheckmarkLanding = false;
+    isValidCheckmarkLanding = false;
+
     state.dialogBox = { top: 0.04, left: 0.2, width: 0.63, html: '<clear>' };
     setTimeout(() => {
       const html =
@@ -157,6 +166,7 @@ export const stageArrivalLand = (
     isValidCheckmarkHeading &&
     isValidCheckmarkLanding
   ) {
+    event = '';
     completeStageFn();
     setTimeout(() => {
       state.dialogBox = { top: 0.07, left: 0.3, width: 0.61, html: '<clear>' };

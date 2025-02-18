@@ -43,6 +43,7 @@ export const stageConflict = (
   }
 
   if (isConflictFree && event === Events.WaitForSelected0) {
+    event = '';
     completeStageFn();
   }
 

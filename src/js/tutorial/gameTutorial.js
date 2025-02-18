@@ -25,6 +25,14 @@ import { Airport } from '../airports/airports.js';
  * @typedef {import('../game/game.js').State} State
  */
 
+let startTimeStageArrival = 0;
+let startTimeStageDeparture = 0;
+let startTimeStageWaypoint = 0;
+let startTimeStageConflict = 0;
+let areConflictPlanesCreated = false;
+let stage = '';
+let stageCompleted = [];
+
 /**
  * @param {State} state
  * @param {Object} argObj
@@ -35,6 +43,14 @@ export const setup = (state) => (argObj) => {
   const width = getGameSize(argObj.screenSize).width;
   const height = getGameSize(argObj.screenSize).height;
   const canvasObj = getCanvasObj(argObj);
+
+  startTimeStageArrival = 0;
+  startTimeStageDeparture = 0;
+  startTimeStageWaypoint = 0;
+  startTimeStageConflict = 0;
+  areConflictPlanesCreated = false;
+  stage = '';
+  stageCompleted = [];
 
   const startTime = Date.now();
 
@@ -162,21 +178,12 @@ const createPlaneArrivalStage = ({
   return aircraft;
 };
 
-let stage = '';
-const stageCompleted = [];
-
 const isAtStage = (stageArg) =>
   stageArg === stage && !stageCompleted.find((x) => x === stage);
 const completeStage = (stageArg) => {
   if (stageCompleted.find((x) => x === stageArg)) return;
   stageCompleted.push(stageArg);
 };
-
-let startTimeStageArrival = 0;
-let startTimeStageDeparture = 0;
-let startTimeStageWaypoint = 0;
-let startTimeStageConflict = 0;
-let areConflictPlanesCreated = false;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // TUTORIAL
@@ -321,7 +328,7 @@ const tutorial =
         addToGame(planeB);
       }
 
-      stageConflict(state, elapsedTimeWaypoint, entityManagerArr, () => {
+      stageConflict(state, elapsedTimeConflict, entityManagerArr, () => {
         completeStage(Stages.Conflict);
         setTimeout(() => (stage = Stages.Done), 8000);
       });

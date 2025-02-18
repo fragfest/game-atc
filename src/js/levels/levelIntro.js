@@ -171,7 +171,7 @@ export const getIntro = (gameLevel) => {
         levelNum: gameLevel,
         airportHeading: `New York International (JFK)`,
         airportSubheading: `Southbound Operations - weather: heavy`,
-        text1: `A large weather system is present. Keeping pilots and passengers happy will be tricky`,
+        text1: `A large weather system is approaching the airport. let's get arrivals and departures completed as soon as possible.`,
       };
     }
 

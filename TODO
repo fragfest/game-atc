@@ -1,16 +1,14 @@
 Bugs:
-  ☐ Training can't be retried. Complete training and hit retry (without refreshing). A blank/frozen game screen appears.
 
 Wishlist:
-  ☐ save volume, conflict circles settings
   ☐ More badges
   ☐ Consider another victory goal based on Flight Quality 
   ☐ Emergency message popup/flighstrip/aircraft & mechanic
   ☐ Crash mechanic i.e. due to emergency
   ☐ Custom play level
-  ☐ leaderboard max limit & paged calls
   ☐ cognito login page style
-
+  
+  ☐ save volume, conflict circles settings
   ☐ difficulty setting that changes delay timers
   ☐ More airports & levels (+5)
   ☐ wake circles should include altitude at which they were generated
@@ -18,7 +16,8 @@ Wishlist:
   ☐ Noise abatement mechanic (max 250kts below 10Kft)
   ☐ Fuel mechanic
   ☐ Flight Quality - weather dangerous
-
+  
+  ☐ leaderboard max limit & paged calls
   ☐ save full history
   ☐ Consider allowing plane spawn near waypoints
   ☐ Flights have defined arrival sections, departure waypoints
@@ -30,6 +29,7 @@ Wishlist:
 
 v0.1.4:
   Bugs:
+    ✔ Complete training and hit retry (without refreshing). A blank/frozen game screen appears. @done(25-02-17 17:57)
     ✔ leaderboard BlueSky background badge drawn above expanded badge @done(25-02-13 20:16)
 
   Major:

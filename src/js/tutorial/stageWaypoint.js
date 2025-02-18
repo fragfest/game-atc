@@ -31,6 +31,13 @@ export const stageWaypoint = (
     event = Events.WaitForSelected0;
     objEventCB.isPlaneSelected = false;
 
+    isSetCheckmarkPlaneSelected = false;
+    isValidCheckmarkPlaneSelected = false;
+    isSetCheckmarkWaypoint = false;
+    isValidWaypoint = false;
+    isSetCheckmarkHolding = false;
+    isValidHolding = false;
+
     state.dialogBox = { top: 0.04, left: 0.2, width: 0.57, html: '<clear>' };
     setTimeout(() => {
       const html =
@@ -124,6 +131,7 @@ export const stageWaypoint = (
   }
 
   if (isValidCheckmarkPlaneSelected && isValidWaypoint && isValidHolding) {
+    event = '';
     completeStageFn();
     setTimeout(() => {
       state.dialogBox = { top: 0.07, left: 0.3, width: 0.57, html: '<clear>' };
