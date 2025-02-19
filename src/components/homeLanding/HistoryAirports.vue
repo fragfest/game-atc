@@ -146,7 +146,6 @@ export default {
   data() {
     return {
       sizeClass: getClassSize(getScreenSize()),
-      level: getHighestLevelCompleted(),
       airport: getAirportByLevel(getNextLevel()),
       airportCurrent: getAirportByLevel(getNextLevel()),
       records: getRecords(getAirportByLevel(getNextLevel())),
@@ -197,23 +196,38 @@ export default {
     },
 
     buttonLondonClass: function () {
-      return this.airport === Airport.LondonLHR ? 'selected' : '';
+      let str = '';
+      if (this.airportCurrent === Airport.LondonLHR) str += ' current';
+      if (this.airport === Airport.LondonLHR) str += ' selected';
+      return str;
     },
 
     buttonNewYorkClass: function () {
-      return this.airport === Airport.NewYorkJFK ? 'selected' : '';
+      let str = '';
+      if (this.airportCurrent === Airport.NewYorkJFK) str += ' current';
+      if (this.airport === Airport.NewYorkJFK) str += ' selected';
+      return str;
     },
 
     buttonTokyoClass: function () {
-      return this.airport === Airport.TokyoHND ? 'selected' : '';
+      let str = '';
+      if (this.airportCurrent === Airport.TokyoHND) str += ' current';
+      if (this.airport === Airport.TokyoHND) str += ' selected';
+      return str;
     },
 
     buttonAmsterdamClass: function () {
-      return this.airport === Airport.AmsterdamAMS ? 'selected' : '';
+      let str = '';
+      if (this.airportCurrent === Airport.AmsterdamAMS) str += ' current';
+      if (this.airport === Airport.AmsterdamAMS) str += ' selected';
+      return str;
     },
 
     buttonVancouverClass: function () {
-      return this.airport === Airport.VancouverYVR ? 'selected' : '';
+      let str = '';
+      if (this.airportCurrent === Airport.VancouverYVR) str += ' current';
+      if (this.airport === Airport.VancouverYVR) str += ' selected';
+      return str;
     },
 
     isButtonCheckmarkLondon: function () {
@@ -311,8 +325,8 @@ export default {
     }
 
     &:active:not(.selected) {
-      outline: 2px solid white;
       left: 2px;
+      outline: 2px solid white;
       box-shadow: none;
       filter: brightness(1);
     }
@@ -324,6 +338,10 @@ export default {
     &.selected {
       outline: 2px solid white;
       box-shadow: none;
+      filter: brightness(1);
+    }
+
+    &.current {
       filter: brightness(1);
     }
 
