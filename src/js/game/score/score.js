@@ -16,8 +16,8 @@ import {
   getBadgesJwt,
 } from './score.secure';
 
-let debug = false;
-export const setDebugUnitTests = () => (debug = false);
+let debugUseSecure = false;
+export const setDebugUnitTests = () => (debugUseSecure = false);
 
 // key & values must match
 export const ScoreEvents = Object.freeze({
@@ -184,7 +184,7 @@ const publishScore = (score) => {
  * @returns {Array.<String>}
  */
 export const getBadgesSecure = () => {
-  if (process.env.NODE_ENV === 'production' || debug) {
+  if (process.env.NODE_ENV === 'production' || debugUseSecure) {
     const badges = getBadgesJwt();
     return badges || [];
   }
@@ -197,7 +197,7 @@ export const getBadgesSecure = () => {
  * @returns {Array.<String>}
  */
 export const getBadges = () => {
-  if (process.env.NODE_ENV === 'production' || debug) {
+  if (process.env.NODE_ENV === 'production' || debugUseSecure) {
     const badges = getBadgesArrSecure();
     return badges || [];
   }
@@ -210,7 +210,7 @@ export const getBadges = () => {
  * @param {Array.<String>} badges
  */
 export const setBadges = (badges) => {
-  if (process.env.NODE_ENV === 'production' || debug) {
+  if (process.env.NODE_ENV === 'production' || debugUseSecure) {
     setBadgesArrSecure(badges || []);
     return;
   }
@@ -222,7 +222,7 @@ export const setBadges = (badges) => {
  * @returns {Array.<HistoryRecord>}
  */
 export const getHistoryRecords = () => {
-  if (process.env.NODE_ENV === 'production' || debug) {
+  if (process.env.NODE_ENV === 'production' || debugUseSecure) {
     const historyRecords = getHistorySecure();
     return historyRecords || [];
   }
@@ -235,7 +235,7 @@ export const getHistoryRecords = () => {
  * @returns {String}
  */
 export const getHistoryRecordsSecure = () => {
-  if (process.env.NODE_ENV === 'production' || debug) {
+  if (process.env.NODE_ENV === 'production' || debugUseSecure) {
     const recordsJwt = getHistoryJwt();
     return recordsJwt || '';
   }
@@ -261,7 +261,7 @@ const removeHistoryRecord = (level) => {
 
   historyRecords.splice(indexRemove, 1);
 
-  if (process.env.NODE_ENV === 'production' || debug) {
+  if (process.env.NODE_ENV === 'production' || debugUseSecure) {
     setHistorySecure(historyRecords);
     historyRecordDebug();
     return;
@@ -280,7 +280,7 @@ const setHistoryRecord = (level, historyScore) => {
   const historyRecords = getHistoryRecords();
   historyRecords.push({ v, level, historyScore });
 
-  if (process.env.NODE_ENV === 'production' || debug) {
+  if (process.env.NODE_ENV === 'production' || debugUseSecure) {
     setHistorySecure(historyRecords);
     return;
   }
@@ -329,7 +329,7 @@ const Score = {
  * @returns {Score}
  */
 export const getScore = () => {
-  if (process.env.NODE_ENV === 'production' || debug) {
+  if (process.env.NODE_ENV === 'production' || debugUseSecure) {
     const score = getScoreSecure();
     return score || { ...Score };
   }
@@ -342,7 +342,7 @@ export const getScore = () => {
  * @returns {Score}
  */
 const _getScore = () => {
-  if (process.env.NODE_ENV === 'production' || debug) {
+  if (process.env.NODE_ENV === 'production' || debugUseSecure) {
     const score = getScoreBasicSecure();
     return score || { ...Score };
   }
@@ -355,7 +355,7 @@ const _getScore = () => {
  * @param {Score} score
  */
 const setScore = (score) => {
-  if (process.env.NODE_ENV === 'production' || debug) {
+  if (process.env.NODE_ENV === 'production' || debugUseSecure) {
     setScoreSecure(score);
     return;
   }

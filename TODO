@@ -25,16 +25,17 @@ Wishlist:
   ☐ Sound on dialog text spawn
   ☐ redraw aircraft profile silhouettes
   ☐ select-flick sound too quiet
-  ☐ Add display username for player and leaderboard (instead of cognito username)
+  ☐ federated cognito login
 
 v0.1.5:
   Bugs:
 
   Major:
+    ☐ display name for player/leaderboard (instead of all-lowercase cognito username)
 
   Minor:
+    ✔ increase session time, use localStorage instead of sessionStorage @done(25-02-19 17:39)
     ✔ homeLanding airport should be bright when contains current level @done(25-02-19 14:06)
-    ☐ federated login & increase session time
 
 v0.1.4:
   Bugs:

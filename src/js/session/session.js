@@ -1,5 +1,5 @@
 import { default as dayjs } from 'dayjs';
-import { UserManager } from 'oidc-client-ts';
+import { UserManager, WebStorageStateStore } from 'oidc-client-ts';
 import { v4 as uuidv4 } from 'uuid';
 
 // dev config ///////////////////////////////////////////////////////
@@ -11,6 +11,7 @@ let config = {
   redirect_uri: 'http://localhost:8080/',
   response_type: 'code',
   scope: 'phone openid email',
+  userStore: new WebStorageStateStore({ store: window.localStorage }),
 };
 
 // prod config ///////////////////////////////////////////////////////
@@ -40,10 +41,10 @@ export const startLogin = async () => {
 
 export const isLoggedIn = () => {
   const key = `oidc.user:${config.authority}:${config.client_id}`;
-  const sessionStr = sessionStorage.getItem(key);
-  if (!sessionStr) return false;
+  const storage = localStorage.getItem(key);
+  if (!storage) return false;
 
-  const session = JSON.parse(sessionStr);
+  const session = JSON.parse(storage);
   const expiryEpochSecs = session['expires_at'];
   const expiryTime = dayjs.unix(expiryEpochSecs);
   const now = dayjs();
@@ -58,7 +59,7 @@ export const isLoggedIn = () => {
 
 export const logout = () => {
   const key = `oidc.user:${config.authority}:${config.client_id}`;
-  sessionStorage.removeItem(key);
+  localStorage.removeItem(key);
 };
 
 // async function signOutRedirect() {
@@ -83,10 +84,10 @@ export const loginUsingCallbackUrl = async (url) => {
 
 export const getUserId = () => {
   const key = `oidc.user:${config.authority}:${config.client_id}`;
-  const sessionStr = sessionStorage.getItem(key);
-  if (!sessionStr) return '';
+  const storage = localStorage.getItem(key);
+  if (!storage) return '';
 
-  const session = JSON.parse(sessionStr);
+  const session = JSON.parse(storage);
   return session.profile.sub;
 };
 
@@ -101,19 +102,19 @@ export const getClientId = () => {
 
 export const getUsername = () => {
   const key = `oidc.user:${config.authority}:${config.client_id}`;
-  const sessionStr = sessionStorage.getItem(key);
-  if (!sessionStr) return '';
+  const storage = localStorage.getItem(key);
+  if (!storage) return '';
 
-  const session = JSON.parse(sessionStr);
+  const session = JSON.parse(storage);
   return session.profile['cognito:username'];
 };
 
 export const getAccessToken = () => {
   const key = `oidc.user:${config.authority}:${config.client_id}`;
-  const sessionStr = sessionStorage.getItem(key);
-  if (!sessionStr) return '';
+  const storage = localStorage.getItem(key);
+  if (!storage) return '';
 
-  const session = JSON.parse(sessionStr);
+  const session = JSON.parse(storage);
   return session.access_token;
 };
 
