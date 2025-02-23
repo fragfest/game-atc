@@ -22,7 +22,20 @@
 
     <section v-if="!isMobile">
       <div class="content">
-        <h1 class="title">ATC - Future Flight Ops</h1>
+        <div class="header">
+          <h1 class="title">ATC - Future Flight Ops</h1>
+          <SignInButton
+            :isLoggedIn="isLoggedIn"
+            @update="signInUpdate"
+          ></SignInButton>
+        </div>
+        <!-- <div class="header">
+          <h1 class="title">ATC - Future Flight Ops</h1>
+          <h3 v-if="isLoggedIn && username">
+            logged in as &nbsp;&nbsp;<span class="white">{{ username }}</span>
+          </h3>
+          <h3 v-else-if="isLoggedIn && !username">enter user name</h3>
+        </div> -->
 
         <!-- grid-score-buttons -->
         <div class="grid-score-buttons">
@@ -59,7 +72,7 @@
           <!-- column right -->
           <div class="leaderboard">
             <button @click="onLeaderboardClick">
-              <h3>leaderboard</h3>
+              <h3 class="lightgreen">leaderboard</h3>
             </button>
           </div>
           <!-- END next grid row -->
@@ -88,14 +101,15 @@
     <div class="attribution">
       <div class="attribution-list">
         <a href="https://www.freepik.com" title="freepik" target="_blank">
-          location images by freepik</a
-        >
+          location images by freepik
+        </a>
         <a
           href="https://www.flaticon.com/free-animated-icons/rain"
           title="rain animated icons"
           target="_blank"
-          >animated icons created by freepik</a
         >
+          animated icons created by freepik
+        </a>
       </div>
     </div>
 
@@ -106,6 +120,8 @@
 </template>
 
 <script>
+import Bowser from 'bowser';
+
 import { getFinalLevel } from '../../js/levels/getLevel';
 import {
   setup as setupScore,
@@ -131,17 +147,19 @@ import BadgesDisplay from '../badges/BadgesDisplay';
 import CyberBox from '../common/CyberBox';
 import {
   getAllScores,
-  getClientId,
   getScoresByUser,
   getUserId,
+  getUsername,
+  isLoggedIn,
   loginUsingCallbackUrl,
+  logout,
   sendHistory,
 } from '../../js/session/session';
-
-import Bowser from 'bowser';
+import SignInButton from '../common/SignInButton';
 
 export default {
   components: {
+    SignInButton,
     LoginModal,
     HistoryAirports,
     BadgesDisplay,
@@ -150,11 +168,15 @@ export default {
 
   data() {
     return {
+      isLoggedIn: false,
+      username: '',
+
       showLoginModal: false,
       loginArr: [],
       isMobile: false,
       isTablet: false,
       screenSize: '',
+
       isTutorial: getHighestLevelCompleted() === null,
       levelComplete: getHighestLevelCompleted(),
       levelNext: getHighestLevelCompleted() + 1,
@@ -196,6 +218,11 @@ export default {
     this.isTablet = browsers?.platform?.type === 'tablet' ?? false;
 
     this.screenSize = getScreenSize();
+    if (isLoggedIn()) {
+      this.isLoggedIn = true;
+      this.username = getUsername();
+    }
+
     setupScore();
     this.bluesky = isAchievedBlueSky();
     if (this.finalLevel === this.levelComplete) {
@@ -206,12 +233,10 @@ export default {
     const isNewLoginSuccess = await loginUsingCallbackUrl(url);
     if (isNewLoginSuccess) {
       console.info('login success');
+      this.isLoggedIn = true;
+      this.username = getUsername();
 
-      await sendHistory(
-        getClientId(),
-        getHistoryRecordsSecure(),
-        getBadgesSecure()
-      );
+      await sendHistory(getHistoryRecordsSecure(), getBadgesSecure());
       this.loginArr = await getScoresByUser(true, getUserId());
 
       if (this.loginArr.length > 1) {
@@ -225,6 +250,13 @@ export default {
   },
 
   methods: {
+    signInUpdate: function (isLoggedIn) {
+      if (!isLoggedIn) {
+        this.isLoggedIn = false;
+        logout();
+      }
+    },
+
     onDoneEvent: async function () {
       this.showLoginModal = false;
       getAllScores(true);
@@ -258,6 +290,7 @@ export default {
 .gold {
   color: gold;
 }
+
 .hdr-green {
   background: linear-gradient(to bottom, white 0%, limegreen 100%);
   background-clip: text;
@@ -365,19 +398,29 @@ export default {
   width: 100%;
 }
 
+.home section .content .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 24px;
+  border-bottom: 1px dashed white;
+
+  h1,
+  h2,
+  h3 {
+    margin: 8px 0px;
+  }
+}
+
 .home section .content h1 {
   font-size: 48px;
-  border-bottom: 1px dashed white;
   margin: 0;
 
   background: linear-gradient(to bottom, white 0%, limegreen 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-}
-
-.home section .content h3 {
-  color: lightgreen;
 }
 
 // grid-score-buttons ////////////////////////////////////////

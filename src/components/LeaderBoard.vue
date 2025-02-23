@@ -11,25 +11,11 @@
 
     <div class="body">
       <section class="body-top">
-        <div class="login">
-          <div v-if="!username" class="login-btn">
-            <button @click="signIn">
-              <h2 class="hdr-white">Sign In</h2>
-            </button>
-          </div>
-          <div v-if="username" class="login-btn">
-            <button @click="signOut">
-              <h2 class="hdr-white">Sign Out</h2>
-            </button>
-          </div>
-
-          <div v-if="username" class="login-btn">
-            <h3 class="hdr-green">{{ textFormat(username) }}</h3>
-          </div>
-          <div v-if="!username" class="login-btn">
-            <h3 class="hdr-white">Sign In to view</h3>
-          </div>
-        </div>
+        <SignInButton
+          :isLeaderboard="true"
+          :isLoggedIn="isLoggedIn"
+          @update="signInUpdate"
+        ></SignInButton>
 
         <div class="user-rank">
           <h2 class="hdr-white">your rank:</h2>
@@ -55,7 +41,7 @@
           <div class="score-user">
             <h3 class="hdr-green">{{ item?.rank || '' }}</h3>
             <h2 v-if="isPlayerItem(item)" class="hdr-green">
-              {{ textFormat(item?.username) }}
+              {{ textFormat(username) }}
             </h2>
             <h2 v-else class="hdr-white">
               {{ textFormat(item?.username) }}
@@ -85,12 +71,12 @@ import {
   getUsername,
   isLoggedIn,
   logout,
-  startLogin,
 } from '../js/session/session';
 import { calculateScreenSize, setScreenSize } from '../js/utils';
 import BadgesDisplay from './badges/BadgesDisplay';
 
 import Bowser from 'bowser';
+import SignInButton from './common/SignInButton.vue';
 
 const badgeSize = ref(44);
 
@@ -99,8 +85,44 @@ const setBadgeSize = (width) => {
   badgeSize.value = 44;
 };
 
+const sortArr = (arr) => {
+  const sorted = arr.sort((a, b) => {
+    if (a.score === b.score) {
+      return b?.badges?.length - a?.badges?.length;
+    }
+    return b?.score - a?.score;
+  });
+
+  let rank = 1;
+  const topScoresOnly = [];
+  const prevUserIds = [];
+
+  sorted.forEach((item) => {
+    if (!prevUserIds.length) {
+      item.rank = rank++;
+      prevUserIds.push(item);
+      topScoresOnly.push(item);
+    } else if (!prevUserIds.find((x) => x.userId === item.userId)) {
+      item.rank = rank++;
+      prevUserIds.push(item);
+      topScoresOnly.push(item);
+    }
+  });
+
+  return topScoresOnly;
+};
+
+const getLeaderboard = async () => {
+  if (!isLoggedIn() || !getUsername()) {
+    return [];
+  }
+  const scoresArr = await getAllScores();
+  return sortArr(scoresArr || []);
+};
+
 export default {
   components: {
+    SignInButton,
     BadgesDisplay,
   },
 
@@ -108,11 +130,12 @@ export default {
     return {
       isMobile: false,
       userId: getUserId(),
-      username: '',
-      leaderboardArr: this.sortArr(
+      leaderboardArr: sortArr(
         JSON.parse(localStorage.getItem('leaderboard') || '[]')
       ),
       badgeSize,
+      username: '',
+      isLoggedIn: false,
     };
   },
 
@@ -134,14 +157,11 @@ export default {
     const isTablet = browsers?.platform?.type === 'tablet' ?? false;
     this.isMobile = isMobile || isTablet;
 
-    if (!isLoggedIn()) {
-      this.leaderboardArr = [];
-      return;
+    if (isLoggedIn()) {
+      this.isLoggedIn = true;
     }
-
     this.username = getUsername();
-    const scoresArr = await getAllScores();
-    this.leaderboardArr = this.sortArr(scoresArr || []);
+    this.leaderboardArr = await getLeaderboard();
   },
 
   computed: {
@@ -160,18 +180,18 @@ export default {
       return false;
     },
 
+    signInUpdate: async function (isLoggedIn) {
+      this.username = getUsername();
+      if (isLoggedIn) {
+        this.leaderboardArr = await getLeaderboard();
+      } else {
+        this.isLoggedIn = false;
+        logout();
+      }
+    },
+
     goBack: function () {
       this.$router.push({ path: '/' });
-    },
-
-    signIn: function () {
-      startLogin();
-    },
-
-    signOut: async function () {
-      this.leaderboardArr = [];
-      this.username = '';
-      logout();
     },
 
     textFormat: function (text) {
@@ -185,6 +205,10 @@ export default {
       return Number(score).toLocaleString('en-CA');
     },
 
+    getPlayerUsername: function () {
+      return getUsername() || '';
+    },
+
     isPlayerItem: function (item) {
       if (this.userId === item.userId) return true;
       return false;
@@ -194,33 +218,6 @@ export default {
       if (!item.userId) return '';
       if (this.userId === item.userId) return 'selected';
       return '';
-    },
-
-    sortArr: function (arr) {
-      const sorted = arr.sort((a, b) => {
-        if (a.score === b.score) {
-          return b?.badges?.length - a?.badges?.length;
-        }
-        return b?.score - a?.score;
-      });
-
-      let rank = 1;
-      const topScoresOnly = [];
-      const prevUserIds = [];
-
-      sorted.forEach((item) => {
-        if (!prevUserIds.length) {
-          item.rank = rank++;
-          prevUserIds.push(item);
-          topScoresOnly.push(item);
-        } else if (!prevUserIds.find((x) => x.userId === item.userId)) {
-          item.rank = rank++;
-          prevUserIds.push(item);
-          topScoresOnly.push(item);
-        }
-      });
-
-      return topScoresOnly;
     },
   },
 };
@@ -241,13 +238,15 @@ h2 {
 .blue {
   color: darkblue;
 }
-.hdr-green {
+
+:deep(.hdr-green) {
   background: linear-gradient(to bottom, white 0%, limegreen 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
-.hdr-white {
+
+:deep(.hdr-white) {
   background: linear-gradient(to bottom, white 50%, #c1c1c1 100%);
   background-clip: text;
   -webkit-background-clip: text;
@@ -343,6 +342,7 @@ h2 {
     }
 
     @media (max-width: 1000px) {
+      justify-content: center;
       width: 100%;
       h2 {
         margin: 8px;
@@ -447,31 +447,9 @@ h2 {
     outline: 2px solid rgb(44, 255, 44);
     background-color: #19354a;
   }
-
   // END scores
 
-  // login
-  .login {
-    display: flex;
-    column-gap: 20px;
-    width: fit-content;
-    word-break: break-all;
-
-    padding: 4px 15px;
-    border-radius: 6px;
-    background-color: #2c5c81;
-    border: 1px solid lightgrey;
-
-    h2 {
-      margin: 8px;
-    }
-
-    @media (max-width: 1000px) {
-      flex-direction: column;
-      width: 100%;
-    }
-  }
-
+  // login-btn
   .login-btn {
     display: flex;
     flex-wrap: wrap;
@@ -531,6 +509,6 @@ h2 {
       box-shadow: none;
     }
   }
-  // END login
+  // END login-btn
 }
 </style>

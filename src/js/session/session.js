@@ -101,12 +101,13 @@ export const getClientId = () => {
 };
 
 export const getUsername = () => {
-  const key = `oidc.user:${config.authority}:${config.client_id}`;
-  const storage = localStorage.getItem(key);
-  if (!storage) return '';
+  const username = localStorage.getItem('username');
+  if (!username) return '';
+  return username;
+};
 
-  const session = JSON.parse(storage);
-  return session.profile['cognito:username'];
+export const setUsername = (str) => {
+  localStorage.setItem('username', str);
 };
 
 export const getAccessToken = () => {
@@ -187,11 +188,10 @@ export const getScoresByUser = async (isSkipCache, userId) => {
 
 /**
  * send JWTs to update table: scores
- * @param {String} clientId
  * @param {String} historyRecordsJwt
  * @param {String} badgesJwt
  */
-export const sendHistory = async (clientId, historyRecordsJwt, badgesJwt) => {
+export const sendHistory = async (historyRecordsJwt, badgesJwt) => {
   const token = getAccessToken();
   const method = 'PUT';
   const headers = {
@@ -202,6 +202,8 @@ export const sendHistory = async (clientId, historyRecordsJwt, badgesJwt) => {
   const isString = (x) => typeof x === 'string';
   const history = historyRecordsJwt;
   const badges = badgesJwt;
+  const clientId = getClientId() || null;
+  const username = getUsername() || '';
 
   if (!isString(clientId) || !isString(history) || !isString(badges)) {
     console.warn('PUT leaderboard not sent');
@@ -210,6 +212,7 @@ export const sendHistory = async (clientId, historyRecordsJwt, badgesJwt) => {
 
   const body = JSON.stringify({
     clientId,
+    username,
     history,
     badges,
   });
