@@ -58,19 +58,39 @@
             </button>
           </div>
 
-          <div v-else-if="!record.level" class="button-restart active">
-            <button @click="onClickRetry(record.level)">
-              <h3>training</h3>
-            </button>
-          </div>
-          <div v-else-if="record.level" class="button-restart active">
+          <div
+            v-else-if="record.isNext"
+            class="button-restart active next"
+            :class="btnRestartSelectClass(index)"
+          >
             <button @click="onClickRetry(record.level)">
               <h3>level {{ record.level }}</h3>
             </button>
           </div>
 
-          <p v-if="!record.isInactive && record.level" class="gold">
-            {{ scoreFormat(record?.historyScore?.scoreTotal) }}
+          <div
+            v-else-if="!record.level"
+            class="button-restart active"
+            :class="btnRestartSelectClass(index)"
+          >
+            <button @click="onClickRetry(record.level)">
+              <h3>training</h3>
+            </button>
+          </div>
+
+          <div
+            v-else-if="record.level"
+            class="button-restart active"
+            :class="btnRestartSelectClass(index)"
+          >
+            <button @click="onClickRetry(record.level)">
+              <h3>level {{ record.level }}</h3>
+            </button>
+          </div>
+
+          <h4 v-if="record.isNext" class="white shadow">start</h4>
+          <p v-else-if="!record.isInactive && record.level" class="gold shadow">
+            {{ scoreFormat(record?.historyScore?.scoreTotal || 0) }}
           </p>
         </div>
       </div>
@@ -78,8 +98,8 @@
       <div v-if="airportTotal">
         <hr />
         <div class="row">
-          <p>score</p>
-          <p class="gold">{{ airportTotal }}</p>
+          <h4>score</h4>
+          <p class="gold shadow">{{ airportTotal }}</p>
         </div>
       </div>
     </div>
@@ -91,7 +111,6 @@ import { Airport } from '../../js/airports/airports';
 import {
   getHighestLevelCompleted,
   getHistoryRecords,
-  levelRetry,
 } from '../../js/game/score/score';
 import {
   getCityByAirport,
@@ -110,8 +129,22 @@ const getNextLevel = () => {
   return level + 1;
 };
 
+const onClickAirport = (self, airportNew, airportOld) => {
+  self.airport = airportNew;
+  if (airportNew !== airportOld) {
+    const records = getRecords(airportNew);
+    const recordsCompleted = records.filter((x) => !x.isInactive);
+    if (!recordsCompleted.length) return;
+
+    self.level = recordsCompleted.slice(-1)[0].level;
+    self.$emit('updateLevel', self.level);
+  }
+};
+
 const getLevelsByAirport = (airport, completed) => {
   const lastLevel = getFinalLevel();
+  const nextLevel = getNextLevel();
+  const isTutorialDone = !!completed.find((x) => x.level === 0);
   const arr = new Array(getFinalLevel());
   let isComplete = false;
   let level = 1;
@@ -121,11 +154,23 @@ const getLevelsByAirport = (airport, completed) => {
     const record = completed.find((x) => x.level === level);
 
     if (isComplete) return;
+
     if (level === lastLevel) {
-      if (record) levels.push(record);
-      else levels.push({ isInactive: true, level });
+      if (record) {
+        levels.push(record);
+      } else if (level === nextLevel) {
+        levels.push({ isNext: true, level });
+      } else {
+        levels.push({ isInactive: true, level });
+      }
 
       isComplete = true;
+      return;
+    }
+
+    if (level === nextLevel && isTutorialDone) {
+      levels.push({ isNext: true, level });
+      level++;
       return;
     }
 
@@ -141,7 +186,7 @@ const getLevelsByAirport = (airport, completed) => {
       return;
     }
 
-    level += 1;
+    level++;
   });
 
   return levels;
@@ -175,7 +220,7 @@ const isLocationCompleted = (airport) => {
       return;
     }
 
-    level += 1;
+    level++;
   });
 
   return isComplete;
@@ -185,43 +230,44 @@ export default {
   data() {
     return {
       sizeClass: getClassSize(getScreenSize()),
+      level: getNextLevel(),
       airport: getAirportByLevel(getNextLevel()),
       airportCurrent: getAirportByLevel(getNextLevel()),
-      records: getRecords(getAirportByLevel(getNextLevel())),
     };
   },
 
+  emits: ['updateLevel'],
+
   methods: {
     onClickLondon: function () {
-      this.airport = Airport.LondonLHR;
-      this.records = getRecords(Airport.LondonLHR);
+      onClickAirport(this, Airport.LondonLHR, this.airport);
     },
 
     onClickNewYork: function () {
-      this.airport = Airport.NewYorkJFK;
-      this.records = getRecords(Airport.NewYorkJFK);
+      onClickAirport(this, Airport.NewYorkJFK, this.airport);
     },
 
     onClickTokyo: function () {
-      this.airport = Airport.TokyoHND;
-      this.records = getRecords(Airport.TokyoHND);
+      onClickAirport(this, Airport.TokyoHND, this.airport);
     },
 
     onClickAmsterdam: function () {
-      this.airport = Airport.AmsterdamAMS;
-      this.records = getRecords(Airport.AmsterdamAMS);
+      onClickAirport(this, Airport.AmsterdamAMS, this.airport);
     },
 
     onClickVancouver: function () {
-      this.airport = Airport.VancouverYVR;
-      this.records = getRecords(Airport.VancouverYVR);
+      onClickAirport(this, Airport.VancouverYVR, this.airport);
     },
 
     onClickRetry: function (level) {
       routerPathRelative();
+      this.level = level;
+      this.$emit('updateLevel', level);
+    },
 
-      levelRetry(level);
-      this.$router.push({ path: '/game' });
+    btnRestartSelectClass: function (index) {
+      if (this.records[index].selected) return 'selected';
+      return '';
     },
 
     scoreFormat: function (score) {
@@ -230,6 +276,18 @@ export default {
   },
 
   computed: {
+    records: function () {
+      const level = this.level;
+      const records = getRecords(this.airport);
+
+      const addPropSelected = (record) => {
+        if (record.level === level) return { ...record, selected: true };
+        return { ...record, selected: false };
+      };
+
+      return records.map(addPropSelected);
+    },
+
     location: function () {
       return getCityByAirport(this.airport);
     },
@@ -346,6 +404,10 @@ export default {
   hr {
     width: 100%;
     border: dotted 1px lightgrey;
+  }
+
+  .shadow {
+    text-shadow: 1px 2px 2px #000000a0;
   }
 
   .airports-grid {
@@ -471,9 +533,22 @@ export default {
       justify-content: space-between;
       align-items: center;
       margin-top: 6px;
-      height: 33px;
+      padding-right: 4px;
+      height: 30px;
+
+      &:has(.button-restart.selected) {
+        background-color: #ffffff50;
+        border-radius: 4px;
+        outline: 1px solid limegreen;
+      }
+
+      &:has(.button-restart.selected.next) {
+        background-color: #90ee9080;
+        border-radius: 4px;
+      }
     }
 
+    // button-restart
     .button-restart {
       display: flex;
       justify-content: space-between;
@@ -481,10 +556,10 @@ export default {
 
       button {
         width: 100px;
+        height: 30px;
         padding: 4px 10px;
         border: none;
         border-radius: 4px;
-        box-shadow: 4px 2px 2px #000000a0;
         background-color: #90ee90;
       }
 
@@ -498,26 +573,29 @@ export default {
     .button-restart.active {
       button:hover {
         cursor: pointer;
-        background-color: rgb(119, 201, 119);
+        background-color: #c6ffc6;
       }
 
-      button:active {
-        position: relative;
+      button:focus-visible {
         outline: 1px solid white;
-        left: 2px;
-        box-shadow: none;
       }
     }
 
     .button-restart.inactive {
       button {
-        box-shadow: none;
         background-color: grey;
       }
       button h3 {
-        color: rgb(191, 191, 191);
+        color: #bfbfbf;
       }
     }
+
+    .button-restart.selected {
+      button {
+        background-color: #c6ffc6;
+      }
+    }
+    // END button-restart
   }
   // END history
 }

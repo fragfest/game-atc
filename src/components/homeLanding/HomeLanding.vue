@@ -50,14 +50,17 @@
             <h3 v-if="isTutorial">
               <span class="font-mono white">training</span>
             </h3>
-            <h3 v-else-if="!isGameComplete">
+            <!-- <h3 v-else-if="!isGameComplete"> -->
+            <h3 v-else>
               <span>level &nbsp;&nbsp;</span>
               <span class="font-mono white">{{ levelNext }}</span>
             </h3>
 
-            <CyberBox v-if="!isGameComplete" width="400" type="button">
+            <CyberBox width="400" type="button">
               <button @click="onStartClick">
-                <h2>start</h2>
+                <h2 v-if="isGameComplete">retry</h2>
+                <h2 v-else-if="levelComplete + 1 === levelNext">start</h2>
+                <h2 v-else>retry</h2>
               </button>
             </CyberBox>
           </div>
@@ -75,7 +78,7 @@
         <div class="row-history-badges">
           <div class="history-record" :class="screenSize">
             <h2>locations</h2>
-            <HistoryAirports></HistoryAirports>
+            <HistoryAirports @updateLevel="updateLevel"></HistoryAirports>
           </div>
 
           <div v-if="showHistory" class="badges">
@@ -129,7 +132,6 @@ import {
   setScreenSize,
   ScreenSizes,
   getScreenSize,
-  routerPathRelative,
   setLogLevel,
 } from '../../js/utils';
 import { isAchievedBlueSky } from '../../js/game/score/badges';
@@ -220,6 +222,7 @@ export default {
     this.bluesky = isAchievedBlueSky();
     if (this.finalLevel === this.levelComplete) {
       this.isGameComplete = true;
+      this.levelNext = this.finalLevel;
     }
 
     const url = window.location.href;
@@ -243,6 +246,11 @@ export default {
   },
 
   methods: {
+    updateLevel: function (level) {
+      this.levelNext = level;
+      levelRetry(level);
+    },
+
     signInUpdate: function (isLoggedIn) {
       if (!isLoggedIn) {
         this.isLoggedIn = false;
@@ -260,13 +268,6 @@ export default {
     },
 
     onStartClick: function () {
-      this.$router.push({ path: '/game' });
-    },
-
-    onRetryClick: function (level) {
-      routerPathRelative();
-
-      levelRetry(level);
       this.$router.push({ path: '/game' });
     },
   },
