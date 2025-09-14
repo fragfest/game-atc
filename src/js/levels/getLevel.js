@@ -51,10 +51,10 @@ export const getAirportByLevel = (gameLevel) => {
 };
 
 export const getCityByAirport = (airport) => {
-  if (airport === Airport.LondonLHR) return 'london';
-  if (airport === Airport.NewYorkJFK) return 'new york';
-  if (airport === Airport.TokyoHND) return 'tokyo';
-  if (airport === Airport.AmsterdamAMS) return 'amsterdam';
-  if (airport === Airport.VancouverYVR) return 'vancouver';
+  if (airport === Airport.LondonLHR) return 'London';
+  if (airport === Airport.NewYorkJFK) return 'New York';
+  if (airport === Airport.TokyoHND) return 'Tokyo';
+  if (airport === Airport.AmsterdamAMS) return 'Amsterdam';
+  if (airport === Airport.VancouverYVR) return 'Vancouver';
   return '';
 };

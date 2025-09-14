@@ -50,26 +50,27 @@
     <div class="history">
       <div>
         <h2>{{ location }}</h2>
-        <div v-if="!records.length && airportCurrent === airport">
-          <p>new location</p>
-        </div>
-        <div v-else-if="!records.length">
-          <p>not started</p>
-        </div>
 
         <div v-for="(record, index) in records" :key="index" class="row">
-          <div v-if="!record.level" class="button-restart">
+          <div v-if="record.isInactive" class="button-restart inactive">
+            <button disabled>
+              <h3>level {{ record.level }}</h3>
+            </button>
+          </div>
+
+          <div v-else-if="!record.level" class="button-restart active">
             <button @click="onClickRetry(record.level)">
               <h3>training</h3>
             </button>
           </div>
-          <div v-if="record.level" class="button-restart">
+          <div v-else-if="record.level" class="button-restart active">
             <button @click="onClickRetry(record.level)">
               <h3>level {{ record.level }}</h3>
             </button>
           </div>
-          <p v-if="record.level" class="gold">
-            {{ scoreFormat(record.historyScore.scoreTotal) }}
+
+          <p v-if="!record.isInactive && record.level" class="gold">
+            {{ scoreFormat(record?.historyScore?.scoreTotal) }}
           </p>
         </div>
       </div>
@@ -109,11 +110,49 @@ const getNextLevel = () => {
   return level + 1;
 };
 
+const getLevelsByAirport = (airport, completed) => {
+  const lastLevel = getFinalLevel();
+  const arr = new Array(getFinalLevel());
+  let isComplete = false;
+  let level = 1;
+  const levels = [];
+
+  Array.from(arr, () => {
+    const record = completed.find((x) => x.level === level);
+
+    if (isComplete) return;
+    if (level === lastLevel) {
+      if (record) levels.push(record);
+      else levels.push({ isInactive: true, level });
+
+      isComplete = true;
+      return;
+    }
+
+    const location = getAirportByLevel(level);
+    const locationNext = getAirportByLevel(level + 1);
+    if (location === airport) {
+      if (record) levels.push(record);
+      else levels.push({ isInactive: true, level });
+    }
+
+    if (location === airport && locationNext !== airport) {
+      isComplete = true;
+      return;
+    }
+
+    level += 1;
+  });
+
+  return levels;
+};
+
 const isAirportLevel = (airport) => (x) =>
   getAirportByLevel(x.level) === airport;
 
 const getRecords = (airport) => {
-  const records = getHistoryRecords().filter(isAirportLevel(airport));
+  const completed = getHistoryRecords().filter(isAirportLevel(airport));
+  const records = getLevelsByAirport(airport, completed);
   return records.sort((a, b) => a.level - b.level);
 };
 
@@ -231,23 +270,23 @@ export default {
     },
 
     isButtonCheckmarkLondon: function () {
-      return isLocationCompleted(Airport.LondonLHR) ? true : false;
+      return isLocationCompleted(Airport.LondonLHR);
     },
 
     isButtonCheckmarkNewYork: function () {
-      return isLocationCompleted(Airport.NewYorkJFK) ? true : false;
+      return isLocationCompleted(Airport.NewYorkJFK);
     },
 
     isButtonCheckmarkTokyo: function () {
-      return isLocationCompleted(Airport.TokyoHND) ? true : false;
+      return isLocationCompleted(Airport.TokyoHND);
     },
 
     isButtonCheckmarkAmsterdam: function () {
-      return isLocationCompleted(Airport.AmsterdamAMS) ? true : false;
+      return isLocationCompleted(Airport.AmsterdamAMS);
     },
 
     isButtonCheckmarkVancouver: function () {
-      return isLocationCompleted(Airport.VancouverYVR) ? true : false;
+      return isLocationCompleted(Airport.VancouverYVR);
     },
 
     airportTotal: function () {
@@ -432,6 +471,7 @@ export default {
       justify-content: space-between;
       align-items: center;
       margin-top: 6px;
+      height: 33px;
     }
 
     .button-restart {
@@ -453,7 +493,9 @@ export default {
         color: rgb(28, 28, 28);
         font-size: 18px;
       }
+    }
 
+    .button-restart.active {
       button:hover {
         cursor: pointer;
         background-color: rgb(119, 201, 119);
@@ -464,6 +506,16 @@ export default {
         outline: 1px solid white;
         left: 2px;
         box-shadow: none;
+      }
+    }
+
+    .button-restart.inactive {
+      button {
+        box-shadow: none;
+        background-color: grey;
+      }
+      button h3 {
+        color: rgb(191, 191, 191);
       }
     }
   }

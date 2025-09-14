@@ -29,13 +29,6 @@
             @update="signInUpdate"
           ></SignInButton>
         </div>
-        <!-- <div class="header">
-          <h1 class="title">ATC - Future Flight Ops</h1>
-          <h3 v-if="isLoggedIn && username">
-            logged in as &nbsp;&nbsp;<span class="white">{{ username }}</span>
-          </h3>
-          <h3 v-else-if="isLoggedIn && !username">enter user name</h3>
-        </div> -->
 
         <!-- grid-score-buttons -->
         <div class="grid-score-buttons">
@@ -293,6 +286,13 @@ export default {
 
 .hdr-green {
   background: linear-gradient(to bottom, white 0%, limegreen 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hdr-white {
+  background: linear-gradient(to bottom, white 50%, #c1c1c1 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;

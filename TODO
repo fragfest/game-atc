@@ -1,28 +1,31 @@
 Bugs:
+  ☐ slow browser performance post-leave: run video on separate browser video, enter level & leave, wait 10 seconds and notice videom slowdown until home screen refreshed
 
 Wishlist:
-  ☐ More badges
-  ☐ Consider another victory goal based on Flight Quality 
-  ☐ Emergency message popup/flighstrip/aircraft & mechanic
-  ☐ Crash mechanic i.e. due to emergency
-  ☐ Custom play level
+  ☐ more badges
+  ☐ vonsider another victory goal based on Flight Quality 
+  ☐ emergency message popup/flighstrip/aircraft & mechanic
+  ☐ crash mechanic i.e. due to emergency
+  ☐ custom play level
   ☐ cognito login page style
   
   ☐ save volume, conflict circles settings
   ☐ difficulty setting that changes delay timers
-  ☐ More airports & levels (+5)
+  ☐ more airports & levels (+5)
   ☐ wake circles should include altitude at which they were generated
-  ☐ Restricted areas with min altitude levels
-  ☐ Noise abatement mechanic (max 250kts below 10Kft)
-  ☐ Fuel mechanic
-  ☐ Flight Quality - weather dangerous
+  ☐ restricted areas with min altitude levels
+  ☐ noise abatement mechanic (max 250kts below 10Kft)
+  ☐ fuel mechanic
+  ☐ change runways for arrivals (departures too ?)
+  ☐ flight quality - weather dangerous
   
   ☐ leaderboard max limit & paged calls
+  ☐ show leaderboard without sign in
   ☐ save full history
-  ☐ Consider allowing plane spawn near waypoints
-  ☐ Flights have defined arrival sections, departure waypoints
-  ☐ Touchdown sound (tyre screech)
-  ☐ Sound on dialog text spawn
+  ☐ consider allowing plane spawn near waypoints
+  ☐ flights have defined arrival sections, departure waypoints
+  ☐ touchdown sound (tyre screech)
+  ☐ sound on dialog text spawn
   ☐ redraw aircraft profile silhouettes
   ☐ select-flick sound too quiet
   ☐ federated cognito login
@@ -31,10 +34,18 @@ v0.1.5:
   Bugs:
 
   Major:
-    ☐ show leaderboard without sign in
+    ☐ location score copy & consider score progress bar in addition to number
+    ☐ pause button & screen
+    ☐ simulation speed increase
+    ☐ help info re-org (i.e. accordion) especially on small screens
     ✔ display name for player/leaderboard (instead of all-lowercase cognito username) @started(25-02-19 18:41) @done(25-02-23 11:50) @lasted(3d17h9m18s)
 
   Minor:
+    ☐ GameoverPopup has restart button & "return to main screen" button
+    ☐ location level button should update start button instead of starting level immediately
+    ☐ tab key preventDefault and use with Enter key to cycle compass input fields
+    ☐ consider shortcut key for each compass input field
+    ✔ show upcoming levels as greyed-out @started(25-02-25 15:08) @done(25-09-14 01:00) @lasted(28w4d8h52m51s)
     ✔ increase session time, use localStorage instead of sessionStorage @done(25-02-19 17:39)
     ✔ homeLanding airport should be bright when contains current level @done(25-02-19 14:06)
 
