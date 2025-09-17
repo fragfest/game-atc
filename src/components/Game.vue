@@ -100,6 +100,7 @@
               <ButtonPanel
                 :screenSize="screenSize"
                 @showCirclesEv="showCirclesEv"
+                @pauseEv="pauseEv"
               ></ButtonPanel>
               <ControlPanel
                 ref="controlPanel"
@@ -203,6 +204,7 @@ import {
   setShowCircles,
   drawInertElements,
   cancelGameLoop,
+  setGameLoopState,
 } from '../js/game/game';
 import { setup as setupTutorial } from '../js/tutorial/gameTutorial';
 import { isArrival, isDeparture, isAircraft } from '../js/types';
@@ -268,6 +270,7 @@ let msgPopupWidth = ref(0.4);
 let updatedHeadingTutorial_hdgArg = null;
 let updatedAltitudeTutorial_altArg = null;
 let setShowCircles_isShowCirclesArg = null;
+let setGameLoopState_isRunning = null;
 
 let controlPanel;
 
@@ -414,6 +417,10 @@ export default {
     showCirclesEv: function (isShowCircle) {
       setShowCircles_isShowCirclesArg(isShowCircle);
     },
+
+    pauseEv: function (isPaused) {
+      setGameLoopState_isRunning(!isPaused);
+    },
   },
 
   beforeCreate() {
@@ -502,6 +509,7 @@ export default {
     updatedAltitudeTutorial_altArg = (alt) =>
       tutorialEventArg.updatedAltitudeTutorial(alt);
     setShowCircles_isShowCirclesArg = setShowCircles(gameState);
+    setGameLoopState_isRunning = setGameLoopState(gameState);
 
     // LEVEL, AIRPORT
     const level = getScore().level;

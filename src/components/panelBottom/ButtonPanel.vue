@@ -268,6 +268,43 @@
       </button>
       <template v-slot:hover>conflict circles</template>
     </ToolTip>
+
+    <!-- pause button -->
+    <ToolTip>
+      <button class="button-aircraft" :class="showPauseClass" @click="onPause">
+        <svg viewBox="0 0 512 512" fill="#fff">
+          <g id="SVGRepo_iconCarrier">
+            <rect
+              x="160"
+              y="96"
+              width="24"
+              height="320"
+              style="
+                fill: none;
+                stroke: #fff;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+                stroke-width: 40px;
+              "
+            ></rect>
+            <rect
+              x="344"
+              y="96"
+              width="24"
+              height="320"
+              style="
+                fill: none;
+                stroke: #fff;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+                stroke-width: 40px;
+              "
+            ></rect>
+          </g>
+        </svg>
+      </button>
+      <template v-slot:hover>pause</template>
+    </ToolTip>
   </div>
 </template>
 
@@ -281,7 +318,7 @@ export default {
   props: {
     screenSize: { type: String },
   },
-  emits: ['showCirclesEv'],
+  emits: ['showCirclesEv', 'pauseEv'],
 
   components: {
     ToolTip,
@@ -292,6 +329,7 @@ export default {
       isSoundMuted: true,
       isBackgroundSound: false,
       isShowCircles: false,
+      isPaused: false,
     };
   },
 
@@ -312,6 +350,11 @@ export default {
 
     showCircleClass: function () {
       if (this.isShowCircles) return 'active';
+      return '';
+    },
+
+    showPauseClass: function () {
+      if (this.isPaused) return 'active';
       return '';
     },
   },
@@ -342,6 +385,11 @@ export default {
     onShowCircles: function () {
       this.isShowCircles = !this.isShowCircles;
       this.$emit('showCirclesEv', this.isShowCircles);
+    },
+
+    onPause: function () {
+      this.isPaused = !this.isPaused;
+      this.$emit('pauseEv', this.isPaused);
     },
   },
 };

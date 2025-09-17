@@ -35,9 +35,9 @@ v0.1.5:
 
   Major:
     ☐ location score copy & consider score progress bar in addition to number
-    ☐ pause button & screen
     ☐ simulation speed increase
     ☐ help info re-org (i.e. accordion) especially on small screens
+    ☐ pause button & screen @started(25-09-16 22:57)
     ✔ display name for player/leaderboard (instead of all-lowercase cognito username) @started(25-02-19 18:41) @done(25-02-23 11:50) @lasted(3d17h9m18s)
 
   Minor:
