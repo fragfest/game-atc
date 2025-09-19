@@ -272,16 +272,16 @@
     <!-- pause button -->
     <ToolTip>
       <button class="button-aircraft" :class="showPauseClass" @click="onPause">
-        <svg viewBox="0 0 512 512" fill="#fff">
-          <g id="SVGRepo_iconCarrier">
+        <svg viewBox="0 0 512 512">
+          <g>
             <rect
               x="160"
               y="96"
               width="24"
               height="320"
+              :stroke="pauseStroke"
               style="
                 fill: none;
-                stroke: #fff;
                 stroke-linecap: round;
                 stroke-linejoin: round;
                 stroke-width: 40px;
@@ -292,9 +292,9 @@
               y="96"
               width="24"
               height="320"
+              :stroke="pauseStroke"
               style="
                 fill: none;
-                stroke: #fff;
                 stroke-linecap: round;
                 stroke-linejoin: round;
                 stroke-width: 40px;
@@ -317,6 +317,8 @@ export default {
   name: 'ButtonPanel',
   props: {
     screenSize: { type: String },
+    isPaused: { type: Boolean },
+    isPauseDisabled: { type: Boolean },
   },
   emits: ['showCirclesEv', 'pauseEv'],
 
@@ -329,7 +331,6 @@ export default {
       isSoundMuted: true,
       isBackgroundSound: false,
       isShowCircles: false,
-      isPaused: false,
     };
   },
 
@@ -354,8 +355,14 @@ export default {
     },
 
     showPauseClass: function () {
-      if (this.isPaused) return 'active';
+      if (this.isPauseDisabled) return 'disabled';
+      else if (this.isPaused) return 'active';
       return '';
+    },
+
+    pauseStroke: function () {
+      if (this.isPauseDisabled) return 'lightgrey';
+      else return '#fff';
     },
   },
 
@@ -388,8 +395,7 @@ export default {
     },
 
     onPause: function () {
-      this.isPaused = !this.isPaused;
-      this.$emit('pauseEv', this.isPaused);
+      this.$emit('pauseEv', !this.isPaused);
     },
   },
 };
@@ -447,6 +453,18 @@ export default {
   button.active {
     outline: 2px solid limegreen;
     box-shadow: none;
+  }
+
+  button.disabled {
+    border: 1px solid lightgrey;
+
+    &:hover {
+      cursor: default;
+      background-color: #2c5c81;
+    }
+    &:focus-visible {
+      outline: none;
+    }
   }
 }
 

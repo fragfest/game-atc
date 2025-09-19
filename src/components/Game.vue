@@ -1,6 +1,7 @@
 <template>
   <div class="container">
     <GameOverPopup v-if="hasPopup" />
+
     <div class="game">
       <div class="row-left">
         <div class="scope" :style="styleScope">
@@ -44,6 +45,13 @@
           ></canvas>
 
           <Plane></Plane>
+
+          <PlaneClouds
+            :init="isPausedInit"
+            :deflate="!isPaused"
+            @pauseEv="pauseEv"
+            class="layer-seven"
+          ></PlaneClouds>
 
           <!-- msgPopup -->
           <div
@@ -99,6 +107,8 @@
             <div class="btm-right-col" :class="screenSize">
               <ButtonPanel
                 :screenSize="screenSize"
+                :isPauseDisabled="isPauseBtnDisabled"
+                :isPaused="isPaused"
                 @showCirclesEv="showCirclesEv"
                 @pauseEv="pauseEv"
               ></ButtonPanel>
@@ -114,8 +124,7 @@
               ></ControlPanel>
             </div>
           </div>
-
-          <div v-if="screenSize === 'small'" class="row-bottom-right">
+          <div v-else-if="screenSize === 'small'" class="row-bottom-right">
             <div class="btm-right-col" :class="screenSize">
               <div class="small btm-right-row">
                 <div class="small btm-center-row row-reverse">
@@ -133,7 +142,10 @@
                 <div class="small col-compass">
                   <ButtonPanel
                     :screenSize="screenSize"
+                    :isPauseDisabled="isPauseBtnDisabled"
+                    :isPaused="isPaused"
                     @showCirclesEv="showCirclesEv"
+                    @pauseEv="pauseEv"
                   ></ButtonPanel>
                   <ControlPanel
                     ref="controlPanel"
@@ -196,6 +208,7 @@ import ControlPanel from './panelBottom/ControlPanel';
 import FlightStrip from './FlightStrip';
 import FlightStripDeparture from './FlightStripDeparture';
 import GameOverPopup from './GameOverPopup';
+import PlaneClouds from './splash/PlaneClouds';
 
 import {
   setup as setupFullGame,
@@ -277,6 +290,8 @@ let controlPanel;
 export default {
   name: 'atc-game',
   components: {
+    PlaneClouds,
+    GameOverPopup,
     PlaneTelemetry,
     PlaneControls,
     MessagePanel,
@@ -287,7 +302,6 @@ export default {
     ControlPanel,
     ScorePanel,
     DetailsPanel,
-    GameOverPopup,
     ButtonPanel,
   },
 
@@ -303,7 +317,11 @@ export default {
       aircraftClicked,
       planeSelHeadingRad,
 
+      isPauseBtnDisabled: true,
+      isPausedInit: true,
+      isPaused: false,
       hasPopup: false,
+
       backgroundImage: '',
 
       // msgPopup
@@ -376,8 +394,8 @@ export default {
       }
       return {
         'min-width': minWidth + 'px',
-        width: '100%',
         'min-height': '99vh',
+        width: '100%',
       };
     },
 
@@ -419,7 +437,11 @@ export default {
     },
 
     pauseEv: function (isPaused) {
-      setGameLoopState_isRunning(!isPaused);
+      if (!this.isPauseBtnDisabled) {
+        this.isPaused = isPaused;
+        this.isPausedInit = false;
+        setGameLoopState_isRunning(!isPaused);
+      }
     },
   },
 
@@ -594,6 +616,7 @@ export default {
     attachHtmlQueue(this, 'msgPopupHtml', msgPopupHtmlQueue);
     setupVictory();
     showLevelIntro(msgPopup, () => {
+      this.isPauseBtnDisabled = false;
       setupFullGame(gameState)(setupArg);
     });
 
