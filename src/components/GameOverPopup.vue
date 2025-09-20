@@ -81,19 +81,34 @@
         ></BadgesDisplay>
       </div>
 
-      <div
-        v-if="isShowOkBtn"
-        class="btn"
-        tabindex="1"
-        ref="okBtn"
-        @keyup.space.enter="onClickOkBtn"
-      >
-        <router-link tabindex="-1" :to="btnRouteObj">
-          <h1>OK</h1>
-        </router-link>
+      <div v-if="isShowOkBtn" class="footer-btn-group">
+        <div
+          class="btn btn-secondary"
+          tabindex="2"
+          @keyup.space.enter="onClickRetryBtn"
+        >
+          <a href="#/game" tabindex="-1" @click="onClickRetryBtn">
+            <h2>retry</h2>
+          </a>
+        </div>
+        <div
+          class="btn"
+          tabindex="1"
+          ref="okBtn"
+          @keyup.space.enter="onClickOkBtn"
+        >
+          <router-link tabindex="-1" :to="btnRouteObj">
+            <h1>next</h1>
+          </router-link>
+        </div>
       </div>
-      <div v-if="!isShowOkBtn" class="btn btn-disabled">
-        <h1>OK</h1>
+      <div v-if="!isShowOkBtn" class="footer-btn-group">
+        <div class="btn btn-secondary btn-disabled">
+          <h2>retry</h2>
+        </div>
+        <div class="btn btn-disabled">
+          <h1>next</h1>
+        </div>
       </div>
     </div>
   </div>
@@ -386,6 +401,10 @@ export default {
       this[badgeClass] = 'badge-expand';
     },
 
+    onClickRetryBtn: function () {
+      window.location.reload();
+    },
+
     onClickOkBtn: function () {
       this.$router.push(this.btnRouteObj);
     },
@@ -515,7 +534,6 @@ export default {
   font-family: monospace;
   cursor: default;
 }
-
 .popup.small .modal {
   height: 620px;
 }
@@ -552,6 +570,7 @@ export default {
 .popup.small .modal .title {
   height: 18px;
   font-size: 24px;
+  margin-bottom: 22px;
 }
 
 .popup .modal .content {
@@ -573,6 +592,7 @@ export default {
   align-self: center;
   text-align: center;
   width: 120px;
+  height: 62px;
   margin-bottom: 8px;
 
   background-color: darkslategrey;
@@ -600,9 +620,8 @@ export default {
   }
 }
 .popup.small .modal .btn {
-  a h1 {
+  a h2 {
     padding: 10px 0px;
-    font-size: 22px;
   }
 }
 
@@ -616,12 +635,26 @@ export default {
   }
 }
 
-.popup.small .modal .btn.btn-disabled {
-  h1 {
-    margin: 0;
-    padding: 10px 0px;
-    font-size: 22px;
+.popup .modal .btn.btn-secondary,
+.btn.btn-disabled {
+  height: 52px;
+  border: none;
+
+  a {
+    color: whitesmoke;
   }
+
+  a h2 {
+    margin: 0px;
+    padding: 16px 0px;
+  }
+}
+
+.popup .footer-btn-group {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin: 12px 0px;
 }
 
 //////////////////////////////////////////////////////
