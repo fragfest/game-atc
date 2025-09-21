@@ -132,6 +132,8 @@ export default {
 // help-panel small
 .help-panel.small {
   .help-info {
+    max-height: 200px;
+
     .row {
       font-size: 11px;
     }
@@ -149,8 +151,9 @@ export default {
     flex-direction: column;
     overflow-y: auto;
     height: 100%;
-    padding: 4px 10px;
+    max-height: 400px;
 
+    padding: 4px 10px;
     border: 1px solid darkgrey;
     border-top: none;
     border-bottom-left-radius: 6px;
