@@ -271,7 +271,7 @@
 
     <!-- pause button -->
     <ToolTip>
-      <button class="button-aircraft" :class="showPauseClass" @click="onPause">
+      <button class="button-aircraft" :class="pauseClass" @click="onPause">
         <svg viewBox="0 0 512 512">
           <g>
             <rect
@@ -279,7 +279,7 @@
               y="96"
               width="24"
               height="320"
-              :stroke="pauseStroke"
+              :stroke="controlsColor"
               style="
                 fill: none;
                 stroke-linecap: round;
@@ -292,7 +292,7 @@
               y="96"
               width="24"
               height="320"
-              :stroke="pauseStroke"
+              :stroke="controlsColor"
               style="
                 fill: none;
                 stroke-linecap: round;
@@ -304,6 +304,29 @@
         </svg>
       </button>
       <template v-slot:hover>pause</template>
+    </ToolTip>
+
+    <!-- fast-forward button -->
+    <ToolTip>
+      <button
+        class="button-aircraft"
+        :class="fastForwardClass"
+        @click="onFastForward"
+      >
+        <h2 class="btn-title">{{ fastForwardDisp }}</h2>
+        <svg viewBox="0 0 394.941 394.941">
+          <g>
+            <g>
+              <path
+                :fill="controlsColor"
+                transform="scale(1, 1) translate(24,0)"
+                d="M185.492,211.636v109.588l209.449-123.747L185.492,73.718v109.611L0,73.718v247.506L185.492,211.636 z"
+              ></path>
+            </g>
+          </g>
+        </svg>
+      </button>
+      <template v-slot:hover>fast-forward</template>
     </ToolTip>
   </div>
 </template>
@@ -317,10 +340,11 @@ export default {
   name: 'ButtonPanel',
   props: {
     screenSize: { type: String },
+    isControlsDisabled: { type: Boolean },
     isPaused: { type: Boolean },
-    isPauseDisabled: { type: Boolean },
+    fastForwardNum: { type: Number },
   },
-  emits: ['showCirclesEv', 'pauseEv'],
+  emits: ['showCirclesEv', 'pauseEv', 'fastForwardEv'],
 
   components: {
     ToolTip,
@@ -354,15 +378,28 @@ export default {
       return '';
     },
 
-    showPauseClass: function () {
-      if (this.isPauseDisabled) return 'disabled';
+    controlsColor: function () {
+      if (this.isControlsDisabled) return 'lightgrey';
+      else return 'white';
+    },
+
+    pauseClass: function () {
+      if (this.isControlsDisabled) return 'disabled';
       else if (this.isPaused) return 'active';
       return '';
     },
 
-    pauseStroke: function () {
-      if (this.isPauseDisabled) return 'lightgrey';
-      else return '#fff';
+    fastForwardClass: function () {
+      if (this.isControlsDisabled) return 'disabled';
+      else if (this.fastForwardNum) return 'active';
+      return '';
+    },
+
+    fastForwardDisp: function () {
+      const str = '' + this.fastForwardNum + 'x';
+      if (this.isControlsDisabled) return '';
+      else if (this.fastForwardNum) return str;
+      return '';
     },
   },
 
@@ -397,6 +434,10 @@ export default {
     onPause: function () {
       this.$emit('pauseEv', !this.isPaused);
     },
+
+    onFastForward: function () {
+      this.$emit('fastForwardEv', 1);
+    },
   },
 };
 </script>
@@ -405,6 +446,12 @@ export default {
 // small
 .button-panel.small {
   height: 32px;
+
+  h2 {
+    font-size: 11px;
+    margin-left: 7px;
+    margin-top: 7px;
+  }
 
   button.button-aircraft {
     height: 24px;
@@ -424,7 +471,24 @@ export default {
   gap: 14px;
   height: 42px;
 
+  h2 {
+    font-size: 14px;
+    letter-spacing: 1px;
+    margin-top: 14px;
+    margin-left: 14px;
+    color: orange;
+    text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black,
+      1px 1px 0 black;
+  }
+
+  .btn-title {
+    position: absolute;
+    left: 0;
+    right: 0;
+  }
+
   button {
+    position: relative;
     border: none;
     padding: 3px;
     color: white;

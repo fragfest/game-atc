@@ -107,10 +107,12 @@
             <div class="btm-right-col" :class="screenSize">
               <ButtonPanel
                 :screenSize="screenSize"
-                :isPauseDisabled="isPauseBtnDisabled"
+                :isControlsDisabled="isControlBtnsDisabled"
                 :isPaused="isPaused"
+                :fastForwardNum="fastForwardNum"
                 @showCirclesEv="showCirclesEv"
                 @pauseEv="pauseEv"
+                @fastForwardEv="fastForwardEv"
               ></ButtonPanel>
               <ControlPanel
                 ref="controlPanel"
@@ -142,10 +144,12 @@
                 <div class="small col-compass">
                   <ButtonPanel
                     :screenSize="screenSize"
-                    :isPauseDisabled="isPauseBtnDisabled"
+                    :isControlsDisabled="isControlBtnsDisabled"
                     :isPaused="isPaused"
+                    :fastForwardNum="fastForwardNum"
                     @showCirclesEv="showCirclesEv"
                     @pauseEv="pauseEv"
+                    @fastForwardEv="fastForwardEv"
                   ></ButtonPanel>
                   <ControlPanel
                     ref="controlPanel"
@@ -218,6 +222,7 @@ import {
   drawInertElements,
   cancelGameLoop,
   setGameLoopState,
+  setGameSpeed,
 } from '../js/game/game';
 import { setup as setupTutorial } from '../js/tutorial/gameTutorial';
 import { isArrival, isDeparture, isAircraft } from '../js/types';
@@ -284,6 +289,7 @@ let updatedHeadingTutorial_hdgArg = null;
 let updatedAltitudeTutorial_altArg = null;
 let setShowCircles_isShowCirclesArg = null;
 let setGameLoopState_isRunning = null;
+let setGameLoopSpeed_numArg = null;
 
 let controlPanel;
 
@@ -317,10 +323,12 @@ export default {
       aircraftClicked,
       planeSelHeadingRad,
 
-      isPauseBtnDisabled: true,
+      hasPopup: false,
+
+      isControlBtnsDisabled: true,
       isPausedInit: true,
       isPaused: false,
-      hasPopup: false,
+      fastForwardNum: 0,
 
       backgroundImage: '',
 
@@ -437,11 +445,23 @@ export default {
     },
 
     pauseEv: function (isPaused) {
-      if (!this.isPauseBtnDisabled) {
-        this.isPaused = isPaused;
-        this.isPausedInit = false;
-        setGameLoopState_isRunning(!isPaused);
-      }
+      if (this.isControlBtnsDisabled) return;
+
+      this.isPaused = isPaused;
+      this.isPausedInit = false;
+      setGameLoopState_isRunning(!isPaused);
+    },
+
+    fastForwardEv: function (increaseNum) {
+      if (this.isControlBtnsDisabled) return;
+
+      const newNum = this.fastForwardNum + increaseNum;
+
+      if (newNum === 1) this.fastForwardNum = 2;
+      else if (newNum > 6) this.fastForwardNum = 0;
+      else this.fastForwardNum = newNum;
+
+      setGameLoopSpeed_numArg(this.fastForwardNum);
     },
   },
 
@@ -532,6 +552,7 @@ export default {
       tutorialEventArg.updatedAltitudeTutorial(alt);
     setShowCircles_isShowCirclesArg = setShowCircles(gameState);
     setGameLoopState_isRunning = setGameLoopState(gameState);
+    setGameLoopSpeed_numArg = setGameSpeed(gameState);
 
     // LEVEL, AIRPORT
     const level = getScore().level;
@@ -616,7 +637,7 @@ export default {
     attachHtmlQueue(this, 'msgPopupHtml', msgPopupHtmlQueue);
     setupVictory();
     showLevelIntro(msgPopup, () => {
-      this.isPauseBtnDisabled = false;
+      this.isControlBtnsDisabled = false;
       setupFullGame(gameState)(setupArg);
     });
 

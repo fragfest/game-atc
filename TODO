@@ -34,13 +34,15 @@ v0.1.5:
   Bugs:
 
   Major:
-    ☐ location score copy & consider score progress bar in addition to number
-    ☐ simulation speed increase
+    ✔ simulation fast-forward @started(25-09-20 20:53) @done(25-09-26 00:40) @lasted(5d3h47m16s)
     ✔ pause button & screen @started(25-09-16 22:57) @done(25-09-19 04:58) @lasted(2d6h1m20s)
     ✔ display name for player/leaderboard (instead of all-lowercase cognito username) @started(25-02-19 18:41) @done(25-02-23 11:50) @lasted(3d17h9m18s)
     
     Minor:
-      ✔ help info scrollbar @started(25-09-20 20:06) @done(25-09-20 20:26) @lasted(20m51s)
+      ☐ ToolTip hover z-index not on top of side panel
+      ☐ remove background sound & button
+      ☐ click to skip level intro
+    ✔ help info scrollbar @started(25-09-20 20:06) @done(25-09-20 20:26) @lasted(20m51s)
     ✔ GameOverPopup has restart button & "return to main screen" button @started(25-09-19 22:44) @done(25-09-19 23:30) @lasted(46m19s)
     ✔ location level button should update start button instead of starting level immediately @started(25-09-14 01:21) @done(25-09-14 15:49) @lasted(14h28m47s)
     ✔ show upcoming levels as greyed-out @started(25-02-25 15:08) @done(25-09-14 01:00) @lasted(28w4d8h52m51s)

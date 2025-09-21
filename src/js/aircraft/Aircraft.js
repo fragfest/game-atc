@@ -574,10 +574,14 @@ export default class Aircraft {
     return calcDelta(speedDeltaPerMs);
   }
 
-  updateWake(timestampMs) {
+  updateWake(timestampMs, deltaTimeMs) {
     const isInWake = !!this.turbulenceWakeArr.length;
     const maxStrength = this.turbulenceWakeArr.reduce(accMax, 0);
     this.resetTurbulenceWakeArr();
+
+    if (this.wakeTimestampMs > timestampMs) {
+      this.wakeTimestampMs = timestampMs;
+    }
 
     if (!isInWake) {
       this.isTurbulenceWake = false;
@@ -586,7 +590,12 @@ export default class Aircraft {
       this.isTurbulenceWake = true;
     } else if (isInWake) {
       wakeDebug();
-      const turbulenceDiff = timestampMs - this.wakeTimestampMs;
+
+      let turbulenceDiff = timestampMs - this.wakeTimestampMs;
+      if (turbulenceDiff > 2 * deltaTimeMs) {
+        turbulenceDiff = deltaTimeMs;
+      }
+
       turbulencePenalty(turbulenceDiff);
 
       wakeDanger(timestampMs);
@@ -665,7 +674,7 @@ export default class Aircraft {
       this.updateHtmlClass();
     }
 
-    this.updateWake(timestamp);
+    this.updateWake(timestamp, deltaTimeMs);
 
     // timer
     if (this.time <= 0) {
@@ -756,6 +765,10 @@ export default class Aircraft {
       _drawTrailPixel(this, pixel, 1);
       this.trailPixelArr.unshift(pixel);
     }
+
+    if (timestamp < this.trailPixelMs) {
+      this.trailPixelMs = timestamp;
+    }
   }
 
   hide() {
@@ -777,7 +790,13 @@ export default class Aircraft {
     }
   }
 
-  setProximity({ entityManagerArr, screenSize, showCircles, timestamp }) {
+  setProximity({
+    entityManagerArr,
+    screenSize,
+    showCircles,
+    timestamp,
+    deltaTimeMs,
+  }) {
     const isEntityCloseTo = isCloseToEntity(screenSize)(this);
     const isOnRunway = (plane) =>
       !plane.isTaxiing && (plane.takeoff || plane.isTouchedDown);
@@ -794,7 +813,7 @@ export default class Aircraft {
     const timestampMs = timestamp;
     this.setShowCircle(!!showCircles);
 
-    // wake proximity //////////////////////////////////////////
+    // wake proximity /////////////////////////////////////////////////////////
     const planesInWake = calcWake({ entityManagerArr, aircraft: this });
     planesInWake.forEach(({ plane, strength }) =>
       plane.addTurbulenceWake(strength)
@@ -805,6 +824,10 @@ export default class Aircraft {
     if (turbulenceArr.length) {
       const isTurbulenceWeather = !!turbulenceArr.find(isInWeather(this));
 
+      if (this.turbulenceTimestampMs > timestampMs) {
+        this.turbulenceTimestampMs = timestampMs;
+      }
+
       if (!isTurbulenceWeather) {
         this.isTurbulenceWeather = false;
       } else if (!this.isTurbulenceWeather && isTurbulenceWeather) {
@@ -812,7 +835,12 @@ export default class Aircraft {
         this.isTurbulenceWeather = true;
       } else if (isTurbulenceWeather) {
         turbulenceCounterReset();
-        const turbulenceDiff = timestampMs - this.turbulenceTimestampMs;
+
+        let turbulenceDiff = timestampMs - this.turbulenceTimestampMs;
+        if (turbulenceDiff > 2 * deltaTimeMs) {
+          turbulenceDiff = deltaTimeMs;
+        }
+
         this.turbulenceTimestampMs = timestampMs;
         this.turbulenceMs += turbulenceDiff;
 
@@ -822,7 +850,7 @@ export default class Aircraft {
       this.isTurbulenceWeather = false;
     }
 
-    // plane proximity //////////////////////////////////////////
+    // plane proximity ///////////////////////////////////////////////////////
     const planeClose = entityManagerArr.find(isPlaneClose);
     if (!planeClose) {
       this.hasProximityAlert = false;

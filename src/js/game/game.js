@@ -29,6 +29,7 @@ import { SoundType, play, playLoop, stop } from './sound';
 
 /**
  * @typedef {Object} State
+ * @property {Number} fastForwardNum
  * @property {Boolean} gameLoopCancel
  * @property {Boolean} gameLoopRunning
  * @property {Boolean} playProximitySound
@@ -121,6 +122,15 @@ export const drawInertElements = (layerObj, { screenSize, width, height }) => {
   drawScale(layerObj, screenSize, width, height);
 };
 
+export const setGameSpeed = (state) => (fastForwardNum) => {
+  if (fastForwardNum === 0) state.fastForwardNum = 1;
+  if (fastForwardNum === 2) state.fastForwardNum = 4;
+  if (fastForwardNum === 3) state.fastForwardNum = 8;
+  if (fastForwardNum === 4) state.fastForwardNum = 12;
+  if (fastForwardNum === 5) state.fastForwardNum = 16;
+  if (fastForwardNum >= 6) state.fastForwardNum = 32;
+};
+
 export const cancelGameLoop = (state) => {
   state.gameLoopCancel = true;
 };
@@ -161,13 +171,19 @@ export const gameTick =
     headingLayerClearFn,
     gameUpdateFn
   ) =>
-  (timestamp) => {
+  (timestampArg) => {
     if (!state.focusObj) state.focusObj = {};
+
     let gameLoopRunning = state.gameLoopRunning;
     let showCircles = state.showCircles;
 
     const updateIntervalMs = 500;
+    const timestamp = timestampArg * (state.fastForwardNum || 1);
+
     const deltaTime = timestamp - timestampPrev;
+    if (deltaTime < 0) {
+      timestampPrev = timestamp;
+    }
 
     if (gameLoopRunning && deltaTime > updateIntervalMs) {
       timestampPrev = timestamp;
@@ -180,8 +196,8 @@ export const gameTick =
       entityManagerArr.forEach(callFn('hide'));
       entityManagerArr.forEach(
         callFn('update', {
-          deltaTimeMs: updateIntervalMs,
           entityManagerArr,
+          deltaTimeMs: updateIntervalMs,
           timestamp,
         })
       );
@@ -191,6 +207,7 @@ export const gameTick =
           entityManagerArr,
           screenSize,
           showCircles,
+          deltaTimeMs: updateIntervalMs,
           timestamp,
         })
       );
