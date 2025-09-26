@@ -32,6 +32,7 @@ Wishlist:
 
 v0.1.5:
   Bugs:
+    ✔ retry button does next level if success. need to set level on retry @done(25-09-26 01:18)
 
   Major:
     ✔ simulation fast-forward @started(25-09-20 20:53) @done(25-09-26 00:40) @lasted(5d3h47m16s)
@@ -39,8 +40,8 @@ v0.1.5:
     ✔ display name for player/leaderboard (instead of all-lowercase cognito username) @started(25-02-19 18:41) @done(25-02-23 11:50) @lasted(3d17h9m18s)
     
     Minor:
-      ☐ ToolTip hover z-index not on top of side panel
       ☐ remove background sound & button
+      ☐ ToolTip hover z-index not on top of side panel
       ☐ click to skip level intro
     ✔ help info scrollbar @started(25-09-20 20:06) @done(25-09-20 20:26) @lasted(20m51s)
     ✔ GameOverPopup has restart button & "return to main screen" button @started(25-09-19 22:44) @done(25-09-19 23:30) @lasted(46m19s)

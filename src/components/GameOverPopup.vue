@@ -132,6 +132,7 @@ import {
   levelComplete,
   getHistoryRecordsSecure,
   getBadgesSecure,
+  levelRetry,
 } from '../js/game/score/score';
 import {
   isDelayed,
@@ -402,6 +403,7 @@ export default {
     },
 
     onClickRetryBtn: function () {
+      levelRetry(this.level);
       window.location.reload();
     },
 

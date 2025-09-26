@@ -124,11 +124,10 @@ export const drawInertElements = (layerObj, { screenSize, width, height }) => {
 
 export const setGameSpeed = (state) => (fastForwardNum) => {
   if (fastForwardNum === 0) state.fastForwardNum = 1;
-  if (fastForwardNum === 2) state.fastForwardNum = 4;
-  if (fastForwardNum === 3) state.fastForwardNum = 8;
-  if (fastForwardNum === 4) state.fastForwardNum = 12;
-  if (fastForwardNum === 5) state.fastForwardNum = 16;
-  if (fastForwardNum >= 6) state.fastForwardNum = 32;
+  if (fastForwardNum === 1) state.fastForwardNum = 1;
+  if (fastForwardNum === 2) state.fastForwardNum = 8;
+  if (fastForwardNum === 3) state.fastForwardNum = 16;
+  if (fastForwardNum >= 4) state.fastForwardNum = 32;
 };
 
 export const cancelGameLoop = (state) => {

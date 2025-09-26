@@ -45,12 +45,25 @@ export const showLevelIntro = (msgPopup, cb) => {
  * @returns {IntroObj}
  */
 
+const debugSkipIntro = false;
+
 /**
  * @param {Number} gameLevel
  * @returns {IntroFunc}
  */
 export const getIntro = (gameLevel) => {
   return () => {
+    if (debugSkipIntro) {
+      return {
+        displayTimeMs: 1000,
+        width: 0.72,
+        levelNum: gameLevel,
+        airportHeading: ``,
+        airportSubheading: ``,
+        text1: ``,
+      };
+    }
+
     if (gameLevel === 1) {
       return {
         displayTimeMs: 20000,
@@ -342,15 +355,6 @@ export const getIntro = (gameLevel) => {
         text1: `Typical rainy day in the pacific northwest. We have to contend with many scattered storm cells.`,
       };
     }
-
-    // return {
-    //   displayTimeMs: 1000,
-    //   width: 0.72,
-    //   levelNum: gameLevel,
-    //   airportHeading: ``,
-    //   airportSubheading: ``,
-    //   text1: ``,
-    // };
 
     // Phrase ideas ////////////////////////////////////////////////
     // Another day taming the maelstrom

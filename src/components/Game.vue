@@ -46,12 +46,14 @@
 
           <Plane></Plane>
 
+          <!-- pause screen -->
           <PlaneClouds
             :init="isPausedInit"
             :deflate="!isPaused"
             @pauseEv="pauseEv"
             class="layer-seven"
           ></PlaneClouds>
+          <!-- pause screen -->
 
           <!-- msgPopup -->
           <div
@@ -458,7 +460,7 @@ export default {
       const newNum = this.fastForwardNum + increaseNum;
 
       if (newNum === 1) this.fastForwardNum = 2;
-      else if (newNum > 6) this.fastForwardNum = 0;
+      else if (newNum > 4) this.fastForwardNum = 0;
       else this.fastForwardNum = newNum;
 
       setGameLoopSpeed_numArg(this.fastForwardNum);
@@ -537,6 +539,8 @@ export default {
       msgPopupWidth,
       msgPopupHtmlQueue,
     };
+    attachHtmlQueue(this, 'msgPopupHtml', msgPopupHtmlQueue);
+
     const tutorialEventArg = {
       setIsHoldingTutorial: () => {},
       setTakeoffTutorial: () => {},
@@ -626,7 +630,6 @@ export default {
       subscribeScore(ScoreEvents.ScoreEV, (score) => {
         if (isDefeat(score)) publishFailed();
       });
-      attachHtmlQueue(this, 'msgPopupHtml', msgPopupHtmlQueue);
       setupTutorialEvents(tutorialEventArg, gameState);
       setupTutorial(gameState)(setupArg);
       return;
@@ -634,7 +637,6 @@ export default {
     // END TUTORIAL
 
     // MAIN GAME
-    attachHtmlQueue(this, 'msgPopupHtml', msgPopupHtmlQueue);
     setupVictory();
     showLevelIntro(msgPopup, () => {
       this.isControlBtnsDisabled = false;
