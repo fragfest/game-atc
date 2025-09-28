@@ -144,7 +144,7 @@ const onClickAirport = (self, airportNew, airportOld) => {
 const getLevelsByAirport = (airport, completed) => {
   const lastLevel = getFinalLevel();
   const nextLevel = getNextLevel();
-  const isTutorialDone = !!completed.find((x) => x.level === 0);
+  const isTutorialDone = !!getHistoryRecords().find((x) => x.level === 0);
   const arr = new Array(getFinalLevel());
   let isComplete = false;
   let level = 1;
@@ -168,15 +168,12 @@ const getLevelsByAirport = (airport, completed) => {
       return;
     }
 
-    if (level === nextLevel && isTutorialDone) {
-      levels.push({ isNext: true, level });
-      level++;
-      return;
-    }
-
     const location = getAirportByLevel(level);
     const locationNext = getAirportByLevel(level + 1);
-    if (location === airport) {
+
+    if (location === airport && level === nextLevel && isTutorialDone) {
+      levels.push({ isNext: true, level });
+    } else if (location === airport) {
       if (record) levels.push(record);
       else levels.push({ isInactive: true, level });
     }
