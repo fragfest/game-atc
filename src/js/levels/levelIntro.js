@@ -1,7 +1,13 @@
 import { fillHtmlQueue } from '../game/gameEvents';
 import { getLevelObj } from './getLevel';
 
-export const showLevelIntro = (msgPopup, cb) => {
+/**
+ * @param {Object} msgPopup Object with vue refs of the popup window
+ * @param {Object} argOut
+ * @param {Function} argOut.cancel when called, cancels window
+ * @param {Function} doneCB called when popup display complete
+ */
+export const showLevelIntro = (msgPopup, argOut, doneCB) => {
   const { msgPopupTop, msgPopupLeft, msgPopupWidth, msgPopupHtmlQueue } =
     msgPopup;
 
@@ -24,10 +30,18 @@ export const showLevelIntro = (msgPopup, cb) => {
     }, 1000);
   }
 
-  setTimeout(() => {
+  const timeoutId = setTimeout(() => {
     fillHtmlQueue('<clear>', msgPopupHtmlQueue);
-    cb();
+    doneCB();
   }, obj.displayTimeMs || 0);
+
+  argOut.cancel = () => {
+    if (!timeoutId) return;
+
+    clearTimeout(timeoutId);
+    fillHtmlQueue('<clear>', msgPopupHtmlQueue);
+    setTimeout(() => doneCB(), 4000);
+  };
 };
 
 /**

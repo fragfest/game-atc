@@ -558,6 +558,13 @@ export default {
     setGameLoopState_isRunning = setGameLoopState(gameState);
     setGameLoopSpeed_numArg = setGameSpeed(gameState);
 
+    const levelIntroArgOut = {
+      cancel: () => {},
+    };
+    const anyInputEventFn = () => {
+      levelIntroArgOut.cancel();
+    };
+
     // LEVEL, AIRPORT
     const level = getScore().level;
     const isTutorial = level === 0;
@@ -617,6 +624,7 @@ export default {
         this.hasPopup = true;
       },
       msgPopup,
+      anyInputEventFn,
       gameState
     );
     setupDebug();
@@ -638,7 +646,7 @@ export default {
 
     // MAIN GAME
     setupVictory();
-    showLevelIntro(msgPopup, () => {
+    showLevelIntro(msgPopup, levelIntroArgOut, () => {
       this.isControlBtnsDisabled = false;
       setupFullGame(gameState)(setupArg);
     });

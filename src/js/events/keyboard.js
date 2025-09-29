@@ -1,5 +1,7 @@
 // key & values must match
 export const KeyboardEvents = Object.freeze({
+  MouseClickEV: 'MouseClickEV',
+  KeyboardAllEV: 'KeyboardAllEV',
   KeyboardArrowDownEV: 'KeyboardArrowDownEV',
   KeyboardArrowUpEV: 'KeyboardArrowUpEV',
   KeyboardLetter_W_EV: 'KeyboardLetter_W_EV',
@@ -11,10 +13,12 @@ export const KeyboardEvents = Object.freeze({
 export const setup = () => {
   keyboardEventsAbortArr = [];
   document.addEventListener('keydown', keyDownFn);
+  document.addEventListener('click', clickFn);
 };
 
 export const destroy = () => {
   document.removeEventListener('keydown', keyDownFn);
+  document.removeEventListener('click', clickFn);
   keyboardEventsAbortArr.forEach((controller) => controller.abort());
 };
 
@@ -34,7 +38,13 @@ export const subscribeKeyboard = (keyboardEV, cb) => {
 
 let keyboardEventsAbortArr = [];
 
+const clickFn = () => {
+  document.dispatchEvent(new Event(KeyboardEvents.MouseClickEV));
+};
+
 const keyDownFn = (ev) => {
+  document.dispatchEvent(new Event(KeyboardEvents.KeyboardAllEV));
+
   switch (ev.key) {
     case 'ArrowDown':
       ev.preventDefault();

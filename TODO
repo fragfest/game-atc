@@ -39,10 +39,10 @@ v0.1.5:
     ✔ pause button & screen @started(25-09-16 22:57) @done(25-09-19 04:58) @lasted(2d6h1m20s)
     ✔ display name for player/leaderboard (instead of all-lowercase cognito username) @started(25-02-19 18:41) @done(25-02-23 11:50) @lasted(3d17h9m18s)
     
-    Minor:
-      ☐ remove background sound & button
-      ☐ ToolTip hover z-index not on top of side panel
-      ☐ click to skip level intro
+  Minor:
+    ☐ remove background sound & button
+    ☐ ToolTip hover z-index not on top of side panel
+    ✔ key press or click to skip level intro @started(25-09-28 22:28) @done(25-09-28 23:04) @lasted(36m19s)
     ✔ help info scrollbar @started(25-09-20 20:06) @done(25-09-20 20:26) @lasted(20m51s)
     ✔ GameOverPopup has restart button & "return to main screen" button @started(25-09-19 22:44) @done(25-09-19 23:30) @lasted(46m19s)
     ✔ location level button should update start button instead of starting level immediately @started(25-09-14 01:21) @done(25-09-14 15:49) @lasted(14h28m47s)
