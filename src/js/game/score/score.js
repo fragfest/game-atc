@@ -104,10 +104,14 @@ export const uniqueProximityPair = (planeOne, planeTwo, timestampMs) => {
   return true;
 };
 
-export const planeProximityPenalty = (planeOne, planeTwo, timestampMs) => {
-  const bothPlanesInConflict =
-    planeOne.hasProximityAlert && planeTwo.hasProximityAlert;
-  if (!bothPlanesInConflict) return null;
+export const planeProximityPenalty = (
+  planeOne,
+  planeTwo,
+  timestampMs,
+  deltaTimeMs
+) => {
+  const inConflict = planeOne.hasProximityAlert && planeTwo.hasProximityAlert;
+  if (!inConflict) return null;
 
   const proximityPairPlaneOne = proximityPairs[planeOne.id];
   if (!proximityPairPlaneOne) return null;
@@ -116,8 +120,17 @@ export const planeProximityPenalty = (planeOne, planeTwo, timestampMs) => {
   const currentTimeSec = timestampMs / 1000;
   if (!startTimeSec || !currentTimeSec) return null;
 
+  let timeDiffSec = currentTimeSec - startTimeSec;
+
+  if (timeDiffSec < 0) {
+    proximityPairPlaneOne.startTimestampMs = currentTimeSec;
+    timeDiffSec = 0;
+  }
+  if (timeDiffSec > 2 * deltaTimeMs) {
+    timeDiffSec = deltaTimeMs;
+  }
+
   proximityPairPlaneOne.startTimestampMs = timestampMs;
-  const timeDiffSec = currentTimeSec - startTimeSec;
 
   const score = getScore();
   const conflictNew = score.conflict + timeDiffSec;

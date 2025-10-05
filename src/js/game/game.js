@@ -171,10 +171,11 @@ export const gameTick =
     gameUpdateFn
   ) =>
   (timestampArg) => {
-    if (!state.focusObj) state.focusObj = {};
-
     let gameLoopRunning = state.gameLoopRunning;
     let showCircles = state.showCircles;
+
+    if (!gameLoopRunning) return;
+    if (!state.focusObj) state.focusObj = {};
 
     const updateIntervalMs = 500;
     const timestamp = timestampArg * (state.fastForwardNum || 1);
@@ -184,7 +185,7 @@ export const gameTick =
       timestampPrev = timestamp;
     }
 
-    if (gameLoopRunning && deltaTime > updateIntervalMs) {
+    if (deltaTime > updateIntervalMs) {
       timestampPrev = timestamp;
       // cleanup
       entityManagerArr.forEach(callFn('updateDestroy', { entityManagerArr }));

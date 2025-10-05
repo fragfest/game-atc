@@ -865,7 +865,8 @@ export default class Aircraft {
       const scoreDecrease = planeProximityPenalty(
         this,
         planeClose,
-        timestampMs
+        timestampMs,
+        deltaTimeMs
       );
       if (scoreDecrease === null) return;
 
