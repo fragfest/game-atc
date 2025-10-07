@@ -5,7 +5,7 @@ import {
 } from '../events/keyboard';
 import { isArrival, isDeparture } from '../types';
 import { nextWaypoint } from '../utils';
-import { setGameLoopState } from './game';
+import { cancelGameLoop, setGameLoopState } from './game';
 import {
   buttonIsHoldingFn,
   buttonHandoffFn,
@@ -47,6 +47,7 @@ export const setup = (
   let isGameOver = false;
   const gameOverFreezePopup = (delayMs) => {
     setGameLoopState(state)(false);
+    cancelGameLoop(state);
     setTimeout(() => {
       gamePopupFn();
     }, delayMs);

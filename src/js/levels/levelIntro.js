@@ -35,8 +35,12 @@ export const showLevelIntro = (msgPopup, argOut, doneCB) => {
     doneCB();
   }, obj.displayTimeMs || 0);
 
+  let isShowLevel = true;
+
   argOut.cancel = () => {
+    if (!isShowLevel) return;
     if (!timeoutId) return;
+    isShowLevel = false;
 
     clearTimeout(timeoutId);
     fillHtmlQueue('<clear>', msgPopupHtmlQueue);

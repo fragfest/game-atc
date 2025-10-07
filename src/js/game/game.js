@@ -174,7 +174,6 @@ export const gameTick =
     let gameLoopRunning = state.gameLoopRunning;
     let showCircles = state.showCircles;
 
-    if (!gameLoopRunning) return;
     if (!state.focusObj) state.focusObj = {};
 
     const updateIntervalMs = 500;
@@ -185,7 +184,7 @@ export const gameTick =
       timestampPrev = timestamp;
     }
 
-    if (deltaTime > updateIntervalMs) {
+    if (gameLoopRunning && deltaTime > updateIntervalMs) {
       timestampPrev = timestamp;
       // cleanup
       entityManagerArr.forEach(callFn('updateDestroy', { entityManagerArr }));
