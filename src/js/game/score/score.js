@@ -120,17 +120,17 @@ export const planeProximityPenalty = (
   const currentTimeSec = timestampMs / 1000;
   if (!startTimeSec || !currentTimeSec) return null;
 
+  proximityPairPlaneOne.startTimestampMs = timestampMs;
   let timeDiffSec = currentTimeSec - startTimeSec;
 
   if (timeDiffSec < 0) {
     proximityPairPlaneOne.startTimestampMs = currentTimeSec;
     timeDiffSec = 0;
   }
-  if (timeDiffSec > 2 * deltaTimeMs) {
-    timeDiffSec = deltaTimeMs;
+  if (timeDiffSec > deltaTimeMs) {
+    proximityPairPlaneOne.startTimestampMs = currentTimeSec;
+    timeDiffSec = deltaTimeMs / 1000;
   }
-
-  proximityPairPlaneOne.startTimestampMs = timestampMs;
 
   const score = getScore();
   const conflictNew = score.conflict + timeDiffSec;
