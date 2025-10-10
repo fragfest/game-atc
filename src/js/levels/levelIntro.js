@@ -30,20 +30,28 @@ export const showLevelIntro = (msgPopup, argOut, doneCB) => {
     }, 1000);
   }
 
+  let isShowLevel = true;
+  let isFirstCancel = true;
+
   const timeoutId = setTimeout(() => {
+    isShowLevel = false;
     fillHtmlQueue('<clear>', msgPopupHtmlQueue);
     doneCB();
   }, obj.displayTimeMs || 0);
 
-  let isShowLevel = true;
-
   argOut.cancel = () => {
+    if (isFirstCancel) {
+      isFirstCancel = false;
+      return;
+    }
     if (!isShowLevel) return;
     if (!timeoutId) return;
-    isShowLevel = false;
 
+    isShowLevel = false;
     clearTimeout(timeoutId);
-    fillHtmlQueue('<clear>', msgPopupHtmlQueue);
+    setTimeout(() => {
+      fillHtmlQueue('<clear>', msgPopupHtmlQueue);
+    }, 1000);
     setTimeout(() => doneCB(), 4000);
   };
 };
