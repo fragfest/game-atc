@@ -1,7 +1,6 @@
 import { VictoryEvents, subscribeVictory } from './victory';
 import { subscribeScore, ScoreEvents } from './score/score';
 
-let background;
 let collision;
 let ding;
 let denied;
@@ -30,7 +29,6 @@ let isMuted = true;
 let oldScore = {};
 
 export const setup = () => {
-  background = new Audio('/audio/tower-background.mp3');
   collision = new Audio('/audio/collision-warning.mp3');
   ding = new Audio('/audio/ding.mp3');
   denied = new Audio('/audio/denied.mp3');
@@ -64,18 +62,15 @@ export const setup = () => {
 
   subscribeVictory(VictoryEvents.Failed, () => {
     stop(SoundType.Collision);
-    stop(SoundType.Background);
   });
 
   subscribeVictory(VictoryEvents.Success, () => {
     stop(SoundType.Collision);
-    stop(SoundType.Background);
   });
 };
 
 export const destroy = () => {
   setMute(true);
-  background = null;
   collision = null;
   ding = null;
   denied = null;
@@ -93,7 +88,6 @@ export const destroy = () => {
  */
 export const setMute = (isMutedArg) => {
   isMuted = !!isMutedArg;
-  background.muted = isMuted;
   collision.muted = isMuted;
   ding.muted = isMuted;
   denied.muted = isMuted;
@@ -111,11 +105,6 @@ export const setMute = (isMutedArg) => {
 export const playLoop = (soundType) => {
   if (!isSetup) return;
 
-  if (soundType === SoundType.Background) {
-    background.loop = true;
-    background.volume = 0.15;
-    return background.play();
-  }
   if (soundType === SoundType.Collision) {
     collision.loop = true;
     return collision.play();
@@ -165,11 +154,6 @@ export const play = (soundType) => {
 export const stop = (soundType) => {
   if (!isSetup) return;
 
-  if (soundType === SoundType.Background) {
-    background.pause();
-    background.currentTime = 0;
-    return;
-  }
   if (soundType === SoundType.Collision) {
     collision.pause();
     collision.currentTime = 0;
