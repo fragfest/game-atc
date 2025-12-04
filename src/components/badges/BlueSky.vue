@@ -11,19 +11,19 @@
     <defs id="defs1">
       <linearGradient id="linearGradient1475">
         <stop
-          style="stop-color: #30fefe; stop-opacity: 1"
-          offset="0"
-          id="stop1475"
+          style="stop-color: #0db601; stop-opacity: 1"
+          offset="0.00010002"
+          id="stop1476"
         />
         <stop
-          style="stop-color: #30fefe; stop-opacity: 1"
-          offset="0.99483895"
+          style="stop-color: #b5fbb0; stop-opacity: 1"
+          offset="0.72963238"
           id="stop1477"
         />
         <stop
-          style="stop-color: #fdffff; stop-opacity: 0"
-          offset="0.99989998"
-          id="stop1476"
+          style="stop-color: #0ead02; stop-opacity: 1"
+          offset="1"
+          id="stop1475"
         />
       </linearGradient>
       <linearGradient id="linearGradient1799">
@@ -409,8 +409,8 @@
         id="filter121"
         x="-0.013631844"
         y="-0.021759611"
-        width="1.0272636"
-        height="1.0435193"
+        width="1.0272637"
+        height="1.0435192"
       >
         <feGaussianBlur
           stdDeviation="0.86896052"
@@ -449,10 +449,10 @@
       <filter
         style="color-interpolation-filters: sRGB"
         id="filter141"
-        x="-0.029315824"
-        y="-0.031056194"
-        width="1.0586317"
-        height="1.0621125"
+        x="-0.029315823"
+        y="-0.031056193"
+        width="1.0586316"
+        height="1.0621124"
       >
         <feGaussianBlur
           stdDeviation="0.8 0.8"
@@ -463,8 +463,8 @@
       <filter
         style="color-interpolation-filters: sRGB"
         id="filter102638-1"
-        x="-0.050679047"
-        y="-0.20528612"
+        x="-0.050679045"
+        y="-0.20528611"
         width="1.1013581"
         height="1.4105722"
       >
@@ -477,7 +477,7 @@
       <filter
         style="color-interpolation-filters: sRGB"
         id="filter102639-3"
-        x="-0.036141481"
+        x="-0.036141482"
         y="-0.10397963"
         width="1.072283"
         height="1.2079593"
@@ -505,7 +505,7 @@
         id="filter102646-3"
         x="-0.0408099"
         y="-0.04581473"
-        width="1.0816199"
+        width="1.0816198"
         height="1.0916295"
       >
         <feGaussianBlur
@@ -518,7 +518,7 @@
         style="color-interpolation-filters: sRGB"
         id="filter102652-7"
         x="-0.14205982"
-        y="-0.078106955"
+        y="-0.078106958"
         width="1.2841196"
         height="1.1562138"
       >
@@ -531,8 +531,8 @@
         style="color-interpolation-filters: sRGB"
         id="filter103113-4"
         x="-0.14025064"
-        y="-0.077112243"
-        width="1.2805012"
+        y="-0.07711224"
+        width="1.2805013"
         height="1.1542244"
       >
         <feGaussianBlur
@@ -543,8 +543,8 @@
       <filter
         style="color-interpolation-filters: sRGB"
         id="filter1-1"
-        x="-0.0033599285"
-        y="-0.070342451"
+        x="-0.0033599286"
+        y="-0.070342454"
         width="1.0067199"
         height="1.150005"
       >
@@ -553,10 +553,10 @@
       <filter
         style="color-interpolation-filters: sRGB"
         id="filter2-9"
-        x="-0.0054295971"
-        y="-0.042254977"
-        width="1.0093307"
-        height="1.1010638"
+        x="-0.0054295972"
+        y="-0.042254978"
+        width="1.0093308"
+        height="1.1010639"
       >
         <feGaussianBlur stdDeviation="0.0075652516" id="feGaussianBlur2-4" />
       </filter>
@@ -564,7 +564,7 @@
         style="color-interpolation-filters: sRGB"
         id="filter15-7"
         x="-0.015018682"
-        y="-0.064515568"
+        y="-0.06451557"
         width="1.0300374"
         height="1.1290311"
       >
@@ -573,8 +573,8 @@
       <filter
         style="color-interpolation-filters: sRGB"
         id="filter17-0"
-        x="-0.031592004"
-        y="-0.31735539"
+        x="-0.031592005"
+        y="-0.31735538"
         width="1.063184"
         height="1.6347108"
       >
@@ -583,8 +583,8 @@
       <filter
         style="color-interpolation-filters: sRGB"
         id="filter21-0"
-        x="-0.06706892"
-        y="-0.029977741"
+        x="-0.067068916"
+        y="-0.02997774"
         width="1.0862607"
         height="1.0599555"
       >
@@ -594,7 +594,7 @@
         style="color-interpolation-filters: sRGB"
         id="filter22-1"
         x="-0.029821733"
-        y="-0.024746981"
+        y="-0.02474698"
         width="1.0596435"
         height="1.049494"
       >
@@ -603,7 +603,7 @@
       <filter
         style="color-interpolation-filters: sRGB"
         id="filter23-5"
-        x="-0.17196351"
+        x="-0.17196352"
         y="-0.20998025"
         width="1.343927"
         height="1.4199605"
@@ -615,7 +615,7 @@
         id="filter26-9"
         x="-0.21463327"
         y="-0.11678255"
-        width="1.4292665"
+        width="1.4292664"
         height="1.233565"
       >
         <feGaussianBlur stdDeviation="0.019950192" id="feGaussianBlur26-6" />
@@ -624,7 +624,7 @@
         style="color-interpolation-filters: sRGB"
         id="filter27-3"
         x="-0.23486638"
-        y="-0.13655858"
+        y="-0.13655857"
         width="1.4697295"
         height="1.2731171"
       >
@@ -634,7 +634,7 @@
         style="color-interpolation-filters: sRGB"
         id="filter32-8"
         x="-0.065770805"
-        y="-0.095898472"
+        y="-0.09589847"
         width="1.1315416"
         height="1.1917969"
       >
@@ -644,7 +644,7 @@
         style="color-interpolation-filters: sRGB"
         id="filter34-3"
         x="-0.015112068"
-        y="-0.027883545"
+        y="-0.027883544"
         width="1.0302241"
         height="1.0557671"
       >
@@ -654,16 +654,16 @@
         style="color-interpolation-filters: sRGB"
         id="filter36-8"
         x="-0.011351019"
-        y="-0.05231832"
+        y="-0.052318321"
         width="1.022702"
-        height="1.1046365"
+        height="1.1046366"
       >
         <feGaussianBlur stdDeviation="0.022725808" id="feGaussianBlur36-7" />
       </filter>
       <filter
         style="color-interpolation-filters: sRGB"
         id="filter633"
-        x="-0.0038351405"
+        x="-0.0038351406"
         y="-0.11527199"
         width="1.0076703"
         height="1.230544"
@@ -673,7 +673,7 @@
       <filter
         style="color-interpolation-filters: sRGB"
         id="filter638"
-        x="-0.025521046"
+        x="-0.025521045"
         y="-0.21021165"
         width="1.0510421"
         height="1.4204233"
@@ -684,7 +684,7 @@
         style="color-interpolation-filters: sRGB"
         id="filter640"
         x="-0.014205058"
-        y="-0.061004739"
+        y="-0.06100474"
         width="1.0284101"
         height="1.1220095"
       >
@@ -712,7 +712,7 @@
       <filter
         style="color-interpolation-filters: sRGB"
         id="filter648"
-        x="-0.16074716"
+        x="-0.16074715"
         y="-0.22969797"
         width="1.3214943"
         height="1.4593959"
@@ -838,9 +838,9 @@
       />
       <filter
         style="color-interpolation-filters: sRGB"
-        x="-0.26191288"
-        width="1.5238256"
-        y="-0.36310649"
+        x="-0.26191287"
+        width="1.5238257"
+        y="-0.36310648"
         height="1.726213"
         id="filter1603"
       >
@@ -1030,7 +1030,7 @@
         x="-0.11183036"
         width="1.2236607"
         y="-0.15503755"
-        height="1.310075"
+        height="1.3100751"
         id="filter1650"
       >
         <feGaussianBlur
@@ -1216,9 +1216,9 @@
       />
       <filter
         style="color-interpolation-filters: sRGB"
-        x="-0.22516765"
+        x="-0.22516764"
         width="1.4503353"
-        y="-0.31216422"
+        y="-0.31216423"
         height="1.6243285"
         id="filter1717"
       >
@@ -1334,7 +1334,7 @@
       <filter
         style="color-interpolation-filters: sRGB"
         x="-0.10513625"
-        width="1.2102726"
+        width="1.2102725"
         y="-0.14575708"
         height="1.2915142"
         id="filter1770"
@@ -2012,15 +2012,6 @@
         y2="270.32565"
       />
       <linearGradient
-        xlink:href="#linearGradient1475"
-        id="linearGradient1476"
-        x1="-182.36165"
-        y1="158.59357"
-        x2="-182.36165"
-        y2="55.14748"
-        gradientUnits="userSpaceOnUse"
-      />
-      <linearGradient
         xlink:href="#linearGradient6"
         id="linearGradient2"
         gradientUnits="userSpaceOnUse"
@@ -2032,7 +2023,7 @@
       />
       <filter
         style="color-interpolation-filters: sRGB"
-        x="-0.21780372"
+        x="-0.21780371"
         width="1.4356074"
         y="-0.27579877"
         height="1.5515975"
@@ -2124,8 +2115,8 @@
         style="color-interpolation-filters: sRGB"
         x="-0.21033986"
         width="1.4206797"
-        y="-0.2663475"
-        height="1.5326951"
+        y="-0.26634751"
+        height="1.532695"
         id="filter166"
       >
         <feGaussianBlur
@@ -2239,9 +2230,9 @@
       />
       <filter
         style="color-interpolation-filters: sRGB"
-        x="-0.2516745"
-        width="1.5033489"
-        y="-0.34891236"
+        x="-0.25167449"
+        width="1.503349"
+        y="-0.34891237"
         height="1.6978247"
         id="filter180"
       >
@@ -2713,6 +2704,16 @@
         y1="260.48227"
         x2="75.040749"
         y2="260.48227"
+      />
+      <linearGradient
+        xlink:href="#linearGradient1475"
+        id="linearGradient5"
+        gradientUnits="userSpaceOnUse"
+        x1="-182.36165"
+        y1="158.59357"
+        x2="-182.36165"
+        y2="55.14748"
+        :gradientTransform="colorGradient"
       />
     </defs>
     <g
@@ -11657,10 +11658,11 @@
           font-variation-settings: normal;
           display: inline;
           opacity: 1;
-          fill: url(#linearGradient1476);
+          fill: #bfffff;
+          fill-opacity: 1;
           fill-rule: evenodd;
           stroke: #23d2ed;
-          stroke-width: 0.211741;
+          stroke-width: 0.211667;
           stroke-linecap: butt;
           stroke-linejoin: round;
           stroke-miterlimit: 4;
@@ -11670,12 +11672,38 @@
           stop-color: #000000;
           stop-opacity: 1;
         "
-        id="rect1474"
+        id="progressbar-outline"
         width="6.6926918"
         height="103.47239"
         x="-185.64642"
         y="55.147251"
         ry="1.148998"
+        transform="translate(-1.2722865e-6)"
+      />
+      <rect
+        style="
+          font-variation-settings: normal;
+          display: inline;
+          opacity: 1;
+          fill: url(#linearGradient5);
+          fill-rule: evenodd;
+          stroke: none;
+          stroke-width: 0;
+          stroke-linecap: butt;
+          stroke-linejoin: round;
+          stroke-miterlimit: 4;
+          stroke-dasharray: none;
+          stroke-dashoffset: 0;
+          stroke-opacity: 1;
+          stop-color: #000000;
+          stop-opacity: 1;
+        "
+        id="progressbar-level"
+        width="5.7679167"
+        :height="progressbarHeight"
+        x="-185.17412"
+        :y="progressbarPositionY"
+        :ry="cornerRadiusY"
       />
       <path
         d="M 66.366491,21.798669 52.429874,35.735286 h -0.02274 l -5.16e-4,5.17e-4 h -1.81436 l 5.17e-4,-5.17e-4 H 40.420788 L 24.013521,52.142553 v 77.020617 28.65045 5.01778 l 23.411491,23.44818 h 5.054471 28.650964 4.789372 21.123771 8.46254 58.45523 l 14.53307,-14.26957 V 113.29127 87.665966 76.476468 35.227307 28.111365 l -5.88741,-6.312696 h -8.88429 l -13.35367,13.515454 -26.4253,0.118856 -3.84679,-3.846794 -0.008,0.0078 -9.79527,-9.795268 h -4.78886 z m 2.038118,4.202328 h 46.626611 3.03186 l 13.37282,13.189375 h 32.20579 l 12.02304,-13.189375 h 5.15627 l 3.47111,3.396175 v 9.346199 0.35295 38.78833 10.617956 24.315833 57.15413 l -12.11554,12.1052 h -57.14328 -8.03 H 86.958515 82.41409 55.227119 50.430513 L 28.215332,159.82745 V 155.06598 127.87953 54.794071 L 43.784407,39.225512 h 9.652124 l -5.17e-4,5.17e-4 h 1.721859 l 5.17e-4,-5.17e-4 h 0.02119 z"
@@ -11828,7 +11856,12 @@
 
 <script>
 export default {
-  props: {},
+  props: {
+    progressbarHeight: { type: Number, required: true },
+    progressbarPositionY: { type: Number, required: true },
+    cornerRadiusY: { type: Number, required: true },
+    colorGradient: { type: String, required: true },
+  },
 
   data() {
     return {};

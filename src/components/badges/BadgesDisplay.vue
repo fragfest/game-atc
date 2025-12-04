@@ -2,11 +2,15 @@
   <div class="container" :class="sizeClass">
     <div class="badges" :class="badgesRowClass">
       <!-- BlueSky -->
-      <ToolTip v-if="bluesky" :disabled="!isLeaderboard" :width="width">
+      <ToolTip v-if="blueSky" :disabled="!isLeaderboard" :width="width">
         <BlueSky
           class="badge-achieved"
           :class="blueSkyClassComputed"
           :style="badgeStyle"
+          :progressbarHeight="blueSkyHeight"
+          :progressbarPositionY="blueSkyPositionYaxis"
+          :cornerRadiusY="blueSkyRadiusYcorner"
+          :colorGradient="blueSkyColorGradient"
           @click="onClickBadgeAchieved('blueSkyClass')"
           @mouseenter="onMouseEnterBadgeAchieved('bluesky')"
           @mouseleave="onMouseLeaveBadgeAchieved()"
@@ -18,7 +22,7 @@
           </div>
         </template>
       </ToolTip>
-      <ToolTip v-if="!bluesky" :disabled="!isLeaderboard" :width="width">
+      <ToolTip v-if="!blueSky" :disabled="!isLeaderboard" :width="width">
         <BlueSkyGrey
           :style="badgeStyle"
           @mouseenter="onMouseEnterBadgeAchieved('bluesky-grey')"
@@ -102,6 +106,7 @@ import BadgeEmpty from './BadgeEmpty.vue';
 import BlueSky from './BlueSky';
 import BlueSkyGrey from './BlueSkyGrey';
 import ToolTip from '../common/ToolTip';
+import { getProgressbarDisp } from '../../js/game/score/badges';
 
 export const BadgeTypes = Object.freeze({
   none: { title: '', desc: 'future achievement', goals: [] },
@@ -116,8 +121,11 @@ export default {
   props: {
     isMobile: { type: Boolean },
     size: { type: Number, default: 44 },
-    bluesky: { type: Boolean },
+
+    blueSky: { type: Boolean },
     isNewBlueSky: { type: Boolean },
+    blueSkyLevel: { type: Number },
+
     isShowDescription: { type: Boolean },
     isShowGoals: { type: Boolean },
     isLeaderboard: { type: Boolean },
@@ -134,8 +142,8 @@ export default {
       badgeTitle: '',
       badgeDesc: '',
       badgeGoals: [],
-      blueSkyClass: '',
       descClass: '',
+      blueSkyClass: '',
     };
   },
 
@@ -171,6 +179,19 @@ export default {
         return 'badge-new';
       }
       return '';
+    },
+
+    blueSkyHeight: function () {
+      return getProgressbarDisp(this.blueSkyLevel).height;
+    },
+    blueSkyPositionYaxis: function () {
+      return getProgressbarDisp(this.blueSkyLevel).y;
+    },
+    blueSkyRadiusYcorner: function () {
+      return getProgressbarDisp(this.blueSkyLevel).cornerRadiusY;
+    },
+    blueSkyColorGradient: function () {
+      return getProgressbarDisp(this.blueSkyLevel).colorGradient;
     },
   },
 

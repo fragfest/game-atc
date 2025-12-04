@@ -75,8 +75,9 @@
       <div class="badge-display">
         <BadgesDisplay
           :size="badgeSize"
-          :bluesky="bluesky"
+          :blueSky="bluesky"
           :isNewBlueSky="isNewBlueSky"
+          :blueSkyLevel="blueSkyLevel"
           :isShowDescription="isShowBadgeDesc"
         ></BadgesDisplay>
       </div>
@@ -147,6 +148,7 @@ import {
 import BadgesDisplay from './badges/BadgesDisplay.vue';
 import { BadgeTypes } from './badges/BadgesDisplay.vue';
 import {
+  getBadgeLevelBlueSky,
   isAchievedBlueSky,
   isNewAchievementBlueSky,
   setBadgeBlueSky,
@@ -210,6 +212,7 @@ export default {
       badgeDesc: '',
 
       bluesky: false,
+      blueSkyLevel: 0,
       blueSkyClass: '',
       isNewBlueSky: false,
     };
@@ -345,6 +348,7 @@ export default {
     }
 
     if (this.bluesky) {
+      this.blueSkyLevel = getBadgeLevelBlueSky();
       this.badgeTitle = BadgeTypes.bluesky.title;
       this.badgeDesc = BadgeTypes.bluesky.desc;
     }

@@ -52,7 +52,8 @@
               :isMobile="isMobile"
               :isLeaderboard="true"
               :size="badgeSize"
-              :bluesky="hasBlueSky(item)"
+              :blueSky="hasBlueSky(item)"
+              :blueSkyLevel="getBadgeLevelBlueSky()"
             />
             <h2 class="w-col hdr-green">{{ scoreFormat(item?.score) }}</h2>
           </div>
@@ -64,7 +65,7 @@
 
 <script>
 import { ref } from 'vue';
-import { Badges } from '../js/game/score/badges';
+import { Badges, getBadgeLevelBlueSky } from '../js/game/score/badges';
 import {
   getAllScores,
   getUserId,
@@ -176,8 +177,12 @@ export default {
   methods: {
     hasBlueSky: function (item) {
       if (!item?.badges) return false;
-      if (item.badges.find((x) => x === Badges.BlueSky)) return true;
+      if (item.badges.find((x) => x === Badges.BlueSky1)) return true;
       return false;
+    },
+
+    getBadgeLevelBlueSky: function () {
+      return getBadgeLevelBlueSky();
     },
 
     signInUpdate: async function (isLoggedIn) {

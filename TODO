@@ -2,23 +2,25 @@ Bugs:
   ☐ slow browser performance post-leave: run video on separate browser video, enter level & leave, wait 10 seconds and notice video slowdown until home screen refreshed
 
 Wishlist:
-  ☐ more badges
-  ☐ consider another victory goal based on Flight Quality 
+  ☐ more badges (2x): pushing-tin, mayday
+  ☐ badge levels (shown on badge progressbar)
   ☐ emergency message popup/flighstrip/aircraft & mechanic
   ☐ crash mechanic i.e. due to emergency
   ☐ custom play level
   ☐ cognito login page style
+  ☐ logo
+  ☐ ambient animated background
+  ☐ animated compass
+  ☐ change runways for arrivals & departures
   
   ☐ save volume, conflict circles settings
-  ☐ difficulty setting that changes delay timers
-  ☐ more airports & levels (+5)
   ☐ wake circles should include altitude at which they were generated
-  ☐ restricted areas with min altitude levels
-  ☐ noise abatement mechanic (max 250kts below 10Kft)
-  ☐ fuel mechanic
-  ☐ change runways for arrivals (departures too ?)
-  ☐ flight quality - weather dangerous
   
+  ☐ restricted areas with min altitude levels
+  ☐ fuel mechanic
+  ☐ flight quality - weather dangerous
+  ☐ noise abatement mechanic (max 250kts below 10Kft)
+  ☐ consider another victory goal based on Flight Quality 
   ☐ leaderboard max limit & paged calls
   ☐ show leaderboard without sign in
   ☐ save full history
@@ -26,7 +28,6 @@ Wishlist:
   ☐ flights have defined arrival sections, departure waypoints
   ☐ touchdown sound (tyre screech)
   ☐ sound on dialog text spawn
-  ☐ redraw aircraft profile silhouettes
   ☐ select-flick sound too quiet
   ☐ federated cognito login
 
@@ -36,6 +37,7 @@ v0.1.5:
     ✔ retry button does next level if success. need to set level on retry @done(25-09-26 01:18)
 
   Major:
+    ☐ goal BlueSky multiple achievement levels
     ✔ simulation fast-forward @started(25-09-20 20:53) @done(25-09-26 00:40) @lasted(5d3h47m16s)
     ✔ pause button & screen @started(25-09-16 22:57) @done(25-09-19 04:58) @lasted(2d6h1m20s)
     ✔ display name for player/leaderboard (instead of all-lowercase cognito username) @started(25-02-19 18:41) @done(25-02-23 11:50) @lasted(3d17h9m18s)

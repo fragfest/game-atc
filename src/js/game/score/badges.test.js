@@ -22,7 +22,7 @@ describe('isAchievedBlueSky', () => {
 
   describe('when BlueSky already in achieved badges', () => {
     test('should return true', () => {
-      badges = [Badges.BlueSky];
+      badges = [Badges.BlueSky1];
       expect(isAchievedBlueSky()).toBeTruthy();
     });
   });
