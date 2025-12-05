@@ -4,6 +4,7 @@ import { isVictory } from '../victory';
 
 export const Badges = Object.freeze({
   BlueSky1: 'BlueSky1',
+  BlueSky2: 'BlueSky2',
 });
 
 /**
@@ -13,6 +14,61 @@ export const Badges = Object.freeze({
  * @property {Number} cornerRadiusY
  * @property {String} colorGradient
  */
+
+/**
+ * get BlueSky badge level from Badges enum
+ * @param {Badges} badge
+ * @returns {Number} badge level
+ */
+export const getBadgeLevelBlueSky = (badge) => {
+  const badgeFound = Object.keys(Badges).find((x) => x === badge);
+  if (!badgeFound) return null;
+
+  if (Badges[badgeFound] === Badges.BlueSky2) return 2;
+  if (Badges[badgeFound] === Badges.BlueSky1) return 1;
+  return null;
+};
+
+/**
+ * @returns {Number} return highest badge level or null if badge not achieved
+ */
+export const getBadgeLevelCompletedBlueSky = () => {
+  const badgeCompleted = getHistoryBadgeBlueSky();
+  if (badgeCompleted === Badges.BlueSky2) return 2;
+  if (badgeCompleted === Badges.BlueSky1) return 1;
+
+  const levelsBadge2 = getWeatherLevels(2);
+  const levelsBadge1 = getWeatherLevels(1);
+
+  // return highest badge level
+  if (levelsBadge2.filter(isAchievedBlueSky).length === levelsBadge2.length) {
+    return 2;
+  }
+  if (levelsBadge1.filter(isAchievedBlueSky).length === levelsBadge1.length) {
+    return 1;
+  }
+
+  return null;
+};
+
+export const isNewAchievementBlueSky = () => {
+  const isBlueSky = !!getBadgeLevelCompletedBlueSky();
+  const hasPreviousBadge = getHistoryBadgeBlueSky();
+  return isBlueSky && !hasPreviousBadge;
+};
+
+export const setBadgeBlueSky = (badgeLevel) => {
+  if (!badgeLevel) {
+    console.error('badgeLevel missing');
+    return;
+  }
+  if (badgeLevel <= getBadgeLevelBlueSky(getHistoryBadgeBlueSky())) return;
+
+  const badges = getBadges();
+  if (badgeLevel === 2) badges.push(Badges.BlueSky2);
+  if (badgeLevel === 1) badges.push(Badges.BlueSky1);
+  setBadges(badges);
+};
 
 /**
  * display settings for the badge progressbar
@@ -73,56 +129,29 @@ export const getProgressbarDisp = (badgeLevel) => {
   }
 };
 
-export const getBadgeLevelBlueSky = () => {
-  const badges = getBadges();
-  if (badges.find((x) => x === Badges.BlueSky1)) return 1;
+// PRIVATE ////////////////////////////////////////////////////////
+
+/**
+ * @returns {Badges} return highest badge level already achieved
+ */
+const getHistoryBadgeBlueSky = () => {
+  const badges = getBadges() || [];
+
+  // return highest level in descending order
+  if (badges.find((badge) => badge === Badges.BlueSky2)) return Badges.BlueSky2;
+  if (badges.find((badge) => badge === Badges.BlueSky1)) return Badges.BlueSky1;
   return null;
 };
 
-export const isAchievedBlueSky = () => {
-  if (hasHistoryBadgeBlueSky()) return true;
+const isAchievedBlueSky = (gameLevel) => {
+  const record = getHistoryRecords().find((x) => x.level === gameLevel);
 
-  const isTurbulentLevel = (record) =>
-    !!getWeatherLevels().find((level) => level === record.level);
   const isPass = (record) => isVictory(record.historyScore);
-  const hasNonZeroProp = (prop) => (record) => !!record?.historyScore?.[prop];
+  const hasZeroProp = (prop) => (record) => !record?.historyScore?.[prop];
+  const hasTurbulenceZero = hasZeroProp('turbulence');
+  const hasWakeZero = hasZeroProp('wake');
 
-  const weatherLevelsCompleted = getHistoryRecords()
-    .filter(isTurbulentLevel)
-    .filter(isPass);
-  const noWeatherTurbulence = !weatherLevelsCompleted.find(
-    hasNonZeroProp('turbulence')
+  return (
+    record && isPass(record) && hasTurbulenceZero(record) && hasWakeZero(record)
   );
-  const noWakeTurbulence = !getHistoryRecords().find(hasNonZeroProp('wake'));
-
-  if (
-    noWakeTurbulence &&
-    noWeatherTurbulence &&
-    weatherLevelsCompleted.length === 2
-  ) {
-    return true;
-  }
-
-  return false;
-};
-
-export const isNewAchievementBlueSky = () => {
-  const isBlueSky = isAchievedBlueSky();
-  const hasPreviousBadge = hasHistoryBadgeBlueSky();
-  return isBlueSky && !hasPreviousBadge;
-};
-
-export const setBadgeBlueSky = () => {
-  if (hasHistoryBadgeBlueSky()) return;
-
-  const badges = getBadges();
-  badges.push(Badges.BlueSky1);
-  setBadges(badges);
-};
-
-// PRIVATE ////////////////////////////////////////////////////////
-
-const hasHistoryBadgeBlueSky = () => {
-  const badges = getBadges() || [];
-  return !!badges.find((badge) => badge === Badges.BlueSky1);
 };

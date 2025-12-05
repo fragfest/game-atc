@@ -135,10 +135,7 @@ import {
   getScreenSize,
   setLogLevel,
 } from '../../js/utils';
-import {
-  getBadgeLevelBlueSky,
-  isAchievedBlueSky,
-} from '../../js/game/score/badges';
+import { getBadgeLevelCompletedBlueSky } from '../../js/game/score/badges';
 
 import LoginModal from './LoginModal.vue';
 import HistoryAirports from './HistoryAirports';
@@ -225,8 +222,8 @@ export default {
 
     setupScore();
 
-    this.bluesky = isAchievedBlueSky();
-    this.blueSkyLevel = getBadgeLevelBlueSky();
+    this.blueSkyLevel = getBadgeLevelCompletedBlueSky();
+    this.bluesky = !!this.blueSkyLevel;
 
     if (this.finalLevel === this.levelComplete) {
       this.isGameComplete = true;

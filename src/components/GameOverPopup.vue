@@ -148,8 +148,7 @@ import {
 import BadgesDisplay from './badges/BadgesDisplay.vue';
 import { BadgeTypes } from './badges/BadgesDisplay.vue';
 import {
-  getBadgeLevelBlueSky,
-  isAchievedBlueSky,
+  getBadgeLevelCompletedBlueSky,
   isNewAchievementBlueSky,
   setBadgeBlueSky,
 } from '../js/game/score/badges';
@@ -329,7 +328,8 @@ export default {
     // },
 
     // BADGES /////////////////////////////////////////////////
-    this.bluesky = isAchievedBlueSky();
+    this.blueSkyLevel = getBadgeLevelCompletedBlueSky();
+    this.bluesky = !!this.blueSkyLevel;
     const newBadgeAchieved = isNewAchievementBlueSky();
 
     if (newBadgeAchieved) {
@@ -337,7 +337,7 @@ export default {
     }
 
     if (newBadgeAchieved) {
-      setBadgeBlueSky();
+      setBadgeBlueSky(this.blueSkyLevel);
       this.isShowBadgeBox = true;
       play(SoundType.Ding);
 
@@ -348,7 +348,6 @@ export default {
     }
 
     if (this.bluesky) {
-      this.blueSkyLevel = getBadgeLevelBlueSky();
       this.badgeTitle = BadgeTypes.bluesky.title;
       this.badgeDesc = BadgeTypes.bluesky.desc;
     }
