@@ -106,16 +106,11 @@ import BadgeEmpty from './BadgeEmpty.vue';
 import BlueSky from './BlueSky';
 import BlueSkyGrey from './BlueSkyGrey';
 import ToolTip from '../common/ToolTip';
-import { BadgesTypes, getProgressbarDisp } from '../../js/game/score/badges';
-
-export const BadgeTypes = Object.freeze({
-  none: { title: '', desc: 'future achievement', goals: [] },
-  bluesky: {
-    title: 'Blue Sky',
-    desc: 'avoid all turbulence',
-    goals: ['no wake turbulence', 'no weather turbulence'],
-  },
-});
+import {
+  BadgesTypes,
+  BadgeTextDisp,
+  getProgressbarDisp,
+} from '../../js/game/score/badges';
 
 export default {
   props: {
@@ -202,10 +197,11 @@ export default {
       if (!isShow) return;
 
       if (this.isNewBlueSky) {
-        this.badgeTitle = BadgeTypes.bluesky.title;
-        this.badgeDesc = BadgeTypes.bluesky.desc;
-        this.badgeGoals = BadgeTypes.bluesky.goals;
+        this.badgeTitle = BadgeTextDisp.bluesky.title + ' ' + this.blueSkyLevel;
+        this.badgeDesc = BadgeTextDisp.bluesky.desc;
+        this.badgeGoals = BadgeTextDisp.bluesky.goals;
       }
+
       this.showBadgeDesc = true;
     },
   },
@@ -214,23 +210,23 @@ export default {
     onMouseEnterBadgeAchieved: function (badgeType) {
       if (badgeType === 'none') {
         this.badgeSuccess = '';
-        this.badgeTitle = BadgeTypes.none.title;
-        this.badgeDesc = BadgeTypes.none.desc;
-        this.badgeGoals = BadgeTypes.none.goals;
+        this.badgeTitle = BadgeTextDisp.none.title;
+        this.badgeDesc = BadgeTextDisp.none.desc;
+        this.badgeGoals = BadgeTextDisp.none.goals;
         this.descClass = '';
       }
       if (badgeType === 'bluesky') {
         this.badgeSuccess = 'COMPLETE';
-        this.badgeTitle = BadgeTypes.bluesky.title;
-        this.badgeDesc = BadgeTypes.bluesky.desc;
-        this.badgeGoals = BadgeTypes.bluesky.goals;
+        this.badgeTitle = BadgeTextDisp.bluesky.title + ' ' + this.blueSkyLevel;
+        this.badgeDesc = BadgeTextDisp.bluesky.desc;
+        this.badgeGoals = BadgeTextDisp.bluesky.goals;
         this.descClass = '';
       }
       if (badgeType === 'bluesky-grey') {
         this.badgeSuccess = 'INCOMPLETE';
-        this.badgeTitle = BadgeTypes.bluesky.title;
-        this.badgeDesc = BadgeTypes.bluesky.desc;
-        this.badgeGoals = BadgeTypes.bluesky.goals;
+        this.badgeTitle = BadgeTextDisp.bluesky.title;
+        this.badgeDesc = BadgeTextDisp.bluesky.desc;
+        this.badgeGoals = BadgeTextDisp.bluesky.goals;
         this.descClass = 'desc-grey';
       }
 

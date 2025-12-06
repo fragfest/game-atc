@@ -13,6 +13,15 @@ export const Badges = Object.freeze({
   BlueSky4: 'BlueSky4',
 });
 
+export const BadgeTextDisp = Object.freeze({
+  none: { title: '', desc: 'future achievement', goals: [] },
+  bluesky: {
+    title: 'Blue Sky',
+    desc: 'avoid all turbulence',
+    goals: ['no wake turbulence', 'no weather turbulence'],
+  },
+});
+
 /**
  * @typedef ProgressbarDisp
  * @property {Number} height

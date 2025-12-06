@@ -9,7 +9,7 @@
       <div class="badge-text">
         <div class="title">
           <div class="checkmark">&check;</div>
-          <h1 class="light-green">{{ badgeTitle }}</h1>
+          <h1 class="light-green">{{ badgeTitle }} {{ badgeLevel }}</h1>
         </div>
         <h3><span class="green mr-6">COMPLETED</span> {{ badgeDesc }}</h3>
       </div>
@@ -146,7 +146,7 @@ import {
 } from '../js/game/victory';
 
 import BadgesDisplay from './badges/BadgesDisplay.vue';
-import { BadgeTypes } from './badges/BadgesDisplay.vue';
+import { BadgeTextDisp } from '../js/game/score/badges';
 import {
   getBadgeLevelCompletedBlueSky,
   isNewAchievementBlueSky,
@@ -348,8 +348,9 @@ export default {
     }
 
     if (this.bluesky) {
-      this.badgeTitle = BadgeTypes.bluesky.title;
-      this.badgeDesc = BadgeTypes.bluesky.desc;
+      this.badgeTitle = BadgeTextDisp.bluesky.title;
+      this.badgeDesc = BadgeTextDisp.bluesky.desc;
+      this.badgeLevel = this.blueSkyLevel;
     }
 
     if (newBadgeAchieved) {
@@ -382,29 +383,6 @@ export default {
   },
 
   methods: {
-    onMouseEnterBadgeAchieved: function (badgeType) {
-      if (badgeType === 'bluesky') {
-        this.badgeTitle = BadgeTypes[badgeType].title;
-        this.badgeDesc = BadgeTypes[badgeType].desc;
-      }
-      this.isShowBadgeDesc = true;
-    },
-    onMouseLeaveBadgeAchieved: function () {
-      this.isShowBadgeDesc = false;
-    },
-
-    onClickBadgeAchieved: function (badgeClass) {
-      if (this[badgeClass] === 'badge-expand') {
-        this[badgeClass] = 'badge-collapse';
-        return;
-      }
-      if (this[badgeClass] === 'badge-collapse') {
-        this[badgeClass] = 'badge-expand';
-        return;
-      }
-      this[badgeClass] = 'badge-expand';
-    },
-
     onClickRetryBtn: function () {
       levelRetry(this.level);
       window.location.reload();
