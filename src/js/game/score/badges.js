@@ -1,10 +1,16 @@
-import { getTurbulenceLevels as getWeatherLevels } from '../weather';
+import { getAllTurbulenceLevels } from '../weather';
 import { getBadges, getHistoryRecords, setBadges } from './score';
 import { isVictory } from '../victory';
+
+export const BadgesTypes = Object.freeze({
+  BlueSky: 'BlueSky',
+});
 
 export const Badges = Object.freeze({
   BlueSky1: 'BlueSky1',
   BlueSky2: 'BlueSky2',
+  BlueSky3: 'BlueSky3',
+  BlueSky4: 'BlueSky4',
 });
 
 /**
@@ -24,31 +30,34 @@ export const getBadgeLevelBlueSky = (badge) => {
   const badgeFound = Object.keys(Badges).find((x) => x === badge);
   if (!badgeFound) return null;
 
+  if (Badges[badgeFound] === Badges.BlueSky4) return 4;
+  if (Badges[badgeFound] === Badges.BlueSky3) return 3;
   if (Badges[badgeFound] === Badges.BlueSky2) return 2;
   if (Badges[badgeFound] === Badges.BlueSky1) return 1;
   return null;
 };
 
 /**
- * @returns {Number} return highest badge level or null if badge not achieved
+ * @returns {Number} return highest badge level completed from badges & score histories
  */
 export const getBadgeLevelCompletedBlueSky = () => {
   const badgeCompleted = getHistoryBadgeBlueSky();
-  if (badgeCompleted === Badges.BlueSky2) return 2;
-  if (badgeCompleted === Badges.BlueSky1) return 1;
 
-  const levelsBadge2 = getWeatherLevels(2);
-  const levelsBadge1 = getWeatherLevels(1);
+  const weatherLevels = getAllTurbulenceLevels();
+  const weatherLevelsCompleted = weatherLevels.filter(isAchievedBlueSky).length;
+  const badgeLevelCompleted = getBadgeLevelBlueSky(badgeCompleted);
 
-  // return highest badge level
-  if (levelsBadge2.filter(isAchievedBlueSky).length === levelsBadge2.length) {
-    return 2;
+  let badgeLevelFromScore = 0;
+  if (weatherLevelsCompleted >= 10) badgeLevelFromScore = 4;
+  else if (weatherLevelsCompleted >= 7) badgeLevelFromScore = 3;
+  else if (weatherLevelsCompleted >= 4) badgeLevelFromScore = 2;
+  else if (weatherLevelsCompleted >= 1) badgeLevelFromScore = 1;
+
+  if (!badgeLevelFromScore && !badgeLevelCompleted) return null;
+  if (badgeLevelFromScore > badgeLevelCompleted) {
+    return badgeLevelFromScore;
   }
-  if (levelsBadge1.filter(isAchievedBlueSky).length === levelsBadge1.length) {
-    return 1;
-  }
-
-  return null;
+  return badgeLevelCompleted;
 };
 
 export const isNewAchievementBlueSky = () => {
@@ -65,18 +74,30 @@ export const setBadgeBlueSky = (badgeLevel) => {
   if (badgeLevel <= getBadgeLevelBlueSky(getHistoryBadgeBlueSky())) return;
 
   const badges = getBadges();
+  if (badgeLevel === 4) badges.push(Badges.BlueSky4);
+  if (badgeLevel === 3) badges.push(Badges.BlueSky3);
   if (badgeLevel === 2) badges.push(Badges.BlueSky2);
   if (badgeLevel === 1) badges.push(Badges.BlueSky1);
   setBadges(badges);
 };
 
+// TODO use a generic argument to determine Badges type
 /**
  * display settings for the badge progressbar
+ * @param {BadgesTypes} badgeType
  * @param {Number} badgeLevel
  * @returns {ProgressbarDisp}
  */
-export const getProgressbarDisp = (badgeLevel) => {
-  switch (badgeLevel) {
+export const getProgressbarDisp = (badgeType, badgeLevel) => {
+  let progressLevel = 0;
+  if (badgeType === BadgesTypes.BlueSky) {
+    if (badgeLevel === 1) progressLevel = 1;
+    if (badgeLevel === 2) progressLevel = 2;
+    if (badgeLevel === 3) progressLevel = 4;
+    if (badgeLevel === 4) progressLevel = 6;
+  }
+
+  switch (progressLevel) {
     case 1:
       return {
         height: 16.094793,
@@ -137,7 +158,8 @@ export const getProgressbarDisp = (badgeLevel) => {
 const getHistoryBadgeBlueSky = () => {
   const badges = getBadges() || [];
 
-  // return highest level in descending order
+  if (badges.find((badge) => badge === Badges.BlueSky4)) return Badges.BlueSky4;
+  if (badges.find((badge) => badge === Badges.BlueSky3)) return Badges.BlueSky3;
   if (badges.find((badge) => badge === Badges.BlueSky2)) return Badges.BlueSky2;
   if (badges.find((badge) => badge === Badges.BlueSky1)) return Badges.BlueSky1;
   return null;
@@ -145,13 +167,12 @@ const getHistoryBadgeBlueSky = () => {
 
 const isAchievedBlueSky = (gameLevel) => {
   const record = getHistoryRecords().find((x) => x.level === gameLevel);
+  if (!record) return false;
 
-  const isPass = (record) => isVictory(record.historyScore);
+  const isPass = (record) => isVictory(record?.historyScore);
   const hasZeroProp = (prop) => (record) => !record?.historyScore?.[prop];
   const hasTurbulenceZero = hasZeroProp('turbulence');
   const hasWakeZero = hasZeroProp('wake');
 
-  return (
-    record && isPass(record) && hasTurbulenceZero(record) && hasWakeZero(record)
-  );
+  return isPass(record) && hasTurbulenceZero(record) && hasWakeZero(record);
 };

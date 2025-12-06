@@ -45,7 +45,7 @@ describe('getBadgeLevelCompletedBlueSky', () => {
     });
   });
 
-  describe('when BlueSky not in achieved badges', () => {
+  describe('when BlueSky in achieved badges and historyRecords populated', () => {
     let historyRecords;
     let victory;
 
@@ -56,10 +56,6 @@ describe('getBadgeLevelCompletedBlueSky', () => {
           level: 5,
           historyScore: { turbulence: 0, wake: 0 },
         },
-        {
-          level: 6,
-          historyScore: { turbulence: 0, wake: 0 },
-        },
       ];
       jest
         .spyOn(Score, 'getHistoryRecords')
@@ -67,42 +63,81 @@ describe('getBadgeLevelCompletedBlueSky', () => {
       jest.spyOn(Victory, 'isVictory').mockImplementation(() => victory);
     });
 
-    describe('when history has: all weather levels victory for badge level 1. wake=0, turbulence=0', () => {
-      beforeEach(() => {
-        victory = true;
+    describe('when BlueSky not in achieved badges history', () => {
+      describe('when history has: weather level 1 victory. wake=0, turbulence=0', () => {
+        beforeEach(() => {
+          victory = true;
+        });
+        test('should return badge level 1', () => {
+          expect(getBadgeLevelCompletedBlueSky()).toEqual(1);
+        });
       });
-      test('should return badge level 1', () => {
-        expect(getBadgeLevelCompletedBlueSky()).toEqual(1);
+
+      describe('when history has: weather level 1 fail. wake=0, turbulence=0', () => {
+        beforeEach(() => {
+          jest.spyOn(Victory, 'isVictory').mockImplementationOnce(() => false);
+        });
+        test('should return null', () => {
+          expect(getBadgeLevelCompletedBlueSky()).toBeNull();
+        });
+      });
+
+      describe('when history has: weather level 1 victory. wake!=0, turbulence=0', () => {
+        beforeEach(() => {
+          victory = true;
+          historyRecords[0].historyScore.wake = 0.1;
+        });
+        test('should return false', () => {
+          expect(getBadgeLevelCompletedBlueSky()).toBeNull();
+        });
+      });
+
+      describe('when history has: weather level 1 victory. wake=0, turbulence!=0', () => {
+        beforeEach(() => {
+          victory = true;
+          historyRecords[0].historyScore.turbulence = 0.1;
+        });
+        test('should return false', () => {
+          expect(getBadgeLevelCompletedBlueSky()).toBeNull();
+        });
       });
     });
 
-    describe('when history has: only one weather level victory. wake=0, turbulence=0', () => {
-      beforeEach(() => {
-        jest.spyOn(Victory, 'isVictory').mockImplementationOnce(() => false);
-        jest.spyOn(Victory, 'isVictory').mockImplementationOnce(() => true);
-      });
-      test('should return null', () => {
-        expect(getBadgeLevelCompletedBlueSky()).toBeNull();
-      });
-    });
-
-    describe('when history has: all weather level victory. wake!=0, turbulence=0', () => {
+    describe('when BlueSky level 1 in achieved badges history', () => {
       beforeEach(() => {
         victory = true;
-        historyRecords[1].historyScore.wake = 0.1;
+        badges = [Badges.BlueSky1];
       });
-      test('should return false', () => {
-        expect(getBadgeLevelCompletedBlueSky()).toBeNull();
-      });
-    });
 
-    describe('when history has: all weather level victory. wake=0, turbulence!=0', () => {
-      beforeEach(() => {
-        victory = true;
-        historyRecords[1].historyScore.turbulence = 0.1;
-      });
-      test('should return false', () => {
-        expect(getBadgeLevelCompletedBlueSky()).toBeNull();
+      describe('history has level 2 victory', () => {
+        beforeEach(() => {
+          historyRecords = [
+            {
+              level: 6,
+              historyScore: { turbulence: 0, wake: 0 },
+            },
+            {
+              level: 9,
+              historyScore: { turbulence: 0, wake: 0 },
+            },
+            {
+              level: 11,
+              historyScore: { turbulence: 0, wake: 0 },
+            },
+            {
+              level: 14,
+              historyScore: { turbulence: 0, wake: 0 },
+            },
+          ];
+          jest
+            .spyOn(Score, 'getHistoryRecords')
+            .mockImplementation(() => historyRecords);
+          jest.spyOn(Victory, 'isVictory').mockImplementation(() => victory);
+        });
+
+        test('should return 2', () => {
+          expect(getBadgeLevelCompletedBlueSky()).toEqual(2);
+        });
       });
     });
   });
@@ -122,6 +157,14 @@ describe('isNewAchievementBlueSky', () => {
         level: 6,
         historyScore: { turbulence: 0, wake: 0 },
       },
+      {
+        level: 9,
+        historyScore: { turbulence: 0, wake: 0 },
+      },
+      {
+        level: 11,
+        historyScore: { turbulence: 0, wake: 0 },
+      },
     ];
     jest
       .spyOn(Score, 'getHistoryRecords')
@@ -129,9 +172,9 @@ describe('isNewAchievementBlueSky', () => {
     jest.spyOn(Victory, 'isVictory').mockImplementation(() => true);
   });
 
-  describe('when BlueSky already in achieved badges, history conditions not met', () => {
+  describe('when BlueSky1 in achieved badges; BlueSky2 history condition failed', () => {
     beforeEach(() => {
-      badges = [Badges.BlueSky2];
+      badges = [Badges.BlueSky1];
       historyRecords[0].historyScore.wake = 0.1;
     });
     test('should return false', () => {
@@ -139,7 +182,10 @@ describe('isNewAchievementBlueSky', () => {
     });
   });
 
-  describe('when BlueSky not in achieved badges, history conditions met', () => {
+  describe('when badges empty; BlueSky2 history condition passed', () => {
+    beforeEach(() => {
+      badges = [];
+    });
     test('should return true', () => {
       expect(isNewAchievementBlueSky()).toBeTruthy();
     });

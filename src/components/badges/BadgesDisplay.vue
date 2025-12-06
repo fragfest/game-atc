@@ -106,7 +106,7 @@ import BadgeEmpty from './BadgeEmpty.vue';
 import BlueSky from './BlueSky';
 import BlueSkyGrey from './BlueSkyGrey';
 import ToolTip from '../common/ToolTip';
-import { getProgressbarDisp } from '../../js/game/score/badges';
+import { BadgesTypes, getProgressbarDisp } from '../../js/game/score/badges';
 
 export const BadgeTypes = Object.freeze({
   none: { title: '', desc: 'future achievement', goals: [] },
@@ -182,16 +182,18 @@ export default {
     },
 
     blueSkyHeight: function () {
-      return getProgressbarDisp(this.blueSkyLevel).height;
+      return getProgressbarDisp(BadgesTypes.BlueSky, this.blueSkyLevel).height;
     },
     blueSkyPositionYaxis: function () {
-      return getProgressbarDisp(this.blueSkyLevel).y;
+      return getProgressbarDisp(BadgesTypes.BlueSky, this.blueSkyLevel).y;
     },
     blueSkyRadiusYcorner: function () {
-      return getProgressbarDisp(this.blueSkyLevel).cornerRadiusY;
+      return getProgressbarDisp(BadgesTypes.BlueSky, this.blueSkyLevel)
+        .cornerRadiusY;
     },
     blueSkyColorGradient: function () {
-      return getProgressbarDisp(this.blueSkyLevel).colorGradient;
+      return getProgressbarDisp(BadgesTypes.BlueSky, this.blueSkyLevel)
+        .colorGradient;
     },
   },
 

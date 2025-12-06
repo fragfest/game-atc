@@ -180,22 +180,9 @@ export const getWeatherLevelByGameLevel = (gameLevel) => {
   return weatherFn;
 };
 
-/**
- * @param {Number} badgeLevel the level in badges that determines the badge progressbar
- * @returns {Array.<Number>} game levels with turbulence for that badge level
- */
-export const getTurbulenceLevels = (badgeLevel) => {
-  // TODO additional turbulent levels: 14, 16, 20, 24, 25, 26
-
-  switch (badgeLevel) {
-    case 1:
-      return [5, 6];
-    case 2:
-      return [9, 11];
-    default:
-      return [];
-  }
-};
+export const getAllTurbulenceLevels = () => [
+  5, 6, 9, 11, 14, 16, 20, 24, 25, 26,
+];
 
 ////////////////////////////////////////////////////////////////////////
 // PRIVATE
