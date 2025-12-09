@@ -58,12 +58,19 @@
         <div class="item score" :class="conflictScoreClass">
           {{ conflictScore }}
         </div>
-        <div class="item" :class="turbulenceClass">turbulence (seconds)</div>
+        <div class="item" :class="bonusClass">turbulence (seconds)</div>
         <div class="item points" :class="turbulencePointsClass">
           {{ turbulence }}
         </div>
         <div class="item score" :class="turbulenceScoreClass">
           {{ turbulenceScore }}
+        </div>
+        <div class="item" :class="bonusClass">runway idle</div>
+        <div class="item points" :class="idleStatusClass">
+          {{ idle }}
+        </div>
+        <div class="item score" :class="idleScoreClass">
+          {{ idleScore }}
         </div>
         <div class="item margin-top border-top">SCORE</div>
         <div class="item margin-top"></div>
@@ -198,9 +205,14 @@ export default {
       conflictScoreClass: 'silver',
       turbulence: 0,
       turbulenceScore: 0,
-      turbulenceClass: 'border-white',
+      bonusClass: 'border-white',
       turbulencePointsClass: 'silver',
       turbulenceScoreClass: 'silver',
+      idle: 'no',
+      idleScore: 0,
+      idleStatusClass: 'silver',
+      idleScoreClass: 'silver',
+
       scoreTotalClass: 'silver',
       total: 0,
 
@@ -247,6 +259,7 @@ export default {
       this.conflictPointsClass = 'white';
       this.conflictScoreClass = 'white';
       this.turbulenceScoreClass = 'white';
+      this.idleScoreClass = 'white';
 
       this.scoreTotalClass = 'white';
       this.isSuccess = true;
@@ -274,6 +287,9 @@ export default {
     if (score.turbulence && isVictory(score)) {
       this.turbulencePointsClass = 'white';
     }
+    if (score.idle & isVictory(score)) {
+      this.idleStatusClass = 'white';
+    }
 
     const baseScorePass = getBaseScore();
     const failedScoreMax = goal.Failed;
@@ -289,6 +305,7 @@ export default {
       (baseScorePass / conflictScoreMax);
     const turbulence = Math.floor(score.turbulence);
     const turbulenceScore = turbulence <= 300 ? -1 * turbulence : -300;
+    const idleScore = score.idle ? -50 : 0;
 
     this.level = score.level;
     this.departures = '' + score.departures + '/' + goal.Departures;
@@ -299,6 +316,7 @@ export default {
       score.conflict < conflictScoreMax ? score.conflict : conflictScoreMax;
     this.conflict = '' + Math.floor(conflict) + '/' + goal.Conflict;
     this.turbulence = Math.floor(score.turbulence);
+    this.idle = score.idle ? 'yes' : 'no';
 
     this.departureScore = isVictory(score) ? baseScorePass : 0;
     this.arrivalScore = isVictory(score) ? baseScorePass : 0;
@@ -306,13 +324,15 @@ export default {
     this.delayScore = isVictory(score) ? Math.round(delayScore) : 0;
     this.conflictScore = isVictory(score) ? Math.round(conflictScore) : 0;
     this.turbulenceScore = isVictory(score) ? turbulenceScore : 0;
+    this.idleScore = isVictory(score) ? idleScore : 0;
     const total =
       this.departureScore +
       this.arrivalScore +
       this.failedScore +
       this.delayScore +
       this.conflictScore +
-      this.turbulenceScore;
+      this.turbulenceScore +
+      this.idleScore;
 
     if (total < 0) this.total = 0;
     else this.total = total;
@@ -499,11 +519,11 @@ export default {
   justify-content: space-around;
 
   width: 46%;
-  height: 680px;
+  height: 760px;
   min-width: 800px;
   max-width: 1200px;
 
-  margin-top: 10%;
+  margin-top: 4%;
   margin-bottom: auto;
   margin-left: auto;
   margin-right: auto;
@@ -518,7 +538,7 @@ export default {
   cursor: default;
 }
 .popup.small .modal {
-  height: 620px;
+  height: 680px;
 }
 
 .popup .modal .item {

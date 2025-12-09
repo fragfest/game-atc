@@ -60,28 +60,21 @@
       </div>
 
       <div class="score-row margin-top" :class="sizeClass">
-        <span class="badge white b-top-left-rad b-btm-left-rad">
+        <span class="badge white b-top-left-rad">
           turbulence <small>seconds</small>
         </span>
-        <span class="badge badge-score white b-top-right-rad b-btm-right-rad">
+        <span class="badge badge-score white b-top-right-rad">
           {{ turbulenceDisplay }}
         </span>
       </div>
-
-      <!-- <hr />
-      <h3>Bonus</h3>
       <div class="score-row" :class="sizeClass">
-        <span class="badge">
-          <b>hot runway</b> <small>keep runway busy</small>
+        <span class="badge white b-btm-left-rad">
+          runway idle timer <small>seconds</small>
         </span>
-        <span>0</span>
+        <span class="badge badge-score white b-btm-right-rad">
+          {{ runwayIdleDisplay }}
+        </span>
       </div>
-      <div class="score-row" :class="sizeClass">
-        <span class="badge">
-          <b>tin pusher</b> <small>reduce delays</small>
-        </span>
-        <span>0</span>
-      </div> -->
     </div>
   </div>
 </template>
@@ -100,13 +93,13 @@ export default {
 
   props: {
     hasFocusPulse: { type: Boolean },
+    runwayIdleTimer: { type: Number },
   },
 
   data() {
     return {
       screenSize: '',
 
-      scoreTotal: 0,
       score: {
         departures: 0,
         arrivals: 0,
@@ -226,6 +219,11 @@ export default {
 
     scoreInfoClass: function () {
       return this.hasFocusPulse ? 'pulse-score' : '';
+    },
+
+    runwayIdleDisplay: function () {
+      if (this.runwayIdleTimer <= 0) return 0;
+      return Math.floor(this.runwayIdleTimer);
     },
 
     turbulenceDisplay: function () {

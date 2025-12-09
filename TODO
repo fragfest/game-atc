@@ -2,7 +2,7 @@ Bugs:
   ☐ slow browser performance post-leave: run video on separate browser video, enter level & leave, wait 10 seconds and notice video slowdown until home screen refreshed
 
 Wishlist:
-  ☐ more badges (2x): pushing-tin, mayday
+  ☐ goal mayday
   ☐ badge levels (shown on badge progressbar)
   ☐ emergency message popup/flighstrip/aircraft & mechanic
   ☐ crash mechanic i.e. due to emergency
@@ -37,6 +37,7 @@ v0.1.5:
     ✔ retry button does next level if success. need to set level on retry @done(25-09-26 01:18)
 
   Major:
+    ☐ goal pushing tin @started(25-12-06 10:40)
     ✔ goal BlueSky multiple achievement levels @started(25-12-06 07:42) @done(25-12-06 09:23) @lasted(1h41m29s)
     ✔ simulation fast-forward @started(25-09-20 20:53) @done(25-09-26 00:40) @lasted(5d3h47m16s)
     ✔ pause button & screen @started(25-09-16 22:57) @done(25-09-19 04:58) @lasted(2d6h1m20s)

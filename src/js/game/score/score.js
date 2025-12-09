@@ -41,6 +41,13 @@ export const resetScore = () => {
   setScore({ ...Score, level });
 };
 
+export const runwayIdlePenalty = () => {
+  const score = getScore();
+  score.idle += 1;
+  setScore(score);
+  publishScore(score);
+};
+
 export const wakePenalty = (newScore) => {
   const score = getScore();
   score.wake += newScore;
@@ -326,6 +333,7 @@ const v = '0.1.3';
  * @property {number} delayed
  * @property {number} turbulence
  * @property {number} wake
+ * @property {number} idle
  */
 const Score = {
   level: 0,
@@ -336,6 +344,7 @@ const Score = {
   delayed: 0,
   turbulence: 0,
   wake: 0,
+  idle: 0,
 };
 
 /**
@@ -351,6 +360,7 @@ export const getScore = () => {
   return score || { ...Score };
 };
 
+// TODO deprecate? use getScore instead
 /**
  * @returns {Score}
  */

@@ -9,6 +9,8 @@ import {
   spawnPlaneGameTick,
 } from '../aircraft/aircraftGame.js';
 import { SoundType, play, playLoop, stop } from './sound';
+import Runway from '../airports/Runway.js';
+import { runwayIdlePenalty } from './score/score.js';
 
 /**
  * @typedef {import('../airports/airports.js').EntitySetupFn} EntitySetupFn
@@ -29,6 +31,9 @@ import { SoundType, play, playLoop, stop } from './sound';
 
 /**
  * @typedef {Object} State
+ * @property {Number} idleTimerTimestamp
+ * @property {Number} idleTimerSecs
+ * @property {Boolean} isIdlePrev
  * @property {Number} fastForwardNum
  * @property {Boolean} gameLoopCancel
  * @property {Boolean} gameLoopRunning
@@ -37,6 +42,8 @@ import { SoundType, play, playLoop, stop } from './sound';
  * @property {Object} dialogBox
  * @property {FocusObj} focusObj
  */
+
+export const idleTimerStartValSecs = 180;
 
 /**
  * @param {State} state
@@ -211,6 +218,9 @@ export const gameTick =
         })
       );
       entityManagerArr.forEach(callFn('draw', timestamp));
+
+      setRunwayIdle(state, timestamp, updateIntervalMs, entityManagerArr);
+
       // sounds
       setProximityAlarm(state, entityManagerArr);
       // callbacks
@@ -234,6 +244,39 @@ export const gameTick =
   };
 
 // PRIVATE ////////////////////////////////////////////////////////////////////
+
+const setRunwayIdle = (state, timestamp, deltaTimeMs, entityManagerArr) => {
+  const isRunway = (entity) => entity instanceof Runway;
+
+  const runways = entityManagerArr.filter(isRunway);
+  const isIdle = runways.reduce((acc, val) => acc && val.isIdle, true);
+  const isIdleStateEnabled = runways.find((val) => val.isIdleStateEnabled);
+
+  if (isIdleStateEnabled && isIdle) {
+    if (state.idleTimerTimestamp) {
+      let delta = timestamp - state.idleTimerTimestamp;
+      if (delta < 0) {
+        delta = 0;
+      }
+      if (delta > 2 * deltaTimeMs) {
+        delta = deltaTimeMs;
+      }
+
+      state.idleTimerTimestamp = timestamp;
+      state.idleTimerSecs -= delta / 1000;
+      if (state.idleTimerSecs < 0 && !state.isIdlePrev) {
+        state.isIdlePrev = true;
+        runwayIdlePenalty();
+      }
+    }
+  }
+
+  if (isIdleStateEnabled && !isIdle) {
+    state.isIdlePrev = false;
+    state.idleTimerTimestamp = timestamp;
+    state.idleTimerSecs = idleTimerStartValSecs;
+  }
+};
 
 const setProximityAlarm = (state, entityManagerArr) => {
   const planes = entityManagerArr.filter(isAircraft);

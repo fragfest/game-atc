@@ -90,7 +90,6 @@ export const setBadgeBlueSky = (badgeLevel) => {
   setBadges(badges);
 };
 
-// TODO use a generic argument to determine Badges type
 /**
  * display settings for the badge progressbar
  * @param {BadgesTypes} badgeType

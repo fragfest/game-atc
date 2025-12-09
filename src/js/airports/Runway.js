@@ -13,15 +13,20 @@ import {
 } from '../utils';
 import { MessageEvents, publishMessage as publish } from '../events/messages';
 import { play, SoundType } from '../game/sound';
-import { planeLandFail } from '../game/score/score';
 import { getHeadingToEntity } from '../entity';
+import {
+  planeLandFail,
+  ScoreEvents,
+  subscribeScore,
+} from '../game/score/score';
+import { isArrivalsSuccess } from '../game/victory';
 
 ////////////////////////////////////////////////////////////
 // class Runway
 ////////////////////////////////////////////////////////////
 export default class Runway {
   constructor(title, runwayType, imgLayerObj, runwayObj) {
-    this.classType = 'Waypoint';
+    this.classType = 'Runway';
     const screenSize = getScreenSize();
 
     this.id = Math.random();
@@ -38,9 +43,19 @@ export default class Runway {
     this.runwayHeading = inputHeadingToRad(runwayObj.heading);
     this.waypoint = runwayObj.waypoint;
     this.landingEntities = [];
+    this.takeoffEntities = [];
     this.titlePosition = runwayObj.titlePosition || {};
     this.titleX = this.titlePosition.x || 0;
     this.titleY = this.titlePosition.y || 0;
+
+    this.isIdleStateEnabled = false;
+    this.isIdle = true;
+
+    subscribeScore(ScoreEvents.ScoreEV, (score) => {
+      if (isArrivalsSuccess(score.level, score.arrivals)) {
+        this.isIdleStateEnabled = false;
+      }
+    });
 
     this.isShowDashes = true;
     if (runwayType === RunwayType.DepartureOnly) {
@@ -98,7 +113,10 @@ export default class Runway {
   }
 
   update({ entityManagerArr }) {
-    const isEntityOnRunway = isOnRunway(this.landingEntities);
+    const isEntityOnRunway = isOnRunwayRollout(this.landingEntities);
+    const isOnTakeoffRoll = (entity) => {
+      return !!this.takeoffEntities.find((takeoff) => takeoff.id === entity.id);
+    };
 
     entityManagerArr.forEach((entity) => {
       if (!isAircraft(entity)) return;
@@ -110,6 +128,15 @@ export default class Runway {
       if (entity.destroyFlag) return;
       if (entity.runway !== this.title) return;
       if (isEntityOnRunway(entity)) return;
+      if (entity.takeoff) {
+        if (isOnTakeoffRoll(entity)) {
+          this.isIdle = false;
+          return;
+        }
+
+        this.takeoffEntities.push(entity);
+        return;
+      }
       if (!entity.landing) return;
 
       // const { x, y } = { ...entity };
@@ -179,14 +206,33 @@ export default class Runway {
 
   updateDestroy({ entityManagerArr }) {
     const isEntityTouchedDown = isTouchedDown(this);
-    const isEntityOnRunway = isOnRunway(this.landingEntities);
+    const isEntityOnRunway = isOnRunwayRollout(this.landingEntities);
+    const noDeparturesOnRunway = !this.takeoffEntities.length;
+    const runwayEmpty = !this.landingEntities.length && noDeparturesOnRunway;
+
+    if (runwayEmpty) {
+      this.isIdle = true;
+    } else {
+      this.isIdle = false;
+    }
 
     entityManagerArr.forEach((entity) => {
       const placeOnRunway = (entity) => this.landingEntities.push(entity);
+      const hasEntityLiftedOff = (entity) => {
+        return (
+          this.takeoffEntities.find((takeoff) => takeoff.id === entity.id) &&
+          !entity.takeoff
+        );
+      };
 
       if (!isAircraft) return;
+      if (hasEntityLiftedOff(entity)) {
+        removeTakeoffFromRunway(this.takeoffEntities)(entity);
+        return;
+      }
       if (!entity.landing) return;
       if (isEntityOnRunway(entity)) {
+        this.isIdleStateEnabled = true;
         landingRollout(this, entity);
       } else if (isEntityTouchedDown(entity)) {
         // console.log(entity.title + ' :: touch down');
@@ -289,6 +335,13 @@ const updateSpeedAlt = (self, aircraft, distToRunway) => {
     aircraft.setAltitude(altitudeTarget, true);
 };
 
+const removeTakeoffFromRunway = (takeoffEntities) => (entity) => {
+  const index = takeoffEntities.findIndex((item) => item.id === entity.id);
+  if (index >= 0) {
+    takeoffEntities.splice(index, 1);
+  }
+};
+
 const landingRollout = (self, entity) => {
   const removeFromRunway = (entity) => {
     self.landingEntities = self.landingEntities.filter(
@@ -318,8 +371,9 @@ const isWithinMaxDist = (self, distToRunway) => {
   return distToRunway < maxDistFromRunway;
 };
 
-const isOnRunway = (landingEntities) => (entity) =>
-  landingEntities.find((landing) => landing.id === entity.id);
+const isOnRunwayRollout = (landingEntities) => (entity) => {
+  return !!landingEntities.find((landing) => landing.id === entity.id);
+};
 
 const isTouchedDown = (self) => (entityOther) => {
   if (entityOther.id === self.id) return false;

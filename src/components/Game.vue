@@ -101,6 +101,7 @@
               </div>
               <ScorePanel
                 :hasFocusPulse="focusObj.isScorePanelFocus"
+                :runwayIdleTimer="runwayIdleTimerNum"
               ></ScorePanel>
             </div>
           </div>
@@ -225,6 +226,7 @@ import {
   cancelGameLoop,
   setGameLoopState,
   setGameSpeed,
+  idleTimerStartValSecs,
 } from '../js/game/game';
 import { setup as setupTutorial } from '../js/tutorial/gameTutorial';
 import { isArrival, isDeparture, isAircraft } from '../js/types';
@@ -280,8 +282,10 @@ const backgroundOpacity = ref(1);
 
 let gameState = {};
 let entityManagerArr = ref([]);
+
 let aircraftClicked = ref({});
 const planeSelHeadingRad = ref(0);
+const runwayIdleTimerNum = ref(0);
 
 let msgPopupTop = ref(0.4);
 let msgPopupLeft = ref(0.4);
@@ -322,8 +326,10 @@ export default {
       inputHeading: '',
       inputSpeed: '',
 
+      // callback vars
       aircraftClicked,
       planeSelHeadingRad,
+      runwayIdleTimerNum,
 
       hasPopup: false,
 
@@ -594,6 +600,8 @@ export default {
       gameUpdateCB: () => {
         gameUpdateEventCB(aircraftClicked, entityManagerArr);
         this.planeSelHeadingRad = aircraftClicked?.value?.headingRad;
+        const idleTimer = gameState.idleTimerSecs || idleTimerStartValSecs;
+        runwayIdleTimerNum.value = idleTimer;
 
         if (isTutorial) {
           tutorialUpdateEventCB(
