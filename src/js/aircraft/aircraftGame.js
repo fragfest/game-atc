@@ -62,6 +62,7 @@ export const spawnPlaneGameTick =
       const spawnRateModifier = 0.7;
       const chanceOfPlaneBase = (chanceOfPlanePerSec * deltaTimeMs) / 1000;
       return chanceOfPlaneBase * (spawnRate * spawnRateModifier);
+      // return 1;
     };
 
     callAircraftFnByLevel({
@@ -169,6 +170,13 @@ const createAircraftArrival = (
       altitude,
       speed,
     },
+    // {
+    //   x: 600,
+    //   y: 420,
+    //   heading: '270',
+    //   altitude: 1000,
+    //   speed,
+    // },
     {
       destinationType: DestinationType.Arrival,
       airframeObj,

@@ -226,7 +226,6 @@ import {
   cancelGameLoop,
   setGameLoopState,
   setGameSpeed,
-  idleTimerStartValSecs,
 } from '../js/game/game';
 import { setup as setupTutorial } from '../js/tutorial/gameTutorial';
 import { isArrival, isDeparture, isAircraft } from '../js/types';
@@ -273,7 +272,7 @@ import {
   getMapImageOpacity,
   getWaypointArrivalsAll,
 } from '../js/airports/airports.js';
-import { getAirportByLevel } from '../js/levels/getLevel';
+import { getAirportByLevel, getLevelObj } from '../js/levels/getLevel';
 
 let screenSize = ScreenSizes.Large;
 let width = getGameSize(ScreenSizes.Large).width;
@@ -571,12 +570,16 @@ export default {
       levelIntroArgOut.cancel();
     };
 
-    // LEVEL, AIRPORT
+    // LEVEL, AIRPORT, GOALS
     const level = getScore().level;
     const isTutorial = level === 0;
     const airport = getAirportByLevel(level);
+
     this.backgroundImage = getMapImage(airport);
     backgroundOpacity.value = getMapImageOpacity(airport);
+    gameState.goals = getLevelObj().goalFn(level);
+    gameState.idleTimerSecs = gameState?.goals?.IdleTimer || null;
+    runwayIdleTimerNum.value = null;
 
     const setupArg = {
       airport,
@@ -600,8 +603,7 @@ export default {
       gameUpdateCB: () => {
         gameUpdateEventCB(aircraftClicked, entityManagerArr);
         this.planeSelHeadingRad = aircraftClicked?.value?.headingRad;
-        const idleTimer = gameState.idleTimerSecs || idleTimerStartValSecs;
-        runwayIdleTimerNum.value = idleTimer;
+        runwayIdleTimerNum.value = gameState?.idleTimerSecs;
 
         if (isTutorial) {
           tutorialUpdateEventCB(

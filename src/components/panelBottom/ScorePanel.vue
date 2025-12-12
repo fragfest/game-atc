@@ -222,6 +222,7 @@ export default {
     },
 
     runwayIdleDisplay: function () {
+      if (this.runwayIdleTimer === null) return '-';
       if (this.runwayIdleTimer <= 0) return 0;
       return Math.floor(this.runwayIdleTimer);
     },

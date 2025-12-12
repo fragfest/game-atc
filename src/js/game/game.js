@@ -14,6 +14,7 @@ import { runwayIdlePenalty } from './score/score.js';
 
 /**
  * @typedef {import('../airports/airports.js').EntitySetupFn} EntitySetupFn
+ * @typedef {import('./victory.js').Goals} Goals
  */
 
 /**
@@ -31,6 +32,7 @@ import { runwayIdlePenalty } from './score/score.js';
 
 /**
  * @typedef {Object} State
+ * @property {Goals} goals
  * @property {Number} idleTimerTimestamp
  * @property {Number} idleTimerSecs
  * @property {Boolean} isIdlePrev
@@ -42,8 +44,6 @@ import { runwayIdlePenalty } from './score/score.js';
  * @property {Object} dialogBox
  * @property {FocusObj} focusObj
  */
-
-export const idleTimerStartValSecs = 180;
 
 /**
  * @param {State} state
@@ -252,6 +252,10 @@ const setRunwayIdle = (state, timestamp, deltaTimeMs, entityManagerArr) => {
   const isIdle = runways.reduce((acc, val) => acc && val.isIdle, true);
   const isIdleStateEnabled = runways.find((val) => val.isIdleStateEnabled);
 
+  if (state.idleTimerSecs === null) {
+    return;
+  }
+
   if (isIdleStateEnabled && isIdle) {
     if (state.idleTimerTimestamp) {
       let delta = timestamp - state.idleTimerTimestamp;
@@ -274,7 +278,7 @@ const setRunwayIdle = (state, timestamp, deltaTimeMs, entityManagerArr) => {
   if (isIdleStateEnabled && !isIdle) {
     state.isIdlePrev = false;
     state.idleTimerTimestamp = timestamp;
-    state.idleTimerSecs = idleTimerStartValSecs;
+    state.idleTimerSecs = state?.goals?.IdleTimer;
   }
 };
 

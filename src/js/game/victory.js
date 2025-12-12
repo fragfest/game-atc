@@ -80,6 +80,7 @@ export const publishFailed = () => {
  * @property {Number} Conflict
  * @property {Number} SpawnRate
  * @property {Number} Delayed
+ * @property {Number} IdleTimer
  */
 
 /**
@@ -135,6 +136,7 @@ export const getGoalsByLevel = () => {
         Conflict: 60,
         SpawnRate: 1,
         Delayed: 6,
+        IdleTimer: 180,
       };
     }
 
