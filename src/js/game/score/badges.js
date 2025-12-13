@@ -1,20 +1,28 @@
 import { getAllTurbulenceLevels } from '../weather';
 import { getBadges, getHistoryRecords, setBadges } from './score';
-import { isVictory } from '../victory';
+import { getIdleTimerLevels, isVictory } from '../victory';
 
 export const BadgesTypes = Object.freeze({
+  PushingTin: 'PushingTin',
   BlueSky: 'BlueSky',
 });
 
 export const Badges = Object.freeze({
-  BlueSky1: 'BlueSky1',
-  BlueSky2: 'BlueSky2',
-  BlueSky3: 'BlueSky3',
+  PushingTin2: 'PushingTin2',
+  PushingTin1: 'PushingTin1',
   BlueSky4: 'BlueSky4',
+  BlueSky3: 'BlueSky3',
+  BlueSky2: 'BlueSky2',
+  BlueSky1: 'BlueSky1',
 });
 
 export const BadgeTextDisp = Object.freeze({
   none: { title: '', desc: 'future achievement', goals: [] },
+  pushingtin: {
+    title: 'Pushing Tin',
+    desc: 'minimal delays',
+    goals: ['no delay penalties', 'minimum runway idle time'],
+  },
   bluesky: {
     title: 'Blue Sky',
     desc: 'avoid all turbulence',
@@ -31,13 +39,16 @@ export const BadgeTextDisp = Object.freeze({
  */
 
 /**
- * get BlueSky badge level from Badges enum
+ * get badge level from Badges enum
  * @param {Badges} badge
  * @returns {Number} badge level
  */
-export const getBadgeLevelBlueSky = (badge) => {
+export const getBadgeLevel = (badge) => {
   const badgeFound = Object.keys(Badges).find((x) => x === badge);
   if (!badgeFound) return null;
+
+  if (Badges[badgeFound] === Badges.PushingTin2) return 2;
+  if (Badges[badgeFound] === Badges.PushingTin1) return 1;
 
   if (Badges[badgeFound] === Badges.BlueSky4) return 4;
   if (Badges[badgeFound] === Badges.BlueSky3) return 3;
@@ -47,40 +58,41 @@ export const getBadgeLevelBlueSky = (badge) => {
 };
 
 /**
+ * @param {BadgesTypes} badgeType
  * @returns {Number} return highest badge level completed from badges & score histories
  */
-export const getBadgeLevelCompletedBlueSky = () => {
-  const badgeCompleted = getHistoryBadgeBlueSky();
+export const getBadgeLevelCompleted = (badgeType) => {
+  if (!badgeType) return console.error('badgeType missing');
 
-  const weatherLevels = getAllTurbulenceLevels();
-  const weatherLevelsCompleted = weatherLevels.filter(isAchievedBlueSky).length;
-  const badgeLevelCompleted = getBadgeLevelBlueSky(badgeCompleted);
-
-  let badgeLevelFromScore = 0;
-  if (weatherLevelsCompleted >= 10) badgeLevelFromScore = 4;
-  else if (weatherLevelsCompleted >= 7) badgeLevelFromScore = 3;
-  else if (weatherLevelsCompleted >= 4) badgeLevelFromScore = 2;
-  else if (weatherLevelsCompleted >= 1) badgeLevelFromScore = 1;
-
-  if (!badgeLevelFromScore && !badgeLevelCompleted) return null;
-  if (badgeLevelFromScore > badgeLevelCompleted) {
-    return badgeLevelFromScore;
+  const levelComplete = getBadgeLevelAllHistories(badgeType);
+  if (!levelComplete.score && !levelComplete.badge) return null;
+  if (levelComplete.score > levelComplete.badge) {
+    return levelComplete.score;
   }
-  return badgeLevelCompleted;
+  return levelComplete.badge;
 };
 
-export const isNewAchievementBlueSky = () => {
-  const isBlueSky = !!getBadgeLevelCompletedBlueSky();
-  const hasPreviousBadge = getHistoryBadgeBlueSky();
-  return isBlueSky && !hasPreviousBadge;
+/**
+ * @param {BadgesTypes} badgeType
+ * @returns {Boolean} true if score level completed greater than badge level completed
+ */
+export const isNewAchievement = (badgeType) => {
+  if (!badgeType) return console.error('badgeType missing');
+
+  const levelComplete = getBadgeLevelAllHistories(badgeType);
+  if (!levelComplete.score && !levelComplete.badge) return false;
+  if (levelComplete.score > levelComplete.badge) {
+    return true;
+  }
+  return false;
 };
 
 export const setBadgeBlueSky = (badgeLevel) => {
-  if (!badgeLevel) {
-    console.error('badgeLevel missing');
-    return;
-  }
-  if (badgeLevel <= getBadgeLevelBlueSky(getHistoryBadgeBlueSky())) return;
+  if (!badgeLevel) return console.error('badgeLevel missing');
+
+  // TODO save PushingTin
+
+  if (badgeLevel <= getBadgeLevel(getHistoryBadge(BadgesTypes.BlueSky))) return;
 
   const badges = getBadges();
   if (badgeLevel === 4) badges.push(Badges.BlueSky4);
@@ -104,6 +116,8 @@ export const getProgressbarDisp = (badgeType, badgeLevel) => {
     if (badgeLevel === 3) progressLevel = 4;
     if (badgeLevel === 4) progressLevel = 6;
   }
+
+  // TODO PushingTin translation of badgeLevel to progressLevel
 
   switch (progressLevel) {
     case 1:
@@ -158,21 +172,96 @@ export const getProgressbarDisp = (badgeType, badgeLevel) => {
   }
 };
 
-// PRIVATE ////////////////////////////////////////////////////////
+// PRIVATE ////////////////////////////////////////////////////////////////////////
 
 /**
+ * @param {BadgesTypes} badgeType
  * @returns {Badges} return highest badge level already achieved
  */
-const getHistoryBadgeBlueSky = () => {
+const getHistoryBadge = (badgeType) => {
   const badges = getBadges() || [];
+  // always return the highest badge for a BadgesTypes
 
-  if (badges.find((badge) => badge === Badges.BlueSky4)) return Badges.BlueSky4;
-  if (badges.find((badge) => badge === Badges.BlueSky3)) return Badges.BlueSky3;
-  if (badges.find((badge) => badge === Badges.BlueSky2)) return Badges.BlueSky2;
-  if (badges.find((badge) => badge === Badges.BlueSky1)) return Badges.BlueSky1;
+  if (badgeType === BadgesTypes.PushingTin) {
+    if (badges.find((x) => x === Badges.PushingTin2)) return Badges.PushingTin2;
+    if (badges.find((x) => x === Badges.PushingTin1)) return Badges.PushingTin1;
+  }
+
+  if (badgeType === BadgesTypes.BlueSky) {
+    if (badges.find((x) => x === Badges.BlueSky4)) return Badges.BlueSky4;
+    if (badges.find((x) => x === Badges.BlueSky3)) return Badges.BlueSky3;
+    if (badges.find((x) => x === Badges.BlueSky2)) return Badges.BlueSky2;
+    if (badges.find((x) => x === Badges.BlueSky1)) return Badges.BlueSky1;
+  }
+
   return null;
 };
 
+/**
+ * @param {BadgesTypes} badgeType
+ * @returns {Number} badge level based on score history
+ */
+const getBadgeLevelFromScore = (badgeType) => {
+  let badgeLevelFromScore = 0;
+  // always return the highest score for a BadgesTypes
+
+  if (badgeType === BadgesTypes.PushingTin) {
+    const levelsArr = getIdleTimerLevels();
+    // TODO consider checking all victory levels for zero delays
+    const idleTimerLevelsPassed = levelsArr.filter(isAchievedPushingTin).length;
+    if (idleTimerLevelsPassed >= 2) badgeLevelFromScore = 2;
+    else if (idleTimerLevelsPassed >= 1) badgeLevelFromScore = 1;
+  }
+
+  if (badgeType === BadgesTypes.BlueSky) {
+    const levelsArr = getAllTurbulenceLevels();
+    const weatherLevelsPassed = levelsArr.filter(isAchievedBlueSky).length;
+
+    if (weatherLevelsPassed >= 10) badgeLevelFromScore = 4;
+    else if (weatherLevelsPassed >= 7) badgeLevelFromScore = 3;
+    else if (weatherLevelsPassed >= 4) badgeLevelFromScore = 2;
+    else if (weatherLevelsPassed >= 1) badgeLevelFromScore = 1;
+  }
+
+  return badgeLevelFromScore;
+};
+
+/**
+ * @param {BadgesTypes} badgeType
+ * @returns {Object} return badge & score histories
+ */
+export const getBadgeLevelAllHistories = (badgeType) => {
+  if (!badgeType) return console.error('badgeType missing');
+
+  const badgeCompleted = getHistoryBadge(badgeType);
+  const badgeLevelCompleted = getBadgeLevel(badgeCompleted);
+  const badgeLevelFromScore = getBadgeLevelFromScore(badgeType);
+
+  return {
+    badge: badgeLevelCompleted,
+    score: badgeLevelFromScore,
+  };
+};
+
+/**
+ * @param {Number} gameLevel
+ * @returns {Boolean}
+ */
+const isAchievedPushingTin = (gameLevel) => {
+  const record = getHistoryRecords().find((x) => x.level === gameLevel);
+  if (!record) return false;
+
+  const isPass = (record) => isVictory(record?.historyScore);
+  const hasIdleZero = (record) => record?.historyScore?.idle === 0;
+  // TODO check for zero delays
+
+  return isPass(record) && hasIdleZero(record);
+};
+
+/**
+ * @param {Number} gameLevel
+ * @returns {Boolean}
+ */
 const isAchievedBlueSky = (gameLevel) => {
   const record = getHistoryRecords().find((x) => x.level === gameLevel);
   if (!record) return false;

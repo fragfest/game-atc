@@ -65,7 +65,7 @@
 
 <script>
 import { ref } from 'vue';
-import { getBadgeLevelBlueSky } from '../js/game/score/badges';
+import { getBadgeLevel } from '../js/game/score/badges';
 import {
   getAllScores,
   getUserId,
@@ -177,12 +177,12 @@ export default {
   methods: {
     hasBlueSky: function (item) {
       if (!item?.badges) return false;
-      return !!item.badges.find(getBadgeLevelBlueSky);
+      return !!item.badges.find(getBadgeLevel);
     },
 
     getBadgeLevelBlueSky: function (item) {
       if (!item?.badges) return null;
-      return Math.max(...item.badges.map(getBadgeLevelBlueSky));
+      return Math.max(...item.badges.map(getBadgeLevel));
     },
 
     signInUpdate: async function (isLoggedIn) {

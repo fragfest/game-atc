@@ -89,6 +89,9 @@ export const publishFailed = () => {
  * @returns {Goals}
  */
 
+// PushingTin goal: badge levels with IdleTimer
+export const getIdleTimerLevels = () => [3, 4];
+
 /**
  * @returns {GoalsFunc}
  */
@@ -136,7 +139,7 @@ export const getGoalsByLevel = () => {
         Conflict: 60,
         SpawnRate: 1,
         Delayed: 6,
-        IdleTimer: 180,
+        IdleTimer: 240,
       };
     }
 
@@ -148,6 +151,7 @@ export const getGoalsByLevel = () => {
         Conflict: 60,
         SpawnRate: 2,
         Delayed: 5,
+        IdleTimer: 180,
       };
     }
 

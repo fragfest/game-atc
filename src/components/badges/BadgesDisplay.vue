@@ -37,18 +37,41 @@
       </ToolTip>
       <!-- END BlueSky -->
 
-      <ToolTip :disabled="!isLeaderboard" :width="width">
-        <BadgeEmpty
+      <!-- PushingTin -->
+      <ToolTip v-if="pushingTin" :disabled="!isLeaderboard" :width="width">
+        <PushingTin
+          class="badge-achieved"
+          :class="pushingTinClassComputed"
           :style="badgeStyle"
-          @mouseenter="onMouseEnterBadgeAchieved('none')"
+          :progressbarHeight="pushingTinHeight"
+          :progressbarPositionY="pushingTinPositionYaxis"
+          :cornerRadiusY="pushingTinRadiusYcorner"
+          :colorGradient="pushingTinColorGradient"
+          @click="onClickBadgeAchieved('pushingTinClass')"
+          @mouseenter="onMouseEnterBadgeAchieved('pushingtin')"
           @mouseleave="onMouseLeaveBadgeAchieved()"
         />
         <template v-slot:hover>
           <div class="badges-desc">
+            <h3 class="light-green">{{ badgeTitle }}</h3>
             <p class="white">{{ badgeDesc }}</p>
           </div>
         </template>
       </ToolTip>
+      <ToolTip v-if="!pushingTin" :disabled="!isLeaderboard" :width="width">
+        <PushingTinGrey
+          :style="badgeStyle"
+          @mouseenter="onMouseEnterBadgeAchieved('pushingtin-grey')"
+          @mouseleave="onMouseLeaveBadgeAchieved()"
+        />
+        <template v-slot:hover>
+          <div class="badges-desc">
+            <h3 class="light-green">{{ badgeTitle }}</h3>
+            <p class="white">{{ badgeDesc }}</p>
+          </div>
+        </template>
+      </ToolTip>
+      <!-- END PushingTin -->
 
       <ToolTip :disabled="!isLeaderboard" :width="width">
         <BadgeEmpty
@@ -102,9 +125,11 @@
 
 <script>
 import { getClassSize, getScreenSize } from '../../js/utils';
-import BadgeEmpty from './BadgeEmpty.vue';
+import PushingTinGrey from './PushingTinGrey';
+import PushingTin from './PushingTin';
 import BlueSky from './BlueSky';
 import BlueSkyGrey from './BlueSkyGrey';
+import BadgeEmpty from './BadgeEmpty.vue';
 import ToolTip from '../common/ToolTip';
 import {
   BadgesTypes,
@@ -121,12 +146,23 @@ export default {
     isNewBlueSky: { type: Boolean },
     blueSkyLevel: { type: Number },
 
+    pushingTin: { type: Boolean },
+    isNewPushingTin: { type: Boolean },
+    pushingTinLevel: { type: Number },
+
     isShowDescription: { type: Boolean },
     isShowGoals: { type: Boolean },
     isLeaderboard: { type: Boolean },
   },
 
-  components: { ToolTip, BadgeEmpty, BlueSky, BlueSkyGrey },
+  components: {
+    ToolTip,
+    BadgeEmpty,
+    PushingTin,
+    PushingTinGrey,
+    BlueSky,
+    BlueSkyGrey,
+  },
 
   data() {
     return {
@@ -138,6 +174,8 @@ export default {
       badgeDesc: '',
       badgeGoals: [],
       descClass: '',
+
+      pushingTinClass: '',
       blueSkyClass: '',
     };
   },
@@ -166,6 +204,34 @@ export default {
       return 'width:' + this.size + 'px';
     },
 
+    // PushingTin
+    pushingTinClassComputed: function () {
+      if (this.pushingTinClass) {
+        return this.pushingTinClass;
+      }
+      if (this.isNewPushingTin) {
+        return 'badge-new';
+      }
+      return '';
+    },
+    pushingTinHeight: function () {
+      return getProgressbarDisp(BadgesTypes.PushingTin, this.pushingTinLevel)
+        .height;
+    },
+    pushingTinPositionYaxis: function () {
+      return getProgressbarDisp(BadgesTypes.PushingTin, this.pushingTinLevel).y;
+    },
+    pushingTinRadiusYcorner: function () {
+      return getProgressbarDisp(BadgesTypes.PushingTin, this.pushingTinLevel)
+        .cornerRadiusY;
+    },
+    pushingTinColorGradient: function () {
+      return getProgressbarDisp(BadgesTypes.PushingTin, this.pushingTinLevel)
+        .colorGradient;
+    },
+    // END PushingTin
+
+    // BlueSky
     blueSkyClassComputed: function () {
       if (this.blueSkyClass) {
         return this.blueSkyClass;
@@ -175,7 +241,6 @@ export default {
       }
       return '';
     },
-
     blueSkyHeight: function () {
       return getProgressbarDisp(BadgesTypes.BlueSky, this.blueSkyLevel).height;
     },
@@ -190,14 +255,23 @@ export default {
       return getProgressbarDisp(BadgesTypes.BlueSky, this.blueSkyLevel)
         .colorGradient;
     },
+    // END BlueSky
   },
 
   watch: {
     isShowDescription(isShow) {
       if (!isShow) return;
 
+      if (this.isNewPushingTin) {
+        this.badgeTitle =
+          BadgeTextDisp.pushingtin.title + ' ' + (this.pushingTinLevel || '');
+        this.badgeDesc = BadgeTextDisp.pushingtin.desc;
+        this.badgeGoals = BadgeTextDisp.pushingtin.goals;
+      }
+
       if (this.isNewBlueSky) {
-        this.badgeTitle = BadgeTextDisp.bluesky.title + ' ' + this.blueSkyLevel;
+        this.badgeTitle =
+          BadgeTextDisp.bluesky.title + ' ' + (this.blueSkyLevel || '');
         this.badgeDesc = BadgeTextDisp.bluesky.desc;
         this.badgeGoals = BadgeTextDisp.bluesky.goals;
       }
@@ -215,9 +289,28 @@ export default {
         this.badgeGoals = BadgeTextDisp.none.goals;
         this.descClass = '';
       }
+
+      if (badgeType === 'pushingtin') {
+        this.badgeSuccess = 'COMPLETE';
+        this.badgeTitle =
+          BadgeTextDisp.pushingtin.title + ' ' + (this.pushingTinLevel || '');
+        this.badgeDesc = BadgeTextDisp.pushingtin.desc;
+        this.badgeGoals = BadgeTextDisp.pushingtin.goals;
+        this.descClass = '';
+      }
+
+      if (badgeType === 'pushingtin-grey') {
+        this.badgeSuccess = 'INCOMPLETE';
+        this.badgeTitle = BadgeTextDisp.pushingtin.title;
+        this.badgeDesc = BadgeTextDisp.pushingtin.desc;
+        this.badgeGoals = BadgeTextDisp.pushingtin.goals;
+        this.descClass = 'desc-grey';
+      }
+
       if (badgeType === 'bluesky') {
         this.badgeSuccess = 'COMPLETE';
-        this.badgeTitle = BadgeTextDisp.bluesky.title + ' ' + this.blueSkyLevel;
+        this.badgeTitle =
+          BadgeTextDisp.bluesky.title + ' ' + (this.blueSkyLevel || '');
         this.badgeDesc = BadgeTextDisp.bluesky.desc;
         this.badgeGoals = BadgeTextDisp.bluesky.goals;
         this.descClass = '';

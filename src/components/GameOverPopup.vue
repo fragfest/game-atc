@@ -153,10 +153,10 @@ import {
 } from '../js/game/victory';
 
 import BadgesDisplay from './badges/BadgesDisplay.vue';
-import { BadgeTextDisp } from '../js/game/score/badges';
+import { BadgesTypes, BadgeTextDisp } from '../js/game/score/badges';
 import {
-  getBadgeLevelCompletedBlueSky,
-  isNewAchievementBlueSky,
+  getBadgeLevelCompleted,
+  isNewAchievement,
   setBadgeBlueSky,
 } from '../js/game/score/badges';
 import CyberBox from './common/CyberBox.vue';
@@ -348,15 +348,16 @@ export default {
     // },
 
     // BADGES /////////////////////////////////////////////////
-    this.blueSkyLevel = getBadgeLevelCompletedBlueSky();
+    this.blueSkyLevel = getBadgeLevelCompleted(BadgesTypes.BlueSky);
     this.bluesky = !!this.blueSkyLevel;
-    const newBadgeAchieved = isNewAchievementBlueSky();
+    const newBadgeAchievedBlueSky = isNewAchievement(BadgesTypes.BlueSky);
+    const newBadgeAchieved = newBadgeAchievedBlueSky;
 
     if (newBadgeAchieved) {
       resetBadgeHistory();
     }
 
-    if (newBadgeAchieved) {
+    if (newBadgeAchievedBlueSky) {
       setBadgeBlueSky(this.blueSkyLevel);
       this.isShowBadgeBox = true;
       play(SoundType.Ding);
