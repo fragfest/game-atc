@@ -2,7 +2,12 @@
   <div class="container" :class="sizeClass">
     <div class="badges" :class="badgesRowClass">
       <!-- BlueSky -->
-      <ToolTip v-if="blueSky" :disabled="!isLeaderboard" :width="width">
+      <ToolTip
+        v-if="blueSky"
+        :disabled="!isLeaderboard"
+        :width="width"
+        position="below"
+      >
         <BlueSky
           class="badge-achieved"
           :class="blueSkyClassComputed"
@@ -22,7 +27,12 @@
           </div>
         </template>
       </ToolTip>
-      <ToolTip v-if="!blueSky" :disabled="!isLeaderboard" :width="width">
+      <ToolTip
+        v-if="!blueSky"
+        :disabled="!isLeaderboard"
+        :width="width"
+        position="below"
+      >
         <BlueSkyGrey
           :style="badgeStyle0"
           @mouseenter="onMouseEnterBadgeAchieved('bluesky-grey')"
@@ -38,7 +48,12 @@
       <!-- END BlueSky -->
 
       <!-- PushingTin -->
-      <ToolTip v-if="pushingTin" :disabled="!isLeaderboard" :width="width">
+      <ToolTip
+        v-if="pushingTin"
+        :disabled="!isLeaderboard"
+        :width="width"
+        position="below"
+      >
         <PushingTin
           class="badge-achieved"
           :class="pushingTinClassComputed"
@@ -58,7 +73,12 @@
           </div>
         </template>
       </ToolTip>
-      <ToolTip v-if="!pushingTin" :disabled="!isLeaderboard" :width="width">
+      <ToolTip
+        v-if="!pushingTin"
+        :disabled="!isLeaderboard"
+        :width="width"
+        position="below"
+      >
         <PushingTinGrey
           :style="badgeStyle1"
           @mouseenter="onMouseEnterBadgeAchieved('pushingtin-grey')"
@@ -71,9 +91,8 @@
           </div>
         </template>
       </ToolTip>
-      <!-- END PushingTin -->
 
-      <ToolTip :disabled="!isLeaderboard" :width="width">
+      <ToolTip :disabled="!isLeaderboard" :width="width" position="below">
         <BadgeEmpty
           :style="badgeStyle2"
           @mouseenter="onMouseEnterBadgeAchieved('none')"
@@ -86,7 +105,7 @@
         </template>
       </ToolTip>
 
-      <ToolTip :disabled="!isLeaderboard" :width="width">
+      <ToolTip :disabled="!isLeaderboard" :width="width" position="below">
         <BadgeEmpty
           :style="badgeStyle3"
           @mouseenter="onMouseEnterBadgeAchieved('none')"
@@ -426,7 +445,8 @@ export default {
 .container {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 24px;
+  align-items: center;
 
   .light-green {
     color: lightgreen;
@@ -531,14 +551,17 @@ export default {
   flex-wrap: wrap;
   align-items: flex-start;
   font-family: monospace;
+  padding-top: 0px;
 
   .body {
     display: flex;
     align-items: center;
+    gap: 12px;
   }
 
   h2 {
     margin: 8px;
+    margin-left: 0px;
     font-size: 22px;
     background: linear-gradient(to bottom, white 0%, limegreen 100%);
     background-clip: text;
@@ -546,11 +569,15 @@ export default {
     -webkit-text-fill-color: transparent;
   }
   h3 {
-    margin: 8px;
+    margin-top: 4px;
+    margin-bottom: 8px;
+    margin-left: 0px;
     font-size: 14px;
   }
   p {
-    margin-bottom: 3px;
+    margin-left: 0px;
+    margin-top: 0px;
+    margin-bottom: 4px;
     font-size: 12px;
   }
 }

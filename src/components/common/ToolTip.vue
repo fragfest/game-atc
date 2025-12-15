@@ -19,7 +19,7 @@ export default {
     position: {
       type: String,
       validator: (val) => {
-        return ['close'].includes(val);
+        return ['below', 'close'].includes(val);
       },
     },
     width: { type: Number, default: null },
@@ -44,7 +44,7 @@ export default {
     classComputed: function () {
       let classStr = '';
       classStr += this.disabled ? 'disabled' : '';
-      classStr += this.position ? this.position : '';
+      classStr += this.position ? ' ' + this.position : '';
       if (this.sizeClass === ScreenSizes.Small) classStr += ' small';
       return classStr;
     },
@@ -73,6 +73,11 @@ main {
       font-size: 11px;
       padding: 4px 8px;
     }
+  }
+
+  .tooltip .hover.below {
+    margin-top: 56px;
+    margin-left: 0px;
   }
 
   .tooltip .hover.close {
