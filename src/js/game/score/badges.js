@@ -25,7 +25,7 @@ export const BadgeTextDisp = Object.freeze({
   },
   bluesky: {
     title: 'Blue Sky',
-    desc: 'avoid all turbulence',
+    desc: 'avoid turbulence',
     goals: ['no wake turbulence', 'no weather turbulence'],
   },
 });
@@ -110,14 +110,16 @@ export const setBadgeBlueSky = (badgeLevel) => {
  */
 export const getProgressbarDisp = (badgeType, badgeLevel) => {
   let progressLevel = 0;
+  if (badgeType === BadgesTypes.PushingTin) {
+    if (badgeLevel === 1) progressLevel = 1;
+    if (badgeLevel === 2) progressLevel = 2;
+  }
   if (badgeType === BadgesTypes.BlueSky) {
     if (badgeLevel === 1) progressLevel = 1;
     if (badgeLevel === 2) progressLevel = 2;
     if (badgeLevel === 3) progressLevel = 4;
     if (badgeLevel === 4) progressLevel = 6;
   }
-
-  // TODO PushingTin translation of badgeLevel to progressLevel
 
   switch (progressLevel) {
     case 1:
@@ -207,8 +209,9 @@ const getBadgeLevelFromScore = (badgeType) => {
 
   if (badgeType === BadgesTypes.PushingTin) {
     const levelsArr = getIdleTimerLevels();
-    // TODO consider checking all victory levels for zero delays
     const idleTimerLevelsPassed = levelsArr.filter(isAchievedPushingTin).length;
+    // TODO consider checking all victory levels for zero delays
+
     if (idleTimerLevelsPassed >= 2) badgeLevelFromScore = 2;
     else if (idleTimerLevelsPassed >= 1) badgeLevelFromScore = 1;
   }
@@ -216,6 +219,7 @@ const getBadgeLevelFromScore = (badgeType) => {
   if (badgeType === BadgesTypes.BlueSky) {
     const levelsArr = getAllTurbulenceLevels();
     const weatherLevelsPassed = levelsArr.filter(isAchievedBlueSky).length;
+    // TODO consider checking all victory levels for wake
 
     if (weatherLevelsPassed >= 10) badgeLevelFromScore = 4;
     else if (weatherLevelsPassed >= 7) badgeLevelFromScore = 3;

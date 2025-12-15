@@ -6,7 +6,7 @@
         <BlueSky
           class="badge-achieved"
           :class="blueSkyClassComputed"
-          :style="badgeStyle"
+          :style="badgeStyle0"
           :progressbarHeight="blueSkyHeight"
           :progressbarPositionY="blueSkyPositionYaxis"
           :cornerRadiusY="blueSkyRadiusYcorner"
@@ -24,7 +24,7 @@
       </ToolTip>
       <ToolTip v-if="!blueSky" :disabled="!isLeaderboard" :width="width">
         <BlueSkyGrey
-          :style="badgeStyle"
+          :style="badgeStyle0"
           @mouseenter="onMouseEnterBadgeAchieved('bluesky-grey')"
           @mouseleave="onMouseLeaveBadgeAchieved()"
         />
@@ -42,7 +42,7 @@
         <PushingTin
           class="badge-achieved"
           :class="pushingTinClassComputed"
-          :style="badgeStyle"
+          :style="badgeStyle1"
           :progressbarHeight="pushingTinHeight"
           :progressbarPositionY="pushingTinPositionYaxis"
           :cornerRadiusY="pushingTinRadiusYcorner"
@@ -60,7 +60,7 @@
       </ToolTip>
       <ToolTip v-if="!pushingTin" :disabled="!isLeaderboard" :width="width">
         <PushingTinGrey
-          :style="badgeStyle"
+          :style="badgeStyle1"
           @mouseenter="onMouseEnterBadgeAchieved('pushingtin-grey')"
           @mouseleave="onMouseLeaveBadgeAchieved()"
         />
@@ -75,7 +75,7 @@
 
       <ToolTip :disabled="!isLeaderboard" :width="width">
         <BadgeEmpty
-          :style="badgeStyle"
+          :style="badgeStyle2"
           @mouseenter="onMouseEnterBadgeAchieved('none')"
           @mouseleave="onMouseLeaveBadgeAchieved()"
         />
@@ -88,7 +88,7 @@
 
       <ToolTip :disabled="!isLeaderboard" :width="width">
         <BadgeEmpty
-          :style="badgeStyle"
+          :style="badgeStyle3"
           @mouseenter="onMouseEnterBadgeAchieved('none')"
           @mouseleave="onMouseLeaveBadgeAchieved()"
         />
@@ -146,13 +146,16 @@ export default {
     isNewBlueSky: { type: Boolean },
     blueSkyLevel: { type: Number },
 
-    pushingTin: { type: Boolean },
+    // pushingTin: { type: Boolean },
+    pushingTin: { type: Boolean, default: () => true },
     isNewPushingTin: { type: Boolean },
-    pushingTinLevel: { type: Number },
+    // pushingTinLevel: { type: Number },
+    pushingTinLevel: { type: Number, default: () => 1 },
 
     isShowDescription: { type: Boolean },
     isShowGoals: { type: Boolean },
     isLeaderboard: { type: Boolean },
+    isGameOverPopup: { type: Boolean },
   },
 
   components: {
@@ -186,7 +189,7 @@ export default {
 
   computed: {
     width: function () {
-      if (this.isLeaderboard) return 240;
+      if (this.isLeaderboard) return 160;
       return null;
     },
 
@@ -196,12 +199,61 @@ export default {
     },
 
     badgesRowClass: function () {
+      if (this.isGameOverPopup) return 'popup';
       if (this.isLeaderboard) return 'leaderboard';
       return '';
     },
 
-    badgeStyle: function () {
-      return 'width:' + this.size + 'px';
+    badgeStyle0: function () {
+      return {
+        display: 'block',
+        position: 'absolute',
+        top: 10,
+        left: 10,
+        width: this.size + 'px',
+      };
+    },
+
+    badgeStyle1: function () {
+      let left = 80;
+      if (this.isLeaderboard) left = 66;
+      else if (this.sizeClass === 'small') left = 60;
+
+      return {
+        display: 'block',
+        position: 'absolute',
+        top: 10,
+        left,
+        width: this.size + 'px',
+      };
+    },
+
+    badgeStyle2: function () {
+      let left = 150;
+      if (this.isLeaderboard) left = 122;
+      else if (this.sizeClass === 'small') left = 110;
+
+      return {
+        display: 'block',
+        position: 'absolute',
+        top: 10,
+        left,
+        width: this.size + 'px',
+      };
+    },
+
+    badgeStyle3: function () {
+      let left = 220;
+      if (this.isLeaderboard) left = 178;
+      else if (this.sizeClass === 'small') left = 160;
+
+      return {
+        display: 'block',
+        position: 'absolute',
+        top: 10,
+        left,
+        width: this.size + 'px',
+      };
     },
 
     // PushingTin
@@ -333,15 +385,15 @@ export default {
     onClickBadgeAchieved: function (badgeClass) {
       if (this.isMobile) return;
 
-      if (this[badgeClass] === 'badge-expand') {
-        this[badgeClass] = 'badge-collapse';
+      if (this[badgeClass] === 'badge-expand z-index-2') {
+        this[badgeClass] = 'badge-collapse z-index-1';
         return;
       }
-      if (this[badgeClass] === 'badge-collapse') {
-        this[badgeClass] = 'badge-expand';
+      if (this[badgeClass] === 'badge-collapse z-index-1') {
+        this[badgeClass] = 'badge-expand z-index-2';
         return;
       }
-      this[badgeClass] = 'badge-expand';
+      this[badgeClass] = 'badge-expand z-index-2';
     },
   },
 };
@@ -349,6 +401,16 @@ export default {
 
 <style lang="scss" scoped>
 @import '~/src/scss/common.scss';
+
+.z-index-1 {
+  z-index: 1;
+  transition-property: z-index;
+  transition-delay: 1s;
+}
+
+.z-index-2 {
+  z-index: 2;
+}
 
 .container {
   @include vars;
@@ -377,10 +439,21 @@ export default {
   }
 }
 
+// badges
+.container.small .badges {
+  width: 184px;
+  height: 50px;
+}
+.container.small .badges.popup {
+  width: 184px;
+  height: 50px;
+}
+
 .container .badges {
-  display: flex;
-  column-gap: 12px;
-  align-items: center;
+  position: relative;
+  width: 270px;
+  height: 76px;
+
   margin: 12px 0;
   padding-top: 6px;
   padding-left: 12px;
@@ -391,11 +464,19 @@ export default {
   border-radius: 6px;
 }
 
+.container .badges.popup {
+  width: 252px;
+  height: 58px;
+}
+
 .container .badges.leaderboard {
   background-color: transparent;
   border: none;
+  width: 210px;
+  height: 56px;
   margin: 0;
 }
+// END badges
 
 .container .badge-expand {
   z-index: 2;
@@ -415,7 +496,8 @@ export default {
 }
 
 .container .badge-achieved {
-  position: relative;
+  display: block;
+  position: absolute;
   :hover {
     cursor: pointer;
   }
@@ -436,10 +518,10 @@ export default {
     font-size: 18px;
   }
   h3 {
-    font-size: 14px;
+    font-size: 12px;
   }
   p {
-    font-size: 11px;
+    font-size: 10px;
   }
 }
 
@@ -465,11 +547,11 @@ export default {
   }
   h3 {
     margin: 8px;
-    font-size: 18px;
+    font-size: 14px;
   }
   p {
     margin-bottom: 3px;
-    font-size: 14px;
+    font-size: 12px;
   }
 }
 
@@ -491,7 +573,7 @@ export default {
 
 @keyframes shrink {
   0% {
-    transform: scale(12);
+    transform: scale(12) translate(-40%);
   }
   20% {
     transform: scale(1);
@@ -502,7 +584,7 @@ export default {
 }
 @keyframes shrink-small {
   0% {
-    transform: scale(4) translate(30%);
+    transform: scale(12) translate(-40%);
   }
   20% {
     transform: scale(1) translate(0);
@@ -517,10 +599,10 @@ export default {
     transform: scale(1);
   }
   20% {
-    transform: scale(12);
+    transform: scale(12) translate(-40%);
   }
   100% {
-    transform: scale(12);
+    transform: scale(12) translate(-40%);
   }
 }
 @keyframes scale-small {
@@ -528,10 +610,10 @@ export default {
     transform: scale(1);
   }
   20% {
-    transform: scale(4) translate(30%);
+    transform: scale(12) translate(-40%);
   }
   100% {
-    transform: scale(4) translate(30%);
+    transform: scale(12) translate(-40%);
   }
 }
 

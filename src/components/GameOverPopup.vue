@@ -86,6 +86,7 @@
           :isNewBlueSky="isNewBlueSky"
           :blueSkyLevel="blueSkyLevel"
           :isShowDescription="isShowBadgeDesc"
+          :isGameOverPopup="isGameOverPopup"
         ></BadgesDisplay>
       </div>
 
@@ -217,6 +218,7 @@ export default {
       total: 0,
 
       // BADGES /////////////////////////////////////////////////
+      isGameOverPopup: true,
       isShowBadgeBox: false,
       isShowBadgeDesc: false,
       badgeTitle: '',
