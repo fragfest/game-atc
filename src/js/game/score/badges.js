@@ -87,10 +87,20 @@ export const isNewAchievement = (badgeType) => {
   return false;
 };
 
-export const setBadgeBlueSky = (badgeLevel) => {
+export const setBadgePushingTin = (badgeLevel) => {
   if (!badgeLevel) return console.error('badgeLevel missing');
 
-  // TODO save PushingTin
+  if (badgeLevel <= getBadgeLevel(getHistoryBadge(BadgesTypes.PushingTin)))
+    return;
+
+  const badges = getBadges();
+  if (badgeLevel === 2) badges.push(Badges.PushingTin2);
+  if (badgeLevel === 1) badges.push(Badges.PushingTin1);
+  setBadges(badges);
+};
+
+export const setBadgeBlueSky = (badgeLevel) => {
+  if (!badgeLevel) return console.error('badgeLevel missing');
 
   if (badgeLevel <= getBadgeLevel(getHistoryBadge(BadgesTypes.BlueSky))) return;
 
@@ -178,6 +188,23 @@ export const getProgressbarDisp = (badgeType, badgeLevel) => {
 
 /**
  * @param {BadgesTypes} badgeType
+ * @returns {Object} return badge & score histories
+ */
+const getBadgeLevelAllHistories = (badgeType) => {
+  if (!badgeType) return console.error('badgeType missing');
+
+  const badgeCompleted = getHistoryBadge(badgeType);
+  const badgeLevelCompleted = getBadgeLevel(badgeCompleted);
+  const badgeLevelFromScore = getBadgeLevelFromScore(badgeType);
+
+  return {
+    badge: badgeLevelCompleted,
+    score: badgeLevelFromScore,
+  };
+};
+
+/**
+ * @param {BadgesTypes} badgeType
  * @returns {Badges} return highest badge level already achieved
  */
 const getHistoryBadge = (badgeType) => {
@@ -228,23 +255,6 @@ const getBadgeLevelFromScore = (badgeType) => {
   }
 
   return badgeLevelFromScore;
-};
-
-/**
- * @param {BadgesTypes} badgeType
- * @returns {Object} return badge & score histories
- */
-export const getBadgeLevelAllHistories = (badgeType) => {
-  if (!badgeType) return console.error('badgeType missing');
-
-  const badgeCompleted = getHistoryBadge(badgeType);
-  const badgeLevelCompleted = getBadgeLevel(badgeCompleted);
-  const badgeLevelFromScore = getBadgeLevelFromScore(badgeType);
-
-  return {
-    badge: badgeLevelCompleted,
-    score: badgeLevelFromScore,
-  };
 };
 
 /**

@@ -85,6 +85,9 @@
           :blueSky="bluesky"
           :isNewBlueSky="isNewBlueSky"
           :blueSkyLevel="blueSkyLevel"
+          :pushingTin="pushingTin"
+          :isNewPushingTin="isNewPushingTin"
+          :pushingTinLevel="pushingTinLevel"
           :isShowDescription="isShowBadgeDesc"
           :isGameOverPopup="isGameOverPopup"
         ></BadgesDisplay>
@@ -154,7 +157,11 @@ import {
 } from '../js/game/victory';
 
 import BadgesDisplay from './badges/BadgesDisplay.vue';
-import { BadgesTypes, BadgeTextDisp } from '../js/game/score/badges';
+import {
+  BadgesTypes,
+  BadgeTextDisp,
+  setBadgePushingTin,
+} from '../js/game/score/badges';
 import {
   getBadgeLevelCompleted,
   isNewAchievement,
@@ -226,8 +233,11 @@ export default {
 
       bluesky: false,
       blueSkyLevel: 0,
-      blueSkyClass: '',
       isNewBlueSky: false,
+
+      pushingTin: false,
+      isNewPushingTin: false,
+      pushingTinLevel: 0,
     };
   },
 
@@ -352,38 +362,78 @@ export default {
     // BADGES /////////////////////////////////////////////////
     this.blueSkyLevel = getBadgeLevelCompleted(BadgesTypes.BlueSky);
     this.bluesky = !!this.blueSkyLevel;
-    const newBadgeAchievedBlueSky = isNewAchievement(BadgesTypes.BlueSky);
-    const newBadgeAchieved = newBadgeAchievedBlueSky;
 
-    if (newBadgeAchieved) {
+    this.pushingTinLevel = getBadgeLevelCompleted(BadgesTypes.PushingTin);
+    this.pushingTin = !!this.pushingTinLevel;
+
+    const newBadgeAchieved = [];
+    const newBadgeAchievedBlueSky = isNewAchievement(BadgesTypes.BlueSky);
+    const newBadgeAchievedPushingTin = isNewAchievement(BadgesTypes.PushingTin);
+
+    if (newBadgeAchievedBlueSky) {
+      newBadgeAchieved.push(BadgesTypes.BlueSky);
+    }
+    if (newBadgeAchievedPushingTin) {
+      newBadgeAchieved.push(BadgesTypes.PushingTin);
+    }
+
+    if (newBadgeAchieved.length) {
       resetBadgeHistory();
     }
 
-    if (newBadgeAchievedBlueSky) {
-      setBadgeBlueSky(this.blueSkyLevel);
-      this.isShowBadgeBox = true;
-      play(SoundType.Ding);
+    newBadgeAchieved.forEach((badgeType, index) => {
+      if (badgeType === BadgesTypes.BlueSky) {
+        setTimeout(() => {
+          setBadgeBlueSky(this.blueSkyLevel);
+          play(SoundType.Ding);
+          this.isNewBlueSky = true;
+          this.isNewPushingTin = false;
 
-      if (this.bluesky) {
-        this.blueSkyClass = 'badge-new';
-        this.isNewBlueSky = true;
+          this.badgeTitle = BadgeTextDisp.bluesky.title;
+          this.badgeDesc = BadgeTextDisp.bluesky.desc;
+          this.badgeLevel = this.blueSkyLevel;
+
+          this.isShowBadgeDesc = true;
+          this.isShowBadgeBox = true;
+          setTimeout(() => {
+            this.isShowBadgeDesc = false;
+            this.isShowBadgeBox = false;
+          }, this.badgeDispTimeSec * 1000);
+        }, this.badgeDispTimeSec * 1000 * (index * 1.8));
       }
-    }
 
-    if (this.bluesky) {
-      this.badgeTitle = BadgeTextDisp.bluesky.title;
-      this.badgeDesc = BadgeTextDisp.bluesky.desc;
-      this.badgeLevel = this.blueSkyLevel;
-    }
+      if (badgeType === BadgesTypes.PushingTin) {
+        setTimeout(() => {
+          setBadgePushingTin(this.pushingTinLevel);
+          play(SoundType.Ding);
+          this.isNewBlueSky = false;
+          this.isNewPushingTin = true;
 
-    if (newBadgeAchieved) {
+          this.badgeTitle = BadgeTextDisp.pushingtin.title;
+          this.badgeDesc = BadgeTextDisp.pushingtin.desc;
+          this.badgeLevel = this.pushingTinLevel;
+
+          this.isShowBadgeDesc = true;
+          this.isShowBadgeBox = true;
+          setTimeout(() => {
+            this.isShowBadgeDesc = false;
+            this.isShowBadgeBox = false;
+          }, this.badgeDispTimeSec * 1000);
+        }, this.badgeDispTimeSec * 1000 * (index * 1.8));
+      }
+    });
+
+    const btnDisabledTime =
+      this.badgeDispTimeSec * 1000 * (newBadgeAchieved.length + 1.2);
+
+    if (newBadgeAchieved.length) {
       setTimeout(() => {
         this.isShowBadgeDesc = true;
         this.isShowOkBtn = true;
         this.$nextTick(() => {
           this.$refs?.okBtn?.focus();
         });
-      }, this.badgeDispTimeSec * 1000);
+      }, btnDisabledTime);
     } else {
       setTimeout(() => {
         this.isShowOkBtn = true;
@@ -676,6 +726,7 @@ export default {
   position: absolute;
   top: 20%;
   left: calc(65% - 700px);
+  z-index: 3;
 
   background-color: #2c5c81e0;
   border: 1px solid #24b3c9;

@@ -165,11 +165,9 @@ export default {
     isNewBlueSky: { type: Boolean },
     blueSkyLevel: { type: Number },
 
-    // pushingTin: { type: Boolean },
-    pushingTin: { type: Boolean, default: () => true },
+    pushingTin: { type: Boolean },
     isNewPushingTin: { type: Boolean },
-    // pushingTinLevel: { type: Number },
-    pushingTinLevel: { type: Number, default: () => 1 },
+    pushingTinLevel: { type: Number },
 
     isShowDescription: { type: Boolean },
     isShowGoals: { type: Boolean },
@@ -499,11 +497,9 @@ export default {
 // END badges
 
 .container .badge-expand {
-  z-index: 2;
   animation: scale var(--duration-scale) var(--timing-scale) 0s 1 forwards;
 }
 .container.small .badge-expand {
-  z-index: 2;
   animation: scale-small var(--duration-scale) var(--timing-scale) 0s 1 forwards;
 }
 
@@ -524,10 +520,12 @@ export default {
 }
 
 .container .badge-new {
+  z-index: 2;
   animation: scale-shrink var(--duration-scale) var(--timing-scale) 8s 1
     forwards;
 }
 .container.small .badge-new {
+  z-index: 2;
   animation: scale-shrink-small var(--duration-scale) var(--timing-scale) 8s 1
     forwards;
 }
