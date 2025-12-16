@@ -16,27 +16,24 @@ export const Badges = Object.freeze({
   BlueSky1: 'BlueSky1',
 });
 
-export const BadgeTextDisp = Object.freeze({
-  none: { title: '', desc: 'future achievement', goals: [] },
-  pushingtin: {
-    title: 'Pushing Tin',
-    desc: 'minimal delays',
-    goals: ['no delay penalties', 'minimum runway idle time'],
-  },
-  bluesky: {
-    title: 'Blue Sky',
-    desc: 'avoid turbulence',
-    goals: ['no wake turbulence', 'no weather turbulence'],
-  },
-});
-
 /**
- * @typedef ProgressbarDisp
- * @property {Number} height
- * @property {Number} y
- * @property {Number} cornerRadiusY
- * @property {String} colorGradient
+ *
+ * @param {Badges} badge
+ * @returns {BadgesTypes}
  */
+export const getBadgesType = (badgeArg) => {
+  const badge = Object.keys(Badges).find((x) => x === badgeArg);
+  if (!badge) return null;
+
+  if (Badges[badge] === Badges.PushingTin2) return BadgesTypes.PushingTin;
+  if (Badges[badge] === Badges.PushingTin1) return BadgesTypes.PushingTin;
+
+  if (Badges[badge] === Badges.BlueSky4) return BadgesTypes.BlueSky;
+  if (Badges[badge] === Badges.BlueSky3) return BadgesTypes.BlueSky;
+  if (Badges[badge] === Badges.BlueSky2) return BadgesTypes.BlueSky;
+  if (Badges[badge] === Badges.BlueSky1) return BadgesTypes.BlueSky;
+  return null;
+};
 
 /**
  * get badge level from Badges enum
@@ -56,6 +53,20 @@ export const getBadgeLevel = (badge) => {
   if (Badges[badgeFound] === Badges.BlueSky1) return 1;
   return null;
 };
+
+export const BadgeTextDisp = Object.freeze({
+  none: { title: '', desc: 'future achievement', goals: [] },
+  pushingtin: {
+    title: 'Pushing Tin',
+    desc: 'minimal delays',
+    goals: ['no delay penalties', 'minimum runway idle time'],
+  },
+  bluesky: {
+    title: 'Blue Sky',
+    desc: 'avoid turbulence',
+    goals: ['no wake turbulence', 'no weather turbulence'],
+  },
+});
 
 /**
  * @param {BadgesTypes} badgeType
@@ -111,6 +122,14 @@ export const setBadgeBlueSky = (badgeLevel) => {
   if (badgeLevel === 1) badges.push(Badges.BlueSky1);
   setBadges(badges);
 };
+
+/**
+ * @typedef ProgressbarDisp
+ * @property {Number} height
+ * @property {Number} y
+ * @property {Number} cornerRadiusY
+ * @property {String} colorGradient
+ */
 
 /**
  * display settings for the badge progressbar

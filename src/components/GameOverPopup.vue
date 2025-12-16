@@ -83,11 +83,11 @@
         <BadgesDisplay
           :size="badgeSize"
           :blueSky="bluesky"
-          :isNewBlueSky="isNewBlueSky"
           :blueSkyLevel="blueSkyLevel"
+          :isNewBlueSky="isNewBlueSky"
           :pushingTin="pushingTin"
-          :isNewPushingTin="isNewPushingTin"
           :pushingTinLevel="pushingTinLevel"
+          :isNewPushingTin="isNewPushingTin"
           :isShowDescription="isShowBadgeDesc"
           :isGameOverPopup="isGameOverPopup"
         ></BadgesDisplay>

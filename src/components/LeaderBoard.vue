@@ -50,10 +50,12 @@
           <div class="score-content">
             <BadgesDisplay
               :isMobile="isMobile"
-              :isLeaderboard="true"
               :size="badgeSize"
+              :isLeaderboard="true"
               :blueSky="hasBlueSky(item)"
               :blueSkyLevel="getBadgeLevelBlueSky(item)"
+              :pushingTin="hasPushingTin(item)"
+              :pushingTinLevel="getBadgeLevelPushingTin(item)"
             />
             <h2 class="w-col hdr-green">{{ scoreFormat(item?.score) }}</h2>
           </div>
@@ -65,7 +67,11 @@
 
 <script>
 import { ref } from 'vue';
-import { getBadgeLevel } from '../js/game/score/badges';
+import {
+  BadgesTypes,
+  getBadgeLevel,
+  getBadgesType,
+} from '../js/game/score/badges';
 import {
   getAllScores,
   getUserId,
@@ -175,14 +181,32 @@ export default {
   },
 
   methods: {
+    hasPushingTin: function (item) {
+      if (!item?.badges) return false;
+      const goal = (badge) => getBadgesType(badge) === BadgesTypes.PushingTin;
+      return !!item.badges.find(goal);
+    },
+
+    getBadgeLevelPushingTin: function (item) {
+      if (!item?.badges) return null;
+
+      const goal = (badge) => getBadgesType(badge) === BadgesTypes.PushingTin;
+      const levelNums = item.badges.filter(goal).map(getBadgeLevel);
+      return Math.max(...levelNums);
+    },
+
     hasBlueSky: function (item) {
       if (!item?.badges) return false;
-      return !!item.badges.find(getBadgeLevel);
+      const goal = (badge) => getBadgesType(badge) === BadgesTypes.BlueSky;
+      return !!item.badges.find(goal);
     },
 
     getBadgeLevelBlueSky: function (item) {
       if (!item?.badges) return null;
-      return Math.max(...item.badges.map(getBadgeLevel));
+
+      const goal = (badge) => getBadgesType(badge) === BadgesTypes.BlueSky;
+      const levelNums = item.badges.filter(goal).map(getBadgeLevel);
+      return Math.max(...levelNums);
     },
 
     signInUpdate: async function (isLoggedIn) {
