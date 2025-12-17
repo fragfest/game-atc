@@ -377,13 +377,10 @@ export default {
       newBadgeAchieved.push(BadgesTypes.PushingTin);
     }
 
-    if (newBadgeAchieved.length) {
-      resetBadgeHistory();
-    }
-
     newBadgeAchieved.forEach((badgeType, index) => {
       if (badgeType === BadgesTypes.BlueSky) {
         setTimeout(() => {
+          resetBadgeHistory();
           setBadgeBlueSky(this.blueSkyLevel);
           play(SoundType.Ding);
           this.isNewBlueSky = true;
@@ -404,6 +401,7 @@ export default {
 
       if (badgeType === BadgesTypes.PushingTin) {
         setTimeout(() => {
+          resetBadgeHistory();
           setBadgePushingTin(this.pushingTinLevel);
           play(SoundType.Ding);
           this.isNewBlueSky = false;

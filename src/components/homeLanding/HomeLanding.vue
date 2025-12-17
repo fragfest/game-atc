@@ -88,6 +88,8 @@
               :isShowGoals="true"
               :blueSky="bluesky"
               :blueSkyLevel="blueSkyLevel"
+              :pushingTin="pushingTin"
+              :pushingTinLevel="pushingTinLevel"
             />
           </div>
         </div>
@@ -134,6 +136,7 @@ import {
   ScreenSizes,
   getScreenSize,
   setLogLevel,
+  historyRecordDebug,
 } from '../../js/utils';
 import {
   BadgesTypes,
@@ -184,6 +187,8 @@ export default {
       isGameComplete: false,
 
       // BADGES /////////////////////////////////////////////////
+      pushingTin: false,
+      pushingTinLevel: 0,
       bluesky: false,
       blueSkyLevel: 0,
     };
@@ -228,6 +233,9 @@ export default {
     this.blueSkyLevel = getBadgeLevelCompleted(BadgesTypes.BlueSky);
     this.bluesky = !!this.blueSkyLevel;
 
+    this.pushingTinLevel = getBadgeLevelCompleted(BadgesTypes.PushingTin);
+    this.pushingTin = !!this.pushingTinLevel;
+
     if (this.finalLevel === this.levelComplete) {
       this.isGameComplete = true;
       this.levelNext = this.finalLevel;
@@ -255,6 +263,7 @@ export default {
 
   methods: {
     updateLevel: function (level) {
+      historyRecordDebug();
       this.levelNext = level;
       levelRetry(level);
     },
