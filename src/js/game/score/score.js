@@ -48,7 +48,6 @@ export const runwayIdlePenalty = () => {
   publishScore(score);
 };
 
-// TODO round the score here instead
 export const wakePenalty = (newScore) => {
   const score = getScore();
   score.wake += newScore;
@@ -71,7 +70,6 @@ export const planeDelayFail = () => {
   publishScore(score);
 };
 
-// TODO round the score here
 export const levelComplete = (scoreTotal) => {
   const score = getScore();
   setHistoryRecord(score.level, { ...score, scoreTotal });

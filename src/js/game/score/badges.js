@@ -101,8 +101,9 @@ export const isNewAchievement = (badgeType) => {
 export const setBadgePushingTin = (badgeLevel) => {
   if (!badgeLevel) return console.error('badgeLevel missing');
 
-  if (badgeLevel <= getBadgeLevel(getHistoryBadge(BadgesTypes.PushingTin)))
+  if (badgeLevel <= getBadgeLevel(getHistoryBadge(BadgesTypes.PushingTin))) {
     return;
+  }
 
   const badges = getBadges();
   if (badgeLevel === 2) badges.push(Badges.PushingTin2);
@@ -113,7 +114,9 @@ export const setBadgePushingTin = (badgeLevel) => {
 export const setBadgeBlueSky = (badgeLevel) => {
   if (!badgeLevel) return console.error('badgeLevel missing');
 
-  if (badgeLevel <= getBadgeLevel(getHistoryBadge(BadgesTypes.BlueSky))) return;
+  if (badgeLevel <= getBadgeLevel(getHistoryBadge(BadgesTypes.BlueSky))) {
+    return;
+  }
 
   const badges = getBadges();
   if (badgeLevel === 4) badges.push(Badges.BlueSky4);

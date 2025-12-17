@@ -30,52 +30,52 @@
           {{ departures }}
         </div>
         <div class="item score" :class="departuresScoreClass">
-          {{ departureScore }}
+          {{ scoreFormat(departureScore) }}
         </div>
         <div class="item" :class="arrivalsTitleClass">arrivals</div>
         <div class="item points" :class="arrivalsScoreClass">
           {{ arrivals }}
         </div>
         <div class="item score" :class="arrivalsScoreClass">
-          {{ arrivalScore }}
+          {{ scoreFormat(arrivalScore) }}
         </div>
         <div class="item" :class="failedClass">failed handoffs & landings</div>
         <div class="item points" :class="failedPointsClass">{{ failed }}</div>
         <div class="item score" :class="failedScoreClass">
-          {{ failedScore }}
+          {{ scoreFormat(failedScore) }}
         </div>
         <div class="item" :class="delayClass">delays</div>
         <div class="item points" :class="delayPointsClass">
           {{ delays }}
         </div>
         <div class="item score" :class="delayScoreClass">
-          {{ delayScore }}
+          {{ scoreFormat(delayScore) }}
         </div>
         <div class="item" :class="conflictClass">conflict (seconds)</div>
         <div class="item points" :class="conflictPointsClass">
           {{ conflict }}
         </div>
         <div class="item score" :class="conflictScoreClass">
-          {{ conflictScore }}
+          {{ scoreFormat(conflictScore) }}
         </div>
         <div class="item" :class="bonusClass">turbulence (seconds)</div>
         <div class="item points" :class="turbulencePointsClass">
           {{ turbulence }}
         </div>
         <div class="item score" :class="turbulenceScoreClass">
-          {{ turbulenceScore }}
+          {{ scoreFormat(turbulenceScore) }}
         </div>
         <div class="item" :class="bonusClass">runway idle</div>
         <div class="item points" :class="idleStatusClass">
           {{ idle }}
         </div>
         <div class="item score" :class="idleScoreClass">
-          {{ idleScore }}
+          {{ scoreFormat(idleScore) }}
         </div>
         <div class="item margin-top border-top">SCORE</div>
         <div class="item margin-top"></div>
         <div class="item score margin-top border-top" :class="scoreTotalClass">
-          {{ total }}
+          {{ scoreFormat(total) }}
         </div>
       </div>
 
@@ -354,11 +354,6 @@ export default {
       levelComplete(this.total);
     }
 
-    // TODO format scores, add this to methods & test
-    // scoreFormat: function (score) {
-    //   return Number(score).toLocaleString('en-CA');
-    // },
-
     // BADGES /////////////////////////////////////////////////
     this.blueSkyLevel = getBadgeLevelCompleted(BadgesTypes.BlueSky);
     this.bluesky = !!this.blueSkyLevel;
@@ -377,12 +372,14 @@ export default {
       newBadgeAchieved.push(BadgesTypes.PushingTin);
     }
 
+    // newBadgeAchieved forEach
     newBadgeAchieved.forEach((badgeType, index) => {
       if (badgeType === BadgesTypes.BlueSky) {
         setTimeout(() => {
           resetBadgeHistory();
           setBadgeBlueSky(this.blueSkyLevel);
           play(SoundType.Ding);
+
           this.isNewBlueSky = true;
           this.isNewPushingTin = false;
 
@@ -392,6 +389,7 @@ export default {
 
           this.isShowBadgeDesc = true;
           this.isShowBadgeBox = true;
+
           setTimeout(() => {
             this.isShowBadgeDesc = false;
             this.isShowBadgeBox = false;
@@ -404,6 +402,7 @@ export default {
           resetBadgeHistory();
           setBadgePushingTin(this.pushingTinLevel);
           play(SoundType.Ding);
+
           this.isNewBlueSky = false;
           this.isNewPushingTin = true;
 
@@ -413,6 +412,7 @@ export default {
 
           this.isShowBadgeDesc = true;
           this.isShowBadgeBox = true;
+
           setTimeout(() => {
             this.isShowBadgeDesc = false;
             this.isShowBadgeBox = false;
@@ -420,6 +420,7 @@ export default {
         }, this.badgeDispTimeSec * 1000 * (index * 1.8));
       }
     });
+    // END newBadgeAchieved forEach
 
     const btnDisabledTime =
       this.badgeDispTimeSec * 1000 * (newBadgeAchieved.length + 1.2);
@@ -454,6 +455,13 @@ export default {
   },
 
   methods: {
+    scoreFormat: function (score) {
+      let scoreNum = Math.round(Number(score));
+      if (scoreNum <= 0) return '0';
+      if (scoreNum >= 10000) return '9,999+';
+      return scoreNum.toLocaleString('en-CA');
+    },
+
     onClickRetryBtn: function () {
       levelRetry(this.level);
       window.location.reload();
