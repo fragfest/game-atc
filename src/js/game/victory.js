@@ -89,8 +89,10 @@ export const publishFailed = () => {
  * @returns {Goals}
  */
 
-// PushingTin goal: badge levels with IdleTimer
-export const getIdleTimerLevels = () => [3, 4];
+// PushingTin goal: game levels with IdleTimer goal
+export const getIdleTimerLevels = () => [
+  4, 5, 6, 8, 10, 13, 14, 18, 19, 21, 23, 24,
+];
 
 /**
  * @returns {GoalsFunc}
@@ -139,7 +141,6 @@ export const getGoalsByLevel = () => {
         Conflict: 60,
         SpawnRate: 1,
         Delayed: 6,
-        IdleTimer: 240,
       };
     }
 
@@ -151,7 +152,7 @@ export const getGoalsByLevel = () => {
         Conflict: 60,
         SpawnRate: 2,
         Delayed: 5,
-        IdleTimer: 180,
+        IdleTimer: 300,
       };
     }
 
@@ -163,6 +164,7 @@ export const getGoalsByLevel = () => {
         Conflict: 30,
         SpawnRate: 1.5,
         Delayed: 4,
+        IdleTimer: 300,
       };
     }
 
@@ -174,6 +176,7 @@ export const getGoalsByLevel = () => {
         Conflict: 30,
         SpawnRate: 1.5,
         Delayed: 3,
+        IdleTimer: 360,
       };
     }
 
@@ -197,6 +200,7 @@ export const getGoalsByLevel = () => {
         Conflict: 30,
         SpawnRate: 2,
         Delayed: 3,
+        IdleTimer: 300,
       };
     }
 
@@ -219,6 +223,7 @@ export const getGoalsByLevel = () => {
         Conflict: 30,
         SpawnRate: 1.2,
         Delayed: 3,
+        IdleTimer: 240,
       };
     }
 
@@ -253,6 +258,7 @@ export const getGoalsByLevel = () => {
         Conflict: 30,
         SpawnRate: 2,
         Delayed: 3,
+        IdleTimer: 240,
       };
     }
 
@@ -264,6 +270,7 @@ export const getGoalsByLevel = () => {
         Conflict: 30,
         SpawnRate: 1.5,
         Delayed: 3,
+        IdleTimer: 360,
       };
     }
 
@@ -309,6 +316,7 @@ export const getGoalsByLevel = () => {
         Conflict: 30,
         SpawnRate: 1.2,
         Delayed: 3,
+        IdleTimer: 300,
       };
     }
 
@@ -320,6 +328,7 @@ export const getGoalsByLevel = () => {
         Conflict: 30,
         SpawnRate: 1.2,
         Delayed: 3,
+        IdleTimer: 240,
       };
     }
 
@@ -342,6 +351,7 @@ export const getGoalsByLevel = () => {
         Conflict: 30,
         SpawnRate: 2,
         Delayed: 2,
+        IdleTimer: 240,
       };
     }
 
@@ -365,6 +375,7 @@ export const getGoalsByLevel = () => {
         Conflict: 30,
         SpawnRate: 1.5,
         Delayed: 2,
+        IdleTimer: 300,
       };
     }
 
@@ -376,6 +387,7 @@ export const getGoalsByLevel = () => {
         Conflict: 30,
         SpawnRate: 1.5,
         Delayed: 2,
+        IdleTimer: 300,
       };
     }
 

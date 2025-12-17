@@ -8,6 +8,9 @@ export const BadgesTypes = Object.freeze({
 });
 
 export const Badges = Object.freeze({
+  PushingTin5: 'PushingTin5',
+  PushingTin4: 'PushingTin4',
+  PushingTin3: 'PushingTin3',
   PushingTin2: 'PushingTin2',
   PushingTin1: 'PushingTin1',
   BlueSky4: 'BlueSky4',
@@ -25,6 +28,9 @@ export const getBadgesType = (badgeArg) => {
   const badge = Object.keys(Badges).find((x) => x === badgeArg);
   if (!badge) return null;
 
+  if (Badges[badge] === Badges.PushingTin5) return BadgesTypes.PushingTin;
+  if (Badges[badge] === Badges.PushingTin4) return BadgesTypes.PushingTin;
+  if (Badges[badge] === Badges.PushingTin3) return BadgesTypes.PushingTin;
   if (Badges[badge] === Badges.PushingTin2) return BadgesTypes.PushingTin;
   if (Badges[badge] === Badges.PushingTin1) return BadgesTypes.PushingTin;
 
@@ -44,6 +50,9 @@ export const getBadgeLevel = (badge) => {
   const badgeFound = Object.keys(Badges).find((x) => x === badge);
   if (!badgeFound) return null;
 
+  if (Badges[badgeFound] === Badges.PushingTin5) return 5;
+  if (Badges[badgeFound] === Badges.PushingTin4) return 4;
+  if (Badges[badgeFound] === Badges.PushingTin3) return 3;
   if (Badges[badgeFound] === Badges.PushingTin2) return 2;
   if (Badges[badgeFound] === Badges.PushingTin1) return 1;
 
@@ -145,6 +154,9 @@ export const getProgressbarDisp = (badgeType, badgeLevel) => {
   if (badgeType === BadgesTypes.PushingTin) {
     if (badgeLevel === 1) progressLevel = 1;
     if (badgeLevel === 2) progressLevel = 2;
+    if (badgeLevel === 3) progressLevel = 3;
+    if (badgeLevel === 4) progressLevel = 4;
+    if (badgeLevel === 5) progressLevel = 6;
   }
   if (badgeType === BadgesTypes.BlueSky) {
     if (badgeLevel === 1) progressLevel = 1;
@@ -234,6 +246,9 @@ const getHistoryBadge = (badgeType) => {
   // always return the highest badge for a BadgesTypes
 
   if (badgeType === BadgesTypes.PushingTin) {
+    if (badges.find((x) => x === Badges.PushingTin5)) return Badges.PushingTin5;
+    if (badges.find((x) => x === Badges.PushingTin4)) return Badges.PushingTin4;
+    if (badges.find((x) => x === Badges.PushingTin3)) return Badges.PushingTin3;
     if (badges.find((x) => x === Badges.PushingTin2)) return Badges.PushingTin2;
     if (badges.find((x) => x === Badges.PushingTin1)) return Badges.PushingTin1;
   }
@@ -259,20 +274,21 @@ const getBadgeLevelFromScore = (badgeType) => {
   if (badgeType === BadgesTypes.PushingTin) {
     const levelsArr = getIdleTimerLevels();
     const idleTimerLevelsPassed = levelsArr.filter(isAchievedPushingTin).length;
-    // TODO consider checking all victory levels for zero delays
 
-    if (idleTimerLevelsPassed >= 2) badgeLevelFromScore = 2;
+    if (idleTimerLevelsPassed >= 12) badgeLevelFromScore = 5;
+    else if (idleTimerLevelsPassed >= 9) badgeLevelFromScore = 4;
+    else if (idleTimerLevelsPassed >= 6) badgeLevelFromScore = 3;
+    else if (idleTimerLevelsPassed >= 3) badgeLevelFromScore = 2;
     else if (idleTimerLevelsPassed >= 1) badgeLevelFromScore = 1;
   }
 
   if (badgeType === BadgesTypes.BlueSky) {
     const levelsArr = getAllTurbulenceLevels();
     const weatherLevelsPassed = levelsArr.filter(isAchievedBlueSky).length;
-    // TODO consider checking all victory levels for wake
 
     if (weatherLevelsPassed >= 10) badgeLevelFromScore = 4;
-    else if (weatherLevelsPassed >= 7) badgeLevelFromScore = 3;
-    else if (weatherLevelsPassed >= 4) badgeLevelFromScore = 2;
+    else if (weatherLevelsPassed >= 6) badgeLevelFromScore = 3;
+    else if (weatherLevelsPassed >= 3) badgeLevelFromScore = 2;
     else if (weatherLevelsPassed >= 1) badgeLevelFromScore = 1;
   }
 
@@ -289,9 +305,9 @@ const isAchievedPushingTin = (gameLevel) => {
 
   const isPass = (record) => isVictory(record?.historyScore);
   const hasIdleZero = (record) => record?.historyScore?.idle === 0;
-  // TODO check for zero delays
+  const hasDelaysZero = (record) => record?.historyScore?.delayed === 0;
 
-  return isPass(record) && hasIdleZero(record);
+  return isPass(record) && hasIdleZero(record) && hasDelaysZero(record);
 };
 
 /**
