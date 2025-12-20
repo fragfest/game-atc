@@ -7,7 +7,7 @@
     ></LoginModal>
 
     <div v-if="isMobile || isTablet" class="mobile">
-      <h1 class="hdr-green">ATC - Future Flight Ops</h1>
+      <h1 class="hdr-green">ATC - future flight ops</h1>
       <h2 v-if="isMobile" class="lightgreen">On mobile?</h2>
       <h2 v-if="isTablet" class="lightgreen">On tablet?</h2>
       <h3 class="white">Please use a desktop browser to play</h3>
@@ -23,7 +23,7 @@
     <section v-if="!isMobile">
       <div class="content">
         <div class="header">
-          <h1 class="title">ATC - Future Flight Ops</h1>
+          <HeaderTitle />
           <SignInButton
             :isLoggedIn="isLoggedIn"
             @update="signInUpdate"
@@ -33,7 +33,7 @@
         <!-- grid-score-buttons -->
         <div class="grid-score-buttons">
           <!-- column left -->
-          <div>
+          <div class="col-left">
             <h2 v-if="isGameComplete" class="hdr-green">
               all levels completed!
             </h2>
@@ -50,7 +50,6 @@
             <h3 v-if="isTutorial">
               <span class="font-mono white">training</span>
             </h3>
-            <!-- <h3 v-else-if="!isGameComplete"> -->
             <h3 v-else>
               <span>level &nbsp;&nbsp;</span>
               <span class="font-mono white">{{ levelNext }}</span>
@@ -142,11 +141,6 @@ import {
   BadgesTypes,
   getBadgeLevelCompleted,
 } from '../../js/game/score/badges';
-
-import LoginModal from './LoginModal.vue';
-import HistoryAirports from './HistoryAirports';
-import BadgesDisplay from '../badges/BadgesDisplay';
-import CyberBox from '../common/CyberBox';
 import {
   getAllScores,
   getScoresByUser,
@@ -157,10 +151,17 @@ import {
   logout,
   sendHistory,
 } from '../../js/session/session';
+
+import LoginModal from './LoginModal.vue';
+import HistoryAirports from './HistoryAirports';
+import BadgesDisplay from '../badges/BadgesDisplay';
+import CyberBox from '../common/CyberBox';
 import SignInButton from '../common/SignInButton';
+import HeaderTitle from './HeaderTitle';
 
 export default {
   components: {
+    HeaderTitle,
     SignInButton,
     LoginModal,
     HistoryAirports,
@@ -353,6 +354,7 @@ export default {
     font-size: 12px;
   }
 }
+// END small /////////////////////
 
 .home {
   display: flex;
@@ -431,16 +433,6 @@ export default {
   }
 }
 
-.home section .content h1 {
-  font-size: 48px;
-  margin: 0;
-
-  background: linear-gradient(to bottom, white 0%, limegreen 100%);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
 // grid-score-buttons ////////////////////////////////////////
 .grid-score-buttons {
   display: grid;
@@ -450,11 +442,24 @@ export default {
   column-gap: 10%;
 }
 
+.grid-score-buttons .col-left {
+  opacity: 0;
+  animation: slidein-right 0.3s ease-out 0.2s forwards;
+}
+
 .grid-score-buttons .button-start {
   display: flex;
   flex-direction: column;
   align-items: center;
   height: 182px;
+
+  opacity: 0;
+  animation: slidein-right 0.3s ease-out 0.2s forwards;
+}
+
+.grid-score-buttons .leaderboard button {
+  opacity: 0;
+  animation: slidein-right 0.3s ease-out 0.2s forwards;
 }
 
 .grid-score-buttons .button-start h3 {
@@ -537,6 +542,12 @@ export default {
 }
 
 // badges /////////////////////////////////////////////
+
+.badges {
+  opacity: 0;
+  animation: fadein 0.3s ease-out 0.6s forwards;
+}
+
 // small ////////////////////
 .home.small .row-history-badges .badges .container {
   width: 240px;
@@ -583,6 +594,26 @@ export default {
     position: relative;
     outline: 1px solid limegreen;
     box-shadow: none;
+  }
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slidein-right {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0%);
   }
 }
 </style>

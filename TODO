@@ -2,35 +2,29 @@ Bugs:
   ☐ slow browser performance post-leave: run video on separate browser video, enter level & leave, wait 10 seconds and notice video slowdown until home screen refreshed
 
 Wishlist:
-  ☐ goal mayday
-  ☐ badge levels (shown on badge progressbar)
-  ☐ emergency message popup/flighstrip/aircraft & mechanic
-  ☐ crash mechanic i.e. due to emergency
-  ☐ custom play level
-  ☐ cognito login page style
   ☐ logo
-  ☐ ambient animated background
+  ☐ goal mayday
+  ☐ mayday: emergency message popup/flighstrip/aircraft & mechanic
+  ☐ mayday: crash mechanic
   ☐ animated compass
   ☐ change runways for arrivals & departures
   ☐ block takeoff on occupied runway & display message
+  ☐ unlock full game, demo mode
   
   ☐ save volume, conflict circles settings
   ☐ wake circles should include altitude at which they were generated
   
+  ☐ custom play level
   ☐ restricted areas with min altitude levels
   ☐ fuel mechanic
   ☐ flight quality - weather dangerous
   ☐ noise abatement mechanic (max 250kts below 10Kft)
-  ☐ consider another victory goal based on Flight Quality 
-  ☐ leaderboard max limit & paged calls
   ☐ show leaderboard without sign in
-  ☐ save full history
-  ☐ consider allowing plane spawn near waypoints
-  ☐ flights have defined arrival sections, departure waypoints
   ☐ touchdown sound (tyre screech)
   ☐ sound on dialog text spawn
-  ☐ select-flick sound too quiet
   ☐ federated cognito login
+  ☐ leaderboard max limit & paged calls
+  ☐ cognito login page style
 
 v0.1.5:
   Bugs:
@@ -38,13 +32,14 @@ v0.1.5:
     ✔ retry button does next level if success. need to set level on retry @done(25-09-26 01:18)
 
   Major:
-    ✔ goal pushing tin @started(25-12-06 10:40) @done(25-12-17 16:13) @lasted(1w4d5h33m27s)
+    ✔ goal pushing tin & badge levels @started(25-12-06 10:40) @done(25-12-17 16:13) @lasted(1w4d5h33m27s)
     ✔ goal BlueSky multiple achievement levels @started(25-12-06 07:42) @done(25-12-06 09:23) @lasted(1h41m29s)
     ✔ simulation fast-forward @started(25-09-20 20:53) @done(25-09-26 00:40) @lasted(5d3h47m16s)
     ✔ pause button & screen @started(25-09-16 22:57) @done(25-09-19 04:58) @lasted(2d6h1m20s)
     ✔ display name for player/leaderboard (instead of all-lowercase cognito username) @started(25-02-19 18:41) @done(25-02-23 11:50) @lasted(3d17h9m18s)
     
   Minor:
+    ✔ Home screen animations @started(25-12-19 16:07) @done(25-12-24 18:01) @lasted(5d1h54m35s)
     ✔ remove background sound & button @started(25-10-11 03:39) @done(25-10-11 04:12) @lasted(33m30s)
     ✔ ToolTip hover z-index not on top of side panel @done(25-10-11 04:12)
     ✔ key press or click to skip level intro @started(25-09-28 22:28) @done(25-09-28 23:04) @lasted(36m19s)

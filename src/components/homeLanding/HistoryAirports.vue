@@ -493,6 +493,27 @@ export default {
     .photo-vancouver {
       background-image: url('/public/img/cities/photo-vancouver.jpg');
     }
+
+    &:nth-child(1) {
+      opacity: 0;
+      animation: slidein-right 0.3s ease-out 0.4s forwards;
+    }
+    &:nth-child(2) {
+      opacity: 0;
+      animation: slidein-right 0.3s ease-out calc(1.4 * 0.4s) forwards;
+    }
+    &:nth-child(3) {
+      opacity: 0;
+      animation: slidein-right 0.3s ease-out calc(1.8 * 0.4s) forwards;
+    }
+    &:nth-child(4) {
+      opacity: 0;
+      animation: slidein-right 0.3s ease-out calc(2.4 * 0.4s) forwards;
+    }
+    &:nth-child(5) {
+      opacity: 0;
+      animation: slidein-right 0.3s ease-out calc(2.8 * 0.4s) forwards;
+    }
   }
   // END button-airport
 
@@ -593,7 +614,30 @@ export default {
       }
     }
     // END button-restart
+
+    opacity: 0;
+    animation: fadein 0.3s ease-out 0.6s forwards;
   }
   // END history
+
+  @keyframes fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slidein-right {
+    from {
+      opacity: 0;
+      transform: translateX(100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0%);
+    }
+  }
 }
 </style>
