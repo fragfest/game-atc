@@ -1,119 +1,128 @@
 <template>
   <div class="home" :class="screenSize">
-    <LoginModal
-      v-if="showLoginModal"
-      :loginArr="loginArr"
-      @done="onDoneEvent"
-    ></LoginModal>
+    <!-- showSplash -->
+    <SplashLogo
+      v-if="showSplash && !isSplashComplete && !isMobile && !isTablet"
+      @play="splashDismissEV"
+    >
+    </SplashLogo>
+    <div v-else>
+      <LoginModal
+        v-if="showLoginModal"
+        :loginArr="loginArr"
+        @done="onDoneEvent"
+      ></LoginModal>
 
-    <div v-if="isMobile || isTablet" class="mobile">
-      <h1 class="hdr-green">ATC - future flight ops</h1>
-      <h2 v-if="isMobile" class="lightgreen">On mobile?</h2>
-      <h2 v-if="isTablet" class="lightgreen">On tablet?</h2>
-      <h3 class="white">Please use a desktop browser to play</h3>
-      <div class="content">
-        <div class="leaderboard">
-          <button @click="onLeaderboardClick">
-            <h3 class="lightgreen">leaderboard</h3>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <section v-if="!isMobile">
-      <div class="content">
-        <div class="header">
-          <HeaderTitle />
-          <SignInButton
-            :isLoggedIn="isLoggedIn"
-            @update="signInUpdate"
-          ></SignInButton>
-        </div>
-
-        <!-- grid-score-buttons -->
-        <div class="grid-score-buttons">
-          <!-- column left -->
-          <div class="col-left">
-            <h2 v-if="isGameComplete" class="hdr-green">
-              all levels completed!
-            </h2>
-            <h3 v-else-if="levelComplete">
-              <span>level&nbsp;&nbsp;</span>
-              <span class="font-mono white no-wrap">
-                {{ levelComplete }} / {{ finalLevel }}
-              </span>
-            </h3>
-          </div>
-
-          <!-- column center -->
-          <div class="button-start">
-            <h3 v-if="isTutorial">
-              <span class="font-mono white">training</span>
-            </h3>
-            <h3 v-else>
-              <span>level &nbsp;&nbsp;</span>
-              <span class="font-mono white">{{ levelNext }}</span>
-            </h3>
-
-            <CyberBox width="400" type="button">
-              <button @click="onStartClick">
-                <h2 v-if="isGameComplete">retry</h2>
-                <h2 v-else-if="levelComplete + 1 === levelNext">start</h2>
-                <h2 v-else>retry</h2>
-              </button>
-            </CyberBox>
-          </div>
-
-          <!-- column right -->
+      <div v-if="isMobile || isTablet" class="mobile">
+        <h1 class="hdr-green">ATC - future flight ops</h1>
+        <h2 v-if="isMobile" class="lightgreen">On mobile?</h2>
+        <h2 v-if="isTablet" class="lightgreen">On tablet?</h2>
+        <h3 class="white">Please use a desktop browser to play</h3>
+        <div class="content">
           <div class="leaderboard">
             <button @click="onLeaderboardClick">
               <h3 class="lightgreen">leaderboard</h3>
             </button>
           </div>
-          <!-- END next grid row -->
-        </div>
-        <!-- END grid-score-buttons -->
-
-        <div class="row-history-badges">
-          <div class="history-record" :class="screenSize">
-            <h2>locations</h2>
-            <HistoryAirports @updateLevel="updateLevel"></HistoryAirports>
-          </div>
-
-          <div v-if="showHistory" class="badges">
-            <h2>achievements</h2>
-            <BadgesDisplay
-              :size="badgeSize"
-              :isShowGoals="true"
-              :blueSky="bluesky"
-              :blueSkyLevel="blueSkyLevel"
-              :pushingTin="pushingTin"
-              :pushingTinLevel="pushingTinLevel"
-            />
-          </div>
         </div>
       </div>
-      <div></div>
-    </section>
 
-    <div class="attribution">
-      <div class="attribution-list">
-        <a href="https://www.freepik.com" title="freepik" target="_blank">
-          location images by freepik
-        </a>
-        <a
-          href="https://www.flaticon.com/free-animated-icons/rain"
-          title="rain animated icons"
-          target="_blank"
-        >
-          animated icons created by freepik
-        </a>
+      <section v-if="!isMobile">
+        <div class="content">
+          <div class="header">
+            <HeaderTitle />
+            <SignInButton
+              :isLoggedIn="isLoggedIn"
+              @update="signInUpdate"
+            ></SignInButton>
+          </div>
+
+          <!-- grid-score-buttons -->
+          <div class="grid-score-buttons">
+            <!-- column left -->
+            <div class="col-left">
+              <h2 v-if="isGameComplete" class="hdr-green">
+                all levels completed!
+              </h2>
+              <h3 v-else-if="levelComplete">
+                <span>level&nbsp;&nbsp;</span>
+                <span class="font-mono white no-wrap">
+                  {{ levelComplete }} / {{ finalLevel }}
+                </span>
+              </h3>
+            </div>
+
+            <!-- column center -->
+            <div class="button-start">
+              <h3 v-if="isTutorial">
+                <span class="font-mono white">training</span>
+              </h3>
+              <h3 v-else>
+                <span>level &nbsp;&nbsp;</span>
+                <span class="font-mono white">{{ levelNext }}</span>
+              </h3>
+
+              <CyberBox width="400" type="button">
+                <button @click="onStartClick">
+                  <h2 v-if="isGameComplete">retry</h2>
+                  <h2 v-else-if="levelComplete + 1 === levelNext">start</h2>
+                  <h2 v-else>retry</h2>
+                </button>
+              </CyberBox>
+            </div>
+
+            <!-- column right -->
+            <div class="leaderboard">
+              <button @click="onLeaderboardClick">
+                <h3 class="lightgreen">leaderboard</h3>
+              </button>
+            </div>
+            <!-- END next grid row -->
+          </div>
+          <!-- END grid-score-buttons -->
+
+          <div class="row-history-badges">
+            <div class="history-record" :class="screenSize">
+              <h2>locations</h2>
+              <HistoryAirports @updateLevel="updateLevel"></HistoryAirports>
+            </div>
+
+            <div v-if="showHistory" class="badges">
+              <h2>achievements</h2>
+              <BadgesDisplay
+                :size="badgeSize"
+                :isShowGoals="true"
+                :blueSky="bluesky"
+                :blueSkyLevel="blueSkyLevel"
+                :pushingTin="pushingTin"
+                :pushingTinLevel="pushingTinLevel"
+              />
+            </div>
+          </div>
+        </div>
+        <div></div>
+      </section>
+
+      <div class="attribution">
+        <div class="attribution-list">
+          <a href="https://www.freepik.com" title="freepik" target="_blank">
+            location images by freepik
+          </a>
+          <a
+            href="https://www.flaticon.com/free-animated-icons/rain"
+            title="rain animated icons"
+            target="_blank"
+          >
+            animated icons created by freepik
+          </a>
+        </div>
+      </div>
+
+      <div class="version">
+        <p>{{ version }}</p>
       </div>
     </div>
-
-    <div class="version">
-      <p>{{ version }}</p>
-    </div>
+    <!-- END showSplash -->
   </div>
 </template>
 
@@ -158,9 +167,11 @@ import BadgesDisplay from '../badges/BadgesDisplay';
 import CyberBox from '../common/CyberBox';
 import SignInButton from '../common/SignInButton';
 import HeaderTitle from './HeaderTitle';
+import SplashLogo from './SplashLogo.vue';
 
 export default {
   components: {
+    SplashLogo,
     HeaderTitle,
     SignInButton,
     LoginModal,
@@ -171,13 +182,14 @@ export default {
 
   data() {
     return {
-      isLoggedIn: false,
-      username: '',
-
-      showLoginModal: false,
-      loginArr: [],
+      isSplashComplete: false,
       isMobile: false,
       isTablet: false,
+
+      showLoginModal: false,
+      isLoggedIn: false,
+      username: '',
+      loginArr: [],
       screenSize: '',
 
       isTutorial: getHighestLevelCompleted() === null,
@@ -196,6 +208,11 @@ export default {
   },
 
   computed: {
+    showSplash: function () {
+      const str = localStorage.getItem('show-splash') || 'yes';
+      return str === 'yes' ? true : false;
+    },
+
     badgeSize: function () {
       if (this.screenSize === ScreenSizes.Small) return 34;
       return 60;
@@ -263,6 +280,10 @@ export default {
   },
 
   methods: {
+    splashDismissEV: function () {
+      this.isSplashComplete = true;
+    },
+
     updateLevel: function (level) {
       historyRecordDebug();
       this.levelNext = level;

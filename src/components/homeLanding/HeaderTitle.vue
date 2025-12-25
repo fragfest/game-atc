@@ -55,8 +55,8 @@ export default {
           from: '800px',
           to: '0',
           ease: spring({
-            bounce: 0.35,
-            duration: 500,
+            bounce: 0.4,
+            duration: 1400,
           }),
         },
       ],

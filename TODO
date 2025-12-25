@@ -2,7 +2,6 @@ Bugs:
   ☐ slow browser performance post-leave: run video on separate browser video, enter level & leave, wait 10 seconds and notice video slowdown until home screen refreshed
 
 Wishlist:
-  ☐ logo
   ☐ goal mayday
   ☐ mayday: emergency message popup/flighstrip/aircraft & mechanic
   ☐ mayday: crash mechanic
@@ -39,6 +38,7 @@ v0.1.5:
     ✔ display name for player/leaderboard (instead of all-lowercase cognito username) @started(25-02-19 18:41) @done(25-02-23 11:50) @lasted(3d17h9m18s)
     
   Minor:
+    ☐ home splash logo (enable sound button?) @started(25-12-24 19:51)
     ✔ Home screen animations @started(25-12-19 16:07) @done(25-12-24 18:01) @lasted(5d1h54m35s)
     ✔ remove background sound & button @started(25-10-11 03:39) @done(25-10-11 04:12) @lasted(33m30s)
     ✔ ToolTip hover z-index not on top of side panel @done(25-10-11 04:12)
