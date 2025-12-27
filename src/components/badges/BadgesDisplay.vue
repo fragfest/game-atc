@@ -27,6 +27,7 @@
           </div>
         </template>
       </ToolTip>
+
       <ToolTip
         v-if="!blueSky"
         :disabled="!isLeaderboard"
@@ -73,6 +74,7 @@
           </div>
         </template>
       </ToolTip>
+
       <ToolTip
         v-if="!pushingTin"
         :disabled="!isLeaderboard"
@@ -91,6 +93,7 @@
           </div>
         </template>
       </ToolTip>
+      <!-- END PushingTin -->
 
       <ToolTip :disabled="!isLeaderboard" :width="width" position="below">
         <BadgeEmpty

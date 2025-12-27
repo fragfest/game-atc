@@ -38,8 +38,8 @@ v0.1.5:
     ✔ display name for player/leaderboard (instead of all-lowercase cognito username) @started(25-02-19 18:41) @done(25-02-23 11:50) @lasted(3d17h9m18s)
     
   Minor:
-    ☐ BlueSky badge: optimize with png (small screenSize expand stutters)
-    ☐ home splash logo (with sound enable) @started(25-12-24 19:51)
+    ☐ BlueSky badge: optimize with png (small screenSize expand stutters) @started(25-12-26 19:40)
+    ✔ home splash logo (with sound enable) @started(25-12-24 19:51) @done(25-12-26 19:14) @lasted(1d23h23m39s)
     ✔ Home screen animations @started(25-12-19 16:07) @done(25-12-24 18:01) @lasted(5d1h54m35s)
     ✔ remove background sound & button @started(25-10-11 03:39) @done(25-10-11 04:12) @lasted(33m30s)
     ✔ ToolTip hover z-index not on top of side panel @done(25-10-11 04:12)

@@ -153,6 +153,10 @@ export default {
     setScreenSize(size);
   },
 
+  beforeUnmount() {
+    localStorage.setItem('show-splash', 'no');
+  },
+
   async mounted() {
     window.addEventListener('resize', (event) => {
       setBadgeSize(event?.target?.innerWidth);
@@ -469,6 +473,10 @@ h2 {
       @media (max-width: 1000px) {
         column-gap: 0;
       }
+    }
+
+    &:hover {
+      z-index: 1;
     }
   }
 
