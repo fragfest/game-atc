@@ -33,6 +33,7 @@ if (process.env.NODE_ENV === 'production') {
  * start AWS cognito login. when complete, redirects to homepage
  */
 export const startLogin = async () => {
+  localStorage.setItem('show-splash', 'no');
   const userManager = new UserManager({
     ...config,
   });

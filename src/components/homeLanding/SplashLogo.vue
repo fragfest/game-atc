@@ -2,7 +2,10 @@
   <div class="splash-logo">
     <div class="modal">
       <button class="btn btn-next" @click="onClickNext">
-        <h1>PLAY</h1>
+        <h1>PLAY <small>(sound on)</small></h1>
+      </button>
+      <button class="btn btn-next-nosound" @click="onClickNextSoundOff">
+        <h2>PLAY <small>(sound off)</small></h2>
       </button>
       <svg
         viewBox="0 0 206.90416 125.41258"
@@ -1058,19 +1061,41 @@ export default {
 
   methods: {
     onClickNext: function () {
-      this.$emit('play');
+      this.$emit('play', true);
+    },
+
+    onClickNextSoundOff: function () {
+      this.$emit('play', false);
     },
   },
 };
 </script>
 
 <style lang="scss">
+.splash-logo .modal .btn-next-nosound {
+  position: absolute;
+  width: 10%;
+  height: 5%;
+  left: 56%;
+  bottom: 20%;
+
+  &:active {
+    left: calc(56% + 6px);
+    bottom: calc(20% - 6px);
+  }
+}
+
 .splash-logo .modal .btn-next {
   position: absolute;
   width: 16%;
   height: 8%;
-  left: 40%;
+  left: 34%;
   bottom: 20%;
+
+  &:active {
+    left: calc(34% + 6px);
+    bottom: calc(20% - 6px);
+  }
 }
 
 .splash-logo .modal .btn {
@@ -1082,8 +1107,6 @@ export default {
 
   &:active {
     background: linear-gradient(to right, #132839, #1d425e);
-    left: calc(40% + 6px);
-    bottom: calc(20% - 6px);
     border: 2px solid lightgreen;
     box-shadow: none;
     color: lightgray;
@@ -1122,6 +1145,9 @@ export default {
   h1 {
     font-size: 22px;
   }
+  h2 {
+    font-size: 18px;
+  }
 }
 
 .splash-logo {
@@ -1132,6 +1158,7 @@ export default {
   top: 0;
   left: 0;
   width: 100%;
+  max-width: 2400px;
   height: 100%;
   z-index: 10;
   background-color: #000000ff;

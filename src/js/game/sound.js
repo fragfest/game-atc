@@ -29,6 +29,8 @@ let isMuted = true;
 let oldScore = {};
 
 export const setup = () => {
+  if (isSetup) return;
+
   collision = new Audio('/audio/collision-warning.mp3');
   ding = new Audio('/audio/ding.mp3');
   denied = new Audio('/audio/denied.mp3');
@@ -69,18 +71,11 @@ export const setup = () => {
   });
 };
 
-export const destroy = () => {
-  setMute(true);
-  collision = null;
-  ding = null;
-  denied = null;
-  takeoff = null;
-  chime = null;
-  pling = null;
-  tock = null;
-  flick = null;
-  squelch = null;
-  isSetup = false;
+/**
+ * @returns {Boolean} mute status
+ */
+export const getMute = () => {
+  return isMuted;
 };
 
 /**

@@ -2,7 +2,7 @@
   <div class="home" :class="screenSize">
     <!-- showSplash -->
     <SplashLogo
-      v-if="showSplash && !isSplashComplete && !isMobile && !isTablet"
+      v-if="showSplash && !isMobile && !isTablet"
       @play="splashDismissEV"
     >
     </SplashLogo>
@@ -168,6 +168,7 @@ import CyberBox from '../common/CyberBox';
 import SignInButton from '../common/SignInButton';
 import HeaderTitle from './HeaderTitle';
 import SplashLogo from './SplashLogo.vue';
+import { setMute, setup as soundSetup } from '../../js/game/sound';
 
 export default {
   components: {
@@ -183,6 +184,7 @@ export default {
   data() {
     return {
       isSplashComplete: false,
+
       isMobile: false,
       isTablet: false,
 
@@ -210,7 +212,8 @@ export default {
   computed: {
     showSplash: function () {
       const str = localStorage.getItem('show-splash') || 'yes';
-      return str === 'yes' ? true : false;
+      const showSplashStorage = str === 'yes' ? true : false;
+      return showSplashStorage && !this.isSplashComplete;
     },
 
     badgeSize: function () {
@@ -236,6 +239,7 @@ export default {
   },
 
   async mounted() {
+    localStorage.setItem('show-splash', 'yes');
     const browsers = Bowser.parse(window.navigator.userAgent);
     this.isMobile = browsers?.platform?.type === 'mobile' ?? false;
     this.isTablet = browsers?.platform?.type === 'tablet' ?? false;
@@ -280,8 +284,10 @@ export default {
   },
 
   methods: {
-    splashDismissEV: function () {
+    splashDismissEV: function (isSoundOn) {
       this.isSplashComplete = true;
+      soundSetup();
+      setMute(!isSoundOn);
     },
 
     updateLevel: function (level) {
@@ -563,7 +569,6 @@ export default {
 }
 
 // badges /////////////////////////////////////////////
-
 .badges {
   opacity: 0;
   animation: fadein 0.3s ease-out 0.6s forwards;
