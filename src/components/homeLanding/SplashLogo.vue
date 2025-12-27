@@ -1074,8 +1074,8 @@ export default {
 <style lang="scss">
 .splash-logo .modal .btn-next-nosound {
   position: absolute;
-  width: 10%;
-  height: 5%;
+  width: 12%;
+  height: 6%;
   left: 56%;
   bottom: 20%;
 
@@ -1144,9 +1144,11 @@ export default {
 .splash-logo {
   h1 {
     font-size: 22px;
+    margin: 0;
   }
   h2 {
     font-size: 18px;
+    margin: 0;
   }
 }
 
