@@ -95,18 +95,52 @@
       </ToolTip>
       <!-- END PushingTin -->
 
-      <ToolTip :disabled="!isLeaderboard" :width="width" position="below">
-        <BadgeEmpty
+      <!-- MayDay -->
+      <ToolTip
+        v-if="mayDay"
+        :disabled="!isLeaderboard"
+        :width="width"
+        position="below"
+      >
+        <MayDay
+          class="badge-achieved"
+          :class="mayDayClassComputed"
           :style="badgeStyle2"
-          @mouseenter="onMouseEnterBadgeAchieved('none')"
+          :progressbarHeight="mayDayHeight"
+          :progressbarPositionY="mayDayPositionYaxis"
+          :cornerRadiusY="mayDayRadiusYcorner"
+          :colorGradient="mayDayColorGradient"
+          @click="onClickBadgeAchieved('mayDayClass')"
+          @mouseenter="onMouseEnterBadgeAchieved('mayday')"
           @mouseleave="onMouseLeaveBadgeAchieved()"
-        />
+        ></MayDay>
         <template v-slot:hover>
           <div class="badges-desc">
+            <h3 class="light-green">{{ badgeTitle }}</h3>
             <p class="white">{{ badgeDesc }}</p>
           </div>
         </template>
       </ToolTip>
+
+      <ToolTip
+        v-if="!mayDay"
+        :disabled="!isLeaderboard"
+        :width="width"
+        position="below"
+      >
+        <MayDayGrey
+          :style="badgeStyle2"
+          @mouseenter="onMouseEnterBadgeAchieved('mayday-grey')"
+          @mouseleave="onMouseLeaveBadgeAchieved()"
+        ></MayDayGrey>
+        <template v-slot:hover>
+          <div class="badges-desc">
+            <h3 class="light-green">{{ badgeTitle }}</h3>
+            <p class="white">{{ badgeDesc }}</p>
+          </div>
+        </template>
+      </ToolTip>
+      <!-- END MayDay -->
 
       <ToolTip :disabled="!isLeaderboard" :width="width" position="below">
         <BadgeEmpty
@@ -147,6 +181,8 @@
 
 <script>
 import { getClassSize, getScreenSize } from '../../js/utils';
+import MayDayGrey from './MayDayGrey';
+import MayDay from './MayDay';
 import PushingTinGrey from './PushingTinGrey';
 import PushingTin from './PushingTin';
 import BlueSky from './BlueSky';
@@ -164,13 +200,17 @@ export default {
     isMobile: { type: Boolean },
     size: { type: Number, default: 44 },
 
-    blueSky: { type: Boolean },
-    isNewBlueSky: { type: Boolean },
-    blueSkyLevel: { type: Number },
+    mayDay: { type: Boolean },
+    isNewMayDay: { type: Boolean },
+    mayDayLevel: { type: Number },
 
     pushingTin: { type: Boolean },
     isNewPushingTin: { type: Boolean },
     pushingTinLevel: { type: Number },
+
+    blueSky: { type: Boolean },
+    isNewBlueSky: { type: Boolean },
+    blueSkyLevel: { type: Number },
 
     isShowDescription: { type: Boolean },
     isShowGoals: { type: Boolean },
@@ -179,12 +219,14 @@ export default {
   },
 
   components: {
-    ToolTip,
-    BadgeEmpty,
+    MayDayGrey,
+    MayDay,
     PushingTin,
     PushingTinGrey,
     BlueSky,
     BlueSkyGrey,
+    BadgeEmpty,
+    ToolTip,
   },
 
   data() {
@@ -198,6 +240,7 @@ export default {
       badgeGoals: [],
       descClass: '',
 
+      mayDayClass: '',
       pushingTinClass: '',
       blueSkyClass: '',
     };
@@ -276,6 +319,32 @@ export default {
       };
     },
 
+    // MayDay
+    mayDayClassComputed: function () {
+      if (this.mayDayClass) {
+        return this.mayDayClass;
+      }
+      if (this.isNewMayDay) {
+        return 'badge-new';
+      }
+      return '';
+    },
+    mayDayHeight: function () {
+      return getProgressbarDisp(BadgesTypes.MayDay, this.mayDayLevel).height;
+    },
+    mayDayPositionYaxis: function () {
+      return getProgressbarDisp(BadgesTypes.MayDay, this.mayDayLevel).y;
+    },
+    mayDayRadiusYcorner: function () {
+      return getProgressbarDisp(BadgesTypes.MayDay, this.mayDayLevel)
+        .cornerRadiusY;
+    },
+    mayDayColorGradient: function () {
+      return getProgressbarDisp(BadgesTypes.MayDay, this.mayDayLevel)
+        .colorGradient;
+    },
+    // END MayDay
+
     // PushingTin
     pushingTinClassComputed: function () {
       if (this.pushingTinClass) {
@@ -334,6 +403,13 @@ export default {
     isShowDescription(isShow) {
       if (!isShow) return;
 
+      if (this.isNewMayDay) {
+        this.badgeTitle =
+          BadgeTextDisp.mayday.title + ' ' + (this.mayDayLevel || '');
+        this.badgeDesc = BadgeTextDisp.mayday.desc;
+        this.badgeGoals = BadgeTextDisp.mayday.goals;
+      }
+
       if (this.isNewPushingTin) {
         this.badgeTitle =
           BadgeTextDisp.pushingtin.title + ' ' + (this.pushingTinLevel || '');
@@ -359,6 +435,23 @@ export default {
         this.badgeTitle = BadgeTextDisp.none.title;
         this.badgeDesc = BadgeTextDisp.none.desc;
         this.badgeGoals = BadgeTextDisp.none.goals;
+        this.descClass = '';
+      }
+
+      if (badgeType === 'mayday-grey') {
+        this.badgeSuccess = 'INCOMPLETE';
+        this.badgeTitle = BadgeTextDisp.mayday.title;
+        this.badgeDesc = BadgeTextDisp.mayday.desc;
+        this.badgeGoals = BadgeTextDisp.mayday.goals;
+        this.descClass = 'desc-grey';
+      }
+
+      if (badgeType === 'mayday') {
+        this.badgeSuccess = 'COMPLETE';
+        this.badgeTitle =
+          BadgeTextDisp.mayday.title + ' ' + (this.mayDayLevel || '');
+        this.badgeDesc = BadgeTextDisp.mayday.desc;
+        this.badgeGoals = BadgeTextDisp.mayday.goals;
         this.descClass = '';
       }
 

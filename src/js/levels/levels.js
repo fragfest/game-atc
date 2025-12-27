@@ -3,6 +3,7 @@ import { getDepartureCount, getArrivalCount } from '../utils.js';
 import { getAirportByLevel, getLevelObj } from './getLevel.js';
 
 /**
+ * @typedef {import('../flights/flights.js')} FlightObj
  * @typedef {import('../airports/airports.js').Airport} Airport
  * @typedef {import('../game/score/score.js').Score} Score
  * @typedef {import('../game/victory.js').Goals} Goals
@@ -17,7 +18,7 @@ import { getAirportByLevel, getLevelObj } from './getLevel.js';
  * @typedef {Function} SpawnPlane
  * @param {number} chanceOfPlane
  * @param {number} chanceOfDeparture
- * @param {object} flightObj
+ * @param {FlightObj} flightObj
  * @param {Airport} airport
  */
 /**

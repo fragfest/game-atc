@@ -988,7 +988,6 @@ export default {
 .plane-clouds .container {
   width: 100%;
   height: 100%;
-  opacity: 70%;
 
   &.init {
     display: none;

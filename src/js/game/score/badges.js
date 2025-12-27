@@ -3,6 +3,7 @@ import { getBadges, getHistoryRecords, setBadges } from './score';
 import { getIdleTimerLevels, isVictory } from '../victory';
 
 export const BadgesTypes = Object.freeze({
+  MayDay: 'MayDay',
   PushingTin: 'PushingTin',
   BlueSky: 'BlueSky',
 });
@@ -65,6 +66,11 @@ export const getBadgeLevel = (badge) => {
 
 export const BadgeTextDisp = Object.freeze({
   none: { title: '', desc: 'future achievement', goals: [] },
+  mayday: {
+    title: 'Mayday',
+    desc: 'emergencies',
+    goals: ['resolve maydays'],
+  },
   pushingtin: {
     title: 'Pushing Tin',
     desc: 'minimal delays',
