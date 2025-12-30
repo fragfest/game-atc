@@ -1,242 +1,391 @@
 <template>
   <div :class="containerClass">
+    <!-- strip-hover -->
     <div
       class="strip-hover"
       :class="sizeClass"
       @mouseover="hover()"
       @mouseout="flatten()"
     >
+      <!-- strip -->
       <div class="strip" :class="stripClass">
-        <div v-if="isQueueStrip" class="strip-info">
-          <div class="taxi font-large">
-            <b>taxi queue empty</b>
-          </div>
-        </div>
+        <!-- flip-card -->
+        <div class="flip-card">
+          <!-- flip-card-inner -->
+          <div class="flip-card-inner" :class="flipCardClass">
+            <!-- flip-card-front -->
+            <div class="flip-card-front">
+              <!-- strip-info -->
+              <div
+                v-if="!isQueueStrip && !isEmptyStrip"
+                class="strip-info"
+                @click="click(plane)"
+              >
+                <div v-if="isMayday" class="col flip-icon">
+                  <ToolTip>
+                    <button @click="maydayFlipClick">
+                      <p>&#x25c0;</p>
+                    </button>
+                    <template v-slot:hover>details</template>
+                  </ToolTip>
+                </div>
+                <div v-if="!isMayday" class="col font-large">
+                  <span v-if="displayTime" class="time">
+                    <b>{{ displayTime }}</b>
+                  </span>
+                  <span v-else class="time time-delay">
+                    <b>DELAYED</b>
+                  </span>
+                  <span class="title">
+                    <b>{{ plane.title }}</b>
+                  </span>
+                </div>
+                <div v-if="!isMayday" class="col font-large">
+                  <b>{{ plane.runway }}</b>
+                </div>
 
-        <div
-          v-if="!isQueueStrip && !isEmptyStrip"
-          class="strip-info"
-          @click="click(plane)"
-        >
-          <div class="col font-large">
-            <span v-if="displayTime" class="time">
-              <b>{{ displayTime }}</b>
-            </span>
-            <span v-else class="time time-delay">
-              <b>DELAYED</b>
-            </span>
-            <span class="title">
-              <b>{{ plane.title }}</b>
-            </span>
-          </div>
-          <div class="col font-large">
-            <b>{{ plane.runway }}</b>
-          </div>
-
-          <div v-if="!isArrival" class="col font-large">
-            <b>{{ plane.waypoint }}</b>
-          </div>
-          <ToolTip v-else position="close">
-            <div class="col">
-              <button @click="waypointClick" :class="waypointClass">
-                <span class="font-large">
+                <div v-if="!isArrival" class="col font-large">
                   <b>{{ plane.waypoint }}</b>
-                </span>
-              </button>
-            </div>
-            <template v-slot:hover>cycle waypoints (W)</template>
-          </ToolTip>
+                </div>
+                <ToolTip v-else position="close">
+                  <div class="col">
+                    <button @click="waypointClick" :class="waypointClass">
+                      <span class="font-large">
+                        <b>{{ plane.waypoint }}</b>
+                      </span>
+                    </button>
+                  </div>
+                  <template v-slot:hover>cycle waypoints (W)</template>
+                </ToolTip>
 
-          <div class="col w-42">{{ plane.airframe }} {{ plane.wake }}</div>
+                <div class="col w-42">
+                  {{ plane.airframe }} {{ plane.wake }}
+                </div>
 
-          <div class="col fixed-width no-border">
-            <div v-if="hasProximityAlert" class="conflict">
-              <div class="font-large"><b>Traffic</b></div>
-              <div>TCAS conflict</div>
-            </div>
-            <div v-else-if="isTurbulenceWake" class="warn-icon">
-              <div>
-                <img src="/img/weather/wind.gif" />
+                <div class="col fixed-width no-border">
+                  <div v-if="isMayday" class="mayday">
+                    <div class="font-large"><b>MAYDAY</b></div>
+                    <div>engine fire</div>
+                  </div>
+                  <div v-else-if="hasProximityAlert" class="conflict">
+                    <div class="font-large"><b>Traffic</b></div>
+                    <div>TCAS conflict</div>
+                  </div>
+                  <div v-else-if="isTurbulenceWake" class="warn-icon">
+                    <div>
+                      <img src="/img/weather/wind.gif" />
+                    </div>
+                    <div>
+                      <p>wake</p>
+                    </div>
+                  </div>
+                  <div v-else-if="isTurbulenceWeather" class="warn-icon">
+                    <div>
+                      <img src="/img/weather/rain.gif" />
+                    </div>
+                    <div>
+                      <p>weather</p>
+                    </div>
+                  </div>
+                  <div v-else-if="isLanding" class="takeoff-landing">
+                    <div class="font-large"><b>Landing</b></div>
+                    <div>ILS approach</div>
+                  </div>
+                  <div
+                    v-else-if="isLandingMisconfigured"
+                    class="takeoff-landing"
+                  >
+                    <div class="font-large"><b>Landing</b></div>
+                    <div>{{ landingMisconfiguredMsg }}</div>
+                  </div>
+                  <div v-else-if="isTouchedDown" class="takeoff-landing">
+                    <div class="font-large"><b>Landing</b></div>
+                    <div>touchdown</div>
+                  </div>
+                  <div v-else-if="isTakeoff" class="takeoff-landing">
+                    <div class="font-large"><b>Take off</b></div>
+                    <div>accelerating</div>
+                  </div>
+                  <div v-else-if="isTaxiing" class="takeoff-landing">
+                    <div class="font-large"><b>Taxiing</b></div>
+                    <div>ready for take off</div>
+                  </div>
+                  <div v-else-if="isAtHolding" class="holding-handoff">
+                    <div class="font-large"><b>Hold</b></div>
+                    <div>orbit</div>
+                  </div>
+                  <div v-else-if="isNavToHolding" class="holding-handoff">
+                    <div class="font-large"><b>Hold</b></div>
+                    <div>en route</div>
+                  </div>
+                  <div v-else-if="isNavToHandoff" class="holding-handoff">
+                    <div class="font-large"><b>Handoff</b></div>
+                    <div>en route</div>
+                  </div>
+                  <div v-else></div>
+                </div>
               </div>
-              <div>
-                <p>wake</p>
+
+              <div v-if="isQueueStrip" class="strip-info">
+                <div class="taxi font-large">
+                  <b>taxi queue empty</b>
+                </div>
               </div>
+              <!-- END strip-info -->
+
+              <!-- isEmptyStrip -->
+              <svg v-if="isEmptyStrip" viewBox="0 0 100 20">
+                <path
+                  :fill="gradientEnd"
+                  d="M0.76,3 4.29,0.8 50.07,0.8 54.36,2.0 78.68,2.0 82.83,0.8 97.8,0.8 99.2,2.2 99.2,18.1 97.8,19.3 4.48,19.3 0.76,17.1 0.76,2"
+                />
+
+                <path
+                  d="M82.98,0 98,0"
+                  fill="none"
+                  :stroke="outerLineStroke"
+                  :stroke-width="outerLineMed"
+                />
+                <path
+                  d="M98,0 100,2"
+                  fill="none"
+                  :stroke="outerLineStroke"
+                  :stroke-width="outerLineSmall"
+                />
+                <path
+                  d="M100,2 100,18.4"
+                  fill="none"
+                  :stroke="outerLineStroke"
+                  :stroke-width="outerLineMed"
+                />
+                <path
+                  d="M100,18.4 98.23,20"
+                  fill="none"
+                  :stroke="outerLineStroke"
+                  :stroke-width="outerLineSmall"
+                />
+                <path
+                  d="M98.28,20 82,20"
+                  fill="none"
+                  :stroke="outerLineStroke"
+                  :stroke-width="outerLineMed"
+                />
+              </svg>
+              <!-- END isEmptyStrip -->
+
+              <!-- !isEmptyStrip -->
+              <svg v-if="!isEmptyStrip" viewBox="0 0 100 20">
+                <defs>
+                  <linearGradient :id="'gradient-' + plane.id">
+                    <stop offset="0%" :stop-color="gradientStart" />
+                    <stop offset="100%" :stop-color="gradientEnd" />
+                  </linearGradient>
+                </defs>
+                <path
+                  d="M0,2.67 4.29,0"
+                  fill="none"
+                  :stroke="outerLineStroke"
+                  :stroke-width="outerLineSmall"
+                  :stroke-dasharray="dashVal"
+                />
+                <path
+                  d="M4.29,0 50.07,0"
+                  fill="none"
+                  :stroke="outerLineStroke"
+                  :stroke-width="outerLineMed"
+                  :stroke-dasharray="dashVal"
+                />
+                <path
+                  d="M50.07,0 54.36,1.33 78.68,1.33 82.98,0"
+                  fill="none"
+                  :stroke="outerLineStroke"
+                  :stroke-width="outerLineSmall"
+                  :stroke-dasharray="dashVal"
+                />
+                <path
+                  d="M82.98,0 98,0"
+                  fill="none"
+                  :stroke="outerLineStroke"
+                  :stroke-width="outerLineMed"
+                  :stroke-dasharray="dashVal"
+                />
+                <path
+                  d="M98,0 100,2"
+                  fill="none"
+                  :stroke="outerLineStroke"
+                  :stroke-width="outerLineSmall"
+                  :stroke-dasharray="dashVal"
+                />
+                <path
+                  d="M100,2 100,18.4"
+                  fill="none"
+                  :stroke="outerLineStroke"
+                  :stroke-width="outerLineMed"
+                  :stroke-dasharray="dashVal"
+                />
+                <path
+                  d="M100,18.4 98.23,20"
+                  fill="none"
+                  :stroke="outerLineStroke"
+                  :stroke-width="outerLineSmall"
+                  :stroke-dasharray="dashVal"
+                />
+                <path
+                  d="M98.28,20 4.29,20"
+                  fill="none"
+                  :stroke="outerLineStroke"
+                  :stroke-width="outerLineSmall"
+                  :stroke-dasharray="dashVal"
+                />
+                <path
+                  d="M0,17.33 4.29,20"
+                  fill="none"
+                  :stroke="outerLineStroke"
+                  :stroke-width="outerLineSmall"
+                  :stroke-dasharray="dashVal"
+                />
+                <path
+                  d="M0,2.67 0,17.33"
+                  fill="none"
+                  :stroke="outerLineStroke"
+                  :stroke-width="outerLineMed"
+                  :stroke-dasharray="dashVal"
+                />
+
+                <path
+                  v-if="isSafari"
+                  :fill="gradientStart"
+                  d="M0.76,3 4.29,0.8 50.07,0.8 54.36,2.0 78.68,2.0 82.83,0.8 97.8,0.8 99.2,2.2 99.2,18.1 97.8,19.3 4.48,19.3 0.76,17.1 0.76,2"
+                  @click="click(plane)"
+                />
+                <path
+                  v-else
+                  :fill="'url(#gradient-' + plane.id + ')'"
+                  d="M0.76,3 4.29,0.8 50.07,0.8 54.36,2.0 78.68,2.0 82.83,0.8 97.8,0.8 99.2,2.2 99.2,18.1 97.8,19.3 4.48,19.3 0.76,17.1 0.76,2"
+                  @click="click(plane)"
+                />
+              </svg>
+              <!-- END !isEmptyStrip -->
             </div>
-            <div v-else-if="isTurbulenceWeather" class="warn-icon">
-              <div>
-                <img src="/img/weather/rain.gif" />
+            <!-- END flip-card-front -->
+
+            <!-- flip-card-back -->
+            <div class="flip-card-back">
+              <div class="strip-info">
+                <div v-if="isMayday" class="col flip-icon">
+                  <ToolTip>
+                    <button @click="maydayFlipClick">
+                      <p>&#x25c0;</p>
+                    </button>
+                    <template v-slot:hover>back</template>
+                  </ToolTip>
+                </div>
+                <div class="taxi font-large">
+                  <b>flightstrip backside</b>
+                </div>
               </div>
-              <div>
-                <p>weather</p>
-              </div>
+
+              <svg viewBox="0 0 100 20">
+                <defs>
+                  <linearGradient :id="'gradient-' + plane.id">
+                    <stop offset="0%" :stop-color="gradientStart" />
+                    <stop offset="100%" :stop-color="gradientEnd" />
+                  </linearGradient>
+                </defs>
+                <path
+                  d="M0,2.67 4.29,0"
+                  fill="none"
+                  :stroke="outerLineStroke"
+                  :stroke-width="outerLineSmall"
+                  :stroke-dasharray="dashVal"
+                />
+                <path
+                  d="M4.29,0 50.07,0"
+                  fill="none"
+                  :stroke="outerLineStroke"
+                  :stroke-width="outerLineMed"
+                  :stroke-dasharray="dashVal"
+                />
+                <path
+                  d="M50.07,0 54.36,1.33 78.68,1.33 82.98,0"
+                  fill="none"
+                  :stroke="outerLineStroke"
+                  :stroke-width="outerLineSmall"
+                  :stroke-dasharray="dashVal"
+                />
+                <path
+                  d="M82.98,0 98,0"
+                  fill="none"
+                  :stroke="outerLineStroke"
+                  :stroke-width="outerLineMed"
+                  :stroke-dasharray="dashVal"
+                />
+                <path
+                  d="M98,0 100,2"
+                  fill="none"
+                  :stroke="outerLineStroke"
+                  :stroke-width="outerLineSmall"
+                  :stroke-dasharray="dashVal"
+                />
+                <path
+                  d="M100,2 100,18.4"
+                  fill="none"
+                  :stroke="outerLineStroke"
+                  :stroke-width="outerLineMed"
+                  :stroke-dasharray="dashVal"
+                />
+                <path
+                  d="M100,18.4 98.23,20"
+                  fill="none"
+                  :stroke="outerLineStroke"
+                  :stroke-width="outerLineSmall"
+                  :stroke-dasharray="dashVal"
+                />
+                <path
+                  d="M98.28,20 4.29,20"
+                  fill="none"
+                  :stroke="outerLineStroke"
+                  :stroke-width="outerLineSmall"
+                  :stroke-dasharray="dashVal"
+                />
+                <path
+                  d="M0,17.33 4.29,20"
+                  fill="none"
+                  :stroke="outerLineStroke"
+                  :stroke-width="outerLineSmall"
+                  :stroke-dasharray="dashVal"
+                />
+                <path
+                  d="M0,2.67 0,17.33"
+                  fill="none"
+                  :stroke="outerLineStroke"
+                  :stroke-width="outerLineMed"
+                  :stroke-dasharray="dashVal"
+                />
+
+                <path
+                  v-if="isSafari"
+                  :fill="gradientStart"
+                  d="M0.76,3 4.29,0.8 50.07,0.8 54.36,2.0 78.68,2.0 82.83,0.8 97.8,0.8 99.2,2.2 99.2,18.1 97.8,19.3 4.48,19.3 0.76,17.1 0.76,2"
+                  @click="click(plane)"
+                />
+                <path
+                  v-else
+                  :fill="'url(#gradient-' + plane.id + ')'"
+                  d="M0.76,3 4.29,0.8 50.07,0.8 54.36,2.0 78.68,2.0 82.83,0.8 97.8,0.8 99.2,2.2 99.2,18.1 97.8,19.3 4.48,19.3 0.76,17.1 0.76,2"
+                  @click="click(plane)"
+                />
+              </svg>
             </div>
-            <div v-else-if="isLanding" class="takeoff-landing">
-              <div class="font-large"><b>Landing</b></div>
-              <div>ILS approach</div>
-            </div>
-            <div v-else-if="isLandingMisconfigured" class="takeoff-landing">
-              <div class="font-large"><b>Landing</b></div>
-              <div>{{ landingMisconfiguredMsg }}</div>
-            </div>
-            <div v-else-if="isTouchedDown" class="takeoff-landing">
-              <div class="font-large"><b>Landing</b></div>
-              <div>touchdown</div>
-            </div>
-            <div v-else-if="isTakeoff" class="takeoff-landing">
-              <div class="font-large"><b>Take off</b></div>
-              <div>accelerating</div>
-            </div>
-            <div v-else-if="isTaxiing" class="takeoff-landing">
-              <div class="font-large"><b>Taxiing</b></div>
-              <div>ready for take off</div>
-            </div>
-            <div v-else-if="isAtHolding" class="holding-handoff">
-              <div class="font-large"><b>Hold</b></div>
-              <div>orbit</div>
-            </div>
-            <div v-else-if="isNavToHolding" class="holding-handoff">
-              <div class="font-large"><b>Hold</b></div>
-              <div>en route</div>
-            </div>
-            <div v-else-if="isNavToHandoff" class="holding-handoff">
-              <div class="font-large"><b>Handoff</b></div>
-              <div>en route</div>
-            </div>
-            <div v-else></div>
+            <!-- END flip-card-back -->
           </div>
+          <!-- END flip-card-inner -->
         </div>
-
-        <svg v-if="isEmptyStrip" viewBox="0 0 100 20">
-          <path
-            :fill="gradientEnd"
-            d="M0.76,3 4.29,0.8 50.07,0.8 54.36,2.0 78.68,2.0 82.83,0.8 97.8,0.8 99.2,2.2 99.2,18.1 97.8,19.3 4.48,19.3 0.76,17.1 0.76,2"
-          />
-
-          <path
-            d="M82.98,0 98,0"
-            fill="none"
-            :stroke="outerLineStroke"
-            :stroke-width="outerLineMed"
-          />
-          <path
-            d="M98,0 100,2"
-            fill="none"
-            :stroke="outerLineStroke"
-            :stroke-width="outerLineSmall"
-          />
-          <path
-            d="M100,2 100,18.4"
-            fill="none"
-            :stroke="outerLineStroke"
-            :stroke-width="outerLineMed"
-          />
-          <path
-            d="M100,18.4 98.23,20"
-            fill="none"
-            :stroke="outerLineStroke"
-            :stroke-width="outerLineSmall"
-          />
-          <path
-            d="M98.28,20 82,20"
-            fill="none"
-            :stroke="outerLineStroke"
-            :stroke-width="outerLineMed"
-          />
-        </svg>
-
-        <svg v-if="!isEmptyStrip" viewBox="0 0 100 20">
-          <defs>
-            <linearGradient :id="'gradient-' + plane.id">
-              <stop offset="0%" :stop-color="gradientStart" />
-              <stop offset="100%" :stop-color="gradientEnd" />
-            </linearGradient>
-          </defs>
-          <path
-            d="M0,2.67 4.29,0"
-            fill="none"
-            :stroke="outerLineStroke"
-            :stroke-width="outerLineSmall"
-            :stroke-dasharray="dashVal"
-          />
-          <path
-            d="M4.29,0 50.07,0"
-            fill="none"
-            :stroke="outerLineStroke"
-            :stroke-width="outerLineMed"
-            :stroke-dasharray="dashVal"
-          />
-          <path
-            d="M50.07,0 54.36,1.33 78.68,1.33 82.98,0"
-            fill="none"
-            :stroke="outerLineStroke"
-            :stroke-width="outerLineSmall"
-            :stroke-dasharray="dashVal"
-          />
-          <path
-            d="M82.98,0 98,0"
-            fill="none"
-            :stroke="outerLineStroke"
-            :stroke-width="outerLineMed"
-            :stroke-dasharray="dashVal"
-          />
-          <path
-            d="M98,0 100,2"
-            fill="none"
-            :stroke="outerLineStroke"
-            :stroke-width="outerLineSmall"
-            :stroke-dasharray="dashVal"
-          />
-          <path
-            d="M100,2 100,18.4"
-            fill="none"
-            :stroke="outerLineStroke"
-            :stroke-width="outerLineMed"
-            :stroke-dasharray="dashVal"
-          />
-          <path
-            d="M100,18.4 98.23,20"
-            fill="none"
-            :stroke="outerLineStroke"
-            :stroke-width="outerLineSmall"
-            :stroke-dasharray="dashVal"
-          />
-          <path
-            d="M98.28,20 4.29,20"
-            fill="none"
-            :stroke="outerLineStroke"
-            :stroke-width="outerLineSmall"
-            :stroke-dasharray="dashVal"
-          />
-          <path
-            d="M0,17.33 4.29,20"
-            fill="none"
-            :stroke="outerLineStroke"
-            :stroke-width="outerLineSmall"
-            :stroke-dasharray="dashVal"
-          />
-          <path
-            d="M0,2.67 0,17.33"
-            fill="none"
-            :stroke="outerLineStroke"
-            :stroke-width="outerLineMed"
-            :stroke-dasharray="dashVal"
-          />
-
-          <path
-            v-if="isSafari"
-            :fill="gradientStart"
-            d="M0.76,3 4.29,0.8 50.07,0.8 54.36,2.0 78.68,2.0 82.83,0.8 97.8,0.8 99.2,2.2 99.2,18.1 97.8,19.3 4.48,19.3 0.76,17.1 0.76,2"
-            @click="click(plane)"
-          />
-          <path
-            v-else
-            :fill="'url(#gradient-' + plane.id + ')'"
-            d="M0.76,3 4.29,0.8 50.07,0.8 54.36,2.0 78.68,2.0 82.83,0.8 97.8,0.8 99.2,2.2 99.2,18.1 97.8,19.3 4.48,19.3 0.76,17.1 0.76,2"
-            @click="click(plane)"
-          />
-        </svg>
+        <!-- END flip-card -->
       </div>
+      <!-- END strip -->
     </div>
+    <!-- END strip-hover -->
   </div>
 </template>
 
@@ -276,6 +425,7 @@ export default {
   data() {
     return {
       sizeClass: '',
+      isFlipped: false,
       isHover: false,
       isSafari: false,
       isLandingMisconfigured: false,
@@ -340,6 +490,10 @@ export default {
       return classes.join(' ');
     },
 
+    flipCardClass: function () {
+      return this.isFlipped ? 'flip-card-show-back' : '';
+    },
+
     waypointClass: function () {
       return this.hasFocusPulseWaypoint ? 'pulse' : '';
     },
@@ -362,6 +516,12 @@ export default {
       const minutesStr = ('00' + minutes).slice(-2);
       const secondsStr = ('00' + seconds).slice(-2);
       return minutesStr + ':' + secondsStr;
+    },
+
+    isMayday: function () {
+      const plane = getPlane(this.plane, this.planes);
+      if (!plane) return false;
+      return plane.isMayday;
     },
 
     isTurbulenceWake: function () {
@@ -484,6 +644,10 @@ export default {
   },
 
   methods: {
+    maydayFlipClick: function () {
+      this.isFlipped = !this.isFlipped;
+    },
+
     waypointClick: function () {
       const plane = getPlane(this.plane, this.planes);
       if (!plane) return;
@@ -513,6 +677,37 @@ export default {
 
 <style lang="scss">
 @import '~/src/scss/common.scss';
+
+// flip-card
+.flip-card {
+  perspective: 1000px; // 3d effect
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.4s;
+  transform-style: preserve-3d;
+}
+
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.flip-card-show-back {
+  transform: rotateY(180deg);
+}
+
+.flip-card-back {
+  transform: rotateY(180deg);
+}
+// END flip-card
 
 .spawn-delete {
   position: relative;
@@ -583,15 +778,21 @@ export default {
       padding: 6px;
     }
 
+    .fixed-width {
+      width: 75px;
+      padding-left: 12px;
+    }
+
     .conflict {
       width: 90%;
       margin-left: 0px;
       padding: 2px 4px;
     }
 
-    .fixed-width {
-      width: 75px;
-      padding-left: 12px;
+    .mayday {
+      width: 90%;
+      margin-left: 0px;
+      padding: 2px 4px;
     }
   }
   // strip-info END
@@ -687,7 +888,6 @@ export default {
       margin-top: 2px;
       margin-bottom: 0px;
     }
-
     .fixed-width {
       width: 120px;
       padding-left: 10px;
@@ -703,6 +903,12 @@ export default {
     .title {
       color: lightgreen;
       text-shadow: 2px 2px black;
+    }
+
+    .flip-icon {
+      p {
+        margin: 0 6px;
+      }
     }
 
     .warn-icon {
@@ -729,11 +935,33 @@ export default {
     }
     .conflict {
       width: 80%;
-      background-color: red;
+      background-color: #ff0000;
       border-radius: 4px;
       padding: 4px 8px;
       margin-left: 4px;
       color: white;
+    }
+    .mayday {
+      position: relative;
+      width: 80%;
+      padding: 4px 8px;
+      margin-left: 4px;
+      background-color: #ff0000;
+
+      border: 1px solid white;
+      border-radius: 4px;
+    }
+    .mayday::before {
+      position: absolute;
+      content: '';
+      top: -4px;
+      left: -4px;
+      width: 100%;
+      height: 100%;
+
+      border: 4px solid #ff0000;
+      border-radius: 4px;
+      animation: focus-pulse 1.4s infinite linear;
     }
   }
   // strip-info END

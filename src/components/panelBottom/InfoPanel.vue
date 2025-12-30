@@ -11,7 +11,19 @@
         </div>
       </h2>
 
-      <div v-if="plane.isTurbulenceWake" class="warn-icon" :class="sizeClass">
+      <div v-if="plane.isMayday" class="warn-icon" :class="sizeClass">
+        <div>
+          <img class="white-border" src="/img/danger.png" />
+        </div>
+        <div>
+          <h2 class="white">mayday</h2>
+        </div>
+      </div>
+      <div
+        v-else-if="plane.isTurbulenceWake"
+        class="warn-icon"
+        :class="sizeClass"
+      >
         <div>
           <img src="/img/weather/wind.gif" />
         </div>
@@ -33,7 +45,9 @@
       </div>
     </div>
 
+    <!-- plane-info -->
     <div class="plane-info">
+      <!-- info-center -->
       <div class="info-center">
         <div class="info-center-speed">
           <p>
@@ -56,8 +70,17 @@
           </p>
         </div>
 
+        <!-- info-center-experience -->
         <div class="info-center-experience">
-          <div class="experience-row">
+          <div v-if="plane.isMayday" class="experience-row mayday">
+            <div>
+              <p class="red"><b>ENGINE FIRE</b></p>
+            </div>
+            <div>
+              <p class="white"><b>emergency landing</b></p>
+            </div>
+          </div>
+          <div v-else class="experience-row">
             <div>
               <h2 class="green">flight quality</h2>
             </div>
@@ -83,7 +106,18 @@
             </div>
           </div>
 
-          <div v-if="flightQualityMessage" class="experience-row justify-end">
+          <div
+            v-if="plane.isMayday && flightQualityMessage"
+            class="experience-row justify-end"
+          >
+            <div class="flight-quality-message red-bckgnd" :class="sizeClass">
+              <h2 class="white">{{ flightQualityMessage }}</h2>
+            </div>
+          </div>
+          <div
+            v-else-if="flightQualityMessage"
+            class="experience-row justify-end"
+          >
             <div class="flight-quality-message" :class="sizeClass">
               <h2 class="white">{{ flightQualityMessage }}</h2>
             </div>
@@ -96,7 +130,9 @@
             </div>
           </div> -->
         </div>
+        <!-- END info-center-experience -->
       </div>
+      <!-- END info-center -->
 
       <hr />
       <p>
@@ -116,6 +152,7 @@
         <img :src="airframe.images.profile" />
       </div>
     </div>
+    <!-- END plane-info -->
   </div>
 </template>
 
@@ -274,8 +311,12 @@ export default {
 
     flightQualityMessage: function () {
       if (!this.plane) return '';
+
+      const isMayday = this.plane.isMayday;
       const isTurbulence = this.plane.isTurbulenceWeather;
       const isWake = this.plane.isTurbulenceWake;
+
+      if (isMayday) return 'mayday';
       if (isTurbulence) return 'weather';
       if (isWake) return 'wake ';
       return '';
@@ -287,7 +328,7 @@ export default {
 <style lang="scss" scoped>
 // info-panel small //////////////////
 .info-panel.small {
-  min-height: 210px;
+  min-height: 228px;
   padding: 2px 8px;
 
   h1 {
@@ -313,9 +354,6 @@ export default {
   h2 {
     font-size: 10px;
   }
-  img {
-    max-width: 12%;
-  }
 }
 
 .info-panel.small .plane-info {
@@ -327,6 +365,7 @@ export default {
 }
 // END info-panel small //////////////////
 
+// info-panel ////////////////////////////
 .info-panel {
   position: relative;
   min-height: 400px;
@@ -356,10 +395,21 @@ export default {
   color: white;
 }
 
+.info-panel .white-border {
+  border: 1px solid white;
+}
+.info-panel .red-bckgnd {
+  background-color: #ff0000;
+  border-radius: 4px;
+}
+
+.info-panel .red {
+  color: red;
+  text-shadow: 1px 1px 0px #1c1c1c;
+}
 .info-panel .white {
   color: white;
 }
-
 .info-panel .green {
   color: lightgreen;
 }
@@ -379,12 +429,12 @@ export default {
   height: 80px;
   border-bottom: 1px solid white;
 
-  h1,
-  h2 {
+  h1 {
     align-self: center;
   }
-  img {
-    max-width: 16%;
+  h2 {
+    align-self: center;
+    margin-left: 12px;
   }
 }
 
@@ -395,7 +445,8 @@ export default {
   margin-left: 4%;
 
   img {
-    max-width: 40px;
+    margin-top: 6px;
+    height: 40px;
     border-radius: 8px;
   }
 
@@ -405,8 +456,10 @@ export default {
   }
 
   &.small {
+    margin-left: 0px;
+
     img {
-      max-width: 22px;
+      height: 22px;
       margin-top: 6px;
       border-radius: 6px;
     }
@@ -424,8 +477,8 @@ export default {
   color: white;
   margin: 12px 0px;
 }
+// END info-panel /////////////////////////
 
-// info-center //////////////////
 .info-center {
   display: flex;
   justify-content: space-between;
@@ -433,9 +486,7 @@ export default {
   row-gap: 2px;
 }
 
-// .info-center .info-center-speed {
-// }
-
+// info-center-experience ///////////////////
 .info-center-experience {
   display: flex;
   flex-direction: column;
@@ -458,24 +509,21 @@ export default {
     }
   }
 
-  // progress-slices //////////////////
+  // progress-slices /////////////////////////
   .progress-slices {
     display: flex;
 
-    // width: 90px;
     margin-left: 12px;
     padding: 4px;
     padding-left: 8px;
     padding-top: 2px;
 
-    // border: 1px solid lightgreen;
     border-radius: 8px;
     color: white;
 
     .slice {
       height: 28px;
       width: 16px;
-      // border: 1px solid lightgreen;
 
       &.hide {
         display: none;
@@ -487,7 +535,6 @@ export default {
       }
     }
   }
-
   .progress-slices.small {
     .slice {
       height: 14px;
@@ -498,7 +545,7 @@ export default {
       }
     }
   }
-  // END progress-slices //////////////////
+  // END progress-slices ///////////////////////
 
   .flight-quality-message {
     width: 140px;
@@ -511,7 +558,6 @@ export default {
       margin: 0;
     }
   }
-
   .flight-quality-message.small {
     width: 84px;
   }
@@ -542,8 +588,6 @@ export default {
   //     height: 14px;
   //   }
   // }
-
-  // END progress-bar-container //////////////////
 }
-// END info-center //////////////////
+// END info-center-experience /////////////////
 </style>

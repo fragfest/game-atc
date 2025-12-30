@@ -1,11 +1,4 @@
-import {
-  describe,
-  beforeEach,
-  test,
-  jest,
-  expect,
-  afterEach,
-} from '@jest/globals';
+import { describe, beforeEach, test, jest, expect } from '@jest/globals';
 import {
   Badges,
   BadgesTypes,
@@ -191,8 +184,8 @@ describe('getBadgeLevelCompleted', () => {
         badges = [];
         historyRecords = [
           {
-            level: 3,
-            historyScore: { idle: 0 },
+            level: 4,
+            historyScore: { idle: 0, delayed: 0 },
           },
         ];
 
@@ -216,7 +209,7 @@ describe('getBadgeLevelCompleted', () => {
           beforeEach(() => {
             historyRecords = [
               {
-                level: 3,
+                level: 4,
                 historyScore: { idle: 1 },
               },
             ];
@@ -251,12 +244,16 @@ describe('getBadgeLevelCompleted', () => {
           beforeEach(() => {
             historyRecords = [
               {
-                level: 3,
-                historyScore: { idle: 0 },
+                level: 4,
+                historyScore: { idle: 0, delayed: 0 },
               },
               {
-                level: 4,
-                historyScore: { idle: 0 },
+                level: 5,
+                historyScore: { idle: 0, delayed: 0 },
+              },
+              {
+                level: 6,
+                historyScore: { idle: 0, delayed: 0 },
               },
             ];
             jest
@@ -310,13 +307,14 @@ describe('isNewAchievement', () => {
       beforeEach(() => {
         badges = [Badges.BlueSky1];
         historyRecords[0].historyScore.wake = 0.1;
+        historyRecords[2].historyScore.turbulence = 0.1;
       });
       test('should return false', () => {
         expect(isNewAchievement(BadgesTypes.BlueSky)).toBeFalsy();
       });
     });
 
-    describe('when badges empty; BlueSky2 history condition passed', () => {
+    describe('when badges empty; BlueSky1 history condition passed', () => {
       beforeEach(() => {
         badges = [];
       });
@@ -332,11 +330,11 @@ describe('isNewAchievement', () => {
       historyRecords = [
         {
           level: 3,
-          historyScore: { idle: 0 },
+          historyScore: { idle: 0, delayed: 0 },
         },
         {
           level: 4,
-          historyScore: { idle: 0 },
+          historyScore: { idle: 0, delayed: 0 },
         },
       ];
       jest

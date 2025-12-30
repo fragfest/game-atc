@@ -132,6 +132,9 @@ export default class Aircraft {
     this.airportCode = flightObj.airport;
     this.airline = flightObj.airline;
 
+    // flight info: mayday
+    this.isMayday = true;
+
     // flightstrip info
     this.hasProximityAlert = false;
     this.destinationType = planeObj.destinationType || '';
@@ -574,6 +577,20 @@ export default class Aircraft {
     return calcDelta(speedDeltaPerMs);
   }
 
+  updateMayday(timestamp, deltaTimeMs) {
+    this.isMayday;
+    // if isMayday set isFlightstripFlip
+    // if isMayday allow crashing
+    // when crashed keep aircraft un-destroyed, set isCrashed
+    // add failed landing to score (check level has >= 2 failed goals)
+
+    // flightstrip will have tab to flip back to default side
+    // play short conflict sound loop
+    // set aircraft icon to red
+
+    // detect any aircraft with isMayday: pause their time updates
+  }
+
   updateWake(timestampMs, deltaTimeMs) {
     const isInWake = !!this.turbulenceWakeArr.length;
     const maxStrength = this.turbulenceWakeArr.reduce(accMax, 0);
@@ -675,6 +692,7 @@ export default class Aircraft {
     }
 
     this.updateWake(timestamp, deltaTimeMs);
+    this.updateMayday(timestamp, deltaTimeMs);
 
     // timer
     if (this.time <= 0) {
