@@ -22,7 +22,7 @@
                 @click="click(plane)"
               >
                 <div v-if="isMayday" class="col flip-icon">
-                  <ToolTip>
+                  <ToolTip position="tether-below">
                     <button @click="maydayFlipClick">
                       <p>&#x25c0;</p>
                     </button>
@@ -40,7 +40,7 @@
                     <b>{{ plane.title }}</b>
                   </span>
                 </div>
-                <div v-if="!isMayday" class="col font-large">
+                <div class="col font-large">
                   <b>{{ plane.runway }}</b>
                 </div>
 
@@ -273,15 +273,20 @@
             <div class="flip-card-back">
               <div class="strip-info">
                 <div v-if="isMayday" class="col flip-icon">
-                  <ToolTip>
+                  <ToolTip position="tether-below">
                     <button @click="maydayFlipClick">
                       <p>&#x25c0;</p>
                     </button>
                     <template v-slot:hover>back</template>
                   </ToolTip>
                 </div>
+                <div class="col font-large">
+                  <span v-if="displayTime" class="time">
+                    <b>{{ displayTime }}</b>
+                  </span>
+                </div>
                 <div class="taxi font-large">
-                  <b>flightstrip backside</b>
+                  <b>engine fire</b>
                 </div>
               </div>
 

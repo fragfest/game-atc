@@ -19,7 +19,7 @@ export default {
     position: {
       type: String,
       validator: (val) => {
-        return ['below', 'close'].includes(val);
+        return ['below', 'close', 'tether-below'].includes(val);
       },
     },
     width: { type: Number, default: null },
@@ -83,6 +83,11 @@ main {
   .tooltip .hover.close {
     margin-top: -12px;
     margin-left: 50px;
+  }
+
+  .tooltip .hover.tether-below {
+    margin-top: -8px;
+    margin-left: 26px;
   }
 
   .tooltip:hover .hover:not(.disabled) {

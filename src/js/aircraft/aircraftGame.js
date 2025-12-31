@@ -15,7 +15,11 @@ import {
   getWaypointBySection,
   getWaypointDepartureRnd,
 } from '../airports/airports';
-import { getFlightArrival, getFlightDeparture } from '../flights/flights';
+import {
+  getFlightArrival,
+  getFlightDeparture,
+  MaydayScenario,
+} from '../flights/flights';
 
 /**
  * @callback CreateAircraft
@@ -46,12 +50,22 @@ export const spawnPlaneGameTick =
     const aircraftFn = (
       chanceOfPlane,
       chanceOfDeparture,
-      flightObj,
+      flightObjArg,
       airport
     ) => {
+      const flightObj = { ...flightObjArg };
+
       createAircraftRndFn(() => {
-        return createAircraftRndDestinationType(
-          { ...canvasObj, flightObj: { ...flightObj } },
+        if (flightObj.isMayday) {
+          return createAircraftMayday(
+            { ...canvasObj, flightObj },
+            chanceOfDeparture,
+            airport
+          );
+        }
+
+        return createAircraftRndDefault(
+          { ...canvasObj, flightObj },
           chanceOfDeparture,
           airport
         );
@@ -74,7 +88,7 @@ export const spawnPlaneGameTick =
     });
   };
 
-export const createAircraftRndDestinationType = (
+export const createAircraftRndDefault = (
   {
     entityManagerArr,
     width,
@@ -106,6 +120,7 @@ export const createAircraftRndDestinationType = (
       entityManagerArr,
       canvasObjs,
       flightObj,
+      {},
       airport,
       clickCB
     );
@@ -128,10 +143,71 @@ export const createAircraftRndDestinationType = (
 // PRIVATE
 ////////////////////////////////////////////////////////////////////////////
 
+const createAircraftMayday = (
+  {
+    entityManagerArr,
+    width,
+    height,
+    canvasObjEntity,
+    canvasObjText,
+    canvasEntityEl,
+    flightObj,
+    clickCB,
+  },
+  chanceOfDeparture,
+  airport
+) => {
+  let destinationType = DestinationType.Arrival;
+  if (Math.random() < chanceOfDeparture) {
+    destinationType = DestinationType.Departure;
+  }
+
+  const canvasObjs = {
+    canvasObjEntity,
+    canvasObjText,
+    canvasEntityEl,
+    width,
+    height,
+  };
+
+  const position = createPositionMayday(
+    flightObj.maydayScenario,
+    width,
+    height
+  );
+
+  if (destinationType === DestinationType.Arrival) {
+    const aircraft = createAircraftArrival(
+      entityManagerArr,
+      canvasObjs,
+      flightObj,
+      position,
+      airport,
+      clickCB
+    );
+
+    aircraft.setIsMayday(true);
+    return aircraft;
+  }
+
+  // TODO setIsMayday for departure
+  if (destinationType === DestinationType.Departure) {
+    const aircraft = createAircraftDeparture(
+      entityManagerArr,
+      canvasObjs,
+      flightObj,
+      airport,
+      clickCB
+    );
+    return aircraft;
+  }
+};
+
 const createAircraftArrival = (
   entityManagerArr,
   canvasObjs,
   flightObjArg = {},
+  positionObjArg = {},
   airport,
   clickCB
 ) => {
@@ -156,6 +232,15 @@ const createAircraftArrival = (
 
   const flight = createFlight(getFlightArrival(airport));
   const flightObj = { ...flight, ...flightObjArg };
+  const position = {
+    x: newPlane.x,
+    y: newPlane.y,
+    heading: newPlane.heading,
+    altitude,
+    speed,
+  };
+  const positionObj = { ...position, ...positionObjArg };
+
   const airframeObj = getPerformance(flight.airframe, getScreenSize());
 
   const aircraft = new Aircraft(
@@ -163,13 +248,7 @@ const createAircraftArrival = (
     canvasObjEntity,
     canvasObjText,
     canvasEntityEl,
-    {
-      x: newPlane.x,
-      y: newPlane.y,
-      heading: newPlane.heading,
-      altitude,
-      speed,
-    },
+    positionObj,
     // {
     //   x: 600,
     //   y: 420,
@@ -242,6 +321,23 @@ const createAircraftDeparture = (
   );
   aircraft.clickEventCB = () => clickCB(aircraft);
   return aircraft;
+};
+
+/**
+ * @param {MaydayScenario} maydayScenario
+ * @param {Number} width
+ * @param {Number} height
+ */
+const createPositionMayday = (maydayScenario, width, height) => {
+  if (maydayScenario === MaydayScenario.Level9Fire) {
+    return {
+      x: width / 2,
+      y: 0.05 * height,
+      heading: convHdgDegToThreeDigits(randMinMax(240, 120)),
+      altitude: 12000, // TODO more random
+      speed: 350, // TODO more random
+    };
+  }
 };
 
 let spawned = [];

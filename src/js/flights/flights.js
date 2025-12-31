@@ -10,6 +10,11 @@ import { Airport } from '../airports/airports';
  * @typedef {import('../aircraft/airframe.js').Airframes} Airframes
  */
 
+// TODO move to new mayday file?
+export const MaydayScenario = Object.freeze({
+  Level9Fire: 'Level9Fire',
+});
+
 /**
  * @typedef FlightObj
  * @property {DestinationType} type
@@ -20,7 +25,10 @@ import { Airport } from '../airports/airports';
  * @property {String} airlineCode
  * @property {String} airline
  * @property {Airframes} airframe
+ * @property {Boolean} isMayday
+ * @property {MaydayScenario} maydayScenario
  */
+
 /**
  * @typedef SpawnFn
  * @param {Array} spawned

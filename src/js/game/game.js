@@ -5,7 +5,7 @@ import { getGameSize } from '../utils';
 import { draw as drawScale } from '../canvas/scale';
 import { isArrival, isAircraft } from '../types';
 import {
-  createAircraftRndDestinationType,
+  createAircraftRndDefault,
   spawnPlaneGameTick,
 } from '../aircraft/aircraftGame.js';
 import { SoundType, play, playLoop, stop } from './sound';
@@ -60,7 +60,7 @@ export const setup = (state) => (argObj) => {
   const firstPlaneCanvasObj = { ...canvasObj, flightObj: { time: 10 * 60 } };
   const spawnFirstPlane = () => {
     spawnAircraftRnd(screenSize, entityManagerArr)(
-      () => createAircraftRndDestinationType(firstPlaneCanvasObj, 1, airport),
+      () => createAircraftRndDefault(firstPlaneCanvasObj, 1, airport),
       1
     );
   };
@@ -284,7 +284,9 @@ const setRunwayIdle = (state, timestamp, deltaTimeMs, entityManagerArr) => {
 
 const setProximityAlarm = (state, entityManagerArr) => {
   const planes = entityManagerArr.filter(isAircraft);
-  const isAlarmOn = !!planes.find((x) => x.hasProximityAlert);
+  const isAlarmOn =
+    planes.find((x) => x.hasProximityAlert) ||
+    planes.find((x) => x.isMaydaySoundOn);
 
   if (!state.playProximitySound && isAlarmOn) {
     playLoop(SoundType.Collision);
@@ -296,7 +298,7 @@ const setProximityAlarm = (state, entityManagerArr) => {
 };
 
 /**
- * @typedef {import('../Plane.js').CreateAircraftRnd} CreateAircraftRnd
+ * @typedef {import('../aircraft/aircraftGame.js').CreateAircraftRnd} CreateAircraftRnd
  */
 /**
  * @param {String} screenSize
@@ -313,11 +315,16 @@ const spawnAircraftRnd =
     const plane = createAircraftFn();
     if (!plane) return;
 
+    // TODO consider allow spawning near waypoints
     const planeClose = !!entityManagerArr.find(isCloseToNewPlane(plane));
     const weatherClose = !!entityManagerArr.find(isCloseToWeather(plane));
     if (isArrival(plane) && (planeClose || weatherClose)) {
       plane.destroy();
       return;
+    }
+
+    if (plane.isMayday) {
+      // TODO set maydaySpawned in localstorage Score NOT to score a point yet, just to stop respawns on failure
     }
 
     play(SoundType.Spawn);

@@ -132,8 +132,9 @@ export default class Aircraft {
     this.airportCode = flightObj.airport;
     this.airline = flightObj.airline;
 
-    // flight info: mayday
-    this.isMayday = true;
+    this.isMayday = false;
+    this.isMaydaySoundOn = false;
+    this.isMaydaySoundEnable = true;
 
     // flightstrip info
     this.hasProximityAlert = false;
@@ -176,6 +177,10 @@ export default class Aircraft {
 
   resetTurbulenceWakeArr() {
     this.turbulenceWakeArr = [];
+  }
+
+  setIsMayday(isMayday) {
+    this.isMayday = !!isMayday;
   }
 
   setIsDelayed(isDelayed) {
@@ -577,18 +582,22 @@ export default class Aircraft {
     return calcDelta(speedDeltaPerMs);
   }
 
-  updateMayday(timestamp, deltaTimeMs) {
-    this.isMayday;
-    // if isMayday set isFlightstripFlip
+  updateMayday() {
+    if (!this.isMayday) return;
+
+    if (this.isMaydaySoundEnable) {
+      this.isMaydaySoundEnable = false;
+      this.isMaydaySoundOn = true;
+      setTimeout(() => {
+        this.isMaydaySoundOn = false;
+      }, 8000);
+    }
+
     // if isMayday allow crashing
     // when crashed keep aircraft un-destroyed, set isCrashed
-    // add failed landing to score (check level has >= 2 failed goals)
+    // crash: add failed landing to score (check levels have >= 2 failed goals)
 
-    // flightstrip will have tab to flip back to default side
-    // play short conflict sound loop
-    // set aircraft icon to red
-
-    // detect any aircraft with isMayday: pause their time updates
+    // detect any aircraft with isMayday: pause their time updates ???
   }
 
   updateWake(timestampMs, deltaTimeMs) {
@@ -692,11 +701,12 @@ export default class Aircraft {
     }
 
     this.updateWake(timestamp, deltaTimeMs);
-    this.updateMayday(timestamp, deltaTimeMs);
+    this.updateMayday();
 
     // timer
     if (this.time <= 0) {
       this.time = 0;
+
       if (!this.isDelayed) {
         timeDebug(true);
         this.setIsDelayed(true);
@@ -754,7 +764,10 @@ export default class Aircraft {
     if (this.destroyFlag) return;
 
     let color = 'white';
-    if (this.hasProximityAlert) {
+    if (this.isMayday) {
+      color = 'orangered';
+      setIfImgSrcDiff(this.iconConflict);
+    } else if (this.hasProximityAlert) {
       color = 'orangered';
       setIfImgSrcDiff(this.iconConflict);
     } else if (this.isSelected) {

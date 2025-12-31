@@ -16,7 +16,7 @@
           <img class="white-border" src="/img/danger.png" />
         </div>
         <div>
-          <h2 class="white">mayday</h2>
+          <h2 class="white">emergency</h2>
         </div>
       </div>
       <div
@@ -77,7 +77,7 @@
               <p class="red"><b>ENGINE FIRE</b></p>
             </div>
             <div>
-              <p class="white"><b>emergency landing</b></p>
+              <p class="white"><b>land immediately</b></p>
             </div>
           </div>
           <div v-else class="experience-row">

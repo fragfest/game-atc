@@ -1,3 +1,4 @@
+import { MaydayScenario } from '../flights/flights.js';
 import { isAircraft } from '../types.js';
 import { getDepartureCount, getArrivalCount } from '../utils.js';
 import { getAirportByLevel, getLevelObj } from './getLevel.js';
@@ -62,7 +63,7 @@ export const getSpawnByGameLevel = (gameLevel) => {
     // JFK
     if (gameLevel === 7) return spawnBalanced(spawnArg, airport);
     if (gameLevel === 8) return spawnBalanced(spawnArg, airport);
-    if (gameLevel === 9) return spawnBalanced(spawnArg, airport);
+    if (gameLevel === 9) return spawnBalancedMayday(spawnArg, airport);
     if (gameLevel === 10) return spawnMoreArrivals(spawnArg, airport);
     if (gameLevel === 11) return spawnBalanced(spawnArg, airport);
     // HND
@@ -193,6 +194,47 @@ export const spawnBalancedCommon = (arg, airport, chanceDeparture, time) => {
 
   // not a lowCount && both Arrivals + Departures remaining
   aircraftFn(getChanceFn(chance), chanceDeparture, flightObj, airport);
+};
+
+/**
+ * @param {LevelArg} arg
+ * @param {Airport} airport
+ * @returns none
+ */
+export const spawnBalancedMayday = (arg, airport) => {
+  const { entityManagerArr, getChanceFn, aircraftFn } = arg;
+  const count = entityManagerArr.filter(isAircraft).length;
+  const maydayCount = entityManagerArr.filter((x) => x.isMayday).length;
+
+  let setMayday = false;
+  let chance = baseChance;
+
+  if (count > 16) {
+    chance = guaranteedChance;
+  } else if (count > 12) {
+    chance = veryHighChance;
+  } else if (count > 8) {
+    chance = highChance;
+  } else {
+    chance = 0;
+  }
+
+  if (Math.random() <= getChanceFn(chance)) {
+    setMayday = true;
+  }
+
+  // TODO current mayday count not needed since we need total spawned count for this level (success/fails)
+  // getScoreMaydaySpawned() < 1
+  if (maydayCount < 1 && setMayday) {
+    const maydayScenario = MaydayScenario.Level9Fire;
+    const flightObj = { time: 18 * 60, isMayday: true, maydayScenario };
+    aircraftFn(getChanceFn(guaranteedChance), noChance, flightObj, airport);
+    return;
+  }
+
+  const chanceDeparture = chanceDepartureBase;
+  const time = 18 * 60;
+  spawnBalancedCommon(arg, airport, chanceDeparture, time);
 };
 
 /**
