@@ -202,16 +202,16 @@ export const spawnBalancedCommon = (arg, airport, chanceDeparture, time) => {
  * @returns none
  */
 export const spawnBalancedMayday = (arg, airport) => {
-  const { entityManagerArr, getChanceFn, aircraftFn } = arg;
+  const { entityManagerArr, getChanceFn, aircraftFn, score } = arg;
   const count = entityManagerArr.filter(isAircraft).length;
-  const maydayCount = entityManagerArr.filter((x) => x.isMayday).length;
+  const maydayCount = score.maydaySpawn;
 
   let setMayday = false;
   let chance = baseChance;
 
-  if (count > 16) {
+  if (count > 12) {
     chance = guaranteedChance;
-  } else if (count > 12) {
+  } else if (count > 10) {
     chance = veryHighChance;
   } else if (count > 8) {
     chance = highChance;
@@ -223,8 +223,6 @@ export const spawnBalancedMayday = (arg, airport) => {
     setMayday = true;
   }
 
-  // TODO current mayday count not needed since we need total spawned count for this level (success/fails)
-  // getScoreMaydaySpawned() < 1
   if (maydayCount < 1 && setMayday) {
     const maydayScenario = MaydayScenario.Level9Fire;
     const flightObj = { time: 18 * 60, isMayday: true, maydayScenario };

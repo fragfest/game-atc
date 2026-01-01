@@ -133,6 +133,7 @@ export default class Aircraft {
     this.airline = flightObj.airline;
 
     this.isMayday = false;
+    this.isFlightstripFlip = false;
     this.isMaydaySoundOn = false;
     this.isMaydaySoundEnable = true;
 

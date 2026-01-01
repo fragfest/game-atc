@@ -10,7 +10,7 @@ import {
 } from '../aircraft/aircraftGame.js';
 import { SoundType, play, playLoop, stop } from './sound';
 import Runway from '../airports/Runway.js';
-import { runwayIdlePenalty } from './score/score.js';
+import { maydaySpawned, runwayIdlePenalty } from './score/score.js';
 
 /**
  * @typedef {import('../airports/airports.js').EntitySetupFn} EntitySetupFn
@@ -324,7 +324,7 @@ const spawnAircraftRnd =
     }
 
     if (plane.isMayday) {
-      // TODO set maydaySpawned in localstorage Score NOT to score a point yet, just to stop respawns on failure
+      maydaySpawned();
     }
 
     play(SoundType.Spawn);

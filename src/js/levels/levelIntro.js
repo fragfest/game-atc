@@ -180,7 +180,6 @@ export const getIntro = (gameLevel) => {
       };
     }
 
-    // TODO introduce emergency here
     if (gameLevel === 9) {
       return {
         displayTimeMs: 16000,

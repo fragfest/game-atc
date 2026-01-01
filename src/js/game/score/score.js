@@ -41,6 +41,13 @@ export const resetScore = () => {
   setScore({ ...Score, level });
 };
 
+export const maydaySpawned = () => {
+  const score = getScore();
+  score.maydaySpawn += 1;
+  setScore(score);
+  publishScore(score);
+};
+
 export const runwayIdlePenalty = () => {
   const score = getScore();
   score.idle += 1;
@@ -334,6 +341,7 @@ const v = '0.1.3';
  * @property {number} turbulence
  * @property {number} wake
  * @property {number} idle
+ * @property {number} maydaySpawn
  */
 const Score = {
   level: 0,
@@ -345,6 +353,7 @@ const Score = {
   turbulence: 0,
   wake: 0,
   idle: 0,
+  maydaySpawn: 0,
 };
 
 /**

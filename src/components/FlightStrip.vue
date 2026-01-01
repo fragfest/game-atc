@@ -21,7 +21,7 @@
                 class="strip-info"
                 @click="click(plane)"
               >
-                <div v-if="isMayday" class="col flip-icon">
+                <div v-if="plane.isMayday" class="col flip-icon">
                   <ToolTip position="tether-below">
                     <button @click="maydayFlipClick">
                       <p>&#x25c0;</p>
@@ -29,7 +29,7 @@
                     <template v-slot:hover>details</template>
                   </ToolTip>
                 </div>
-                <div v-if="!isMayday" class="col font-large">
+                <div v-if="!plane.isMayday" class="col font-large">
                   <span v-if="displayTime" class="time">
                     <b>{{ displayTime }}</b>
                   </span>
@@ -63,7 +63,7 @@
                 </div>
 
                 <div class="col fixed-width no-border">
-                  <div v-if="isMayday" class="mayday">
+                  <div v-if="plane.isMayday" class="mayday">
                     <div class="font-large"><b>MAYDAY</b></div>
                     <div>engine fire</div>
                   </div>
@@ -270,9 +270,9 @@
             <!-- END flip-card-front -->
 
             <!-- flip-card-back -->
-            <div class="flip-card-back">
+            <div class="flip-card-back" @click="click(plane)">
               <div class="strip-info">
-                <div v-if="isMayday" class="col flip-icon">
+                <div v-if="plane.isMayday" class="col flip-icon">
                   <ToolTip position="tether-below">
                     <button @click="maydayFlipClick">
                       <p>&#x25c0;</p>
@@ -430,7 +430,6 @@ export default {
   data() {
     return {
       sizeClass: '',
-      isFlipped: false,
       isHover: false,
       isSafari: false,
       isLandingMisconfigured: false,
@@ -496,7 +495,9 @@ export default {
     },
 
     flipCardClass: function () {
-      return this.isFlipped ? 'flip-card-show-back' : '';
+      const plane = getPlane(this.plane, this.planes);
+      if (!plane) return false;
+      return plane.isFlightstripFlip ? 'flip-card-show-back' : '';
     },
 
     waypointClass: function () {
@@ -521,12 +522,6 @@ export default {
       const minutesStr = ('00' + minutes).slice(-2);
       const secondsStr = ('00' + seconds).slice(-2);
       return minutesStr + ':' + secondsStr;
-    },
-
-    isMayday: function () {
-      const plane = getPlane(this.plane, this.planes);
-      if (!plane) return false;
-      return plane.isMayday;
     },
 
     isTurbulenceWake: function () {
@@ -650,7 +645,9 @@ export default {
 
   methods: {
     maydayFlipClick: function () {
-      this.isFlipped = !this.isFlipped;
+      const plane = getPlane(this.plane, this.planes);
+      if (!plane) return;
+      plane.isFlightstripFlip = !plane.isFlightstripFlip;
     },
 
     waypointClick: function () {
