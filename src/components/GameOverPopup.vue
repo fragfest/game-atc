@@ -88,6 +88,9 @@
           :pushingTin="pushingTin"
           :pushingTinLevel="pushingTinLevel"
           :isNewPushingTin="isNewPushingTin"
+          :mayDay="mayday"
+          :mayDayLevel="maydayLevel"
+          :isNewMayDay="isNewMayday"
           :isShowDescription="isShowBadgeDesc"
           :isGameOverPopup="isGameOverPopup"
         ></BadgesDisplay>
@@ -236,8 +239,12 @@ export default {
       isNewBlueSky: false,
 
       pushingTin: false,
-      isNewPushingTin: false,
       pushingTinLevel: 0,
+      isNewPushingTin: false,
+
+      mayday: false,
+      maydayLevel: 0,
+      isNewMayday: false,
     };
   },
 
@@ -361,15 +368,22 @@ export default {
     this.pushingTinLevel = getBadgeLevelCompleted(BadgesTypes.PushingTin);
     this.pushingTin = !!this.pushingTinLevel;
 
+    this.maydayLevel = getBadgeLevelCompleted(BadgesTypes.MayDay);
+    this.mayday = !!this.maydayLevel;
+
     const newBadgeAchieved = [];
     const newBadgeAchievedBlueSky = isNewAchievement(BadgesTypes.BlueSky);
     const newBadgeAchievedPushingTin = isNewAchievement(BadgesTypes.PushingTin);
+    const newBadgeAchievedMayday = isNewAchievement(BadgesTypes.MayDay);
 
     if (newBadgeAchievedBlueSky) {
       newBadgeAchieved.push(BadgesTypes.BlueSky);
     }
     if (newBadgeAchievedPushingTin) {
       newBadgeAchieved.push(BadgesTypes.PushingTin);
+    }
+    if (newBadgeAchievedMayday) {
+      newBadgeAchieved.push(BadgesTypes.MayDay);
     }
 
     // newBadgeAchieved forEach
@@ -418,6 +432,10 @@ export default {
             this.isShowBadgeBox = false;
           }, this.badgeDispTimeSec * 1000);
         }, this.badgeDispTimeSec * 1000 * (index * 1.8));
+      }
+
+      if (badgeType === BadgesTypes.MayDay) {
+        console.log('IS NEW MAYDAY');
       }
     });
     // END newBadgeAchieved forEach

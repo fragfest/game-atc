@@ -32,6 +32,7 @@ import {
   planeLeaveFail,
   planeHandoffSuccess,
   planeDelayFail,
+  maydaySuccess,
 } from '../game/score/score';
 import { play, SoundType } from '../game/sound';
 import { isInWeather, isTurbulence } from '../game/weather';
@@ -408,6 +409,8 @@ export default class Aircraft {
 
     if (this.isHandoff) {
       planeHandoffSuccess();
+      if (this.isMayday) maydaySuccess();
+
       publish(
         MessageEvents.MessageAllEV,
         this.title + ' departure handoff complete'
@@ -416,6 +419,8 @@ export default class Aircraft {
     }
     if (this.isTouchedDown) {
       planeLandSuccess();
+      if (this.isMayday) maydaySuccess();
+
       publish(MessageEvents.MessageAllEV, this.title + ' landing complete');
       return;
     }
@@ -594,6 +599,7 @@ export default class Aircraft {
       }, 8000);
     }
 
+    // TODO
     // if isMayday allow crashing
     // when crashed keep aircraft un-destroyed, set isCrashed
     // crash: add failed landing to score (check levels have >= 2 failed goals)

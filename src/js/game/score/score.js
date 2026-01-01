@@ -41,6 +41,13 @@ export const resetScore = () => {
   setScore({ ...Score, level });
 };
 
+export const maydaySuccess = () => {
+  const score = getScore();
+  score.mayday += 1;
+  setScore(score);
+  publishScore(score);
+};
+
 export const maydaySpawned = () => {
   const score = getScore();
   score.maydaySpawn += 1;
@@ -342,6 +349,7 @@ const v = '0.1.3';
  * @property {number} wake
  * @property {number} idle
  * @property {number} maydaySpawn
+ * @property {number} mayday
  */
 const Score = {
   level: 0,
@@ -354,6 +362,7 @@ const Score = {
   wake: 0,
   idle: 0,
   maydaySpawn: 0,
+  mayday: 0,
 };
 
 /**

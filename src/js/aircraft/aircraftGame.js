@@ -132,6 +132,7 @@ export const createAircraftRndDefault = (
       entityManagerArr,
       canvasObjs,
       flightObj,
+      {},
       airport,
       clickCB
     );
@@ -190,15 +191,17 @@ const createAircraftMayday = (
     return aircraft;
   }
 
-  // TODO setIsMayday for departure
   if (destinationType === DestinationType.Departure) {
     const aircraft = createAircraftDeparture(
       entityManagerArr,
       canvasObjs,
       flightObj,
+      position,
       airport,
       clickCB
     );
+
+    aircraft.setIsMayday(true);
     return aircraft;
   }
 };
@@ -272,6 +275,7 @@ const createAircraftDeparture = (
   entityManagerArr,
   canvasObjs,
   flightObjArg = {},
+  positionObjArg = {},
   airport,
   clickCB
 ) => {
@@ -286,14 +290,15 @@ const createAircraftDeparture = (
     console.error('runwayTitleRnd', runwayTitleRnd);
   }
 
-  const newPlane = {
+  const waypoint = getWaypointDepartureRnd(airport);
+  const position = {
     x: runway.x,
     y: runway.y,
     heading: convHdgRadToThreeDigits(runway.runwayHeading),
-    waypoint: getWaypointDepartureRnd(airport),
+    altitude: 0,
+    speed: 0,
   };
-  const altitude = 0;
-  const speed = 0;
+  const positionObj = { ...position, ...positionObjArg };
 
   const flight = createFlight(getFlightDeparture(airport));
   const flightObj = { ...flight, ...flightObjArg };
@@ -304,17 +309,11 @@ const createAircraftDeparture = (
     canvasObjEntity,
     canvasObjText,
     canvasEntityEl,
-    {
-      x: newPlane.x,
-      y: newPlane.y,
-      heading: newPlane.heading,
-      altitude,
-      speed,
-    },
+    positionObj,
     {
       destinationType: DestinationType.Departure,
       airframeObj,
-      waypoint: newPlane.waypoint,
+      waypoint,
       runway: runway.title,
       airport,
     }
