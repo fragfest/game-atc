@@ -163,6 +163,7 @@ import BadgesDisplay from './badges/BadgesDisplay.vue';
 import {
   BadgesTypes,
   BadgeTextDisp,
+  setBadgeMayDay,
   setBadgePushingTin,
 } from '../js/game/score/badges';
 import {
@@ -396,6 +397,7 @@ export default {
 
           this.isNewBlueSky = true;
           this.isNewPushingTin = false;
+          this.isNewMayday = false;
 
           this.badgeTitle = BadgeTextDisp.bluesky.title;
           this.badgeDesc = BadgeTextDisp.bluesky.desc;
@@ -419,6 +421,7 @@ export default {
 
           this.isNewBlueSky = false;
           this.isNewPushingTin = true;
+          this.isNewMayday = false;
 
           this.badgeTitle = BadgeTextDisp.pushingtin.title;
           this.badgeDesc = BadgeTextDisp.pushingtin.desc;
@@ -435,7 +438,27 @@ export default {
       }
 
       if (badgeType === BadgesTypes.MayDay) {
-        console.log('IS NEW MAYDAY');
+        setTimeout(() => {
+          resetBadgeHistory();
+          setBadgeMayDay(this.maydayLevel);
+          play(SoundType.Ding);
+
+          this.isNewBlueSky = false;
+          this.isNewPushingTin = false;
+          this.isNewMayday = true;
+
+          this.badgeTitle = BadgeTextDisp.mayday.title;
+          this.badgeDesc = BadgeTextDisp.mayday.desc;
+          this.badgeLevel = this.maydayLevel;
+
+          this.isShowBadgeDesc = true;
+          this.isShowBadgeBox = true;
+
+          setTimeout(() => {
+            this.isShowBadgeDesc = false;
+            this.isShowBadgeBox = false;
+          }, this.badgeDispTimeSec * 1000);
+        }, this.badgeDispTimeSec * 1000 * (index * 1.8));
       }
     });
     // END newBadgeAchieved forEach

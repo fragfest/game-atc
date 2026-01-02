@@ -378,7 +378,6 @@ export const getScore = () => {
   return score || { ...Score };
 };
 
-// TODO deprecate? use getScore instead
 /**
  * @returns {Score}
  */

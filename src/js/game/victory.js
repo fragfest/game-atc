@@ -89,7 +89,10 @@ export const publishFailed = () => {
  * @returns {Goals}
  */
 
-// PushingTin goal: game levels with IdleTimer goal
+// MayDay goal: game levels with the goal
+export const getMaydayLevels = () => [9];
+
+// PushingTin goal: game levels with the goal
 export const getIdleTimerLevels = () => [
   4, 5, 6, 8, 10, 13, 14, 18, 19, 21, 23, 24,
 ];

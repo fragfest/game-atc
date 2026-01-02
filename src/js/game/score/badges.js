@@ -1,6 +1,6 @@
 import { getAllTurbulenceLevels } from '../weather';
 import { getBadges, getHistoryRecords, setBadges } from './score';
-import { getIdleTimerLevels, isVictory } from '../victory';
+import { getIdleTimerLevels, getMaydayLevels, isVictory } from '../victory';
 
 export const BadgesTypes = Object.freeze({
   MayDay: 'MayDay',
@@ -9,6 +9,7 @@ export const BadgesTypes = Object.freeze({
 });
 
 export const Badges = Object.freeze({
+  MayDay1: 'MayDay1',
   PushingTin5: 'PushingTin5',
   PushingTin4: 'PushingTin4',
   PushingTin3: 'PushingTin3',
@@ -50,6 +51,8 @@ export const getBadgesType = (badgeArg) => {
 export const getBadgeLevel = (badge) => {
   const badgeFound = Object.keys(Badges).find((x) => x === badge);
   if (!badgeFound) return null;
+
+  if (Badges[badgeFound] === Badges.MayDay1) return 1;
 
   if (Badges[badgeFound] === Badges.PushingTin5) return 5;
   if (Badges[badgeFound] === Badges.PushingTin4) return 4;
@@ -111,6 +114,18 @@ export const isNewAchievement = (badgeType) => {
     return true;
   }
   return false;
+};
+
+export const setBadgeMayDay = (badgeLevel) => {
+  if (!badgeLevel) return console.error('badgeLevel missing');
+
+  if (badgeLevel <= getBadgeLevel(getHistoryBadge(BadgesTypes.MayDay))) {
+    return;
+  }
+
+  const badges = getBadges();
+  if (badgeLevel === 1) badges.push(Badges.MayDay1);
+  setBadges(badges);
 };
 
 export const setBadgePushingTin = (badgeLevel) => {
@@ -251,6 +266,10 @@ const getHistoryBadge = (badgeType) => {
   const badges = getBadges() || [];
   // always return the highest badge for a BadgesTypes
 
+  if (badgeType === BadgesTypes.MayDay) {
+    if (badges.find((x) => x === Badges.MayDay1)) return Badges.MayDay1;
+  }
+
   if (badgeType === BadgesTypes.PushingTin) {
     if (badges.find((x) => x === Badges.PushingTin5)) return Badges.PushingTin5;
     if (badges.find((x) => x === Badges.PushingTin4)) return Badges.PushingTin4;
@@ -277,6 +296,13 @@ const getBadgeLevelFromScore = (badgeType) => {
   let badgeLevelFromScore = 0;
   // always return the highest score for a BadgesTypes
 
+  if (badgeType === BadgesTypes.MayDay) {
+    const levelsArr = getMaydayLevels();
+    const maydayLevelsPassed = levelsArr.filter(isAchievedMayday).length;
+
+    if (maydayLevelsPassed >= 1) badgeLevelFromScore = 1;
+  }
+
   if (badgeType === BadgesTypes.PushingTin) {
     const levelsArr = getIdleTimerLevels();
     const idleTimerLevelsPassed = levelsArr.filter(isAchievedPushingTin).length;
@@ -299,6 +325,16 @@ const getBadgeLevelFromScore = (badgeType) => {
   }
 
   return badgeLevelFromScore;
+};
+
+const isAchievedMayday = (gameLevel) => {
+  const record = getHistoryRecords().find((x) => x.level === gameLevel);
+  if (!record) return false;
+
+  const isPass = (record) => isVictory(record?.historyScore);
+  const hasMaydayNonZero = (record) => record?.historyScore?.mayday >= 1;
+
+  return isPass(record) && hasMaydayNonZero(record);
 };
 
 /**

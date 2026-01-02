@@ -140,6 +140,7 @@ describe('getBadgeLevelCompleted', () => {
       });
     });
   });
+
   describe('PushingTin', () => {
     beforeEach(() => {
       historyRecords = [
@@ -269,6 +270,136 @@ describe('getBadgeLevelCompleted', () => {
       });
     });
   });
+
+  describe('MayDay', () => {
+    beforeEach(() => {
+      historyRecords = [
+        {
+          level: 9,
+          historyScore: { mayday: 0 },
+        },
+      ];
+
+      jest
+        .spyOn(Score, 'getHistoryRecords')
+        .mockImplementation(() => historyRecords);
+      jest.spyOn(Victory, 'isVictory').mockImplementation(() => victory);
+    });
+
+    describe('when MayDay1 already in achieved badges', () => {
+      test('should return badge level 1', () => {
+        badges = [Badges.MayDay1];
+        expect(getBadgeLevelCompleted(BadgesTypes.MayDay)).toEqual(1);
+      });
+    });
+
+    // TODO update with more MayDay levels
+    describe.skip('when PushingTin2 already in achieved badges', () => {
+      test('should return badge level 2', () => {
+        badges = [Badges.PushingTin2];
+        expect(getBadgeLevelCompleted(BadgesTypes.PushingTin)).toEqual(2);
+      });
+    });
+
+    describe.skip('when PushingTin1, PushingTin2 already in achieved badges', () => {
+      test('should return badge level 2', () => {
+        badges = [Badges.PushingTin1, Badges.PushingTin2];
+        expect(getBadgeLevelCompleted(BadgesTypes.PushingTin)).toEqual(2);
+      });
+    });
+    // END TODO
+
+    describe('when MayDay in achieved badges and historyRecords populated', () => {
+      let historyRecords;
+      let victory;
+
+      beforeEach(() => {
+        badges = [];
+        historyRecords = [
+          {
+            level: 9,
+            historyScore: { mayday: 1 },
+          },
+        ];
+
+        jest
+          .spyOn(Score, 'getHistoryRecords')
+          .mockImplementation(() => historyRecords);
+        jest.spyOn(Victory, 'isVictory').mockImplementation(() => victory);
+      });
+
+      describe('when MayDay not in achieved badges history', () => {
+        describe('when history has: level 1 victory. mayday=1', () => {
+          beforeEach(() => {
+            victory = true;
+          });
+          test('should return badge level 1', () => {
+            expect(getBadgeLevelCompleted(BadgesTypes.MayDay)).toEqual(1);
+          });
+        });
+
+        describe('when history has: level 1 fail. mayday=0', () => {
+          beforeEach(() => {
+            historyRecords = [
+              {
+                level: 9,
+                historyScore: { mayday: 0 },
+              },
+            ];
+
+            jest
+              .spyOn(Victory, 'isVictory')
+              .mockImplementationOnce(() => false);
+          });
+          test('should return null', () => {
+            expect(getBadgeLevelCompleted(BadgesTypes.MayDay)).toBeNull();
+          });
+        });
+
+        describe('when history has: level 1 victory. mayday=0', () => {
+          beforeEach(() => {
+            victory = true;
+            historyRecords[0].historyScore.mayday = 0;
+          });
+          test('should return false', () => {
+            expect(getBadgeLevelCompleted(BadgesTypes.MayDay)).toBeNull();
+          });
+        });
+      });
+
+      describe('when MayDay level 1 in achieved badges history', () => {
+        beforeEach(() => {
+          victory = true;
+          badges = [Badges.MayDay1];
+        });
+
+        // TODO update with more MayDay levels
+        describe.skip('history has level 2 victory', () => {
+          beforeEach(() => {
+            historyRecords = [
+              {
+                level: 9,
+                historyScore: { mayday: 1 },
+              },
+              {
+                level: '???',
+                historyScore: { mayday: 1 },
+              },
+            ];
+            jest
+              .spyOn(Score, 'getHistoryRecords')
+              .mockImplementation(() => historyRecords);
+            jest.spyOn(Victory, 'isVictory').mockImplementation(() => victory);
+          });
+
+          test('should return 2', () => {
+            expect(getBadgeLevelCompleted(BadgesTypes.MayDay)).toEqual(2);
+          });
+        });
+      });
+    });
+  });
+  // END MayDay
 });
 
 describe('isNewAchievement', () => {
@@ -362,6 +493,45 @@ describe('isNewAchievement', () => {
       });
       test('should return true', () => {
         expect(isNewAchievement(BadgesTypes.PushingTin)).toBeTruthy();
+      });
+    });
+  });
+
+  describe('MayDay', () => {
+    beforeEach(() => {
+      badges = [];
+      historyRecords = [
+        {
+          level: 9,
+          historyScore: { mayday: 1 },
+        },
+      ];
+      jest
+        .spyOn(Score, 'getHistoryRecords')
+        .mockImplementation(() => historyRecords);
+      jest.spyOn(Victory, 'isVictory').mockImplementation(() => true);
+
+      global.localStorage = { getItem: jest.fn(() => JSON.stringify(badges)) };
+    });
+
+    // TODO add when more levels
+    describe.skip('when MayDay1 in achieved badges; MayDay2 history condition failed', () => {
+      beforeEach(() => {
+        badges = [Badges.MayDay1];
+        historyRecords[1].historyScore.mayday = 0;
+      });
+      test('should return false', () => {
+        expect(isNewAchievement(BadgesTypes.MayDay)).toBeFalsy();
+      });
+    });
+
+    describe('when badges empty; MayDay1 history condition passed', () => {
+      beforeEach(() => {
+        badges = [];
+        historyRecords[0].historyScore.mayday = 1;
+      });
+      test('should return true', () => {
+        expect(isNewAchievement(BadgesTypes.MayDay)).toBeTruthy();
       });
     });
   });
