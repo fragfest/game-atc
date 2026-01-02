@@ -1,3 +1,4 @@
+import { isAircraft } from './types';
 import { ScreenSizes, isWithinDist } from './utils';
 
 // entity type ////////////////////////////////////////////////
@@ -41,8 +42,9 @@ export const isEntityGettingCloser = (entityDestination, entity, distPrev) => {
   return isWithinDist(distPrev, entityDestination, entity);
 };
 
-export const isCloseToPlane = (screenSize) => (newObj) => (otherObj) => {
-  return isWithinDist(2.5 * getTooCloseDistance(screenSize), newObj, otherObj);
+export const isCloseToPlane = (screenSize) => (plane) => (otherObj) => {
+  if (!isAircraft(otherObj)) return false;
+  return isWithinDist(2.5 * getTooCloseDistance(screenSize), plane, otherObj);
 };
 
 export const isCloseToWaypoint = (waypoint) => (entity) => {

@@ -25,7 +25,10 @@ export const Direction = Object.freeze({
   Right: 'right',
 });
 
+export const isRunway = (obj) => obj.classType === 'Runway';
+export const isWaypoint = (obj) => obj.classType === 'Waypoint';
 export const isAircraft = (obj) => obj.classType === 'Aircraft';
+
 export const isDeparture = (obj) =>
   isAircraft(obj) && obj.destinationType === DestinationType.Departure;
 export const isArrival = (obj) =>

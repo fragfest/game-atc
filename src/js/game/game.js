@@ -315,7 +315,6 @@ const spawnAircraftRnd =
     const plane = createAircraftFn();
     if (!plane) return;
 
-    // TODO consider allow spawning near waypoints
     const planeClose = !!entityManagerArr.find(isCloseToNewPlane(plane));
     const weatherClose = !!entityManagerArr.find(isCloseToWeather(plane));
     if (isArrival(plane) && (planeClose || weatherClose)) {
