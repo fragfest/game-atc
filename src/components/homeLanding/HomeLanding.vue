@@ -96,6 +96,8 @@
                 :blueSkyLevel="blueSkyLevel"
                 :pushingTin="pushingTin"
                 :pushingTinLevel="pushingTinLevel"
+                :mayDay="mayday"
+                :mayDayLevel="mayDayLevel"
               />
             </div>
           </div>
@@ -206,6 +208,8 @@ export default {
       pushingTinLevel: 0,
       bluesky: false,
       blueSkyLevel: 0,
+      mayday: false,
+      mayDayLevel: 0,
     };
   },
 
@@ -257,6 +261,9 @@ export default {
 
     this.pushingTinLevel = getBadgeLevelCompleted(BadgesTypes.PushingTin);
     this.pushingTin = !!this.pushingTinLevel;
+
+    this.mayDayLevel = getBadgeLevelCompleted(BadgesTypes.MayDay);
+    this.mayday = !!this.mayDayLevel;
 
     if (this.finalLevel === this.levelComplete) {
       this.isGameComplete = true;

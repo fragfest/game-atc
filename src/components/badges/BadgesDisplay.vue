@@ -200,17 +200,17 @@ export default {
     isMobile: { type: Boolean },
     size: { type: Number, default: 44 },
 
-    mayDay: { type: Boolean },
-    isNewMayDay: { type: Boolean },
-    mayDayLevel: { type: Number },
+    blueSky: { type: Boolean },
+    blueSkyLevel: { type: Number },
+    isNewBlueSky: { type: Boolean },
 
     pushingTin: { type: Boolean },
-    isNewPushingTin: { type: Boolean },
     pushingTinLevel: { type: Number },
+    isNewPushingTin: { type: Boolean },
 
-    blueSky: { type: Boolean },
-    isNewBlueSky: { type: Boolean },
-    blueSkyLevel: { type: Number },
+    mayDay: { type: Boolean },
+    mayDayLevel: { type: Number },
+    isNewMayDay: { type: Boolean },
 
     isShowDescription: { type: Boolean },
     isShowGoals: { type: Boolean },

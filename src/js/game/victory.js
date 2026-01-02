@@ -72,6 +72,18 @@ export const publishFailed = () => {
   document.dispatchEvent(new CustomEvent(VictoryEvents.Failed));
 };
 
+export const MaydayScenario = Object.freeze({
+  Level9Fire: 'Level9Fire',
+});
+
+// MayDay goal: game levels with the goal
+export const getMaydayLevels = () => [9];
+
+// PushingTin goal: game levels with the goal
+export const getIdleTimerLevels = () => [
+  4, 5, 6, 8, 10, 13, 14, 18, 19, 21, 23, 24,
+];
+
 /**
  * @typedef {Object} Goals
  * @property {Number} Arrivals
@@ -88,14 +100,6 @@ export const publishFailed = () => {
  * @param {Number} gameLevel
  * @returns {Goals}
  */
-
-// MayDay goal: game levels with the goal
-export const getMaydayLevels = () => [9];
-
-// PushingTin goal: game levels with the goal
-export const getIdleTimerLevels = () => [
-  4, 5, 6, 8, 10, 13, 14, 18, 19, 21, 23, 24,
-];
 
 /**
  * @returns {GoalsFunc}

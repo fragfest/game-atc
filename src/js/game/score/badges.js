@@ -30,6 +30,8 @@ export const getBadgesType = (badgeArg) => {
   const badge = Object.keys(Badges).find((x) => x === badgeArg);
   if (!badge) return null;
 
+  if (Badges[badge] === Badges.MayDay1) return BadgesTypes.MayDay;
+
   if (Badges[badge] === Badges.PushingTin5) return BadgesTypes.PushingTin;
   if (Badges[badge] === Badges.PushingTin4) return BadgesTypes.PushingTin;
   if (Badges[badge] === Badges.PushingTin3) return BadgesTypes.PushingTin;
@@ -172,6 +174,11 @@ export const setBadgeBlueSky = (badgeLevel) => {
  */
 export const getProgressbarDisp = (badgeType, badgeLevel) => {
   let progressLevel = 0;
+
+  if (badgeType === BadgesTypes.MayDay) {
+    if (badgeLevel === 1) progressLevel = 1;
+  }
+
   if (badgeType === BadgesTypes.PushingTin) {
     if (badgeLevel === 1) progressLevel = 1;
     if (badgeLevel === 2) progressLevel = 2;
@@ -179,6 +186,7 @@ export const getProgressbarDisp = (badgeType, badgeLevel) => {
     if (badgeLevel === 4) progressLevel = 4;
     if (badgeLevel === 5) progressLevel = 6;
   }
+
   if (badgeType === BadgesTypes.BlueSky) {
     if (badgeLevel === 1) progressLevel = 1;
     if (badgeLevel === 2) progressLevel = 2;

@@ -8,12 +8,8 @@ import { Airport } from '../airports/airports';
 /**
  * @typedef {import('../types.js').DestinationType} DestinationType
  * @typedef {import('../aircraft/airframe.js').Airframes} Airframes
+ * @typedef {import('../game/victory').MaydayScenario} MaydayScenario
  */
-
-// TODO move to new mayday file?
-export const MaydayScenario = Object.freeze({
-  Level9Fire: 'Level9Fire',
-});
 
 /**
  * @typedef FlightObj

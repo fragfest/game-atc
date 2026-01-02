@@ -7,7 +7,7 @@ import {
   randMinMax,
 } from '../utils';
 import { getPerformance } from './airframe';
-import { getGoalsByLevel } from '../game/victory';
+import { getGoalsByLevel, MaydayScenario } from '../game/victory';
 import { getScore } from '../game/score/score';
 import { callAircraftFnByLevel } from '../levels/levels';
 import {
@@ -15,11 +15,7 @@ import {
   getWaypointBySection,
   getWaypointDepartureRnd,
 } from '../airports/airports';
-import {
-  getFlightArrival,
-  getFlightDeparture,
-  MaydayScenario,
-} from '../flights/flights';
+import { getFlightArrival, getFlightDeparture } from '../flights/flights';
 
 /**
  * @callback CreateAircraft
@@ -323,7 +319,7 @@ const createAircraftDeparture = (
 };
 
 /**
- * @param {MaydayScenario} maydayScenario
+ * @param {import('../game/victory').MaydayScenario} maydayScenario
  * @param {Number} width
  * @param {Number} height
  */

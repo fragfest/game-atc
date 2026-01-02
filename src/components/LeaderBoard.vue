@@ -56,6 +56,8 @@
               :blueSkyLevel="getBadgeLevelBlueSky(item)"
               :pushingTin="hasPushingTin(item)"
               :pushingTinLevel="getBadgeLevelPushingTin(item)"
+              :mayDay="hasMayDay(item)"
+              :mayDayLevel="getBadgeLevelMayDay(item)"
             />
             <h2 class="w-col hdr-green">{{ scoreFormat(item?.score) }}</h2>
           </div>
@@ -185,6 +187,20 @@ export default {
   },
 
   methods: {
+    hasMayDay: function (item) {
+      if (!item?.badges) return false;
+      const goal = (badge) => getBadgesType(badge) === BadgesTypes.MayDay;
+      return !!item.badges.find(goal);
+    },
+
+    getBadgeLevelMayDay: function (item) {
+      if (!item?.badges) return null;
+
+      const goal = (badge) => getBadgesType(badge) === BadgesTypes.MayDay;
+      const levelNums = item.badges.filter(goal).map(getBadgeLevel);
+      return Math.max(...levelNums);
+    },
+
     hasPushingTin: function (item) {
       if (!item?.badges) return false;
       const goal = (badge) => getBadgesType(badge) === BadgesTypes.PushingTin;

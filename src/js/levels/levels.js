@@ -1,4 +1,4 @@
-import { MaydayScenario } from '../flights/flights.js';
+import { MaydayScenario } from '../game/victory.js';
 import { isAircraft } from '../types.js';
 import { getDepartureCount, getArrivalCount } from '../utils.js';
 import { getAirportByLevel, getLevelObj } from './getLevel.js';
@@ -53,6 +53,8 @@ export const callAircraftFnByLevel = (arg) => {
 export const getSpawnByGameLevel = (gameLevel) => {
   const spawnFn = (spawnArg) => {
     const airport = getAirportByLevel(gameLevel);
+    const maydayLevel9 = spawnBalancedMayday(MaydayScenario.Level9Fire);
+
     // LHR
     if (gameLevel === 1) return spawnDeparturesOnly(spawnArg, airport);
     if (gameLevel === 2) return spawnArrivalsOnly(spawnArg, airport);
@@ -63,7 +65,7 @@ export const getSpawnByGameLevel = (gameLevel) => {
     // JFK
     if (gameLevel === 7) return spawnBalanced(spawnArg, airport);
     if (gameLevel === 8) return spawnBalanced(spawnArg, airport);
-    if (gameLevel === 9) return spawnBalancedMayday(spawnArg, airport);
+    if (gameLevel === 9) return maydayLevel9(spawnArg, airport);
     if (gameLevel === 10) return spawnMoreArrivals(spawnArg, airport);
     if (gameLevel === 11) return spawnBalanced(spawnArg, airport);
     // HND
@@ -141,6 +143,28 @@ export const spawnArrivalsOnly = (arg, airport) => {
 /**
  * @param {LevelArg} arg
  * @param {Airport} airport
+ * @returns none
+ */
+export const spawnBalanced = (arg, airport) => {
+  const chanceDeparture = chanceDepartureBase;
+  const time = 18 * 60;
+  spawnBalancedCommon(arg, airport, chanceDeparture, time);
+};
+
+/**
+ * @param {LevelArg} arg
+ * @param {Airport} airport
+ * @returns none
+ */
+export const spawnMoreArrivals = (arg, airport) => {
+  const chanceDeparture = chanceDepartureHigh;
+  const time = 20 * 60;
+  spawnBalancedCommon(arg, airport, chanceDeparture, time);
+};
+
+/**
+ * @param {LevelArg} arg
+ * @param {Airport} airport
  * @param {Number} chanceDeparture
  * @param {Number} time flight timer in seconds
  * @returns none
@@ -197,11 +221,12 @@ export const spawnBalancedCommon = (arg, airport, chanceDeparture, time) => {
 };
 
 /**
+ * @param {MaydayScenario} maydayScenario
  * @param {LevelArg} arg
  * @param {Airport} airport
  * @returns none
  */
-export const spawnBalancedMayday = (arg, airport) => {
+export const spawnBalancedMayday = (maydayScenario) => (arg, airport) => {
   const { entityManagerArr, getChanceFn, aircraftFn, score } = arg;
   const count = entityManagerArr.filter(isAircraft).length;
   const maydayCount = score.maydaySpawn;
@@ -224,7 +249,6 @@ export const spawnBalancedMayday = (arg, airport) => {
   }
 
   if (maydayCount < 1 && setMayday) {
-    const maydayScenario = MaydayScenario.Level9Fire;
     const flightObj = { time: 18 * 60, isMayday: true, maydayScenario };
     aircraftFn(getChanceFn(guaranteedChance), noChance, flightObj, airport);
     return;
@@ -232,28 +256,6 @@ export const spawnBalancedMayday = (arg, airport) => {
 
   const chanceDeparture = chanceDepartureBase;
   const time = 18 * 60;
-  spawnBalancedCommon(arg, airport, chanceDeparture, time);
-};
-
-/**
- * @param {LevelArg} arg
- * @param {Airport} airport
- * @returns none
- */
-export const spawnBalanced = (arg, airport) => {
-  const chanceDeparture = chanceDepartureBase;
-  const time = 18 * 60;
-  spawnBalancedCommon(arg, airport, chanceDeparture, time);
-};
-
-/**
- * @param {LevelArg} arg
- * @param {Airport} airport
- * @returns none
- */
-export const spawnMoreArrivals = (arg, airport) => {
-  const chanceDeparture = chanceDepartureHigh;
-  const time = 20 * 60;
   spawnBalancedCommon(arg, airport, chanceDeparture, time);
 };
 
