@@ -65,7 +65,7 @@
                 <div class="col fixed-width no-border">
                   <div v-if="plane.isMayday" class="mayday">
                     <div class="font-large"><b>MAYDAY</b></div>
-                    <div>engine fire</div>
+                    <div>{{ maydayTitle }}</div>
                   </div>
                   <div v-else-if="hasProximityAlert" class="conflict">
                     <div class="font-large"><b>Traffic</b></div>
@@ -280,13 +280,20 @@
                     <template v-slot:hover>back</template>
                   </ToolTip>
                 </div>
-                <div class="col font-large">
-                  <span v-if="displayTime" class="time">
-                    <b>{{ displayTime }}</b>
-                  </span>
-                </div>
-                <div class="taxi font-large">
-                  <b>engine fire</b>
+
+                <div class="col card-back no-border font-large">
+                  <div class="row">
+                    <b>- {{ maydayDetail1 }}</b>
+                  </div>
+                  <div class="row">
+                    <b>- {{ maydayDetail2 }}</b>
+                  </div>
+                  <div v-if="maydayProgressbarTitle" class="row">
+                    <b>- {{ maydayProgressbarTitle }}</b>
+                    <div class="progress-bar-container" :class="stripClass">
+                      <div class="progress-bar" :style="progressBarStyle"></div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -406,6 +413,7 @@ import {
 } from '../js/events/messages';
 
 import ToolTip from './common/ToolTip';
+import { getMaydayInfo } from '../js/game/score/mayday';
 
 const getPlane = (plane, planes) => {
   if (!plane.id) return false;
@@ -492,6 +500,43 @@ export default {
 
       const classes = [].concat(pulse, queue, empty, hover, selected, size);
       return classes.join(' ');
+    },
+
+    progressBarStyle: function () {
+      const plane = getPlane(this.plane, this.planes);
+      if (!plane) return '';
+
+      const timeStart = plane.maydayTimeStart || 0;
+      const maydayTime = plane.maydayTime || 0;
+      if (!maydayTime || !timeStart) return 'width: 0%';
+
+      const fraction = maydayTime / timeStart;
+      if (fraction >= 1) return 'width: 100%';
+      return 'width:' + fraction * 100 + '%';
+    },
+
+    maydayTitle: function () {
+      const plane = getPlane(this.plane, this.planes);
+      if (!plane) return false;
+      return getMaydayInfo(plane.maydayScenario).title;
+    },
+
+    maydayDetail1: function () {
+      const plane = getPlane(this.plane, this.planes);
+      if (!plane) return false;
+      return getMaydayInfo(plane.maydayScenario).detail1;
+    },
+
+    maydayDetail2: function () {
+      const plane = getPlane(this.plane, this.planes);
+      if (!plane) return false;
+      return getMaydayInfo(plane.maydayScenario).detail2;
+    },
+
+    maydayProgressbarTitle: function () {
+      const plane = getPlane(this.plane, this.planes);
+      if (!plane) return false;
+      return getMaydayInfo(plane.maydayScenario).progressTitle;
     },
 
     flipCardClass: function () {
@@ -780,6 +825,11 @@ export default {
       padding: 6px;
     }
 
+    .col.card-back {
+      width: 220px;
+      padding: 0px 6px;
+    }
+
     .fixed-width {
       width: 75px;
       padding-left: 12px;
@@ -835,6 +885,7 @@ export default {
 
     font: 11px Arial;
     color: white;
+
     .font-large {
       font-size: 14px;
     }
@@ -855,6 +906,18 @@ export default {
       padding: 6px;
       text-align: center;
       border-right: solid 1px #b2b0b0;
+    }
+
+    .col.card-back {
+      width: 280px;
+      padding: 0px 12px;
+      text-align: left;
+
+      .row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
     }
 
     .btn-group {
@@ -969,6 +1032,37 @@ export default {
   // strip-info END
 }
 // strip (large) END
+
+// progress-bar-container ////////////////////////////////
+.progress-bar-container {
+  display: flex;
+  align-items: center;
+
+  width: 120px;
+  height: 16px;
+  margin-top: 4px;
+
+  border: 1px solid white;
+  border-radius: 4px;
+
+  .progress-bar {
+    height: 16px;
+    border-bottom-left-radius: 1px;
+    border-top-left-radius: 1px;
+    border-bottom-right-radius: 4px;
+    border-top-right-radius: 4px;
+    background-color: lightgreen;
+  }
+}
+
+.progress-bar-container.small {
+  width: 80px;
+  height: 12px;
+
+  .progress-bar {
+    height: 12px;
+  }
+}
 
 // animation ////////////////////////////////////////////////
 

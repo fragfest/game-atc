@@ -16,7 +16,7 @@
           <img class="white-border" src="/img/danger.png" />
         </div>
         <div>
-          <h2 class="white">emergency</h2>
+          <h2 class="white">mayday</h2>
         </div>
       </div>
       <div
@@ -74,10 +74,14 @@
         <div class="info-center-experience">
           <div v-if="plane.isMayday" class="experience-row mayday">
             <div>
-              <p class="red"><b>ENGINE FIRE</b></p>
+              <p class="red">
+                <b>{{ maydayTitle }}</b>
+              </p>
             </div>
             <div>
-              <p class="white"><b>land immediately</b></p>
+              <p class="white">
+                <b>{{ maydayAction }}</b>
+              </p>
             </div>
           </div>
           <div v-else class="experience-row">
@@ -163,6 +167,7 @@ import { getAirframe, getPerformance } from '../../js/aircraft/airframe';
 import ProgressSliceEmpty from '../common/ProgressSliceEmpty';
 import ProgressSliceFull from '../common/ProgressSliceFull';
 import { flightQuality } from '../../js/game/score/flight';
+import { getMaydayInfo } from '../../js/game/score/mayday';
 
 const showFullSlice = (plane, index) => {
   if (!plane) return false;
@@ -203,6 +208,18 @@ export default {
       const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
       if (!planeSel) return null;
       return planeSel;
+    },
+
+    maydayTitle: function () {
+      const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
+      if (!planeSel) return null;
+      return getMaydayInfo(planeSel.maydayScenario).title;
+    },
+
+    maydayAction: function () {
+      const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
+      if (!planeSel) return null;
+      return getMaydayInfo(planeSel.maydayScenario).action;
     },
 
     cityType: function () {
@@ -301,13 +318,13 @@ export default {
       return showFullSlice(this.plane, 8) ? '' : 'hide';
     },
 
-    progressBarStyle: function () {
-      if (!this.plane) return '';
+    // progressBarStyle: function () {
+    //   if (!this.plane) return '';
 
-      const fraction = 0.3;
-      if (fraction >= 1) return 'width: 100%';
-      return 'width:' + fraction * 100 + '%';
-    },
+    //   const fraction = 0.3;
+    //   if (fraction >= 1) return 'width: 100%';
+    //   return 'width:' + fraction * 100 + '%';
+    // },
 
     flightQualityMessage: function () {
       if (!this.plane) return '';
@@ -405,7 +422,7 @@ export default {
 
 .info-panel .red {
   color: red;
-  text-shadow: 1px 1px 0px #1c1c1c;
+  text-shadow: 1px 1px 0px #2b2b2b;
 }
 .info-panel .white {
   color: white;

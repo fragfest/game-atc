@@ -1,4 +1,4 @@
-import { MaydayScenario } from '../game/victory.js';
+import { MaydayScenario } from '../game/score/mayday.js';
 import { isAircraft } from '../types.js';
 import { getDepartureCount, getArrivalCount } from '../utils.js';
 import { getAirportByLevel, getLevelObj } from './getLevel.js';
@@ -220,43 +220,63 @@ export const spawnBalancedCommon = (arg, airport, chanceDeparture, time) => {
   aircraftFn(getChanceFn(chance), chanceDeparture, flightObj, airport);
 };
 
+export const getSpawnMayday = (arg, maydayScenario) => {
+  const { entityManagerArr, getChanceFn, score } = arg;
+  const maydayCount = score.maydaySpawn;
+  const count = entityManagerArr.filter(isAircraft).length;
+
+  let time = 8 * 60;
+  let isMayday = false;
+
+  if (maydayCount >= 1) return { isMayday, time };
+  let chance = 0;
+
+  if (maydayScenario === MaydayScenario.Level9Fire) {
+    time = 8 * 60;
+    if (count > 12) {
+      chance = guaranteedChance;
+    } else if (count > 10) {
+      chance = veryHighChance;
+    } else if (count > 8) {
+      chance = highChance;
+    } else {
+      chance = 0;
+    }
+
+    // chance = guaranteedChance;
+    if (Math.random() <= getChanceFn(chance)) {
+      isMayday = true;
+      return { isMayday, time };
+    }
+    return { isMayday, time };
+  }
+
+  console.error('unknown maydayScenario');
+  return { isMayday, time };
+};
+
 /**
  * @param {MaydayScenario} maydayScenario
  * @param {LevelArg} arg
  * @param {Airport} airport
- * @returns none
  */
 export const spawnBalancedMayday = (maydayScenario) => (arg, airport) => {
-  const { entityManagerArr, getChanceFn, aircraftFn, score } = arg;
-  const count = entityManagerArr.filter(isAircraft).length;
-  const maydayCount = score.maydaySpawn;
+  const { getChanceFn, aircraftFn } = arg;
+  const { isMayday, time } = getSpawnMayday(arg, maydayScenario);
 
-  let setMayday = false;
-  let chance = baseChance;
-
-  if (count > 12) {
-    chance = guaranteedChance;
-  } else if (count > 10) {
-    chance = veryHighChance;
-  } else if (count > 8) {
-    chance = highChance;
-  } else {
-    chance = 0;
-  }
-
-  if (Math.random() <= getChanceFn(chance)) {
-    setMayday = true;
-  }
-
-  if (maydayCount < 1 && setMayday) {
-    const flightObj = { time: 18 * 60, isMayday: true, maydayScenario };
+  if (isMayday) {
+    const flightObj = {
+      flight: 'MAYDAY',
+      time,
+      isMayday: true,
+      maydayScenario,
+    };
     aircraftFn(getChanceFn(guaranteedChance), noChance, flightObj, airport);
     return;
   }
 
-  const chanceDeparture = chanceDepartureBase;
-  const time = 18 * 60;
-  spawnBalancedCommon(arg, airport, chanceDeparture, time);
+  const timeDefault = 18 * 60;
+  spawnBalancedCommon(arg, airport, chanceDepartureBase, timeDefault);
 };
 
 ////////////////////////////////////////////////////////////////////////

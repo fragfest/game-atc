@@ -133,7 +133,11 @@ export default class Aircraft {
     this.airportCode = flightObj.airport;
     this.airline = flightObj.airline;
 
+    // mayday
     this.isMayday = false;
+    this.maydayScenario = flightObj.maydayScenario || '';
+    this.maydayTimeStart = flightObj.time || 0;
+    this.maydayTime = flightObj.time || 0;
     this.isFlightstripFlip = false;
     this.isMaydaySoundOn = false;
     this.isMaydaySoundEnable = true;
@@ -710,7 +714,7 @@ export default class Aircraft {
     this.updateWake(timestamp, deltaTimeMs);
     this.updateMayday();
 
-    // timer
+    // main time
     if (this.time <= 0) {
       this.time = 0;
 
@@ -720,6 +724,14 @@ export default class Aircraft {
       }
     } else {
       this.time -= deltaTimeMs / 1000;
+    }
+    // mayday time
+    if (this.isMayday) {
+      if (this.maydayTime <= 0) {
+        this.maydayTime = 0;
+      } else {
+        this.maydayTime -= deltaTimeMs / 1000;
+      }
     }
 
     // returning to canvas

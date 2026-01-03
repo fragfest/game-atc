@@ -8,7 +8,7 @@ import { Airport } from '../airports/airports';
 /**
  * @typedef {import('../types.js').DestinationType} DestinationType
  * @typedef {import('../aircraft/airframe.js').Airframes} Airframes
- * @typedef {import('../game/victory').MaydayScenario} MaydayScenario
+ * @typedef {import('../game/score/mayday.js').MaydayScenario} MaydayScenario
  */
 
 /**

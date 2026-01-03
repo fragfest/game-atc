@@ -1,6 +1,7 @@
 import { getAllTurbulenceLevels } from '../weather';
 import { getBadges, getHistoryRecords, setBadges } from './score';
-import { getIdleTimerLevels, getMaydayLevels, isVictory } from '../victory';
+import { getIdleTimerLevels, isVictory } from '../victory';
+import { getMaydayLevels } from './mayday';
 
 export const BadgesTypes = Object.freeze({
   MayDay: 'MayDay',
