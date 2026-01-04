@@ -334,6 +334,8 @@ const createPositionMayday = (maydayScenario, width, height) => {
       speed: spdMinMax(280, 320),
     };
   }
+
+  return {};
 };
 
 let spawned = [];

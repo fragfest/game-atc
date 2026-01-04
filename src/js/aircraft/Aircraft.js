@@ -37,6 +37,7 @@ import {
 import { play, SoundType } from '../game/sound';
 import { isInWeather, isTurbulence } from '../game/weather';
 import { calcWake } from './aircraftWake';
+import { getMaydayAirframe } from '../game/score/mayday';
 
 export default class Aircraft {
   constructor(
@@ -154,8 +155,9 @@ export default class Aircraft {
 
     // constants
     this.pixelsBasePerKnot = 0.001;
-    this.speedDeltaPerMs = planeObj.airframeObj.speedDeltaPerMs;
+    this.airframeObj = { ...planeObj.airframeObj };
     this.speedRatePerMs = planeObj.airframeObj.speedRatePerMs;
+    this.speedDeltaPerMs = planeObj.airframeObj.speedDeltaPerMs;
     this.altitudeRatePerMs = planeObj.airframeObj.altitudeRatePerMs;
     this.turnRateRadPerMs = planeObj.airframeObj.turnRateRadPerMs;
 
@@ -275,7 +277,7 @@ export default class Aircraft {
 
   setIsTouchedDown(isTouchedDown) {
     this.isTouchedDown = !!isTouchedDown;
-    this.speedDeltaPerMs = this.speedDeltaPerMs * 2.5;
+    this.speedDeltaPerMs = this.airframeObj.speedDeltaPerMs * 2.5;
     this.setNonInteractive(true);
   }
 
@@ -515,31 +517,33 @@ export default class Aircraft {
     if (direction === Direction.Left) return headingDecrease;
     if (isClosestSmall) {
       const turnRight = headingTargetSmall > headingSmall;
-      if (turnRight)
+      if (turnRight) {
         return headingIncrease > headingTargetSmall
           ? headingTargetSmall
           : headingIncrease;
-      else
+      } else {
         return headingDecrease < headingTargetSmall
           ? headingTargetSmall
           : headingDecrease;
+      }
     }
     // else isClosestBetween
     const turnRight = isLowestLargeTarget;
-    if (turnRight)
+    if (turnRight) {
       return headingIncrease > headingTargetLarge
         ? headingTargetLarge
         : headingIncrease;
-    else
+    } else {
       return headingLargeDecrease < headingTargetSmall
         ? headingTargetSmall
         : headingLargeDecrease;
+    }
   }
 
-  updateAltitude(altitudeOld, altitudeTarget, altitudeChange) {
+  updateAltitude(altitudeOld, altitudeTarget, altGainArg, altDropArg) {
     const delta = Math.round(altitudeTarget - altitudeOld);
-    const altitudeIncrease = altitudeOld + altitudeChange;
-    const altitudeDecrease = altitudeOld - 1.6 * altitudeChange;
+    const altitudeIncrease = altitudeOld + altGainArg;
+    const altitudeDecrease = altitudeOld - altDropArg;
 
     if (delta === 0) return altitudeOld;
     else if (delta > 0)
@@ -552,19 +556,19 @@ export default class Aircraft {
         : altitudeDecrease;
   }
 
-  updateSpeed(speed, speedTarget, speedIncreaseArg, speedDecreaseArg) {
+  updateSpeed(speed, speedTarget, speedGainArg, speedDropArg) {
     const delta = Math.round(speedTarget - speed);
-    const speedIncrease = speed + speedIncreaseArg;
-    const speedDecrease = speed - 1.6 * speedDecreaseArg;
+    const speedIncrease = speed + speedGainArg;
+    const speedDecrease = speed - speedDropArg;
 
     if (delta === 0) return speed;
-    if (delta > 0)
+    if (delta > 0) {
       return speedIncrease > speedTarget ? speedTarget : speedIncrease;
+    }
     return speedDecrease < speedTarget ? speedTarget : speedDecrease;
   }
 
-  getSpeedDelta(speed, deltaTimeMs) {
-    const speedDeltaPerMs = this.speedDeltaPerMs;
+  getSpeedDelta(speed, speedDeltaPerMs, deltaTimeMs) {
     const speedTakeoff = this.speedTakeoff;
     const calcDelta = (speedDeltaPerMsArg) => {
       const pixelsSpeedDeltaBase = speedDeltaPerMsArg * deltaTimeMs;
@@ -578,8 +582,8 @@ export default class Aircraft {
       return calcDelta(speedDeltaPerMs * 1.6);
     }
 
-    // takeoff
     if (!this.takeoff) return calcDelta(speedDeltaPerMs);
+    // takeoff
     if (speed < 6) return calcDelta(speedDeltaPerMs * 0.5);
     if (speed >= 6 && speed < 10) return calcDelta(speedDeltaPerMs);
     if (speed >= 10 && speed < 20) return calcDelta(speedDeltaPerMs * 1.8);
@@ -607,8 +611,6 @@ export default class Aircraft {
     // if isMayday allow crashing
     // when crashed keep aircraft un-destroyed, set isCrashed
     // crash: add failed landing to score (check levels have >= 2 failed goals)
-
-    // detect any aircraft with isMayday: pause their time updates ???
   }
 
   updateWake(timestampMs, deltaTimeMs) {
@@ -648,9 +650,27 @@ export default class Aircraft {
   }
 
   update({ deltaTimeMs, timestamp }) {
+    const airframeObj = this.airframeObj;
+    const { turnRateRadPerMs, altitudeRatePerMs, speedDeltaPerMs } =
+      airframeObj;
+    let performanceObj = {
+      turnRateRadPerMs,
+      gain: { altitudeRatePerMs, speedDeltaPerMs },
+      drop: { altitudeRatePerMs, speedDeltaPerMs },
+    };
+
+    if (this.isMayday) {
+      const fraction = this.maydayTime / (this.maydayTimeStart || 1);
+      performanceObj = getMaydayAirframe(
+        this.maydayScenario,
+        airframeObj,
+        fraction
+      );
+    }
+
     const headingOld = this.headingRad;
     const headingTarget = this.headingTargetRad;
-    const headingChange = this.turnRateRadPerMs * deltaTimeMs;
+    const headingChange = performanceObj.turnRateRadPerMs * deltaTimeMs;
     const direction = this.direction;
     const headingRadNewLarge = this.updateHeading(
       headingOld,
@@ -670,24 +690,36 @@ export default class Aircraft {
       this.setAltitude(2000, false, false);
     }
 
-    const speedDelta = this.getSpeedDelta(this.speed, deltaTimeMs);
+    const speedGainDelta = this.getSpeedDelta(
+      this.speed,
+      performanceObj.gain.speedDeltaPerMs,
+      deltaTimeMs
+    );
+    const speedDropDelta = this.getSpeedDelta(
+      this.speed,
+      performanceObj.drop.speedDeltaPerMs,
+      deltaTimeMs
+    );
     const speedNew = this.updateSpeed(
       this.speed,
       this.speedTarget,
-      speedDelta,
-      speedDelta
+      speedGainDelta,
+      1.6 * speedDropDelta
     );
+
     const pixelsSpeedRateBase = this.speedRatePerMs * deltaTimeMs;
     const pixelsSpeed = pixelsSpeedRateBase * this.pixelsBasePerKnot * speedNew;
     const pixelsInX = Math.cos(headingRadNew) * pixelsSpeed;
     const pixelsInY = Math.sin(headingRadNew) * pixelsSpeed;
 
     const altitudeOld = this.altitude;
-    const altitudeChange = this.altitudeRatePerMs * deltaTimeMs;
+    const altitudeGain = performanceObj.gain.altitudeRatePerMs * deltaTimeMs;
+    const altitudeDrop = performanceObj.drop.altitudeRatePerMs * deltaTimeMs;
     const altitudeNew = this.updateAltitude(
       altitudeOld,
       this.altitudeTarget,
-      altitudeChange
+      altitudeGain,
+      1.6 * altitudeDrop
     );
 
     this.headingRad = headingRadNew;
@@ -725,6 +757,7 @@ export default class Aircraft {
     } else {
       this.time -= deltaTimeMs / 1000;
     }
+
     // mayday time
     if (this.isMayday) {
       if (this.maydayTime <= 0) {

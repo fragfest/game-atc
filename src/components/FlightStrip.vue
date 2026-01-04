@@ -283,13 +283,15 @@
 
                 <div class="col card-back no-border font-large">
                   <div class="row">
-                    <b>- {{ maydayDetail1 }}</b>
+                    <p>- {{ maydayDetail1 }}</p>
                   </div>
                   <div class="row">
-                    <b>- {{ maydayDetail2 }}</b>
+                    <p>- {{ maydayDetail2 }}</p>
                   </div>
                   <div v-if="maydayProgressbarTitle" class="row">
-                    <b>- {{ maydayProgressbarTitle }}</b>
+                    <p class="ml-8">
+                      <b>{{ maydayProgressbarTitle }}</b>
+                    </p>
                     <div class="progress-bar-container" :class="stripClass">
                       <div class="progress-bar" :style="progressBarStyle"></div>
                     </div>
@@ -917,6 +919,13 @@ export default {
         display: flex;
         justify-content: space-between;
         align-items: center;
+      }
+
+      p {
+        margin: 0;
+      }
+      .ml-8 {
+        margin-left: 8px;
       }
     }
 
