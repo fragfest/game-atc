@@ -15,6 +15,7 @@ import {
   uniqueProximityDebug,
   clearProximityCircle,
   turbulenceCounterReset,
+  resetMayday,
 } from '../utils';
 import {
   getTooCloseDistance,
@@ -33,11 +34,12 @@ import {
   planeHandoffSuccess,
   planeDelayFail,
   maydaySuccess,
+  planeLandFail,
 } from '../game/score/score';
 import { play, SoundType } from '../game/sound';
 import { isInWeather, isTurbulence } from '../game/weather';
 import { calcWake } from './aircraftWake';
-import { getMaydayAirframe } from '../game/score/mayday';
+import { getMaydayPerformance } from '../game/score/mayday';
 
 export default class Aircraft {
   constructor(
@@ -136,6 +138,8 @@ export default class Aircraft {
 
     // mayday
     this.isMayday = false;
+    this.isCrashed = false;
+    this.isCrashing = false;
     this.maydayScenario = flightObj.maydayScenario || '';
     this.maydayTimeStart = flightObj.time || 0;
     this.maydayTime = flightObj.time || 0;
@@ -277,7 +281,7 @@ export default class Aircraft {
 
   setIsTouchedDown(isTouchedDown) {
     this.isTouchedDown = !!isTouchedDown;
-    this.speedDeltaPerMs = this.airframeObj.speedDeltaPerMs * 2.5;
+    this.airframeObj.speedDeltaPerMs = this.airframeObj.speedDeltaPerMs * 2.5;
     this.setNonInteractive(true);
   }
 
@@ -306,6 +310,7 @@ export default class Aircraft {
     let speedMin = this.speedMin;
     if (isLanding) speedMin = this.speedLanding;
     if (this.isTouchedDown) speedMin = 0;
+    if (this.isCrashing) speedMin = 0;
 
     speed = speed < speedMin ? speedMin : speed;
     speed = speed > this.speedMax ? this.speedMax : speed;
@@ -575,7 +580,11 @@ export default class Aircraft {
       return pixelsSpeedDeltaBase * this.pixelsBasePerKnot;
     };
 
-    // touch down rollout
+    if (this.isCrashing) {
+      if (this.altitude <= 1000) return calcDelta(speedDeltaPerMs * 4);
+      if (this.altitude <= 500) return calcDelta(speedDeltaPerMs * 10);
+    }
+
     if (this.isTouchedDown) {
       if (speed > 120) return calcDelta(speedDeltaPerMs * 0.2);
       if (speed <= 120 && speed > 60) return calcDelta(speedDeltaPerMs);
@@ -607,10 +616,26 @@ export default class Aircraft {
       }, 8000);
     }
 
-    // TODO
-    // if isMayday allow crashing
-    // when crashed keep aircraft un-destroyed, set isCrashed
-    // crash: add failed landing to score (check levels have >= 2 failed goals)
+    const fraction = this.maydayTime / (this.maydayTimeStart || 1);
+    if (fraction <= 0.01) {
+      this.isCrashing = true;
+    }
+
+    if (this.isCrashing) {
+      this.setNonInteractive(true);
+      this.setAltitude(0, false, true);
+      this.setSpeed(220, false, true);
+
+      if (this.altitude <= 1000) {
+        this.setSpeed(0, false, true);
+      }
+
+      if (!this.isCrashed && this.altitude <= 100) {
+        this.isCrashed = true;
+        resetMayday();
+        planeLandFail();
+      }
+    }
   }
 
   updateWake(timestampMs, deltaTimeMs) {
@@ -653,6 +678,7 @@ export default class Aircraft {
     const airframeObj = this.airframeObj;
     const { turnRateRadPerMs, altitudeRatePerMs, speedDeltaPerMs } =
       airframeObj;
+
     let performanceObj = {
       turnRateRadPerMs,
       gain: { altitudeRatePerMs, speedDeltaPerMs },
@@ -661,7 +687,7 @@ export default class Aircraft {
 
     if (this.isMayday) {
       const fraction = this.maydayTime / (this.maydayTimeStart || 1);
-      performanceObj = getMaydayAirframe(
+      performanceObj = getMaydayPerformance(
         this.maydayScenario,
         airframeObj,
         fraction
@@ -682,7 +708,9 @@ export default class Aircraft {
       convertToSmallRad(headingRadNewLarge)
     );
 
-    if (this.takeoff) this.setSpeed(220, false, true);
+    if (this.takeoff) {
+      this.setSpeed(220, false, true);
+    }
     if (this.takeoff && this.speed > this.speedTakeoff) {
       this.isNonInteractive = false;
       this.takeoff = false;
@@ -750,7 +778,7 @@ export default class Aircraft {
     if (this.time <= 0) {
       this.time = 0;
 
-      if (!this.isDelayed) {
+      if (!this.isDelayed && !this.isMayday) {
         timeDebug(true);
         this.setIsDelayed(true);
       }
@@ -770,6 +798,8 @@ export default class Aircraft {
     // returning to canvas
     if (
       this.isNonInteractive &&
+      !this.isCrashed &&
+      !this.isCrashing &&
       !this.isTouchedDown &&
       !this.isTaxiing &&
       !this.takeoff &&

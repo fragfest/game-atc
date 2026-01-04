@@ -1,8 +1,31 @@
+import { convHdgDegToThreeDigits, randMinMax } from '../../utils';
+
 export const MaydayScenario = Object.freeze({
   Level9Fire: 'Level9Fire',
 });
 
-export const getMaydayLevels = () => [9];
+// NOTE to allow for crashes without failing level: check victory have >= 2 for goal: Failed
+export const getMaydayLevels = () => [9, 15, 20, 25];
+
+export const getCrashInfo = (scenario) => {
+  if (scenario === MaydayScenario.Level9Fire) {
+    return {
+      title: 'engine fire',
+      action: 'emergency landing',
+      detail1: 'emergency landing initiated',
+      detail2: 'rescue services en route',
+      progressTitle: 'Flight controls',
+    };
+  }
+
+  return {
+    title: 'EMERGENCY',
+    action: 'emergency landing',
+    detail1: '',
+    detail2: '',
+    progressTitle: '',
+  };
+};
 
 export const getMaydayInfo = (scenario) => {
   if (scenario === MaydayScenario.Level9Fire) {
@@ -24,7 +47,27 @@ export const getMaydayInfo = (scenario) => {
   };
 };
 
-export const getMaydayAirframe = (scenario, airframeObj, fraction) => {
+/**
+ * @param {MaydayScenario} maydayScenario
+ * @param {Number} width
+ * @param {Number} height
+ */
+export const createPositionMayday = (maydayScenario, width, height) => {
+  if (maydayScenario === MaydayScenario.Level9Fire) {
+    return {
+      x: width / 2,
+      y: 0 * height,
+      heading: convHdgDegToThreeDigits(randMinMax(240, 120)),
+      altitude: altMinMax(11000, 13000),
+      speed: spdMinMax(280, 320),
+      time: 6 * 60,
+    };
+  }
+
+  return {};
+};
+
+export const getMaydayPerformance = (scenario, airframeObj, fraction) => {
   let turn = 1;
   let altGain = 1;
   let altDrop = 1;
@@ -70,3 +113,7 @@ export const getMaydayAirframe = (scenario, airframeObj, fraction) => {
     },
   };
 };
+
+// PRIVATE ///////////////////////////////////////////////////////////////////////////
+const altMinMax = (min, max) => Math.floor(randMinMax(min, max) / 100) * 100;
+const spdMinMax = (min, max) => Math.floor(randMinMax(min, max) / 5) * 5;

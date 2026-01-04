@@ -28,10 +28,15 @@ export const Direction = Object.freeze({
 export const isRunway = (obj) => obj.classType === 'Runway';
 export const isWaypoint = (obj) => obj.classType === 'Waypoint';
 export const isAircraft = (obj) => obj.classType === 'Aircraft';
+export const isNotCrashed = (obj) => !obj.isCrashed;
 
 export const isDeparture = (obj) =>
   isAircraft(obj) && obj.destinationType === DestinationType.Departure;
 export const isArrival = (obj) =>
   isAircraft(obj) && obj.destinationType === DestinationType.Arrival;
 export const isAirborne = (obj) =>
-  isAircraft(obj) && !obj.isTaxiing && !obj.takeoff && !obj.isTouchedDown;
+  isAircraft(obj) &&
+  !obj.isTaxiing &&
+  !obj.takeoff &&
+  !obj.isTouchedDown &&
+  isNotCrashed(obj);

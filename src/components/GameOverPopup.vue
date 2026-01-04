@@ -498,7 +498,7 @@ export default {
   methods: {
     scoreFormat: function (score) {
       let scoreNum = Math.round(Number(score));
-      if (scoreNum <= 0) return '0';
+      if (scoreNum === 0) return '0';
       if (scoreNum >= 10000) return '9,999+';
       return scoreNum.toLocaleString('en-CA');
     },

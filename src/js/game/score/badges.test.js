@@ -514,7 +514,7 @@ describe('isNewAchievement', () => {
       global.localStorage = { getItem: jest.fn(() => JSON.stringify(badges)) };
     });
 
-    // TODO add when more levels
+    // TODO add when more MayDay levels
     describe.skip('when MayDay1 in achieved badges; MayDay2 history condition failed', () => {
       beforeEach(() => {
         badges = [Badges.MayDay1];

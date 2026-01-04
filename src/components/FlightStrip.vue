@@ -282,10 +282,10 @@
                 </div>
 
                 <div class="col card-back no-border font-large">
-                  <div class="row">
+                  <div v-if="maydayDetail1" class="row">
                     <p>- {{ maydayDetail1 }}</p>
                   </div>
-                  <div class="row">
+                  <div v-if="maydayDetail2" class="row">
                     <p>- {{ maydayDetail2 }}</p>
                   </div>
                   <div v-if="maydayProgressbarTitle" class="row">
@@ -415,7 +415,7 @@ import {
 } from '../js/events/messages';
 
 import ToolTip from './common/ToolTip';
-import { getMaydayInfo } from '../js/game/score/mayday';
+import { getCrashInfo, getMaydayInfo } from '../js/game/score/mayday';
 
 const getPlane = (plane, planes) => {
   if (!plane.id) return false;
@@ -520,18 +520,30 @@ export default {
     maydayTitle: function () {
       const plane = getPlane(this.plane, this.planes);
       if (!plane) return false;
+
+      if (plane.isCrashed) {
+        return getCrashInfo(plane.maydayScenario).title;
+      }
       return getMaydayInfo(plane.maydayScenario).title;
     },
 
     maydayDetail1: function () {
       const plane = getPlane(this.plane, this.planes);
       if (!plane) return false;
+
+      if (plane.isCrashed) {
+        return getCrashInfo(plane.maydayScenario).detail1;
+      }
       return getMaydayInfo(plane.maydayScenario).detail1;
     },
 
     maydayDetail2: function () {
       const plane = getPlane(this.plane, this.planes);
       if (!plane) return false;
+
+      if (plane.isCrashed) {
+        return getCrashInfo(plane.maydayScenario).detail2;
+      }
       return getMaydayInfo(plane.maydayScenario).detail2;
     },
 

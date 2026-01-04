@@ -1,4 +1,4 @@
-import { MaydayScenario } from '../game/score/mayday.js';
+import { createPositionMayday, MaydayScenario } from '../game/score/mayday.js';
 import { isAircraft } from '../types.js';
 import { getDepartureCount, getArrivalCount } from '../utils.js';
 import { getAirportByLevel, getLevelObj } from './getLevel.js';
@@ -108,12 +108,8 @@ const chanceDepartureHigh = chanceDepartureBase / 10;
 export const spawnDeparturesOnly = (arg, airport) => {
   const { entityManagerArr, goals, score, getChanceFn, aircraftFn } = arg;
   const flightObj = { time: 12 * 60 };
-  const areDeparturesSpawned = noMoreDepartures(entityManagerArr, goals, score);
-  const areAllSpawned = noMoreDeparturesArrivals(
-    entityManagerArr,
-    goals,
-    score
-  );
+  const areDeparturesSpawned = noMoreDepart(entityManagerArr, goals, score);
+  const areAllSpawned = noMoreDepartOrArrive(entityManagerArr, goals, score);
   if (areAllSpawned) return;
   if (areDeparturesSpawned) return;
 
@@ -128,12 +124,8 @@ export const spawnDeparturesOnly = (arg, airport) => {
 export const spawnArrivalsOnly = (arg, airport) => {
   const { entityManagerArr, goals, score, getChanceFn, aircraftFn } = arg;
   const flightObj = { time: 18 * 60 };
-  const areArrivalsSpawned = noMoreArrivals(entityManagerArr, goals, score);
-  const areAllSpawned = noMoreDeparturesArrivals(
-    entityManagerArr,
-    goals,
-    score
-  );
+  const areArrivalsSpawned = noMoreArrive(entityManagerArr, goals, score);
+  const areAllSpawned = noMoreDepartOrArrive(entityManagerArr, goals, score);
   if (areAllSpawned) return;
   if (areArrivalsSpawned) return;
 
@@ -174,13 +166,9 @@ export const spawnBalancedCommon = (arg, airport, chanceDeparture, time) => {
   const count = entityManagerArr.filter(isAircraft).length;
   const departureCount = getDepartureCount(entityManagerArr);
   const arrivalCount = getArrivalCount(entityManagerArr);
-  const areDeparturesSpawned = noMoreDepartures(entityManagerArr, goals, score);
-  const areArrivalsSpawned = noMoreArrivals(entityManagerArr, goals, score);
-  const areAllSpawned = noMoreDeparturesArrivals(
-    entityManagerArr,
-    goals,
-    score
-  );
+  const areDeparturesSpawned = noMoreDepart(entityManagerArr, goals, score);
+  const areArrivalsSpawned = noMoreArrive(entityManagerArr, goals, score);
+  const areAllSpawned = noMoreDepartOrArrive(entityManagerArr, goals, score);
   const lowCount = 4;
   const flightObj = { time };
 
@@ -225,14 +213,15 @@ export const getSpawnMayday = (arg, maydayScenario) => {
   const maydayCount = score.maydaySpawn;
   const count = entityManagerArr.filter(isAircraft).length;
 
-  let time = 8 * 60;
+  let time = 10 * 60;
   let isMayday = false;
 
   if (maydayCount >= 1) return { isMayday, time };
   let chance = 0;
 
   if (maydayScenario === MaydayScenario.Level9Fire) {
-    time = 8 * 60;
+    time = createPositionMayday(maydayScenario).time;
+
     if (count > 12) {
       chance = guaranteedChance;
     } else if (count > 10) {
@@ -243,7 +232,6 @@ export const getSpawnMayday = (arg, maydayScenario) => {
       chance = 0;
     }
 
-    // chance = guaranteedChance;
     if (Math.random() <= getChanceFn(chance)) {
       isMayday = true;
       return { isMayday, time };
@@ -282,17 +270,16 @@ export const spawnBalancedMayday = (maydayScenario) => (arg, airport) => {
 ////////////////////////////////////////////////////////////////////////
 // PRIVATE
 ////////////////////////////////////////////////////////////////////////
+const departingCount = (obj) => getDepartureCount(obj);
+const arrivingCount = (obj) => getArrivalCount(obj);
 
 const departureGoalRemaining = (goals, score) =>
   goals.Departures - score.departures;
 const arrivalGoalRemaining = (goals, score) => goals.Arrivals - score.arrivals;
-
 const noMoreRemaining = (countFn, remainingFn) => (arr, goals, score) =>
   countFn(arr) >= remainingFn(goals, score);
-const noMoreDepartures = noMoreRemaining(
-  getDepartureCount,
-  departureGoalRemaining
-);
-const noMoreArrivals = noMoreRemaining(getArrivalCount, arrivalGoalRemaining);
-const noMoreDeparturesArrivals = (arr, goals, score) =>
-  noMoreDepartures(arr, goals, score) && noMoreArrivals(arr, goals, score);
+
+const noMoreDepart = noMoreRemaining(departingCount, departureGoalRemaining);
+const noMoreArrive = noMoreRemaining(arrivingCount, arrivalGoalRemaining);
+const noMoreDepartOrArrive = (arr, goals, score) =>
+  noMoreDepart(arr, goals, score) && noMoreArrive(arr, goals, score);

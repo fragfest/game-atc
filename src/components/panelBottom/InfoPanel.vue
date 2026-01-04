@@ -110,18 +110,7 @@
             </div>
           </div>
 
-          <div
-            v-if="plane.isMayday && flightQualityMessage"
-            class="experience-row justify-end"
-          >
-            <div class="flight-quality-message red-bckgnd" :class="sizeClass">
-              <h2 class="white">{{ flightQualityMessage }}</h2>
-            </div>
-          </div>
-          <div
-            v-else-if="flightQualityMessage"
-            class="experience-row justify-end"
-          >
+          <div v-if="flightQualityMessage" class="experience-row justify-end">
             <div class="flight-quality-message" :class="sizeClass">
               <h2 class="white">{{ flightQualityMessage }}</h2>
             </div>
@@ -167,7 +156,7 @@ import { getAirframe, getPerformance } from '../../js/aircraft/airframe';
 import ProgressSliceEmpty from '../common/ProgressSliceEmpty';
 import ProgressSliceFull from '../common/ProgressSliceFull';
 import { flightQuality } from '../../js/game/score/flight';
-import { getMaydayInfo } from '../../js/game/score/mayday';
+import { getCrashInfo, getMaydayInfo } from '../../js/game/score/mayday';
 
 const showFullSlice = (plane, index) => {
   if (!plane) return false;
@@ -213,12 +202,20 @@ export default {
     maydayTitle: function () {
       const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
       if (!planeSel) return null;
+
+      if (planeSel.isCrashed) {
+        return getCrashInfo(planeSel.maydayScenario).title;
+      }
       return getMaydayInfo(planeSel.maydayScenario).title;
     },
 
     maydayAction: function () {
       const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
       if (!planeSel) return null;
+
+      if (planeSel.isCrashed) {
+        return getCrashInfo(planeSel.maydayScenario).action;
+      }
       return getMaydayInfo(planeSel.maydayScenario).action;
     },
 

@@ -16,7 +16,7 @@ import {
   getWaypointDepartureRnd,
 } from '../airports/airports';
 import { getFlightArrival, getFlightDeparture } from '../flights/flights';
-import { MaydayScenario } from '../game/score/mayday';
+import { createPositionMayday } from '../game/score/mayday';
 
 /**
  * @callback CreateAircraft
@@ -319,25 +319,6 @@ const createAircraftDeparture = (
   return aircraft;
 };
 
-/**
- * @param {import('../game/score/mayday').MaydayScenario} maydayScenario
- * @param {Number} width
- * @param {Number} height
- */
-const createPositionMayday = (maydayScenario, width, height) => {
-  if (maydayScenario === MaydayScenario.Level9Fire) {
-    return {
-      x: width / 2,
-      y: 0 * height,
-      heading: convHdgDegToThreeDigits(randMinMax(240, 120)),
-      altitude: altMinMax(11000, 13000),
-      speed: spdMinMax(280, 320),
-    };
-  }
-
-  return {};
-};
-
 let spawned = [];
 /**
  * create a new FlightObj not already in spawned list of objects
@@ -354,8 +335,6 @@ const createFlight = (spawnFn) => {
   return newFlight;
 };
 
-const altMinMax = (min, max) => Math.floor(randMinMax(min, max) / 100) * 100;
-const spdMinMax = (min, max) => Math.floor(randMinMax(min, max) / 5) * 5;
 const setAlt = () => Math.floor(randMinMax(7000, 10000) / 100) * 100;
 const setSpd = () => Math.floor(randMinMax(230, 250) / 5) * 5;
 

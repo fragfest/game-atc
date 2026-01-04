@@ -246,7 +246,6 @@ export const getIntro = (gameLevel) => {
       };
     }
 
-    // TODO cause emergency here
     if (gameLevel === 15) {
       return {
         displayTimeMs: 16000,
@@ -302,7 +301,6 @@ export const getIntro = (gameLevel) => {
       };
     }
 
-    // TODO cause emergency here
     if (gameLevel === 20) {
       return {
         displayTimeMs: 16000,
@@ -358,7 +356,6 @@ export const getIntro = (gameLevel) => {
       };
     }
 
-    // TODO cross-pacific fuel emergency
     if (gameLevel === 25) {
       return {
         displayTimeMs: 16000,

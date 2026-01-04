@@ -1,9 +1,11 @@
-import { isDeparture, isArrival } from './types';
+import { isDeparture, isArrival, isNotCrashed } from './types';
 import { distBetweenEntities } from './entity';
 
 // PLANES /////////////////////////////////////////////////////////////////
-export const getDepartureCount = (arr) => arr.filter(isDeparture).length;
-export const getArrivalCount = (arr) => arr.filter(isArrival).length;
+export const getDepartureCount = (arr) =>
+  arr.filter((x) => isDeparture(x) && isNotCrashed(x)).length;
+export const getArrivalCount = (arr) =>
+  arr.filter((x) => isArrival(x) && isNotCrashed(x)).length;
 
 // WAYPOINT /////////////////////////////////////////////////////////////////
 export const nextWaypoint = (waypointsArr, plane) => {
@@ -230,6 +232,7 @@ export const setupDebug = () => debug();
 export const historyRecordDebug = () => debug();
 export const victoryDebug = () => debug();
 export const resetBadgeHistory = () => debug();
+export const resetMayday = () => debug();
 
 const debug = () => {
   window['06d6dd1b-76bb-4e0f-9d66-6dd80e324211'] =
