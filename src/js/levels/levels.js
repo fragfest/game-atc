@@ -54,6 +54,7 @@ export const getSpawnByGameLevel = (gameLevel) => {
   const spawnFn = (spawnArg) => {
     const airport = getAirportByLevel(gameLevel);
     const maydayLevel9 = spawnBalancedMayday(MaydayScenario.Level9Fire);
+    const maydayLevel15 = spawnBalancedMayday(MaydayScenario.Level15Decompress);
 
     // LHR
     if (gameLevel === 1) return spawnDeparturesOnly(spawnArg, airport);
@@ -72,7 +73,7 @@ export const getSpawnByGameLevel = (gameLevel) => {
     if (gameLevel === 12) return spawnBalanced(spawnArg, airport);
     if (gameLevel === 13) return spawnBalanced(spawnArg, airport);
     if (gameLevel === 14) return spawnBalanced(spawnArg, airport);
-    if (gameLevel === 15) return spawnBalanced(spawnArg, airport);
+    if (gameLevel === 15) return maydayLevel15(spawnArg, airport);
     if (gameLevel === 16) return spawnBalanced(spawnArg, airport);
     // AMS
     if (gameLevel === 17) return spawnBalanced(spawnArg, airport);
@@ -220,6 +221,26 @@ export const getSpawnMayday = (arg, maydayScenario) => {
   let chance = 0;
 
   if (maydayScenario === MaydayScenario.Level9Fire) {
+    time = createPositionMayday(maydayScenario).time;
+
+    if (count > 12) {
+      chance = guaranteedChance;
+    } else if (count > 10) {
+      chance = veryHighChance;
+    } else if (count > 8) {
+      chance = highChance;
+    } else {
+      chance = 0;
+    }
+
+    if (Math.random() <= getChanceFn(chance)) {
+      isMayday = true;
+      return { isMayday, time };
+    }
+    return { isMayday, time };
+  }
+
+  if (maydayScenario === MaydayScenario.Level15Decompress) {
     time = createPositionMayday(maydayScenario).time;
 
     if (count > 12) {

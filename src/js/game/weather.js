@@ -82,6 +82,10 @@ export const isInWeather = (entityObj) => (weatherEntity) => {
   );
 };
 
+export const getAllTurbulenceLevels = () => [
+  5, 6, 9, 11, 14, 16, 20, 24, 25, 26,
+];
+
 ////////////////////////////////////////////////////////////////////////
 // LEVELS
 ////////////////////////////////////////////////////////////////////////
@@ -179,10 +183,6 @@ export const getWeatherLevelByGameLevel = (gameLevel) => {
   };
   return weatherFn;
 };
-
-export const getAllTurbulenceLevels = () => [
-  5, 6, 9, 11, 14, 16, 20, 24, 25, 26,
-];
 
 ////////////////////////////////////////////////////////////////////////
 // PRIVATE

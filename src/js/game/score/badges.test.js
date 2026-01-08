@@ -293,21 +293,19 @@ describe('getBadgeLevelCompleted', () => {
       });
     });
 
-    // TODO update with more MayDay levels
-    describe.skip('when PushingTin2 already in achieved badges', () => {
+    describe('when MayDay2 already in achieved badges', () => {
       test('should return badge level 2', () => {
-        badges = [Badges.PushingTin2];
-        expect(getBadgeLevelCompleted(BadgesTypes.PushingTin)).toEqual(2);
+        badges = [Badges.MayDay2];
+        expect(getBadgeLevelCompleted(BadgesTypes.MayDay)).toEqual(2);
       });
     });
 
-    describe.skip('when PushingTin1, PushingTin2 already in achieved badges', () => {
+    describe('when MayDay1, MayDay2 already in achieved badges', () => {
       test('should return badge level 2', () => {
-        badges = [Badges.PushingTin1, Badges.PushingTin2];
-        expect(getBadgeLevelCompleted(BadgesTypes.PushingTin)).toEqual(2);
+        badges = [Badges.MayDay1, Badges.MayDay2];
+        expect(getBadgeLevelCompleted(BadgesTypes.MayDay)).toEqual(2);
       });
     });
-    // END TODO
 
     describe('when MayDay in achieved badges and historyRecords populated', () => {
       let historyRecords;
@@ -373,8 +371,7 @@ describe('getBadgeLevelCompleted', () => {
           badges = [Badges.MayDay1];
         });
 
-        // TODO update with more MayDay levels
-        describe.skip('history has level 2 victory', () => {
+        describe('history has level 2 victory', () => {
           beforeEach(() => {
             historyRecords = [
               {
@@ -382,7 +379,7 @@ describe('getBadgeLevelCompleted', () => {
                 historyScore: { mayday: 1 },
               },
               {
-                level: '???',
+                level: 25,
                 historyScore: { mayday: 1 },
               },
             ];
@@ -399,7 +396,6 @@ describe('getBadgeLevelCompleted', () => {
       });
     });
   });
-  // END MayDay
 });
 
 describe('isNewAchievement', () => {
@@ -505,6 +501,10 @@ describe('isNewAchievement', () => {
           level: 9,
           historyScore: { mayday: 1 },
         },
+        {
+          level: 15,
+          historyScore: { mayday: 1 },
+        },
       ];
       jest
         .spyOn(Score, 'getHistoryRecords')
@@ -514,8 +514,7 @@ describe('isNewAchievement', () => {
       global.localStorage = { getItem: jest.fn(() => JSON.stringify(badges)) };
     });
 
-    // TODO add when more MayDay levels
-    describe.skip('when MayDay1 in achieved badges; MayDay2 history condition failed', () => {
+    describe('when MayDay1 in achieved badges; MayDay2 history condition failed', () => {
       beforeEach(() => {
         badges = [Badges.MayDay1];
         historyRecords[1].historyScore.mayday = 0;
@@ -525,9 +524,9 @@ describe('isNewAchievement', () => {
       });
     });
 
-    describe('when badges empty; MayDay1 history condition passed', () => {
+    describe('when MayDay1 in achieved badges; MayDay1 history condition passed', () => {
       beforeEach(() => {
-        badges = [];
+        badges = [Badges.MayDay1];
         historyRecords[0].historyScore.mayday = 1;
       });
       test('should return true', () => {

@@ -279,7 +279,7 @@
         style="
           font-variation-settings: normal;
           display: inline;
-          fill: #bfffff;
+          fill: #30fefe;
           fill-opacity: 1;
           fill-rule: evenodd;
           stroke: #23d2ed;

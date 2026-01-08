@@ -10,6 +10,9 @@ export const BadgesTypes = Object.freeze({
 });
 
 export const Badges = Object.freeze({
+  MayDay4: 'MayDay4',
+  MayDay3: 'MayDay3',
+  MayDay2: 'MayDay2',
   MayDay1: 'MayDay1',
   PushingTin5: 'PushingTin5',
   PushingTin4: 'PushingTin4',
@@ -31,6 +34,9 @@ export const getBadgesType = (badgeArg) => {
   const badge = Object.keys(Badges).find((x) => x === badgeArg);
   if (!badge) return null;
 
+  if (Badges[badge] === Badges.MayDay4) return BadgesTypes.MayDay;
+  if (Badges[badge] === Badges.MayDay3) return BadgesTypes.MayDay;
+  if (Badges[badge] === Badges.MayDay2) return BadgesTypes.MayDay;
   if (Badges[badge] === Badges.MayDay1) return BadgesTypes.MayDay;
 
   if (Badges[badge] === Badges.PushingTin5) return BadgesTypes.PushingTin;
@@ -55,6 +61,9 @@ export const getBadgeLevel = (badge) => {
   const badgeFound = Object.keys(Badges).find((x) => x === badge);
   if (!badgeFound) return null;
 
+  if (Badges[badgeFound] === Badges.MayDay4) return 4;
+  if (Badges[badgeFound] === Badges.MayDay3) return 3;
+  if (Badges[badgeFound] === Badges.MayDay2) return 2;
   if (Badges[badgeFound] === Badges.MayDay1) return 1;
 
   if (Badges[badgeFound] === Badges.PushingTin5) return 5;
@@ -127,6 +136,9 @@ export const setBadgeMayDay = (badgeLevel) => {
   }
 
   const badges = getBadges();
+  if (badgeLevel === 4) badges.push(Badges.MayDay4);
+  if (badgeLevel === 3) badges.push(Badges.MayDay3);
+  if (badgeLevel === 2) badges.push(Badges.MayDay2);
   if (badgeLevel === 1) badges.push(Badges.MayDay1);
   setBadges(badges);
 };
@@ -139,6 +151,9 @@ export const setBadgePushingTin = (badgeLevel) => {
   }
 
   const badges = getBadges();
+  if (badgeLevel === 5) badges.push(Badges.PushingTin5);
+  if (badgeLevel === 4) badges.push(Badges.PushingTin4);
+  if (badgeLevel === 3) badges.push(Badges.PushingTin3);
   if (badgeLevel === 2) badges.push(Badges.PushingTin2);
   if (badgeLevel === 1) badges.push(Badges.PushingTin1);
   setBadges(badges);
@@ -178,6 +193,9 @@ export const getProgressbarDisp = (badgeType, badgeLevel) => {
 
   if (badgeType === BadgesTypes.MayDay) {
     if (badgeLevel === 1) progressLevel = 1;
+    if (badgeLevel === 2) progressLevel = 2;
+    if (badgeLevel === 3) progressLevel = 4;
+    if (badgeLevel === 4) progressLevel = 6;
   }
 
   if (badgeType === BadgesTypes.PushingTin) {
@@ -276,6 +294,9 @@ const getHistoryBadge = (badgeType) => {
   // always return the highest badge for a BadgesTypes
 
   if (badgeType === BadgesTypes.MayDay) {
+    if (badges.find((x) => x === Badges.MayDay4)) return Badges.MayDay4;
+    if (badges.find((x) => x === Badges.MayDay3)) return Badges.MayDay3;
+    if (badges.find((x) => x === Badges.MayDay2)) return Badges.MayDay2;
     if (badges.find((x) => x === Badges.MayDay1)) return Badges.MayDay1;
   }
 
@@ -309,7 +330,10 @@ const getBadgeLevelFromScore = (badgeType) => {
     const levelsArr = getMaydayLevels();
     const maydayLevelsPassed = levelsArr.filter(isAchievedMayday).length;
 
-    if (maydayLevelsPassed >= 1) badgeLevelFromScore = 1;
+    if (maydayLevelsPassed >= 4) badgeLevelFromScore = 4;
+    else if (maydayLevelsPassed >= 3) badgeLevelFromScore = 3;
+    else if (maydayLevelsPassed >= 2) badgeLevelFromScore = 2;
+    else if (maydayLevelsPassed >= 1) badgeLevelFromScore = 1;
   }
 
   if (badgeType === BadgesTypes.PushingTin) {

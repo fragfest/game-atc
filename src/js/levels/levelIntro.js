@@ -252,8 +252,8 @@ export const getIntro = (gameLevel) => {
         width: 0.72,
         levelNum: gameLevel,
         airportHeading: `Tokyo Haneda (HND)`,
-        airportSubheading: `South Wind Operations - weather: moderate`,
-        text1: `An unremarkable day orchestrating a typical sky over the Greater Tokyo Area.`,
+        airportSubheading: `South Wind Operations - weather: clear`,
+        text1: `A quiet unremarkable day orchestrating a typical sky over the Greater Tokyo Area.`,
       };
     }
 
