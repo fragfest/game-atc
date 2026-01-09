@@ -184,7 +184,7 @@ const createAircraftMayday = (
       clickCB
     );
 
-    aircraft.setIsMayday(true);
+    aircraft.setIsMayday(true, false);
     return aircraft;
   }
 
@@ -193,12 +193,12 @@ const createAircraftMayday = (
       entityManagerArr,
       canvasObjs,
       flightObj,
-      position,
+      {},
       airport,
       clickCB
     );
 
-    aircraft.setIsMayday(true);
+    aircraft.setIsMayday(true, true);
     return aircraft;
   }
 };

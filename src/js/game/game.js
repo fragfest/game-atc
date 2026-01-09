@@ -322,7 +322,7 @@ const spawnAircraftRnd =
       return;
     }
 
-    if (plane.isMayday) {
+    if (plane.isMayday || plane.isMaydayDepart) {
       maydaySpawned();
     }
 

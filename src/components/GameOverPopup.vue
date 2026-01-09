@@ -377,14 +377,16 @@ export default {
     const newBadgeAchievedPushingTin = isNewAchievement(BadgesTypes.PushingTin);
     const newBadgeAchievedMayday = isNewAchievement(BadgesTypes.MayDay);
 
-    if (newBadgeAchievedBlueSky) {
-      newBadgeAchieved.push(BadgesTypes.BlueSky);
-    }
-    if (newBadgeAchievedPushingTin) {
-      newBadgeAchieved.push(BadgesTypes.PushingTin);
-    }
-    if (newBadgeAchievedMayday) {
-      newBadgeAchieved.push(BadgesTypes.MayDay);
+    if (isVictory(score)) {
+      if (newBadgeAchievedBlueSky) {
+        newBadgeAchieved.push(BadgesTypes.BlueSky);
+      }
+      if (newBadgeAchievedPushingTin) {
+        newBadgeAchieved.push(BadgesTypes.PushingTin);
+      }
+      if (newBadgeAchievedMayday) {
+        newBadgeAchieved.push(BadgesTypes.MayDay);
+      }
     }
 
     // newBadgeAchieved forEach

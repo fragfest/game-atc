@@ -308,7 +308,7 @@ export const getIntro = (gameLevel) => {
         levelNum: gameLevel,
         airportHeading: `Amsterdam Schiphol (AMS)`,
         airportSubheading: `Southbound Operations - weather: minor`,
-        text1: `Just need to avoid a small weather cell moving through the area.`,
+        text1: `Just need to avoid a small weather cell moving through the area. Some light bird activity near the runways, unlikely to cause problems`,
       };
     }
 
@@ -356,6 +356,7 @@ export const getIntro = (gameLevel) => {
       };
     }
 
+    // TODO fuel emergency from pacific
     if (gameLevel === 25) {
       return {
         displayTimeMs: 16000,

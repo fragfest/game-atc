@@ -1,4 +1,3 @@
-// import { getLevelObj } from '../levels/levels';
 import { getLevelObj } from '../levels/getLevel';
 import { isAirborne } from '../types';
 import { getScreenSize, ScreenSizes, isWithinDist } from '../utils';

@@ -39,7 +39,10 @@ import {
 import { play, SoundType } from '../game/sound';
 import { isInWeather, isTurbulence } from '../game/weather';
 import { calcWake } from './aircraftWake';
-import { getMaydayPerformance } from '../game/score/mayday';
+import {
+  createPositionMayday,
+  getMaydayPerformance,
+} from '../game/score/mayday';
 
 export default class Aircraft {
   constructor(
@@ -138,6 +141,7 @@ export default class Aircraft {
 
     // mayday
     this.isMayday = false;
+    this.isMaydayDepart = false;
     this.isCrashed = false;
     this.isCrashing = false;
     this.maydayScenario = flightObj.maydayScenario || '';
@@ -191,8 +195,9 @@ export default class Aircraft {
     this.turbulenceWakeArr = [];
   }
 
-  setIsMayday(isMayday) {
-    this.isMayday = !!isMayday;
+  setIsMayday(isMayday, isDeparting) {
+    this.isMayday = isMayday && !isDeparting;
+    this.isMaydayDepart = !!isDeparting;
   }
 
   setIsDelayed(isDelayed) {
@@ -428,6 +433,7 @@ export default class Aircraft {
       );
       return;
     }
+
     if (this.isTouchedDown) {
       planeLandSuccess();
       if (this.isMayday) maydaySuccess();
@@ -688,8 +694,8 @@ export default class Aircraft {
       drop: { altitudeRatePerMs, speedDeltaPerMs },
     };
 
-    if (this.isMayday) {
-      const fraction = this.maydayTime / (this.maydayTimeStart || 1);
+    const fraction = this.maydayTime / (this.maydayTimeStart || 1);
+    if (this.destinationType === DestinationType.Arrival) {
       performanceObj = getMaydayPerformance(
         this.maydayScenario,
         airframeObj,
@@ -698,9 +704,25 @@ export default class Aircraft {
         this.altitude,
         altitudeTarget
       );
+    }
 
+    if (this.isMayday) {
       if (!this.landing && !this.takeoff) {
         this.setAltitude(performanceObj.altitudeTarget, false, false);
+      }
+    }
+
+    if (this.isMaydayDepart && isAirborne(this)) {
+      const timeElapsed = this.maydayTimeStart - this.maydayTime;
+      const delayTime = createPositionMayday(this.maydayScenario).delayTime;
+
+      if (timeElapsed > delayTime) {
+        this.destinationType = DestinationType.Arrival;
+        this.time = createPositionMayday(this.maydayScenario).time;
+        this.maydayTime = createPositionMayday(this.maydayScenario).time;
+        this.maydayTimeStart = createPositionMayday(this.maydayScenario).time;
+        this.setIsMayday(true, false);
+        this.setHandoff(false);
       }
     }
 
@@ -797,7 +819,7 @@ export default class Aircraft {
     }
 
     // mayday time
-    if (this.isMayday) {
+    if (this.isMayday || (this.isMaydayDepart && isAirborne(this))) {
       if (this.maydayTime <= 0) {
         this.maydayTime = 0;
       } else {

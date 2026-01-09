@@ -55,6 +55,7 @@ export const getSpawnByGameLevel = (gameLevel) => {
     const airport = getAirportByLevel(gameLevel);
     const maydayLevel9 = spawnBalancedMayday(MaydayScenario.Level9Fire);
     const maydayLevel15 = spawnBalancedMayday(MaydayScenario.Level15Decompress);
+    const maydayLevel20 = spawnBalancedMayday(MaydayScenario.Level20BirdStrike);
 
     // LHR
     if (gameLevel === 1) return spawnDeparturesOnly(spawnArg, airport);
@@ -79,7 +80,7 @@ export const getSpawnByGameLevel = (gameLevel) => {
     if (gameLevel === 17) return spawnBalanced(spawnArg, airport);
     if (gameLevel === 18) return spawnBalanced(spawnArg, airport);
     if (gameLevel === 19) return spawnMoreArrivals(spawnArg, airport);
-    if (gameLevel === 20) return spawnBalanced(spawnArg, airport);
+    if (gameLevel === 20) return maydayLevel20(spawnArg, airport);
     if (gameLevel === 21) return spawnBalanced(spawnArg, airport);
     // YVR
     if (gameLevel === 22) return spawnBalanced(spawnArg, airport);
@@ -243,6 +244,26 @@ export const getSpawnMayday = (arg, maydayScenario) => {
   if (maydayScenario === MaydayScenario.Level15Decompress) {
     time = createPositionMayday(maydayScenario).time;
 
+    if (count > 14) {
+      chance = guaranteedChance;
+    } else if (count > 12) {
+      chance = veryHighChance;
+    } else if (count > 10) {
+      chance = highChance;
+    } else {
+      chance = 0;
+    }
+
+    if (Math.random() <= getChanceFn(chance)) {
+      isMayday = true;
+      return { isMayday, time };
+    }
+    return { isMayday, time };
+  }
+
+  if (maydayScenario === MaydayScenario.Level20BirdStrike) {
+    const time = 18 * 60;
+
     if (count > 12) {
       chance = guaranteedChance;
     } else if (count > 10) {
@@ -260,6 +281,8 @@ export const getSpawnMayday = (arg, maydayScenario) => {
     return { isMayday, time };
   }
 
+  // TODO 1 more levels
+
   console.error('unknown maydayScenario');
   return { isMayday, time };
 };
@@ -274,6 +297,17 @@ export const spawnBalancedMayday = (maydayScenario) => (arg, airport) => {
   const { isMayday, time } = getSpawnMayday(arg, maydayScenario);
 
   if (isMayday) {
+    if (maydayScenario === MaydayScenario.Level20BirdStrike) {
+      const flightObj = { time, isMayday: true, maydayScenario };
+      aircraftFn(
+        getChanceFn(guaranteedChance),
+        guaranteedChance,
+        flightObj,
+        airport
+      );
+      return;
+    }
+
     const flightObj = {
       flight: 'MAYDAY',
       time,

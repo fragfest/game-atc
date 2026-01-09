@@ -3,6 +3,7 @@ import { convHdgDegToThreeDigits, randMinMax } from '../../utils';
 export const MaydayScenario = Object.freeze({
   Level9Fire: 'Level9Fire',
   Level15Decompress: 'Level15Decompress',
+  Level20BirdStrike: 'Level20BirdStrike',
 });
 
 // NOTE to allow for crashes without failing level: check victory have >= 2 for goal: Failed
@@ -26,6 +27,16 @@ export const getCrashInfo = (scenario) => {
       detail1: 'emergency landing initiated',
       detail2: 'rescue services en route',
       progressTitle: 'Flight controls',
+    };
+  }
+
+  if (scenario === MaydayScenario.Level20BirdStrike) {
+    return {
+      title: 'bird strike',
+      action: 'land immediately',
+      detail1: 'emergency landing initiated',
+      detail2: 'rescue services en route',
+      progressTitle: 'Engine power',
     };
   }
 
@@ -56,6 +67,16 @@ export const getMaydayInfo = (scenario) => {
       detail1: 'Emergency descent to 9,000 ft',
       detail2: 'Flight controls degraded',
       progressTitle: 'Flight controls',
+    };
+  }
+
+  if (scenario === MaydayScenario.Level20BirdStrike) {
+    return {
+      title: 'bird strike',
+      action: 'land immediately',
+      detail1: 'Engine failure: climbing degraded',
+      detail2: 'Engine power failing',
+      progressTitle: 'Engine power',
     };
   }
 
@@ -93,6 +114,13 @@ export const createPositionMayday = (maydayScenario, width, height) => {
       altitude: altMinMax(22000, 24000),
       speed: spdMinMax(280, 320),
       time: 10 * 60,
+    };
+  }
+
+  if (maydayScenario === MaydayScenario.Level20BirdStrike) {
+    return {
+      time: 6 * 60,
+      delayTime: 60,
     };
   }
 
@@ -174,6 +202,25 @@ export const getMaydayPerformance = (
     } else if (fraction < 1) {
       turn = 0.9;
     }
+
+    return {
+      altitudeTarget,
+      turnRateRadPerMs: airframeObj.turnRateRadPerMs * turn,
+      gain: {
+        altitudeRatePerMs: airframeObj.altitudeRatePerMs * altGain,
+        speedDeltaPerMs: airframeObj.speedDeltaPerMs * speedGain,
+      },
+      drop: {
+        altitudeRatePerMs: airframeObj.altitudeRatePerMs * altDrop,
+        speedDeltaPerMs: airframeObj.speedDeltaPerMs * speedDrop,
+      },
+    };
+  }
+
+  if (scenario === MaydayScenario.Level20BirdStrike) {
+    altGain = 0.1;
+    turn = 0.9;
+    speedGain = 0.1;
 
     return {
       altitudeTarget,
