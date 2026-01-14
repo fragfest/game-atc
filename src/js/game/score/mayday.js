@@ -119,8 +119,8 @@ export const createPositionMayday = (maydayScenario, width, height) => {
 
   if (maydayScenario === MaydayScenario.Level20BirdStrike) {
     return {
-      time: 6 * 60,
-      delayTime: 60,
+      time: 7 * 60,
+      delayTime: 30,
     };
   }
 

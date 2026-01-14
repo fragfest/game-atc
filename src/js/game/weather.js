@@ -25,8 +25,10 @@ export const isTurbulence = (obj) => obj.weatherType === WeatherType.Turbulence;
  * @param {Array} args.entityManagerArr
  * @param {Object} args.weatherLayerObj canvas object
  * @param {Object} args.entityDiv HtmlElement
+ * @param {import('./game').State} state
+ * @param {Number} state.fastForwardNum
  */
-export const weatherGameLoop = (width, height, args) => {
+export const weatherGameLoop = (width, height, args, state) => {
   const weatherArgs = {
     width,
     height,
@@ -35,20 +37,18 @@ export const weatherGameLoop = (width, height, args) => {
     entityManagerArr: args.entityManagerArr,
   };
   getLevelObj().weatherFn(weatherArgs);
-  window.requestAnimationFrame(tick(width, height, args));
+  window.requestAnimationFrame(tick(width, height, args, state));
 };
 
-const tick = (width, height, args) => () => {
+const tick = (width, height, args, state) => () => {
   args.weatherLayerObj.ctx.clearRect(0, 0, width, height);
-  updateWeather(args.entityManagerArr);
-  window.requestAnimationFrame(tick(width, height, args));
+  updateWeather(args.entityManagerArr, state.fastForwardNum);
+  window.requestAnimationFrame(tick(width, height, args, state));
 };
 
-const updateWeather = (entityManagerArr) => {
+const updateWeather = (entityManagerArr, fastForwardNum) => {
   const weatherArr = entityManagerArr.filter((x) => x.updateWeatherFn);
-  weatherArr.forEach((weather) => {
-    weather.updateWeatherFn();
-  });
+  weatherArr.forEach((weather) => weather.updateWeatherFn(fastForwardNum));
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -640,9 +640,9 @@ const addInert =
     const obj = createWeatherFn(ctx, entityDiv, x, y, radius * 2);
     const updateMoveFn = moveFn(width, height);
 
-    const updateWeatherFn = () => {
+    const updateWeatherFn = (fastForwardNum) => {
       const diffXY = updateMoveFn(centerXY.x, centerXY.y);
-      updateXY(diffXY, XY, centerXY, obj);
+      updateXY(diffXY, XY, centerXY, obj, fastForwardNum);
     };
     entityManagerArr.push(
       createWeatherEntity(WeatherType.Inert, centerXY, radius, updateWeatherFn)
@@ -662,9 +662,9 @@ const addTurbulence =
     const obj = createWeatherFn(ctx, entityDiv, x, y, radius * 2);
     const updateMoveFn = moveFn(width, height);
 
-    const updateWeatherFn = () => {
+    const updateWeatherFn = (fastForwardNum) => {
       const diffXY = updateMoveFn(centerXY.x, centerXY.y);
-      updateXY(diffXY, XY, centerXY, obj);
+      updateXY(diffXY, XY, centerXY, obj, fastForwardNum);
       obj.drawCircleFn(XY.x, XY.y);
     };
     entityManagerArr.push(
@@ -689,7 +689,13 @@ const createWeatherEntity = (
   updateWeatherFn,
 });
 
-const updateXY = (diffXY, XY, centerXY, obj) => {
+const updateXY = (diffXYArg, XY, centerXY, obj, scale) => {
+  const { x, y } = diffXYArg;
+  const diffXY = {
+    x: (scale || 1) * x,
+    y: (scale || 1) * y,
+  };
+
   XY.x += diffXY.x;
   XY.y += diffXY.y;
   obj.weatherDiv.style.left = XY.x + 'px';

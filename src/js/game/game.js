@@ -87,7 +87,7 @@ export const setup = (state) => (argObj) => {
   state.gameLoopCancel = false;
 
   window.requestAnimationFrame(gameTickFullGame);
-  weatherGameLoop(width, height, argObj);
+  weatherGameLoop(width, height, argObj, state);
 
   spawnFirstPlane();
 };
