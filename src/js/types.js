@@ -1,3 +1,10 @@
+export const MaydayScenario = Object.freeze({
+  Level9Fire: 'Level9Fire',
+  Level15Decompress: 'Level15Decompress',
+  Level20BirdStrike: 'Level20BirdStrike',
+  Level25Fuel: 'Level25Fuel',
+});
+
 export const HoldingPosition = Object.freeze({
   North: 'north',
   South: 'south',

@@ -1,4 +1,5 @@
-import { createPositionMayday, MaydayScenario } from '../game/score/mayday.js';
+import { createPositionMayday } from '../game/score/mayday.js';
+import { MaydayScenario } from '../types.js';
 import { isAircraft } from '../types.js';
 import { getDepartureCount, getArrivalCount } from '../utils.js';
 import { getAirportByLevel, getLevelObj } from './getLevel.js';
@@ -56,6 +57,7 @@ export const getSpawnByGameLevel = (gameLevel) => {
     const maydayLevel9 = spawnBalancedMayday(MaydayScenario.Level9Fire);
     const maydayLevel15 = spawnBalancedMayday(MaydayScenario.Level15Decompress);
     const maydayLevel20 = spawnBalancedMayday(MaydayScenario.Level20BirdStrike);
+    const maydayLevel25 = spawnBalancedMayday(MaydayScenario.Level25Fuel);
 
     // LHR
     if (gameLevel === 1) return spawnDeparturesOnly(spawnArg, airport);
@@ -86,7 +88,8 @@ export const getSpawnByGameLevel = (gameLevel) => {
     if (gameLevel === 22) return spawnBalanced(spawnArg, airport);
     if (gameLevel === 23) return spawnBalanced(spawnArg, airport);
     if (gameLevel === 24) return spawnBalanced(spawnArg, airport);
-    if (gameLevel === 25) return spawnMoreArrivals(spawnArg, airport);
+    // if (gameLevel === 25) return spawnMoreArrivals(spawnArg, airport);
+    if (gameLevel === 25) return maydayLevel25(spawnArg, airport);
     if (gameLevel === 26) return spawnBalanced(spawnArg, airport);
 
     throw new Error('unknown level: ' + gameLevel);
@@ -281,7 +284,25 @@ export const getSpawnMayday = (arg, maydayScenario) => {
     return { isMayday, time };
   }
 
-  // TODO 1 more levels
+  if (maydayScenario === MaydayScenario.Level25Fuel) {
+    time = createPositionMayday(maydayScenario).time;
+
+    if (count > 14) {
+      chance = guaranteedChance;
+    } else if (count > 12) {
+      chance = veryHighChance;
+    } else if (count > 10) {
+      chance = highChance;
+    } else {
+      chance = 0;
+    }
+
+    if (Math.random() <= getChanceFn(chance)) {
+      isMayday = true;
+      return { isMayday, time };
+    }
+    return { isMayday, time };
+  }
 
   console.error('unknown maydayScenario');
   return { isMayday, time };

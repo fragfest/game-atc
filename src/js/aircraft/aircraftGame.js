@@ -16,7 +16,7 @@ import {
   getWaypointDepartureRnd,
 } from '../airports/airports';
 import { getFlightArrival, getFlightDeparture } from '../flights/flights';
-import { createPositionMayday } from '../game/score/mayday';
+import { createMaydayFlight, createPositionMayday } from '../game/score/mayday';
 
 /**
  * @callback CreateAircraft
@@ -113,9 +113,11 @@ export const createAircraftRndDefault = (
   };
 
   if (destinationType === DestinationType.Arrival) {
+    const spawnedFlight = createFlight(getFlightArrival(airport));
     const aircraft = createAircraftArrival(
       entityManagerArr,
       canvasObjs,
+      spawnedFlight,
       flightObj,
       {},
       airport,
@@ -125,9 +127,11 @@ export const createAircraftRndDefault = (
   }
 
   if (destinationType === DestinationType.Departure) {
+    const spawnedFlight = createFlight(getFlightDeparture(airport));
     const aircraft = createAircraftDeparture(
       entityManagerArr,
       canvasObjs,
+      spawnedFlight,
       flightObj,
       {},
       airport,
@@ -135,6 +139,22 @@ export const createAircraftRndDefault = (
     );
     return aircraft;
   }
+};
+
+let spawned = [];
+/**
+ * create a new FlightObj not already in spawned list of objects
+ * @param {import('../flights/flights').SpawnFn} spawnFn
+ * @returns {import('../flights/flights').FlightObj}
+ */
+export const createFlight = (spawnFn) => {
+  let newFlight = spawnFn(spawned);
+  if (!newFlight) {
+    spawned = [];
+    newFlight = spawnFn(spawned);
+  }
+  spawned.push(newFlight);
+  return newFlight;
 };
 
 ////////////////////////////////////////////////////////////////////////////
@@ -160,6 +180,7 @@ const createAircraftMayday = (
     destinationType = DestinationType.Departure;
   }
 
+  const scenario = flightObj.maydayScenario;
   const canvasObjs = {
     canvasObjEntity,
     canvasObjText,
@@ -168,16 +189,14 @@ const createAircraftMayday = (
     height,
   };
 
-  const position = createPositionMayday(
-    flightObj.maydayScenario,
-    width,
-    height
-  );
+  const position = createPositionMayday(scenario, width, height);
+  const spawnedFlight = createMaydayFlight(scenario, destinationType, airport);
 
   if (destinationType === DestinationType.Arrival) {
     const aircraft = createAircraftArrival(
       entityManagerArr,
       canvasObjs,
+      spawnedFlight,
       flightObj,
       position,
       airport,
@@ -192,6 +211,7 @@ const createAircraftMayday = (
     const aircraft = createAircraftDeparture(
       entityManagerArr,
       canvasObjs,
+      spawnedFlight,
       flightObj,
       {},
       airport,
@@ -206,6 +226,7 @@ const createAircraftMayday = (
 const createAircraftArrival = (
   entityManagerArr,
   canvasObjs,
+  spawnedFlight = {},
   flightObjArg = {},
   positionObjArg = {},
   airport,
@@ -230,8 +251,7 @@ const createAircraftArrival = (
   const altitude = setAlt();
   const speed = setSpd();
 
-  const flight = createFlight(getFlightArrival(airport));
-  const flightObj = { ...flight, ...flightObjArg };
+  const flightObj = { ...spawnedFlight, ...flightObjArg };
   const position = {
     x: newPlane.x,
     y: newPlane.y,
@@ -240,8 +260,7 @@ const createAircraftArrival = (
     speed,
   };
   const positionObj = { ...position, ...positionObjArg };
-
-  const airframeObj = getPerformance(flight.airframe, getScreenSize());
+  const airframeObj = getPerformance(spawnedFlight?.airframe, getScreenSize());
 
   const aircraft = new Aircraft(
     flightObj,
@@ -271,6 +290,7 @@ const createAircraftArrival = (
 const createAircraftDeparture = (
   entityManagerArr,
   canvasObjs,
+  spawnedFlight = {},
   flightObjArg = {},
   positionObjArg = {},
   airport,
@@ -296,10 +316,8 @@ const createAircraftDeparture = (
     speed: 0,
   };
   const positionObj = { ...position, ...positionObjArg };
-
-  const flight = createFlight(getFlightDeparture(airport));
-  const flightObj = { ...flight, ...flightObjArg };
-  const airframeObj = getPerformance(flight.airframe, getScreenSize());
+  const flightObj = { ...spawnedFlight, ...flightObjArg };
+  const airframeObj = getPerformance(spawnedFlight?.airframe, getScreenSize());
 
   const aircraft = new Aircraft(
     flightObj,
@@ -317,22 +335,6 @@ const createAircraftDeparture = (
   );
   aircraft.clickEventCB = () => clickCB(aircraft);
   return aircraft;
-};
-
-let spawned = [];
-/**
- * create a new FlightObj not already in spawned list of objects
- * @param {import('../flights/flights').SpawnFn} spawnFn
- * @returns {import('../flights/flights').FlightObj}
- */
-const createFlight = (spawnFn) => {
-  let newFlight = spawnFn(spawned);
-  if (!newFlight) {
-    spawned = [];
-    newFlight = spawnFn(spawned);
-  }
-  spawned.push(newFlight);
-  return newFlight;
 };
 
 const setAlt = () => Math.floor(randMinMax(7000, 10000) / 100) * 100;

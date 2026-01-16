@@ -1,5 +1,5 @@
 import { Airframes } from '../aircraft/airframe';
-import { DestinationType } from '../types';
+import { DestinationType, MaydayScenario } from '../types';
 
 export const flightsArrival = [
   {
@@ -23,6 +23,8 @@ export const flightsArrival = [
     airframe: Airframes.B38M,
   },
   {
+    isMayday: true,
+    maydayScenario: MaydayScenario.Level25Fuel,
     type: DestinationType.Arrival,
     time: '20:35',
     flight: 'CX888',
@@ -63,6 +65,8 @@ export const flightsArrival = [
     airframe: Airframes.A320,
   },
   {
+    isMayday: true,
+    maydayScenario: MaydayScenario.Level25Fuel,
     type: DestinationType.Arrival,
     time: '06:55',
     flight: 'AC34',
@@ -93,6 +97,8 @@ export const flightsArrival = [
     airframe: Airframes.A320,
   },
   {
+    isMayday: true,
+    maydayScenario: MaydayScenario.Level25Fuel,
     type: DestinationType.Arrival,
     time: '10:00',
     flight: 'AC4',

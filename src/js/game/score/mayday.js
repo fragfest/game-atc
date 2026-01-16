@@ -1,10 +1,9 @@
-import { convHdgDegToThreeDigits, randMinMax } from '../../utils';
-
-export const MaydayScenario = Object.freeze({
-  Level9Fire: 'Level9Fire',
-  Level15Decompress: 'Level15Decompress',
-  Level20BirdStrike: 'Level20BirdStrike',
-});
+import { createFlight } from '../../aircraft/aircraftGame';
+import { Airport } from '../../airports/airports';
+import { getFlightArrival, getFlightDeparture } from '../../flights/flights';
+import { flightsArrival as flightsYVR } from '../../flights/YVR';
+import { DestinationType, MaydayScenario } from '../../types';
+import { convHdgDegToThreeDigits, getRndIndex, randMinMax } from '../../utils';
 
 // NOTE to allow for crashes without failing level: check victory have >= 2 for goal: Failed
 export const getMaydayLevels = () => [9, 15, 20, 25];
@@ -37,6 +36,16 @@ export const getCrashInfo = (scenario) => {
       detail1: 'emergency landing initiated',
       detail2: 'rescue services en route',
       progressTitle: 'Engine power',
+    };
+  }
+
+  if (scenario === MaydayScenario.Level25Fuel) {
+    return {
+      title: 'fuel low',
+      action: 'land immediately',
+      detail1: 'emergency landing initiated',
+      detail2: 'rescue services en route',
+      progressTitle: 'Fuel',
     };
   }
 
@@ -80,6 +89,16 @@ export const getMaydayInfo = (scenario) => {
     };
   }
 
+  if (scenario === MaydayScenario.Level25Fuel) {
+    return {
+      title: 'fuel low',
+      action: 'land immediately',
+      detail1: 'Fuel emergency: diverting to Vancouver',
+      detail2: 'Avoid altitude gain & high speed',
+      progressTitle: 'Fuel level',
+    };
+  }
+
   return {
     title: 'EMERGENCY',
     action: 'land now',
@@ -87,6 +106,31 @@ export const getMaydayInfo = (scenario) => {
     detail2: '',
     progressTitle: '',
   };
+};
+
+export const createMaydayFlight = (
+  maydayScenario,
+  destinationType,
+  airport
+) => {
+  if (maydayScenario === MaydayScenario.Level25Fuel) {
+    if (airport !== Airport.VancouverYVR) {
+      console.error('Level25 mayday only supported for airport YVR');
+      return {};
+    }
+
+    const planes = flightsYVR.filter(
+      (x) => x.maydayScenario === MaydayScenario.Level25Fuel
+    );
+    return planes[getRndIndex(planes.length)];
+  }
+
+  if (destinationType === DestinationType.Arrival) {
+    return createFlight(getFlightArrival(airport));
+  }
+  if (destinationType === DestinationType.Departure) {
+    return createFlight(getFlightDeparture(airport));
+  }
 };
 
 /**
@@ -124,6 +168,17 @@ export const createPositionMayday = (maydayScenario, width, height) => {
     };
   }
 
+  if (maydayScenario === MaydayScenario.Level25Fuel) {
+    return {
+      x: 0,
+      y: 0.6 * height,
+      heading: convHdgDegToThreeDigits(randMinMax(140, 170)),
+      altitude: altMinMax(14000, 16000),
+      speed: spdMinMax(250, 280),
+      time: 10 * 60,
+    };
+  }
+
   return {};
 };
 
@@ -138,7 +193,7 @@ export const createPositionMayday = (maydayScenario, width, height) => {
  * @param {Number} speed current speed
  * @param {Number} alt current altitude
  * @param {Number} altitudeTarget non-mayday expected target
- * @returns
+ * @returns {Object}
  */
 export const getMaydayPerformance = (
   scenario,
@@ -154,6 +209,7 @@ export const getMaydayPerformance = (
   let speedGain = 1;
   let speedDrop = 1;
   let altitudeTarget = altitudeTargetArg;
+  let maydayTimeScale = 1;
 
   if (scenario === MaydayScenario.Level9Fire) {
     altGain = 0;
@@ -170,6 +226,7 @@ export const getMaydayPerformance = (
     }
 
     return {
+      maydayTimeScale,
       altitudeTarget,
       turnRateRadPerMs: airframeObj.turnRateRadPerMs * turn,
       gain: {
@@ -204,6 +261,7 @@ export const getMaydayPerformance = (
     }
 
     return {
+      maydayTimeScale,
       altitudeTarget,
       turnRateRadPerMs: airframeObj.turnRateRadPerMs * turn,
       gain: {
@@ -223,6 +281,31 @@ export const getMaydayPerformance = (
     speedGain = 0.1;
 
     return {
+      maydayTimeScale,
+      altitudeTarget,
+      turnRateRadPerMs: airframeObj.turnRateRadPerMs * turn,
+      gain: {
+        altitudeRatePerMs: airframeObj.altitudeRatePerMs * altGain,
+        speedDeltaPerMs: airframeObj.speedDeltaPerMs * speedGain,
+      },
+      drop: {
+        altitudeRatePerMs: airframeObj.altitudeRatePerMs * altDrop,
+        speedDeltaPerMs: airframeObj.speedDeltaPerMs * speedDrop,
+      },
+    };
+  }
+
+  if (scenario === MaydayScenario.Level25Fuel) {
+    const speedDiff = speed - 220;
+    if (speedDiff > 0) {
+      maydayTimeScale *= 1 + 2 * (speedDiff / 230);
+    }
+    if (altitudeTarget > alt) {
+      maydayTimeScale *= 2;
+    }
+
+    return {
+      maydayTimeScale,
       altitudeTarget,
       turnRateRadPerMs: airframeObj.turnRateRadPerMs * turn,
       gain: {
@@ -237,6 +320,7 @@ export const getMaydayPerformance = (
   }
 
   return {
+    maydayTimeScale,
     altitudeTarget,
     turnRateRadPerMs: airframeObj.turnRateRadPerMs,
     gain: {

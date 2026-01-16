@@ -134,7 +134,7 @@ export default class Aircraft {
 
     // flight info
     this.time = flightObj.time;
-    this.title = flightObj.flight.trim().substring(0, 6);
+    this.title = (flightObj.flight || '').trim().substring(0, 6);
     this.city = flightObj.city;
     this.airportCode = flightObj.airport;
     this.airline = flightObj.airline;
@@ -686,16 +686,18 @@ export default class Aircraft {
       airframeObj;
 
     const altitudeTarget = this.altitudeTarget;
+    const maydayTimeScale = 1;
 
     let performanceObj = {
+      maydayTimeScale,
       altitudeTarget,
       turnRateRadPerMs,
       gain: { altitudeRatePerMs, speedDeltaPerMs },
       drop: { altitudeRatePerMs, speedDeltaPerMs },
     };
 
-    const fraction = this.maydayTime / (this.maydayTimeStart || 1);
     if (this.destinationType === DestinationType.Arrival) {
+      const fraction = this.maydayTime / (this.maydayTimeStart || 1);
       performanceObj = getMaydayPerformance(
         this.maydayScenario,
         airframeObj,
@@ -718,6 +720,7 @@ export default class Aircraft {
 
       if (timeElapsed > delayTime) {
         this.destinationType = DestinationType.Arrival;
+        this.flight = 'MAYDAY';
         this.time = createPositionMayday(this.maydayScenario).time;
         this.maydayTime = createPositionMayday(this.maydayScenario).time;
         this.maydayTimeStart = createPositionMayday(this.maydayScenario).time;
@@ -819,11 +822,12 @@ export default class Aircraft {
     }
 
     // mayday time
+    const scale = performanceObj.maydayTimeScale;
     if (this.isMayday || (this.isMaydayDepart && isAirborne(this))) {
       if (this.maydayTime <= 0) {
         this.maydayTime = 0;
       } else {
-        this.maydayTime -= deltaTimeMs / 1000;
+        this.maydayTime -= (scale * deltaTimeMs) / 1000;
       }
     }
 

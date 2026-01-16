@@ -158,6 +158,7 @@ export const getClassSize = (screenSize) => {
 };
 
 // GENERAL /////////////////////////////////////////////////////////////////
+export const getRndIndex = (length) => Math.floor(Math.random() * length);
 export const accMax = (acc, val) => (acc > val ? acc : val);
 export const randMinMax = (min, max) => min + Math.random() * (max - min);
 

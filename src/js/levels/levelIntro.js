@@ -356,7 +356,6 @@ export const getIntro = (gameLevel) => {
       };
     }
 
-    // TODO fuel emergency from pacific
     if (gameLevel === 25) {
       return {
         displayTimeMs: 16000,
@@ -364,7 +363,7 @@ export const getIntro = (gameLevel) => {
         levelNum: gameLevel,
         airportHeading: `Vancouver International (YVR)`,
         airportSubheading: `West Wind Operations - weather: minor`,
-        text1: `Lots of traffic including cross-pacific long-haul flights`,
+        text1: `Another day taming the maelstrom, including long-haul fuel-hungry cross-pacific flights.`,
       };
     }
 
@@ -378,9 +377,6 @@ export const getIntro = (gameLevel) => {
         text1: `Typical rainy day in the pacific northwest. We have to contend with many scattered storm cells.`,
       };
     }
-
-    // Phrase ideas ////////////////////////////////////////////////
-    // Another day taming the maelstrom
 
     throw new Error('unknown level: ' + gameLevel);
   };

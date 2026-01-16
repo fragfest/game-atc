@@ -4,11 +4,12 @@ import * as LHR from './LHR';
 import * as JFK from './JFK';
 import * as HND from './HND';
 import { Airport } from '../airports/airports';
+import { getRndIndex } from '../utils.js';
 
 /**
  * @typedef {import('../types.js').DestinationType} DestinationType
  * @typedef {import('../aircraft/airframe.js').Airframes} Airframes
- * @typedef {import('../game/score/mayday.js').MaydayScenario} MaydayScenario
+ * @typedef {import('../types.js') MaydayScenario}
  */
 
 /**
@@ -66,7 +67,6 @@ export const getFlightDeparture = (airport) => (spawned) => {
 ////////////////////////////////////////////////////////////
 
 const setTimeSecs = () => 15 * 60;
-const getRndIndex = (total) => Math.floor(Math.random() * total);
 const isNotSpawned = (spawnedArr) => (obj) =>
   !spawnedArr.find((x) => x.flight === obj.flight);
 
