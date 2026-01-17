@@ -2,7 +2,6 @@ Bugs:
   ☐ slow browser performance post-leave: run video on separate browser video, enter level & leave, wait 10 seconds and notice video slowdown until home screen refreshed
 
 Wishlist:
-  ☐ mayday: crash mechanic
   ☐ animated compass
   ☐ change runways for arrivals & departures
   ☐ block takeoff on occupied runway & display message
@@ -18,6 +17,7 @@ Wishlist:
   ☐ federated cognito login
   ☐ leaderboard max limit & paged calls
   ☐ cognito login page style
+  ☐ mayday crash: more interesting
 
 v0.1.5:
   Bugs:
@@ -34,6 +34,7 @@ v0.1.5:
     
   Minor:
     ☐ pause: disable flightstrips, non-pause buttons
+    ✔ help panel Runway Idle & accordion @done(26-01-17 00:57)
     ✔ BlueSky badge: optimize with png (small screenSize expand stutters) @started(25-12-26 19:41) @done(25-12-26 20:29) @lasted(48m28s)
     ✔ home splash logo (with sound enable) @started(25-12-24 19:51) @done(25-12-26 19:14) @lasted(1d23h23m39s)
     ✔ Home screen animations @started(25-12-19 16:07) @done(25-12-24 18:01) @lasted(5d1h54m35s)

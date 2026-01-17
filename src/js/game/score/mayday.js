@@ -146,7 +146,7 @@ export const createPositionMayday = (maydayScenario, width, height) => {
       heading: convHdgDegToThreeDigits(randMinMax(240, 120)),
       altitude: altMinMax(11000, 13000),
       speed: spdMinMax(280, 320),
-      time: 6 * 60,
+      time: 7 * 60,
     };
   }
 
@@ -224,20 +224,6 @@ export const getMaydayPerformance = (
     } else if (fraction < 1) {
       turn = 0.8;
     }
-
-    return {
-      maydayTimeScale,
-      altitudeTarget,
-      turnRateRadPerMs: airframeObj.turnRateRadPerMs * turn,
-      gain: {
-        altitudeRatePerMs: airframeObj.altitudeRatePerMs * altGain,
-        speedDeltaPerMs: airframeObj.speedDeltaPerMs * speedGain,
-      },
-      drop: {
-        altitudeRatePerMs: airframeObj.altitudeRatePerMs * altDrop,
-        speedDeltaPerMs: airframeObj.speedDeltaPerMs * speedDrop,
-      },
-    };
   }
 
   if (scenario === MaydayScenario.Level15Decompress) {
@@ -259,40 +245,12 @@ export const getMaydayPerformance = (
     } else if (fraction < 1) {
       turn = 0.9;
     }
-
-    return {
-      maydayTimeScale,
-      altitudeTarget,
-      turnRateRadPerMs: airframeObj.turnRateRadPerMs * turn,
-      gain: {
-        altitudeRatePerMs: airframeObj.altitudeRatePerMs * altGain,
-        speedDeltaPerMs: airframeObj.speedDeltaPerMs * speedGain,
-      },
-      drop: {
-        altitudeRatePerMs: airframeObj.altitudeRatePerMs * altDrop,
-        speedDeltaPerMs: airframeObj.speedDeltaPerMs * speedDrop,
-      },
-    };
   }
 
   if (scenario === MaydayScenario.Level20BirdStrike) {
     altGain = 0.1;
     turn = 0.9;
     speedGain = 0.1;
-
-    return {
-      maydayTimeScale,
-      altitudeTarget,
-      turnRateRadPerMs: airframeObj.turnRateRadPerMs * turn,
-      gain: {
-        altitudeRatePerMs: airframeObj.altitudeRatePerMs * altGain,
-        speedDeltaPerMs: airframeObj.speedDeltaPerMs * speedGain,
-      },
-      drop: {
-        altitudeRatePerMs: airframeObj.altitudeRatePerMs * altDrop,
-        speedDeltaPerMs: airframeObj.speedDeltaPerMs * speedDrop,
-      },
-    };
   }
 
   if (scenario === MaydayScenario.Level25Fuel) {
@@ -303,33 +261,19 @@ export const getMaydayPerformance = (
     if (altitudeTarget > alt) {
       maydayTimeScale *= 2;
     }
-
-    return {
-      maydayTimeScale,
-      altitudeTarget,
-      turnRateRadPerMs: airframeObj.turnRateRadPerMs * turn,
-      gain: {
-        altitudeRatePerMs: airframeObj.altitudeRatePerMs * altGain,
-        speedDeltaPerMs: airframeObj.speedDeltaPerMs * speedGain,
-      },
-      drop: {
-        altitudeRatePerMs: airframeObj.altitudeRatePerMs * altDrop,
-        speedDeltaPerMs: airframeObj.speedDeltaPerMs * speedDrop,
-      },
-    };
   }
 
   return {
     maydayTimeScale,
     altitudeTarget,
-    turnRateRadPerMs: airframeObj.turnRateRadPerMs,
+    turnRateRadPerMs: airframeObj.turnRateRadPerMs * turn,
     gain: {
-      altitudeRatePerMs: airframeObj.altitudeRatePerMs,
-      speedDeltaPerMs: airframeObj.speedDeltaPerMs,
+      altitudeRatePerMs: airframeObj.altitudeRatePerMs * altGain,
+      speedDeltaPerMs: airframeObj.speedDeltaPerMs * speedGain,
     },
     drop: {
-      altitudeRatePerMs: airframeObj.altitudeRatePerMs,
-      speedDeltaPerMs: airframeObj.speedDeltaPerMs,
+      altitudeRatePerMs: airframeObj.altitudeRatePerMs * altDrop,
+      speedDeltaPerMs: airframeObj.speedDeltaPerMs * speedDrop,
     },
   };
 };

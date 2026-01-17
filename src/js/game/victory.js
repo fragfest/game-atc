@@ -387,7 +387,7 @@ export const getGoalsByLevel = () => {
         Conflict: 30,
         SpawnRate: 1.5,
         Delayed: 2,
-        IdleTimer: 300,
+        IdleTimer: 240,
       };
     }
 
