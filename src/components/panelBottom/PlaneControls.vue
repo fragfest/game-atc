@@ -28,8 +28,13 @@
       </div>
 
       <div v-show="isTaxiing" class="btn">
-        <ToolTip>
-          <button class="takeoff" @click="takeoffClick" :class="takeoffClass">
+        <ToolTip :disabled="isDisabled">
+          <button
+            class="takeoff"
+            :class="takeoffClass"
+            :disabled="isDisabled"
+            @click="takeoffClick"
+          >
             <span>take off</span>
           </button>
           <template v-slot:hover>take off (T)</template>
@@ -66,6 +71,7 @@ export default {
     planeSelected: { type: Object },
     planes: { type: Object },
     focusObj: { type: Object },
+    isPaused: { type: Boolean },
   },
 
   emits: ['compassFocus'],
@@ -82,6 +88,9 @@ export default {
 
   computed: {
     isDisabled: function () {
+      if (this.isPaused) return true;
+      if (this.isTaxiing) return false;
+
       const planeSel = this.planes.find((x) => x.id === this.planeSelected.id);
       if (!planeSel) return true;
       return this.planeSelected.isNonInteractive;

@@ -3,21 +3,19 @@ Bugs:
 
 Wishlist:
   ☐ animated compass
-  ☐ change runways for arrivals & departures
   ☐ block takeoff on occupied runway & display message
   ☐ consider allowing starting any city any time
   ☐ wake circles should include altitude at which they were generated
   
   ☐ custom play level
-  ☐ restricted areas with min altitude levels
-  ☐ noise abatement mechanic (max 250kts below 10Kft)
-  ☐ flight quality - weather dangerous
-  ☐ touchdown sound (tyre screech)
-  ☐ sound on dialog text spawn
   ☐ federated cognito login
   ☐ leaderboard max limit & paged calls
   ☐ cognito login page style
   ☐ mayday crash: more interesting
+  ☐ change runways for arrivals & departures
+  ☐ restricted areas with min altitude levels
+  ☐ noise abatement mechanic (max 250kts below 10Kft)
+  ☐ dangerous weather mechanic (wind shear)
 
 v0.1.5:
   Bugs:
@@ -33,7 +31,8 @@ v0.1.5:
     ✔ display name for player/leaderboard (instead of all-lowercase cognito username) @started(25-02-19 18:41) @done(25-02-23 11:50) @lasted(3d17h9m18s)
     
   Minor:
-    ☐ pause: disable flightstrips, non-pause buttons
+    ☐ touchdown sound (tyre screech)
+    ✔ pause: disable flightstrips, non-pause buttons @started(26-01-21 15:03) @done(26-01-21 16:22) @lasted(1h19m14s)
     ✔ help panel Runway Idle & accordion @done(26-01-17 00:57)
     ✔ BlueSky badge: optimize with png (small screenSize expand stutters) @started(25-12-26 19:41) @done(25-12-26 20:29) @lasted(48m28s)
     ✔ home splash logo (with sound enable) @started(25-12-24 19:51) @done(25-12-26 19:14) @lasted(1d23h23m39s)

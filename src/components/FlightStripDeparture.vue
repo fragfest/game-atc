@@ -18,6 +18,7 @@
         :planes="planes"
         :screenSize="screenSize"
         :hasFocusPulse="hasFocusPulse"
+        :isPaused="isPaused"
       ></FlightStrip>
       <div v-if="taxiQueueLength" class="queue-length-box">
         <div class="queue-length" :class="sizeClass">{{ taxiQueueLength }}</div>
@@ -48,6 +49,7 @@
           :planeSelected="planeSelected"
           :planes="planes"
           :screenSize="screenSize"
+          :isPaused="isPaused"
         ></FlightStrip>
       </li>
     </ul>
@@ -66,6 +68,7 @@ export default {
     planes: { type: Array },
     screenSize: { type: String },
     hasFocusPulse: { type: Boolean, required: false },
+    isPaused: { type: Boolean },
   },
 
   data() {

@@ -95,6 +95,7 @@
                     :planeSelected="aircraftClicked"
                     :planes="planesSorted"
                     :focusObj="focusObj"
+                    :isPaused="isPaused"
                     @compassFocus="compassFocus"
                   ></PlaneControls>
                 </div>
@@ -141,6 +142,7 @@
                     :planeSelected="aircraftClicked"
                     :planes="planesSorted"
                     :focusObj="focusObj"
+                    :isPaused="isPaused"
                     @compassFocus="compassFocus"
                   ></PlaneControls>
                 </div>
@@ -177,6 +179,7 @@
           :planeSelected="aircraftClicked"
           :planes="planesDeparture"
           :hasFocusPulse="focusObj.isFlightStripDepFocus"
+          :isPaused="isPaused"
         ></FlightStripDeparture>
         <ul>
           <li v-for="(plane, index) in planesArrival" :key="index">
@@ -187,6 +190,7 @@
               :planes="planesSorted"
               :hasFocusPulse="hasFocusPulse(index)"
               :hasFocusPulseWaypoint="hasFocusPulseWaypoint(index)"
+              :isPaused="isPaused"
             ></FlightStrip>
           </li>
         </ul>

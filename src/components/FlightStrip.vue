@@ -8,7 +8,7 @@
       @mouseout="flatten()"
     >
       <!-- strip -->
-      <div class="strip" :class="stripClass">
+      <div class="strip" :class="stripClass" :disabled="isPaused">
         <!-- flip-card -->
         <div class="flip-card">
           <!-- flip-card-inner -->
@@ -47,9 +47,13 @@
                 <div v-if="!isArrival" class="col font-large">
                   <b>{{ plane.waypoint }}</b>
                 </div>
-                <ToolTip v-else position="close">
+                <ToolTip v-else position="close" :disabled="isPaused">
                   <div class="col">
-                    <button @click="waypointClick" :class="waypointClass">
+                    <button
+                      @click="waypointClick"
+                      :class="waypointClass"
+                      :disabled="isPaused"
+                    >
                       <span class="font-large">
                         <b>{{ plane.waypoint }}</b>
                       </span>
@@ -273,8 +277,8 @@
             <div class="flip-card-back" @click="click(plane)">
               <div class="strip-info">
                 <div v-if="plane.isMayday" class="col flip-icon">
-                  <ToolTip position="tether-below">
-                    <button @click="maydayFlipClick">
+                  <ToolTip position="tether-below" :disabled="isPaused">
+                    <button @click="maydayFlipClick" :disabled="isPaused">
                       <p>&#x25c0;</p>
                     </button>
                     <template v-slot:hover>back</template>
@@ -434,6 +438,7 @@ export default {
     isEmptyStrip: { type: Boolean },
     hasFocusPulse: { type: Boolean },
     hasFocusPulseWaypoint: { type: Boolean },
+    isPaused: { type: Boolean },
   },
   components: { ToolTip },
 
@@ -704,12 +709,16 @@ export default {
 
   methods: {
     maydayFlipClick: function () {
+      if (this.isPaused) return;
+
       const plane = getPlane(this.plane, this.planes);
       if (!plane) return;
       plane.isFlightstripFlip = !plane.isFlightstripFlip;
     },
 
     waypointClick: function () {
+      if (this.isPaused) return;
+
       const plane = getPlane(this.plane, this.planes);
       if (!plane) return;
       const waypoint = nextWaypoint(
@@ -720,16 +729,20 @@ export default {
     },
 
     click: function (plane) {
+      if (this.isPaused) return;
+
       const planeFound = getPlane(plane, this.planes);
       if (!planeFound) return;
       planeFound.clickEventCB();
     },
 
     hover: function () {
+      if (this.isPaused) return;
       this.isHover = true;
     },
 
     flatten: function () {
+      if (this.isPaused) return;
       this.isHover = false;
     },
   },
@@ -873,6 +886,10 @@ export default {
   height: 75px;
   cursor: pointer;
 
+  &[disabled='true'] {
+    cursor: default;
+  }
+
   &.empty {
     cursor: default;
   }
@@ -957,14 +974,14 @@ export default {
       border-radius: 6px;
       box-shadow: 2px 2px rgb(0, 84, 84);
 
-      &:hover {
+      &:hover:not([disabled]) {
         cursor: pointer;
         background-color: rgba(255, 255, 255, 0.4);
       }
-      &:focus-visible {
+      &:focus-visible:not([disabled]) {
         outline: 1px solid lightgreen;
       }
-      &:active {
+      &:active:not([disabled]) {
         box-shadow: none;
       }
     }
