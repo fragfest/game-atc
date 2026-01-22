@@ -35,18 +35,19 @@ export const drawPlaneWake = (aircraft, textLayerObj) => {
 
 export const calcWake = ({ entityManagerArr, aircraft }) => {
   const isNotOriginPlane = (plane) => plane.id !== aircraft.id;
-  const isPlane = (obj) =>
-    isAircraft(obj) && isAirborne(obj) && isNotOriginPlane(obj);
-  const isWithinAlt = (planeSrc, alt) => (plane) =>
-    plane.altitude > planeSrc.altitude - alt &&
-    plane.altitude < planeSrc.altitude;
+  const isPlane = (obj) => {
+    return isAircraft(obj) && isAirborne(obj) && isNotOriginPlane(obj);
+  };
+  const isWithinAlt = (point, alt) => (plane) => {
+    return plane.altitude > point.alt - alt && plane.altitude < point.alt;
+  };
 
-  const getPlanesInWake = (circleRadius, wake) => {
+  const getPlanesInWake = (circleRadius, point) => {
     const planes = entityManagerArr.filter(isPlane);
     if (planes.length === 0) return [];
 
     const planesInWake = planes.filter((plane) =>
-      isWithinDist(circleRadius, wake, plane)
+      isWithinDist(circleRadius, point, plane)
     );
     return planesInWake;
   };
@@ -64,7 +65,7 @@ export const calcWake = ({ entityManagerArr, aircraft }) => {
 
     const circleRadius = wakeRadius * minRadius;
     const planesHorizontal = getPlanesInWake(circleRadius, point);
-    const planes = planesHorizontal.filter(isWithinAlt(aircraft, wakeAltitude));
+    const planes = planesHorizontal.filter(isWithinAlt(point, wakeAltitude));
     if (planes.length === 0) return;
 
     const createWakeObj = (planeInwake) => ({
@@ -87,6 +88,9 @@ const strengthByAirframe = (planeSrc, planeInWake, wakeStrength) => {
 };
 
 const wake = (index) => {
+  const altitudeMax = 1000;
+  const wakeIndexMax = 4;
+
   const retObj = {};
   retObj.wakeRadius = 0;
   retObj.wakeAltitude = 0;
@@ -98,8 +102,6 @@ const wake = (index) => {
     return strengthMin + (1 - strengthMin) * ratio;
   };
 
-  const altitudeMax = 1000;
-  const wakeIndexMax = 4;
   if (index % 2 === 0) {
     return retObj;
   } else if (index === 1) {

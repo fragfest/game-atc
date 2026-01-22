@@ -910,7 +910,8 @@ export default class Aircraft {
       this.trailPixelMs = timestamp;
       const x = this.x;
       const y = this.y;
-      const pixel = { x, y };
+      const alt = this.altitude;
+      const pixel = { x, y, alt };
       _drawTrailPixel(this, pixel, 1);
       this.trailPixelArr.unshift(pixel);
     }
