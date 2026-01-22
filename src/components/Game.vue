@@ -639,6 +639,7 @@ export default {
       },
       msgPopup,
       anyInputEventFn,
+      () => this.pauseEv(!this.isPaused),
       gameState
     );
     setupDebug();

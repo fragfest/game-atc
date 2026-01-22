@@ -1,5 +1,6 @@
 // key & values must match
 export const KeyboardEvents = Object.freeze({
+  KeyboardEscapeEV: 'KeyboardEscapeEV',
   MouseClickEV: 'MouseClickEV',
   KeyboardAllEV: 'KeyboardAllEV',
   KeyboardArrowDownEV: 'KeyboardArrowDownEV',
@@ -46,6 +47,9 @@ const keyDownFn = (ev) => {
   document.dispatchEvent(new Event(KeyboardEvents.KeyboardAllEV));
 
   switch (ev.key) {
+    case 'Escape':
+      document.dispatchEvent(new Event(KeyboardEvents.KeyboardEscapeEV));
+      break;
     case 'ArrowDown':
       ev.preventDefault();
       document.dispatchEvent(new Event(KeyboardEvents.KeyboardArrowDownEV));

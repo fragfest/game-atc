@@ -31,6 +31,7 @@ import { gameOver } from './gameOver';
  * @param {Function} gamePopupFn function to set the game over pop-up
  * @param {Object} msgPopup contains vue ref properties
  * @param {Function} anyInputEventFn function called on all key/mouse events
+ * @param {Function} pauseToggleFn call function to toggle pause state
  * @param {State} state game state
  */
 export const setup = (
@@ -42,6 +43,7 @@ export const setup = (
   gamePopupFn,
   msgPopup,
   anyInputEventFn,
+  pauseToggleFn,
   state
 ) => {
   let isGameOver = false;
@@ -101,6 +103,10 @@ export const setup = (
     const isSelected = (plane) => plane.id === planeSelId;
     return self.planesSorted.findIndex(isSelected);
   };
+
+  subscribe(KeyboardEvents.KeyboardEscapeEV, () => {
+    pauseToggleFn();
+  });
 
   subscribe(KeyboardEvents.KeyboardAllEV, () => {
     anyInputEventFn();
