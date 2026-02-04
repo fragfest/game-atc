@@ -237,7 +237,7 @@ export default class Aircraft {
     publish(MessageEvents.MessageLandingErrorEV, {
       id: this.id,
       msg: '',
-      instructions: 'clear active runway ' + this.runway,
+      instructions: 'first clear active runway ' + this.runway,
     });
     play(SoundType.Fail);
   }

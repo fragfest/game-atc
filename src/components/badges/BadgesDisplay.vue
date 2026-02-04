@@ -1,25 +1,25 @@
 <template>
   <div class="container" :class="sizeClass">
     <div class="badges" :class="badgesRowClass">
-      <!-- BlueSky -->
+      <!-- MayDay -->
       <ToolTip
-        v-if="blueSky"
+        v-if="mayDay"
         :disabled="!isLeaderboard"
         :width="width"
         position="below"
       >
-        <BlueSky
+        <MayDay
           class="badge-achieved"
-          :class="blueSkyClassComputed"
+          :class="mayDayClassComputed"
           :style="badgeStyle0"
-          :progressbarHeight="blueSkyHeight"
-          :progressbarPositionY="blueSkyPositionYaxis"
-          :cornerRadiusY="blueSkyRadiusYcorner"
-          :colorGradient="blueSkyColorGradient"
-          @click="onClickBadgeAchieved('blueSkyClass')"
-          @mouseenter="onMouseEnterBadgeAchieved('bluesky')"
+          :progressbarHeight="mayDayHeight"
+          :progressbarPositionY="mayDayPositionYaxis"
+          :cornerRadiusY="mayDayRadiusYcorner"
+          :colorGradient="mayDayColorGradient"
+          @click="onClickBadgeAchieved('mayDayClass')"
+          @mouseenter="onMouseEnterBadgeAchieved('mayday')"
           @mouseleave="onMouseLeaveBadgeAchieved()"
-        />
+        ></MayDay>
         <template v-slot:hover>
           <div class="badges-desc">
             <h3 class="light-green">{{ badgeTitle }}</h3>
@@ -29,16 +29,16 @@
       </ToolTip>
 
       <ToolTip
-        v-if="!blueSky"
+        v-if="!mayDay"
         :disabled="!isLeaderboard"
         :width="width"
         position="below"
       >
-        <BlueSkyGrey
+        <MayDayGrey
           :style="badgeStyle0"
-          @mouseenter="onMouseEnterBadgeAchieved('bluesky-grey')"
+          @mouseenter="onMouseEnterBadgeAchieved('mayday-grey')"
           @mouseleave="onMouseLeaveBadgeAchieved()"
-        />
+        ></MayDayGrey>
         <template v-slot:hover>
           <div class="badges-desc">
             <h3 class="light-green">{{ badgeTitle }}</h3>
@@ -46,7 +46,7 @@
           </div>
         </template>
       </ToolTip>
-      <!-- END BlueSky -->
+      <!-- END MayDay -->
 
       <!-- PushingTin -->
       <ToolTip
@@ -95,25 +95,25 @@
       </ToolTip>
       <!-- END PushingTin -->
 
-      <!-- MayDay -->
+      <!-- BlueSky -->
       <ToolTip
-        v-if="mayDay"
+        v-if="blueSky"
         :disabled="!isLeaderboard"
         :width="width"
         position="below"
       >
-        <MayDay
+        <BlueSky
           class="badge-achieved"
-          :class="mayDayClassComputed"
+          :class="blueSkyClassComputed"
           :style="badgeStyle2"
-          :progressbarHeight="mayDayHeight"
-          :progressbarPositionY="mayDayPositionYaxis"
-          :cornerRadiusY="mayDayRadiusYcorner"
-          :colorGradient="mayDayColorGradient"
-          @click="onClickBadgeAchieved('mayDayClass')"
-          @mouseenter="onMouseEnterBadgeAchieved('mayday')"
+          :progressbarHeight="blueSkyHeight"
+          :progressbarPositionY="blueSkyPositionYaxis"
+          :cornerRadiusY="blueSkyRadiusYcorner"
+          :colorGradient="blueSkyColorGradient"
+          @click="onClickBadgeAchieved('blueSkyClass')"
+          @mouseenter="onMouseEnterBadgeAchieved('bluesky')"
           @mouseleave="onMouseLeaveBadgeAchieved()"
-        ></MayDay>
+        />
         <template v-slot:hover>
           <div class="badges-desc">
             <h3 class="light-green">{{ badgeTitle }}</h3>
@@ -123,16 +123,16 @@
       </ToolTip>
 
       <ToolTip
-        v-if="!mayDay"
+        v-if="!blueSky"
         :disabled="!isLeaderboard"
         :width="width"
         position="below"
       >
-        <MayDayGrey
+        <BlueSkyGrey
           :style="badgeStyle2"
-          @mouseenter="onMouseEnterBadgeAchieved('mayday-grey')"
+          @mouseenter="onMouseEnterBadgeAchieved('bluesky-grey')"
           @mouseleave="onMouseLeaveBadgeAchieved()"
-        ></MayDayGrey>
+        />
         <template v-slot:hover>
           <div class="badges-desc">
             <h3 class="light-green">{{ badgeTitle }}</h3>
@@ -140,7 +140,7 @@
           </div>
         </template>
       </ToolTip>
-      <!-- END MayDay -->
+      <!-- END BlueSky -->
 
       <ToolTip :disabled="!isLeaderboard" :width="width" position="below">
         <BadgeEmpty
