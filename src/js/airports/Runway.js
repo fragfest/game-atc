@@ -134,7 +134,16 @@ export default class Runway {
           return;
         }
 
+        if (
+          this.takeoffEntities.length >= 1 ||
+          this.landingEntities.length >= 1
+        ) {
+          entity.cancelTakeoff();
+          return;
+        }
+
         this.takeoffEntities.push(entity);
+        play(SoundType.Takeoff);
         return;
       }
       if (!entity.landing) return;

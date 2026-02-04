@@ -3,7 +3,6 @@ Bugs:
 
 Wishlist:
   ☐ animated compass
-  ☐ block takeoff on occupied runway & display message
   ☐ consider allowing starting any city any time
   
   ☐ custom play level
@@ -30,6 +29,7 @@ v0.1.5:
     ✔ display name for player/leaderboard (instead of all-lowercase cognito username) @started(25-02-19 18:41) @done(25-02-23 11:50) @lasted(3d17h9m18s)
     
   Minor:
+    ✔ block takeoff/landing on occupied runway & display message @started(26-01-22 02:19) @done(26-02-03 20:22) @lasted(1w5d18h3m57s)
     ✔ wake circles should include altitude at which they were generated @started(26-01-21 22:48) @done(26-01-22 00:46) @lasted(1h58m47s)
     ✔ pause: disable flightstrips, non-pause buttons @started(26-01-21 15:03) @done(26-01-21 16:22) @lasted(1h19m14s)
     ✔ help panel Runway Idle & accordion @done(26-01-17 00:57)

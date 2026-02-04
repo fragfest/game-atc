@@ -112,7 +112,7 @@ const chanceDepartureHigh = chanceDepartureBase / 10;
  */
 export const spawnDeparturesOnly = (arg, airport) => {
   const { entityManagerArr, goals, score, getChanceFn, aircraftFn } = arg;
-  const flightObj = { time: 12 * 60 };
+  const flightObj = { time: 14 * 60 };
   const areDeparturesSpawned = noMoreDepart(entityManagerArr, goals, score);
   const areAllSpawned = noMoreDepartOrArrive(entityManagerArr, goals, score);
   if (areAllSpawned) return;

@@ -225,11 +225,27 @@ export default class Aircraft {
     this.waypoint = waypoint;
   }
 
+  cancelTakeoff() {
+    this.takeoff = false;
+    this.isTaxiing = true;
+    this.speed = 0;
+    this.speedTarget = 0;
+    this.altitude = 0;
+    this.altitudeTarget = 0;
+
+    this.destroy();
+    publish(MessageEvents.MessageLandingErrorEV, {
+      id: this.id,
+      msg: '',
+      instructions: 'clear active runway ' + this.runway,
+    });
+    play(SoundType.Fail);
+  }
+
   startTakeoff() {
     if (!this.isTaxiing) return;
     this.cancelTaxiing();
     this.takeoff = true;
-    play(SoundType.Takeoff);
   }
 
   cancelTaxiing() {
@@ -416,7 +432,10 @@ export default class Aircraft {
     _clearTrailPixelsAll(this);
     clearProximityCircle();
 
-    if (this.htmlAircraftDiv) this.htmlAircraftDiv.remove();
+    if (this.htmlAircraftDiv) {
+      this.htmlAircraftDiv.remove();
+      this.htmlAircraftDiv = null;
+    }
     if (this.isFlyingOutOfArea) {
       planeLeaveFail();
       publish(MessageEvents.MessageAllEV, this.title + ' handoff failed');

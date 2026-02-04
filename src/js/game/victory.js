@@ -349,7 +349,7 @@ export const getGoalsByLevel = () => {
         Departures: 18,
         Failed: 2,
         Conflict: 30,
-        SpawnRate: 2,
+        SpawnRate: 1.5,
         Delayed: 2,
         IdleTimer: 240,
       };

@@ -465,6 +465,7 @@ export default {
       const plane = getPlane(this.plane, this.planes);
       if (!plane) return;
       if (plane.id !== planeErrorObj.id) return;
+      if (!plane.msg) return;
 
       this.isLandingMisconfigured = true;
       this.landingMisconfiguredMsg = planeErrorObj.msg;
