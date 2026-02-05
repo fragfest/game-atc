@@ -1,6 +1,6 @@
 <template>
   <div class="splash-logo">
-    <div class="modal">
+    <div class="modal" :class="size">
       <button class="btn btn-next" @click="onClickNext">
         <h1>PLAY <small>(sound on)</small></h1>
       </button>
@@ -1056,8 +1056,16 @@
 </template>
 
 <script>
+import { getScreenSize } from '../../js/utils';
+
 export default {
   emits: ['play'],
+
+  data() {
+    return {
+      size: getScreenSize(),
+    };
+  },
 
   methods: {
     onClickNext: function () {
@@ -1124,6 +1132,10 @@ export default {
   }
 }
 
+.splash-logo .modal.small {
+  height: 100%;
+  margin-top: 0;
+}
 .splash-logo .modal {
   position: relative;
   display: flex;
