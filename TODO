@@ -1,19 +1,19 @@
 Bugs:
+  ☐ catalog FireFox/Safari bugs
+
   ☐ slow browser performance post-leave: run video on separate browser video, enter level & leave, wait 10 seconds and notice video slowdown until home screen refreshed
 
 Wishlist:
-  ☐ animated compass
   ☐ consider allowing starting any city any time
   
   ☐ custom play level
   ☐ federated cognito login
-  ☐ leaderboard max limit & paged calls
   ☐ cognito login page style
-  ☐ mayday crash: more interesting
   ☐ change runways for arrivals & departures
   ☐ restricted areas with min altitude levels
   ☐ noise abatement mechanic (max 250kts below 10Kft)
   ☐ dangerous weather mechanic (wind shear)
+  ☐ animated compass
 
 v0.1.5:
   Bugs:
@@ -21,6 +21,8 @@ v0.1.5:
     ✔ retry button does next level if success. need to set level on retry @done(25-09-26 01:18)
 
   Major:
+    ☐ leaderboard search by username
+    ☐ leaderboard max limit & paged calls (leaderboard: now need all userId sessions to be shown) @started(26-02-06 00:36)
     ✔ goal mayday @started(25-12-26 21:07) @done(26-01-15 22:55) @lasted(2w6d1h48m36s)
     ✔ goal pushing tin & badge levels @started(25-12-06 10:40) @done(25-12-17 16:13) @lasted(1w4d5h33m27s)
     ✔ goal BlueSky multiple achievement levels @started(25-12-06 07:42) @done(25-12-06 09:23) @lasted(1h41m29s)

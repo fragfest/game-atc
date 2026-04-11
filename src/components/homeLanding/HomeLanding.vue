@@ -153,7 +153,7 @@ import {
   getBadgeLevelCompleted,
 } from '../../js/game/score/badges';
 import {
-  getAllScores,
+  getScores,
   getScoresByUser,
   getUserId,
   getUsername,
@@ -278,14 +278,15 @@ export default {
       this.username = getUsername();
 
       await sendHistory(getHistoryRecordsSecure(), getBadgesSecure());
-      this.loginArr = await getScoresByUser(true, getUserId());
+      const scoreObj = await getScoresByUser(true, getUserId());
+      this.loginArr = scoreObj?.arr || [];
 
       if (this.loginArr.length > 1) {
         this.showLoginModal = true;
         return;
       }
 
-      getAllScores(true);
+      getScores(true);
       return;
     }
   },
@@ -312,7 +313,7 @@ export default {
 
     onDoneEvent: async function () {
       this.showLoginModal = false;
-      getAllScores(true);
+      getScores(true);
     },
 
     onLeaderboardClick: function () {

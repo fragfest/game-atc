@@ -64,6 +64,15 @@
         </div>
       </div>
     </div>
+
+    <!-- footer -->
+    <div>
+      <div class="login-btn">
+        <button @click="more">
+          <h3 class="hdr-white">more</h3>
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -75,8 +84,12 @@ import {
   getBadgesType,
 } from '../js/game/score/badges';
 import {
-  getAllScores,
+  getScores,
+  getScoresBySortKey,
+  getClientId,
+  getLeaderboardSortKey,
   getUserId,
+  getUserIdFromLeaderboardSortKey,
   getUsername,
   isLoggedIn,
   logout,
@@ -94,39 +107,36 @@ const setBadgeSize = (width) => {
   badgeSize.value = 44;
 };
 
-const sortArr = (arr) => {
-  const sorted = arr.sort((a, b) => {
-    if (a.score === b.score) {
-      return b?.badges?.length - a?.badges?.length;
+const sortArr = (obj) => {
+  const arr = obj?.arr || [];
+  const keys = obj?.keys || [];
+  const boardArr = [];
+
+  arr.forEach((item) => {
+    const badges = item.badges || [];
+    const boardItem = { ...item, badges: [...badges] };
+    const itemKey = getLeaderboardSortKey(item);
+
+    const index = keys.findIndex(
+      (key) => getLeaderboardSortKey(key) === itemKey
+    );
+    if (index > -1) {
+      boardItem.rank = index + 1;
     }
-    return b?.score - a?.score;
+    boardArr.push(boardItem);
   });
 
-  let rank = 1;
-  const topScoresOnly = [];
-  const prevUserIds = [];
-
-  sorted.forEach((item) => {
-    if (!prevUserIds.length) {
-      item.rank = rank++;
-      prevUserIds.push(item);
-      topScoresOnly.push(item);
-    } else if (!prevUserIds.find((x) => x.userId === item.userId)) {
-      item.rank = rank++;
-      prevUserIds.push(item);
-      topScoresOnly.push(item);
-    }
-  });
-
-  return topScoresOnly;
+  return boardArr;
 };
 
 const getLeaderboard = async () => {
   if (!isLoggedIn() || !getUsername()) {
-    return [];
+    return { arr: [], keys: [] };
   }
-  const scoresArr = await getAllScores();
-  return sortArr(scoresArr || []);
+  const scoresObj = await getScores();
+  const arr = sortArr(scoresObj);
+  const keys = scoresObj?.keys || [];
+  return { arr, keys };
 };
 
 export default {
@@ -139,9 +149,13 @@ export default {
     return {
       isMobile: false,
       userId: getUserId(),
-      leaderboardArr: sortArr(
-        JSON.parse(localStorage.getItem('leaderboard') || '[]')
-      ),
+      clientId: getClientId(),
+      leaderboardArr: sortArr({
+        arr: JSON.parse(localStorage.getItem('leaderboard')) || [],
+        keys: JSON.parse(localStorage.getItem('leaderboard-keys')) || [],
+      }),
+      leaderboardKeys:
+        JSON.parse(localStorage.getItem('leaderboard-keys')) || [],
       badgeSize,
       username: '',
       isLoggedIn: false,
@@ -174,19 +188,58 @@ export default {
       this.isLoggedIn = true;
     }
     this.username = getUsername();
-    this.leaderboardArr = await getLeaderboard();
+    const { arr, keys } = await getLeaderboard();
+    this.leaderboardArr = arr;
+    this.leaderboardKeys = keys;
   },
 
   computed: {
     userRank: function () {
-      const item = this.leaderboardArr.find(
-        (item) => item.userId === this.userId
-      );
-      return item?.rank || '-';
+      const hasUserId = (keyObj) => {
+        if (!keyObj) return false;
+
+        const str = getLeaderboardSortKey(keyObj) || '';
+        const userId = getUserIdFromLeaderboardSortKey(str);
+        if (this.userId === userId) return true;
+        return false;
+      };
+
+      const index = this.leaderboardKeys.findIndex(hasUserId);
+      if (index === -1) return '-';
+      return index + 1;
     },
   },
 
   methods: {
+    more: async function () {
+      const arrLen = this.leaderboardArr?.length;
+      const keyLen = this.leaderboardKeys?.length;
+      if (!arrLen || !keyLen) return;
+
+      const arrOld = JSON.parse(localStorage.getItem('leaderboard')) || [];
+      const keysOld =
+        JSON.parse(localStorage.getItem('leaderboard-keys')) || [];
+
+      const scoreSortKey = getLeaderboardSortKey(
+        this.leaderboardArr[arrLen - 1]
+      );
+      const indexSortKey = getLeaderboardSortKey(
+        this.leaderboardKeys[keyLen - 1]
+      );
+
+      const obj = await getScoresBySortKey(scoreSortKey, indexSortKey);
+      const arrNext = sortArr(obj) || [];
+      const keysNext = obj?.keys || [];
+
+      const arr = arrOld.concat(arrNext);
+      const keys = keysOld.concat(keysNext);
+      localStorage.setItem('leaderboard', JSON.stringify(arr));
+      localStorage.setItem('leaderboard-keys', JSON.stringify(keys));
+
+      this.leaderboardArr = sortArr({ arr, keys });
+      this.leaderboardKeys = keys;
+    },
+
     hasMayDay: function (item) {
       if (!item?.badges) return false;
       const goal = (badge) => getBadgesType(badge) === BadgesTypes.MayDay;
@@ -232,7 +285,9 @@ export default {
     signInUpdate: async function (isLoggedIn) {
       this.username = getUsername();
       if (isLoggedIn) {
-        this.leaderboardArr = await getLeaderboard();
+        const { arr, keys } = await getLeaderboard();
+        this.leaderboardArr = arr;
+        this.leaderboardKeys = keys;
       } else {
         this.isLoggedIn = false;
         logout();
@@ -259,13 +314,14 @@ export default {
     },
 
     isPlayerItem: function (item) {
-      if (this.userId === item.userId) return true;
+      if (this.userId === item.userId) {
+        return true;
+      }
       return false;
     },
 
     scoreItemClass: function (item) {
-      if (!item.userId) return '';
-      if (this.userId === item.userId) return 'selected';
+      if (this.isPlayerItem(item)) return 'selected';
       return '';
     },
   },

@@ -172,7 +172,7 @@ import {
   setBadgeBlueSky,
 } from '../js/game/score/badges';
 import CyberBox from './common/CyberBox.vue';
-import { getAllScores, isLoggedIn, sendHistory } from '../js/session/session';
+import { getScores, isLoggedIn, sendHistory } from '../js/session/session';
 
 export default {
   components: {
@@ -489,7 +489,7 @@ export default {
     if (isLoggedIn()) {
       sendHistory(getHistoryRecordsSecure(), getBadgesSecure());
       setTimeout(() => {
-        getAllScores(true);
+        getScores(true);
       }, 10000);
     }
 

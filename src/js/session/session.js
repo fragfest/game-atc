@@ -15,7 +15,6 @@ let config = {
 };
 
 // prod config ///////////////////////////////////////////////////////
-
 if (process.env.NODE_ENV === 'production') {
   apiUrl = 'https://api.carladde.com/prod/atc';
 
@@ -55,6 +54,7 @@ export const isLoggedIn = () => {
     return false;
   }
 
+  // TODO test to see if this expiry matches backend cognito, by always returning true
   return true;
 };
 
@@ -120,8 +120,21 @@ export const getAccessToken = () => {
   return session.access_token;
 };
 
+///////////////////////////////////////////////////////////////
+//  SCORES, LEADERBOARD
+///////////////////////////////////////////////////////////////
+
+export const getLeaderboardSortKey = (obj) => obj['score#badges#userId'] || '';
+export const getUserIdFromLeaderboardSortKey = (str) => {
+  const arr = str.split('#', 3);
+  const userId = arr[2] || '';
+  return userId;
+};
+
 /**
- * @typedef {Object} LeaderBoard
+ * @typedef {Object} LeaderBoardArr
+ * @property {String} boardId
+ * @property {String} 'score#badges#userId'
  * @property {String} userId
  * @property {String} clientId
  * @property {String} username
@@ -129,13 +142,22 @@ export const getAccessToken = () => {
  * @property {Array.<String>} badges
  * @property {String} date ISO 8601 UTC
  */
+/**
+ * @typedef {Object} LeaderBoardKeys
+ * @property {String} 'score#badges#userId'
+ */
+/**
+ * @typedef {Object} LeaderBoardObj
+ * @property {Array.<LeaderBoardArr>} arr
+ * @property {Array.<LeaderBoardKeys>} keys
+ */
 
 /**
  * get list of scores for the leaderboard
  * @param {Boolean} isSkipCache skip browser cache
- * @returns {Array.<LeaderBoard>}
+ * @returns {LeaderBoardObj}
  */
-export const getAllScores = async (isSkipCache) => {
+export const getScores = async (isSkipCache) => {
   const token = getAccessToken();
   const method = 'GET';
   let headers = { Authorization: 'Bearer ' + token };
@@ -153,16 +175,49 @@ export const getAllScores = async (isSkipCache) => {
     return [];
   }
 
-  const leaderboardArr = await resp.json();
+  const obj = await resp.json();
+  const leaderboardArr = obj?.arr || [];
+  const leaderboardKeys = obj?.keys || [];
   localStorage.setItem('leaderboard', JSON.stringify(leaderboardArr));
-  return leaderboardArr;
+  localStorage.setItem('leaderboard-keys', JSON.stringify(leaderboardKeys));
+  return obj || { arr: [], keys: [] };
+};
+
+/**
+ * get list of scores for the leaderboard starting at a SortKey
+ * @param {String} scoreKey 'score#badges#userId'
+ * @param {String} indexKey 'score#badges#userId'
+ * @returns {LeaderBoardObj}
+ */
+export const getScoresBySortKey = async (scoreKey, indexKey) => {
+  const token = getAccessToken();
+  const method = 'GET';
+  let headers = { Authorization: 'Bearer ' + token };
+
+  const resp = await fetch(
+    apiUrl +
+      `?scoreKey=${encodeURIComponent(scoreKey)}` +
+      `&indexKey=${encodeURIComponent(indexKey)}`,
+    {
+      method,
+      headers,
+    }
+  );
+
+  if (resp.status !== 200) {
+    console.error('GET leaderboard status:', resp.status);
+    return [];
+  }
+
+  const obj = await resp.json();
+  return obj || { arr: [], keys: [] };
 };
 
 /**
  * get scores across all browsers (clientId) for a user
  * @param {Boolean} isSkipCache skip browser cache
  * @param {String} userId
- * @returns {Array.<LeaderBoard>}
+ * @returns {LeaderBoardObj}
  */
 export const getScoresByUser = async (isSkipCache, userId) => {
   const token = getAccessToken();
@@ -182,9 +237,8 @@ export const getScoresByUser = async (isSkipCache, userId) => {
     return [];
   }
 
-  const leaderboardArr = await resp.json();
-  localStorage.setItem('leaderboard', JSON.stringify(leaderboardArr));
-  return leaderboardArr;
+  const obj = await resp.json();
+  return obj || { arr: [], keys: [] };
 };
 
 /**
@@ -232,9 +286,12 @@ export const sendHistory = async (historyRecordsJwt, badgesJwt) => {
 
 /**
  * delete a browser item (clientId) for this user
+ * @param {String} userId
  * @param {String} clientId
+ * @param {Number} scoreInt - score total
+ * @param {Number} badgesInt - count of badges
  */
-export const deleteHistory = async (clientId) => {
+export const deleteHistory = async (userId, clientId, scoreInt, badgesInt) => {
   const token = getAccessToken();
   const method = 'DELETE';
   const headers = {
@@ -243,18 +300,24 @@ export const deleteHistory = async (clientId) => {
   };
 
   const isString = (x) => typeof x === 'string';
-  if (!isString(clientId)) {
+  const isNumber = (x) => typeof x === 'number';
+  if (
+    !isString(userId) ||
+    !isString(clientId) ||
+    !isNumber(scoreInt) ||
+    !isNumber(badgesInt)
+  ) {
     console.warn('DELETE leaderboard not sent');
     return;
   }
 
-  const body = JSON.stringify({
-    clientId,
-  });
-  const resp = await fetch(apiUrl + `?clientId=${clientId}`, {
+  const url =
+    apiUrl +
+    `?userId=${clientId}&clientId=${clientId}&score=${scoreInt}&badges=${badgesInt}`;
+
+  const resp = await fetch(url, {
     method,
     headers,
-    body,
   });
 
   if (resp.status !== 200) {
@@ -262,3 +325,5 @@ export const deleteHistory = async (clientId) => {
     return;
   }
 };
+
+//  END - SCORES, LEADERBOARD /////////////////////////////////////////////

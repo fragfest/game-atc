@@ -5,7 +5,7 @@
         <div class="header">
           <h1>Leaderboard Scores</h1>
           <p>You have score histories in other browsers.</p>
-          <p>The highest score will be shown on the leaderboard.</p>
+          <p>All scores will be shown on the leaderboard.</p>
           <p>
             You may <b>delete</b> scores from abandoned browser play sessions
             here.
@@ -109,7 +109,12 @@ export default {
     },
 
     deleteFn: async function (deleteItem) {
-      deleteHistory(deleteItem.clientId);
+      deleteHistory(
+        deleteItem.userId,
+        deleteItem.clientId,
+        deleteItem.score,
+        deleteItem?.badges?.length
+      );
       this.isDeleteMode = false;
       this.deleteItem = null;
 
