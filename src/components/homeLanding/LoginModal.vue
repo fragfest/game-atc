@@ -5,7 +5,7 @@
         <div class="header">
           <h1>Leaderboard Scores</h1>
           <p>You have score histories in other browsers.</p>
-          <p>All scores will be shown on the leaderboard.</p>
+          <p>Only the top score will be highlighted on the leaderboard.</p>
           <p>
             You may <b>delete</b> scores from abandoned browser play sessions
             here.

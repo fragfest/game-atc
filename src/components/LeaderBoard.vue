@@ -40,10 +40,7 @@
         >
           <div class="score-user">
             <h3 class="hdr-green">{{ item?.rank || '' }}</h3>
-            <h2 v-if="isPlayerItem(item)" class="hdr-green">
-              {{ textFormat(username) }}
-            </h2>
-            <h2 v-else class="hdr-white">
+            <h2 :class="scoreHeaderClass(item)">
               {{ textFormat(item?.username) }}
             </h2>
           </div>
@@ -67,9 +64,10 @@
 
     <!-- footer -->
     <div>
-      <div class="login-btn">
-        <button @click="more">
-          <h3 class="hdr-white">more</h3>
+      <div v-if="showMoreBtn" class="login-btn">
+        <button class="more-btn" @click="more" :disabled="showSpinnerMoreBtn">
+          <h3 v-if="!showSpinnerMoreBtn" class="hdr-white">more</h3>
+          <SpinnerDots v-else class="more-spinner" color="white"></SpinnerDots>
         </button>
       </div>
     </div>
@@ -99,6 +97,7 @@ import BadgesDisplay from './badges/BadgesDisplay';
 
 import Bowser from 'bowser';
 import SignInButton from './common/SignInButton.vue';
+import SpinnerDots from './common/SpinnerDots.vue';
 
 const badgeSize = ref(44);
 
@@ -107,7 +106,7 @@ const setBadgeSize = (width) => {
   badgeSize.value = 44;
 };
 
-const sortArr = (obj) => {
+const createArrWithRank = (obj) => {
   const arr = obj?.arr || [];
   const keys = obj?.keys || [];
   const boardArr = [];
@@ -134,7 +133,7 @@ const getLeaderboard = async () => {
     return { arr: [], keys: [] };
   }
   const scoresObj = await getScores();
-  const arr = sortArr(scoresObj);
+  const arr = createArrWithRank(scoresObj);
   const keys = scoresObj?.keys || [];
   return { arr, keys };
 };
@@ -143,6 +142,7 @@ export default {
   components: {
     SignInButton,
     BadgesDisplay,
+    SpinnerDots,
   },
 
   data() {
@@ -150,7 +150,7 @@ export default {
       isMobile: false,
       userId: getUserId(),
       clientId: getClientId(),
-      leaderboardArr: sortArr({
+      leaderboardArr: createArrWithRank({
         arr: JSON.parse(localStorage.getItem('leaderboard')) || [],
         keys: JSON.parse(localStorage.getItem('leaderboard-keys')) || [],
       }),
@@ -159,6 +159,8 @@ export default {
       badgeSize,
       username: '',
       isLoggedIn: false,
+      showSpinnerMoreBtn: false,
+      spinnerMoreId: null,
     };
   },
 
@@ -194,6 +196,19 @@ export default {
   },
 
   computed: {
+    showMoreBtn: function () {
+      if (!this.isLoggedIn) return false;
+
+      const arrLen = this.leaderboardArr?.length;
+      const keyLen = this.leaderboardKeys?.length;
+      if (!arrLen || !keyLen) return true;
+
+      // assumed that indexSortKey is looking ahead of scoreSortKey
+      // therefore when lengths are equal we have entire leaderboard
+      if (arrLen > 1 && arrLen === keyLen) return false;
+      return true;
+    },
+
     userRank: function () {
       const hasUserId = (keyObj) => {
         if (!keyObj) return false;
@@ -212,6 +227,10 @@ export default {
 
   methods: {
     more: async function () {
+      if (!this.isLoggedIn) return;
+      if (this.showSpinnerMoreBtn) return;
+      this.showSpinnerMoreBtn = true;
+
       const arrLen = this.leaderboardArr?.length;
       const keyLen = this.leaderboardKeys?.length;
       if (!arrLen || !keyLen) return;
@@ -228,15 +247,21 @@ export default {
       );
 
       const obj = await getScoresBySortKey(scoreSortKey, indexSortKey);
-      const arrNext = sortArr(obj) || [];
-      const keysNext = obj?.keys || [];
+      if (!this.spinnerMoreId) {
+        this.spinnerMoreId = setTimeout(() => {
+          this.spinnerMoreId = null;
+          this.showSpinnerMoreBtn = false;
+        }, 200);
+      }
 
+      const arrNext = createArrWithRank(obj) || [];
+      const keysNext = obj?.keys || [];
       const arr = arrOld.concat(arrNext);
       const keys = keysOld.concat(keysNext);
       localStorage.setItem('leaderboard', JSON.stringify(arr));
       localStorage.setItem('leaderboard-keys', JSON.stringify(keys));
 
-      this.leaderboardArr = sortArr({ arr, keys });
+      this.leaderboardArr = createArrWithRank({ arr, keys });
       this.leaderboardKeys = keys;
     },
 
@@ -314,15 +339,24 @@ export default {
     },
 
     isPlayerItem: function (item) {
-      if (this.userId === item.userId) {
-        return true;
-      }
+      if (this.userId === item.userId) return true;
+      return false;
+    },
+
+    isPlayerTopItem: function (item) {
+      if (this.userRank === item.rank) return true;
       return false;
     },
 
     scoreItemClass: function (item) {
-      if (this.isPlayerItem(item)) return 'selected';
+      if (this.isPlayerTopItem(item)) return 'selected';
       return '';
+    },
+
+    scoreHeaderClass: function (item) {
+      if (this.isPlayerTopItem(item)) return 'hdr-green';
+      if (this.isPlayerItem(item)) return 'hdr-green';
+      return 'hdr-white';
     },
   },
 };
@@ -417,7 +451,7 @@ h2 {
     margin: 1% 12%;
 
     @media (max-width: 1000px) {
-      margin: 1% 4%;
+      margin: 6% 4%;
     }
   }
 
@@ -601,11 +635,11 @@ h2 {
       }
     }
 
-    button:hover {
+    button:hover:not(:disabled) {
       background-color: #132a3b;
     }
 
-    button:active {
+    button:active:not(:disabled) {
       position: relative;
       outline: 1px solid white;
       left: 4px;
@@ -617,6 +651,20 @@ h2 {
       outline: 1px solid limegreen;
       box-shadow: none;
     }
+
+    button:disabled {
+      cursor: default;
+      box-shadow: none;
+      left: 4px;
+    }
+  }
+
+  .login-btn .more-btn {
+    height: 60px;
+  }
+
+  .login-btn .more-spinner {
+    height: 16px;
   }
   // END login-btn
 }
