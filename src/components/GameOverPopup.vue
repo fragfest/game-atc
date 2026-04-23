@@ -139,6 +139,7 @@ import {
   resetLevelComplete,
   victoryDebug,
   resetBadgeHistory,
+  hidePopup,
 } from '../js/utils';
 import {
   getScore,
@@ -506,6 +507,7 @@ export default {
     },
 
     onClickRetryBtn: function () {
+      hidePopup();
       levelRetry(this.level);
       window.location.reload();
     },

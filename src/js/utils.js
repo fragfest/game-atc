@@ -234,6 +234,7 @@ export const historyRecordDebug = () => debug();
 export const victoryDebug = () => debug();
 export const resetBadgeHistory = () => debug();
 export const resetMayday = () => debug();
+export const hidePopup = () => debug();
 
 const debug = () => {
   window['06d6dd1b-76bb-4e0f-9d66-6dd80e324211'] =
