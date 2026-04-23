@@ -41,7 +41,12 @@
           <div class="score-user">
             <h3 class="hdr-green">{{ item?.rank || '' }}</h3>
             <h2 :class="scoreHeaderClass(item)">
-              {{ textFormat(item?.username) }}
+              <span v-if="isLocalPlayerItem(item)">
+                {{ textFormat(username) }}
+              </span>
+              <span v-else>
+                {{ textFormat(item?.username) }}
+              </span>
             </h2>
           </div>
           <div class="score-content">
@@ -334,8 +339,11 @@ export default {
       return Number(score).toLocaleString('en-CA');
     },
 
-    getPlayerUsername: function () {
-      return getUsername() || '';
+    isLocalPlayerItem: function (item) {
+      if (this.userId === item.userId && this.clientId === item.clientId) {
+        return true;
+      }
+      return false;
     },
 
     isPlayerItem: function (item) {
@@ -350,6 +358,7 @@ export default {
 
     scoreItemClass: function (item) {
       if (this.isPlayerTopItem(item)) return 'selected';
+      if (this.isPlayerItem(item)) return 'outline';
       return '';
     },
 
@@ -589,6 +598,10 @@ h2 {
   .scores .scores-row.selected {
     outline: 2px solid rgb(44, 255, 44);
     background-color: #19354a;
+  }
+
+  .scores .scores-row.outline {
+    outline: 2px solid lightgreen;
   }
   // END scores
 
