@@ -25,7 +25,7 @@
         </div>
       </section>
 
-      <div v-if="leaderboardArr.length" class="scores">
+      <div v-if="leaderboardDispArr.length" class="scores">
         <div class="scores-header">
           <h2 class="hdr-white"></h2>
           <div class="labels-right">
@@ -35,7 +35,7 @@
         </div>
 
         <div
-          v-for="(item, index) in leaderboardArr"
+          v-for="(item, index) in leaderboardDispArr"
           :key="index"
           class="scores-row"
           :class="scoreItemClass(item)"
@@ -168,6 +168,7 @@ export default {
       isLoggedIn: false,
       showSpinnerMoreBtn: false,
       spinnerMoreId: null,
+      isFirstLoad: true,
     };
   },
 
@@ -230,12 +231,20 @@ export default {
       if (index === -1) return '-';
       return index + 1;
     },
+
+    leaderboardDispArr: function () {
+      if (this.isFirstLoad) {
+        return this.leaderboardArr.filter((val, index) => index < 100);
+      }
+      return this.leaderboardArr;
+    },
   },
 
   methods: {
     more: async function () {
       if (!this.isLoggedIn) return;
       if (this.showSpinnerMoreBtn) return;
+      this.isFirstLoad = false;
       this.showSpinnerMoreBtn = true;
 
       const arrLen = this.leaderboardArr?.length;

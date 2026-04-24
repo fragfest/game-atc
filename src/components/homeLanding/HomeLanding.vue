@@ -46,13 +46,13 @@
               </h2>
               <h3 v-else-if="levelComplete">
                 <span>level&nbsp;&nbsp;</span>
-                <span class="white no-wrap">
-                  {{ levelComplete }} <small>/</small> {{ finalLevel }}
-                </span>
+                <small class="white no-wrap">
+                  {{ levelComplete }} / {{ finalLevel }}
+                </small>
               </h3>
               <h3 v-if="levelComplete">
                 <span>score&nbsp;&nbsp;</span>
-                <span class="white">{{ score }}</span>
+                <small class="white">{{ score }}</small>
               </h3>
             </div>
 
