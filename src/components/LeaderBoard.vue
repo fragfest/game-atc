@@ -1,5 +1,6 @@
 <template>
   <div class="leaderboard">
+    <!-- header -->
     <div class="header">
       <div class="header-back login-btn">
         <button @click="goBack">
@@ -9,6 +10,7 @@
       <h1 class="hdr-green">LEADERBOARD</h1>
     </div>
 
+    <!-- body -->
     <div class="body">
       <section class="body-top">
         <SignInButton
@@ -505,6 +507,9 @@ h2 {
     flex-direction: column;
     row-gap: 4px;
     margin: 2% 0;
+
+    background-color: #b0e0e6b0;
+    border-radius: 6px;
   }
 
   .scores .scores-header {
@@ -601,7 +606,7 @@ h2 {
   }
 
   .scores .scores-row.outline {
-    outline: 2px solid lightgreen;
+    outline: 2px solid white;
   }
   // END scores
 

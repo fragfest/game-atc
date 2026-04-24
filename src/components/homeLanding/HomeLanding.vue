@@ -46,9 +46,13 @@
               </h2>
               <h3 v-else-if="levelComplete">
                 <span>level&nbsp;&nbsp;</span>
-                <span class="font-mono white no-wrap">
-                  {{ levelComplete }} / {{ finalLevel }}
+                <span class="white no-wrap">
+                  {{ levelComplete }} <small>/</small> {{ finalLevel }}
                 </span>
+              </h3>
+              <h3 v-if="levelComplete">
+                <span>score&nbsp;&nbsp;</span>
+                <span class="white">{{ score }}</span>
               </h3>
             </div>
 
@@ -231,6 +235,17 @@ export default {
 
     version: function () {
       return 'v ' + (process.env.VUE_APP_VERSION || '?.?.?');
+    },
+
+    score: function () {
+      const score = (record) => record?.historyScore?.scoreTotal;
+      const records = getHistoryRecords().filter((obj) => obj.level > 0);
+      if (records.length === 0) return '0';
+
+      const total = records.reduce((acc, val) => acc + score(val), 0);
+      if (total > 99999) return '99,999+';
+      if (total <= 0) return '0';
+      return total.toLocaleString('en-CA');
     },
   },
 

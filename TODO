@@ -5,7 +5,9 @@ Bugs:
 
 Wishlist:
   ☐ consider allowing starting any city any time
-  
+
+  ☐ runway collisions
+  ☐ aicraft ground shadows
   ☐ custom play level
   ☐ federated cognito login
   ☐ cognito login page style
