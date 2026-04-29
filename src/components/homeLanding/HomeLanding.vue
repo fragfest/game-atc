@@ -4,8 +4,7 @@
     <SplashLogo
       v-if="showSplash && !isMobile && !isTablet"
       @play="splashDismissEV"
-    >
-    </SplashLogo>
+    ></SplashLogo>
     <div v-else>
       <LoginModal
         v-if="showLoginModal"
@@ -28,6 +27,9 @@
       </div>
 
       <section v-if="!isMobile">
+        <div v-if="isLoading" class="loading">
+          <SpinnerDots class="loading-dots" color="white"></SpinnerDots>
+        </div>
         <div class="content">
           <div class="header">
             <HeaderTitle />
@@ -166,6 +168,7 @@ import {
   logout,
   sendHistory,
 } from '../../js/session/session';
+import { setMute, setup as soundSetup } from '../../js/game/sound';
 
 import LoginModal from './LoginModal.vue';
 import HistoryAirports from './HistoryAirports';
@@ -174,10 +177,11 @@ import CyberBox from '../common/CyberBox';
 import SignInButton from '../common/SignInButton';
 import HeaderTitle from './HeaderTitle';
 import SplashLogo from './SplashLogo.vue';
-import { setMute, setup as soundSetup } from '../../js/game/sound';
+import SpinnerDots from '../common/SpinnerDots.vue';
 
 export default {
   components: {
+    SpinnerDots,
     SplashLogo,
     HeaderTitle,
     SignInButton,
@@ -189,6 +193,7 @@ export default {
 
   data() {
     return {
+      isLoading: false,
       isSplashComplete: false,
 
       isMobile: false,
@@ -289,6 +294,7 @@ export default {
     const isNewLoginSuccess = await loginUsingCallbackUrl(url);
     if (isNewLoginSuccess) {
       console.info('login success');
+      this.isLoading = true;
       this.isLoggedIn = true;
       this.username = getUsername();
 
@@ -296,6 +302,7 @@ export default {
       const scoreObj = await getScoresByUser(true, getUserId());
       this.loginArr = scoreObj?.arr || [];
 
+      this.isLoading = false;
       if (this.loginArr.length > 1) {
         this.showLoginModal = true;
         return;
@@ -460,6 +467,29 @@ export default {
   font-size: 24px;
   color: lightgreen;
   background-image: url('/public/img/teal-bckgnd.jpg');
+}
+
+.home section .loading {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  background-color: #00000090;
+
+  .loading-dots {
+    position: relative;
+    top: 40%;
+    left: 50%;
+    padding: 1% 2%;
+    width: 5%;
+    background-color: lightslategrey;
+    border-radius: 8px;
+  }
 }
 
 .home section .content {

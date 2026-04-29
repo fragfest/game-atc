@@ -19,6 +19,7 @@ Wishlist:
 
 v0.1.5:
   Bugs:
+    ☐ game over: clouds not freezing
     ✔ pause does not stay paused @done(25-10-07 06:22)
     ✔ retry button does next level if success. need to set level on retry @done(25-09-26 01:18)
 
