@@ -444,7 +444,10 @@ export default class Aircraft {
 
     if (this.isHandoff) {
       planeHandoffSuccess();
-      if (this.isMayday) maydaySuccess();
+      if (this.isMayday) {
+        resetMayday();
+        maydaySuccess();
+      }
 
       publish(
         MessageEvents.MessageAllEV,
@@ -455,7 +458,10 @@ export default class Aircraft {
 
     if (this.isTouchedDown) {
       planeLandSuccess();
-      if (this.isMayday) maydaySuccess();
+      if (this.isMayday) {
+        resetMayday();
+        maydaySuccess();
+      }
 
       publish(MessageEvents.MessageAllEV, this.title + ' landing complete');
       return;

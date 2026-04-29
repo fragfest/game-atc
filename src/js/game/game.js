@@ -1,7 +1,7 @@
 import { isCloseToWeather, weatherGameLoop } from './weather';
 import { isCloseToPlane, hasEntityFuncs } from '../entity';
 
-import { getGameSize, resetMayday } from '../utils';
+import { getGameSize, resetMayday, runwayIdleDisplay } from '../utils';
 import { draw as drawScale } from '../canvas/scale';
 import { isArrival, isAircraft } from '../types';
 import {
@@ -269,6 +269,7 @@ const setRunwayIdle = (state, timestamp, deltaTimeMs, entityManagerArr) => {
       state.idleTimerTimestamp = timestamp;
       state.idleTimerSecs -= delta / 1000;
       if (state.idleTimerSecs < 0 && !state.isIdlePrev) {
+        runwayIdleDisplay();
         state.isIdlePrev = true;
         runwayIdlePenalty();
       }
