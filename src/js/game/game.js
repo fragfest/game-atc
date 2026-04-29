@@ -1,7 +1,7 @@
 import { isCloseToWeather, weatherGameLoop } from './weather';
 import { isCloseToPlane, hasEntityFuncs } from '../entity';
 
-import { getGameSize } from '../utils';
+import { getGameSize, resetMayday } from '../utils';
 import { draw as drawScale } from '../canvas/scale';
 import { isArrival, isAircraft } from '../types';
 import {
@@ -323,6 +323,7 @@ const spawnAircraftRnd =
     }
 
     if (plane.isMayday || plane.isMaydayDepart) {
+      resetMayday();
       maydaySpawned();
     }
 
