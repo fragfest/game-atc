@@ -41,9 +41,14 @@ export const weatherGameLoop = (width, height, args, state) => {
 };
 
 const tick = (width, height, args, state) => () => {
-  args.weatherLayerObj.ctx.clearRect(0, 0, width, height);
-  updateWeather(args.entityManagerArr, state.fastForwardNum);
-  window.requestAnimationFrame(tick(width, height, args, state));
+  if (state.gameLoopRunning) {
+    args.weatherLayerObj.ctx.clearRect(0, 0, width, height);
+    updateWeather(args.entityManagerArr, state.fastForwardNum);
+  }
+
+  if (!state.gameLoopCancel) {
+    window.requestAnimationFrame(tick(width, height, args, state));
+  }
 };
 
 const updateWeather = (entityManagerArr, fastForwardNum) => {
