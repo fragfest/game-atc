@@ -172,7 +172,7 @@ export const getScores = async (isSkipCache) => {
 
   if (resp.status !== 200) {
     console.error('GET leaderboard status:', resp.status);
-    return [];
+    return { arr: [], keys: [] };
   }
 
   const obj = await resp.json();
@@ -206,7 +206,7 @@ export const getScoresBySortKey = async (scoreKey, indexKey) => {
 
   if (resp.status !== 200) {
     console.error('GET leaderboard status:', resp.status);
-    return [];
+    return { arr: [], keys: [] };
   }
 
   const obj = await resp.json();
@@ -234,7 +234,7 @@ export const getScoresByUser = async (isSkipCache, userId) => {
 
   if (resp.status !== 200) {
     console.error('GET leaderboard status:', resp.status);
-    return [];
+    return { arr: [], keys: [] };
   }
 
   const obj = await resp.json();

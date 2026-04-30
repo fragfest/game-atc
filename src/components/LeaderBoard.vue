@@ -198,9 +198,22 @@ export default {
       this.isLoggedIn = true;
     }
     this.username = getUsername();
+
     const { arr, keys } = await getLeaderboard();
-    this.leaderboardArr = arr;
-    this.leaderboardKeys = keys;
+    if (!arr || arr.length === 0) {
+      this.leaderboardArr = createArrWithRank({
+        arr: JSON.parse(localStorage.getItem('leaderboard')) || [],
+        keys: JSON.parse(localStorage.getItem('leaderboard-keys')) || [],
+      });
+    } else {
+      this.leaderboardArr = arr;
+    }
+    if (!keys || keys.length === 0) {
+      this.leaderboardKeys =
+        JSON.parse(localStorage.getItem('leaderboard-keys')) || [];
+    } else {
+      this.leaderboardKeys = keys;
+    }
   },
 
   computed: {
