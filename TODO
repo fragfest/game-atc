@@ -1,7 +1,5 @@
 Bugs:
-  ☐ catalog FireFox/Safari bugs
-
-  ☐ slow browser performance post-leave: run video on separate browser video, enter level & leave, wait 10 seconds and notice video slowdown until home screen refreshed
+  ☐ Safari minor: HomeLanding title animation artifact
 
 Wishlist:
   ☐ consider allowing starting any city any time
@@ -16,9 +14,10 @@ Wishlist:
   ☐ noise abatement mechanic (max 250kts below 10Kft)
   ☐ dangerous weather mechanic (wind shear)
   ☐ animated compass
-
-v0.1.5:
-  Bugs:
+  
+  v0.1.5:
+    Bugs:
+    ✔ firefox: badges not aligned but being displayed stacked on top of each other @done(26-04-30 04:36)
     ✔ game over: clouds not freezing @started(26-04-29 02:36) @done(26-04-29 04:14) @lasted(1h38m6s)
     ✔ anti-cheat crash: mayday spawn score.secure @started(26-04-29 03:38) @done(26-04-29 03:38) @lasted(19s)
     ✔ pause does not stay paused @done(25-10-07 06:22)

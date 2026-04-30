@@ -271,49 +271,49 @@ export default {
       return {
         display: 'block',
         position: 'absolute',
-        top: 10,
-        left: 10,
+        top: '10px',
+        left: '10px',
         width: this.size + 'px',
       };
     },
 
     badgeStyle1: function () {
-      let left = 80;
-      if (this.isLeaderboard) left = 66;
-      else if (this.sizeClass === 'small') left = 60;
+      let left = '80px';
+      if (this.isLeaderboard) left = '66px';
+      else if (this.sizeClass === 'small') left = '60px';
 
       return {
         display: 'block',
         position: 'absolute',
-        top: 10,
+        top: '10px',
         left,
         width: this.size + 'px',
       };
     },
 
     badgeStyle2: function () {
-      let left = 150;
-      if (this.isLeaderboard) left = 122;
-      else if (this.sizeClass === 'small') left = 110;
+      let left = '150px';
+      if (this.isLeaderboard) left = '122px';
+      else if (this.sizeClass === 'small') left = '110px';
 
       return {
         display: 'block',
         position: 'absolute',
-        top: 10,
+        top: '10px',
         left,
         width: this.size + 'px',
       };
     },
 
     badgeStyle3: function () {
-      let left = 220;
-      if (this.isLeaderboard) left = 178;
-      else if (this.sizeClass === 'small') left = 160;
+      let left = '220px';
+      if (this.isLeaderboard) left = '178px';
+      else if (this.sizeClass === 'small') left = '160px';
 
       return {
         display: 'block',
         position: 'absolute',
-        top: 10,
+        top: '10px',
         left,
         width: this.size + 'px',
       };
