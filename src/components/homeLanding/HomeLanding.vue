@@ -269,7 +269,7 @@ export default {
     this.isTablet = browsers?.platform?.type === 'tablet' ?? false;
 
     this.screenSize = getScreenSize();
-    if (isLoggedIn()) {
+    if (await isLoggedIn()) {
       this.isLoggedIn = true;
       this.username = getUsername();
     }

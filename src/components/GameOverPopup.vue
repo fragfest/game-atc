@@ -261,7 +261,7 @@ export default {
     },
   },
 
-  mounted() {
+  async mounted() {
     this.screenSize = getScreenSize();
     resizeGameOver();
     if (this.screenSize === ScreenSizes.Small) {
@@ -487,11 +487,10 @@ export default {
     }
 
     // UPDATE BACKEND ////////////////////////////////////////
-    if (isLoggedIn()) {
-      sendHistory(getHistoryRecordsSecure(), getBadgesSecure());
-      setTimeout(() => {
+    if (await isLoggedIn()) {
+      sendHistory(getHistoryRecordsSecure(), getBadgesSecure()).then(() => {
         getScores(true);
-      }, 10000);
+      });
     }
 
     resetLevelComplete();

@@ -1,4 +1,3 @@
-import { default as dayjs } from 'dayjs';
 import { UserManager, WebStorageStateStore } from 'oidc-client-ts';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -12,6 +11,7 @@ let config = {
   response_type: 'code',
   scope: 'phone openid email',
   userStore: new WebStorageStateStore({ store: window.localStorage }),
+  automaticSilentRenew: true,
 };
 
 // prod config ///////////////////////////////////////////////////////
@@ -25,6 +25,8 @@ if (process.env.NODE_ENV === 'production') {
     redirect_uri: 'https://atc.carladde.com/',
     response_type: 'code',
     scope: 'phone openid email',
+    userStore: new WebStorageStateStore({ store: window.localStorage }),
+    automaticSilentRenew: true,
   };
 }
 
@@ -33,28 +35,26 @@ if (process.env.NODE_ENV === 'production') {
  */
 export const startLogin = async () => {
   localStorage.setItem('show-splash', 'no');
-  const userManager = new UserManager({
-    ...config,
-  });
+  const userManager = new UserManager(config);
   await userManager.signinRedirect();
 };
 
-export const isLoggedIn = () => {
-  const key = `oidc.user:${config.authority}:${config.client_id}`;
-  const storage = localStorage.getItem(key);
-  if (!storage) return false;
-
-  const session = JSON.parse(storage);
-  const expiryEpochSecs = session['expires_at'];
-  const expiryTime = dayjs.unix(expiryEpochSecs);
-  const now = dayjs();
-
-  if (now.isAfter(expiryTime)) {
-    console.warn('token expired');
+export const isLoggedIn = async () => {
+  const userManager = new UserManager(config);
+  const user = await userManager.getUser();
+  if (!user) {
+    console.info('not logged in');
     return false;
   }
+  if (user.expired) {
+    console.info('token expired - refreshing');
+    const userRefresh = await userManager.signinSilent();
+    if (!userRefresh) {
+      console.warn('token refresh failed');
+      return false;
+    }
+  }
 
-  // TODO test to see if this expiry matches backend cognito, by always returning true
   return true;
 };
 
@@ -73,6 +73,11 @@ export const logout = () => {
 //   )}`;
 // }
 
+/**
+ * check url contains post AWS cognito login redirect params
+ * @param {String} url
+ * @returns {Boolean} true if login was successful
+ */
 export const loginUsingCallbackUrl = async (url) => {
   const userManager = new UserManager(config);
   const session = await userManager.signinCallback(url).catch(() => {

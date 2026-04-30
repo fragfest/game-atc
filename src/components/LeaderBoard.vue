@@ -135,8 +135,8 @@ const createArrWithRank = (obj) => {
   return boardArr;
 };
 
-const getLeaderboard = async () => {
-  if (!isLoggedIn() || !getUsername()) {
+const getLeaderboard = async (isLoggedIn) => {
+  if (!isLoggedIn || !getUsername()) {
     return { arr: [], keys: [] };
   }
   const scoresObj = await getScores();
@@ -194,12 +194,12 @@ export default {
     const isTablet = browsers?.platform?.type === 'tablet' ?? false;
     this.isMobile = isMobile || isTablet;
 
-    if (isLoggedIn()) {
+    if (await isLoggedIn()) {
       this.isLoggedIn = true;
     }
     this.username = getUsername();
 
-    const { arr, keys } = await getLeaderboard();
+    const { arr, keys } = await getLeaderboard(this.isLoggedIn);
     if (!arr || arr.length === 0) {
       this.leaderboardArr = createArrWithRank({
         arr: JSON.parse(localStorage.getItem('leaderboard')) || [],
@@ -339,7 +339,7 @@ export default {
     signInUpdate: async function (isLoggedIn) {
       this.username = getUsername();
       if (isLoggedIn) {
-        const { arr, keys } = await getLeaderboard();
+        const { arr, keys } = await getLeaderboard(isLoggedIn);
         this.leaderboardArr = arr;
         this.leaderboardKeys = keys;
       } else {
