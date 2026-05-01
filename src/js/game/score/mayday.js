@@ -83,7 +83,7 @@ export const getMaydayInfo = (scenario) => {
     return {
       title: 'bird strike',
       action: 'land immediately',
-      detail1: 'Engine failure: climbing degraded',
+      detail1: 'Engine damage: thrust degraded',
       detail2: 'Engine power failing',
       progressTitle: 'Engine power',
     };

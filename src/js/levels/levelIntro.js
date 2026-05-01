@@ -264,7 +264,7 @@ export const getIntro = (gameLevel) => {
         levelNum: gameLevel,
         airportHeading: `Tokyo Haneda (HND)`,
         airportSubheading: `South Wind Operations - weather: severe`,
-        text1: `We have lingering turbulent weather from the last typhoon. If possible, navigate around all the remaining pockets of weather`,
+        text1: `We have lingering turbulent weather from the last typhoon. If possible, navigate around all the remaining pockets of weather.`,
       };
     }
 
@@ -308,7 +308,7 @@ export const getIntro = (gameLevel) => {
         levelNum: gameLevel,
         airportHeading: `Amsterdam Schiphol (AMS)`,
         airportSubheading: `Southbound Operations - weather: minor`,
-        text1: `Just need to avoid a small weather cell moving through the area. Some light bird activity near the runways, unlikely to cause problems`,
+        text1: `Just need to avoid a small weather cell moving through the area. Some light bird activity near the runways, unlikely to cause problems.`,
       };
     }
 
