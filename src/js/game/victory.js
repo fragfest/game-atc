@@ -316,7 +316,7 @@ export const getGoalsByLevel = () => {
         Conflict: 30,
         SpawnRate: 1.2,
         Delayed: 3,
-        IdleTimer: 300,
+        IdleTimer: 240,
       };
     }
 
@@ -328,7 +328,7 @@ export const getGoalsByLevel = () => {
         Conflict: 30,
         SpawnRate: 1.2,
         Delayed: 3,
-        IdleTimer: 240,
+        IdleTimer: 180,
       };
     }
 
@@ -351,7 +351,7 @@ export const getGoalsByLevel = () => {
         Conflict: 30,
         SpawnRate: 1.5,
         Delayed: 2,
-        IdleTimer: 240,
+        IdleTimer: 120,
       };
     }
 

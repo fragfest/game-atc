@@ -3,7 +3,6 @@ Bugs:
 
 Wishlist:
   ☐ consider allowing starting any city any time
-  ☐ sound: tire screech on landing
 
   ☐ runway collisions
   ☐ aicraft ground shadows
@@ -16,8 +15,9 @@ Wishlist:
   ☐ dangerous weather mechanic (wind shear)
   ☐ animated compass
   
-  v0.1.5:
-    Bugs:
+v0.1.5:
+  Bugs:
+    ☐ mute icon shows when sound not muted
     ✔ firefox: badges not aligned but being displayed stacked on top of each other @done(26-04-30 04:36)
     ✔ game over: clouds not freezing @started(26-04-29 02:36) @done(26-04-29 04:14) @lasted(1h38m6s)
     ✔ anti-cheat crash: mayday spawn score.secure @started(26-04-29 03:38) @done(26-04-29 03:38) @lasted(19s)
@@ -26,6 +26,7 @@ Wishlist:
 
   Major:
     ☐ leaderboard search by username
+    ✔ sound: tire chirp on landing @done(26-05-01 23:19)
     ✔ leaderboard max limit & paged calls (leaderboard: now need all userId sessions to be shown) @started(26-02-06 00:36) @done(26-04-16 23:39) @lasted(9w6d22h3m40s)
     ✔ goal mayday @started(25-12-26 21:07) @done(26-01-15 22:55) @lasted(2w6d1h48m36s)
     ✔ goal pushing tin & badge levels @started(25-12-06 10:40) @done(25-12-17 16:13) @lasted(1w4d5h33m27s)

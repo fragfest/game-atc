@@ -1,6 +1,7 @@
 import { VictoryEvents, subscribeVictory } from './victory';
 import { subscribeScore, ScoreEvents } from './score/score';
 
+let land;
 let collision;
 let ding;
 let denied;
@@ -12,6 +13,7 @@ let flick;
 let squelch;
 
 export const SoundType = Object.freeze({
+  Land: 'Land',
   Background: 'Background',
   Collision: 'Collision',
   Ding: 'Ding',
@@ -31,6 +33,7 @@ let oldScore = {};
 export const setup = () => {
   if (isSetup) return;
 
+  land = new Audio('/audio/landing-chirp.mp3');
   collision = new Audio('/audio/collision-warning.mp3');
   ding = new Audio('/audio/ding.mp3');
   denied = new Audio('/audio/denied.mp3');
@@ -83,6 +86,7 @@ export const getMute = () => {
  */
 export const setMute = (isMutedArg) => {
   isMuted = !!isMutedArg;
+  land.muted = isMuted;
   collision.muted = isMuted;
   ding.muted = isMuted;
   denied.muted = isMuted;
@@ -114,6 +118,9 @@ export const playLoop = (soundType) => {
 export const play = (soundType) => {
   if (!isSetup) return;
 
+  if (soundType === SoundType.Land) {
+    return land.play();
+  }
   if (soundType === SoundType.Ding) {
     return ding.play();
   }

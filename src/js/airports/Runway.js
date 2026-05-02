@@ -234,7 +234,7 @@ export default class Runway {
         );
       };
 
-      if (!isAircraft) return;
+      if (!isAircraft(entity)) return;
       if (hasEntityLiftedOff(entity)) {
         removeTakeoffFromRunway(this.takeoffEntities)(entity);
         return;
@@ -249,6 +249,7 @@ export default class Runway {
         entity.setAltitude(this.altitude, true, true);
         entity.setHeadingRad(this.runwayHeading, true);
         if (!isEntityOnRunway(entity)) {
+          play(SoundType.Land);
           placeOnRunway(entity);
         }
       }
