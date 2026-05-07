@@ -1,5 +1,6 @@
 import { describe, beforeEach, test, expect } from '@jest/globals';
 import {
+  mergeSortKeys,
   convertToPosRad,
   createInterceptHeading,
   degreesToRad,
@@ -8,7 +9,67 @@ import {
 
 const hdg = (deg) => convertToPosRad(degreesToRad(deg));
 
-describe('util', () => {
+describe('utils', () => {
+  describe('mergeSortKeys', () => {
+    let arr = [];
+    let arrNew = [];
+    let arrResult = [];
+
+    describe('when merge arr START is within source arr, and merge arr end is PAST source arr ', () => {
+      beforeEach(() => {
+        arr = [
+          { 'score#badges#userId': '00005000#010#user-id-0' },
+          { 'score#badges#userId': '00004000#010#user-id-1' },
+          { 'score#badges#userId': '00003000#010#user-id-player' },
+          { 'score#badges#userId': '00002800#000#user-id-2' },
+          { 'score#badges#userId': '00001000#000#user-id-player' },
+        ];
+
+        arrNew = [
+          { 'score#badges#userId': '00003000#010#user-id-player' },
+          { 'score#badges#userId': '00002800#000#user-id-2' },
+          { 'score#badges#userId': '00001000#000#user-id-player' },
+          { 'score#badges#userId': '00000800#000#user-id-3' },
+          { 'score#badges#userId': '00000600#000#user-id-4' },
+        ];
+
+        arrResult = [
+          { 'score#badges#userId': '00005000#010#user-id-0' },
+          { 'score#badges#userId': '00004000#010#user-id-1' },
+          { 'score#badges#userId': '00003000#010#user-id-player' },
+          { 'score#badges#userId': '00002800#000#user-id-2' },
+          { 'score#badges#userId': '00001000#000#user-id-player' },
+          { 'score#badges#userId': '00000800#000#user-id-3' },
+          { 'score#badges#userId': '00000600#000#user-id-4' },
+        ];
+      });
+      test('then returns new larger arr grows with duplicates removed', () => {
+        expect(mergeSortKeys(arr, arrNew)).toEqual(arrResult);
+      });
+    });
+
+    describe('when merge arr START is within source arr, and merge arr end is WITHIN source arr ', () => {
+      beforeEach(() => {
+        arr = [
+          { 'score#badges#userId': '00005000#010#user-id-0' },
+          { 'score#badges#userId': '00004000#010#user-id-1' },
+          { 'score#badges#userId': '00003000#010#user-id-player' },
+          { 'score#badges#userId': '00002800#000#user-id-2' },
+          { 'score#badges#userId': '00001000#000#user-id-player' },
+        ];
+
+        arrNew = [
+          { 'score#badges#userId': '00004000#010#user-id-1' },
+          { 'score#badges#userId': '00003000#010#user-id-player' },
+          { 'score#badges#userId': '00002800#000#user-id-2' },
+        ];
+      });
+      test('then returns new arr the same as source arr', () => {
+        expect(mergeSortKeys(arr, arrNew)).toEqual(arr);
+      });
+    });
+  });
+
   describe('createInterceptHeading', () => {
     let src = { x: 0, y: 0 };
     let dest = { x: 0, y: 0 };

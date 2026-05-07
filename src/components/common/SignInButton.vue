@@ -225,7 +225,7 @@ export default {
 
   .edit-btn {
     width: 60px;
-    height: 90%;
+    height: 80%;
     padding: 0;
     h2 {
       margin: 0;

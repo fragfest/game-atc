@@ -129,8 +129,8 @@ export const getAccessToken = () => {
 //  SCORES, LEADERBOARD
 ///////////////////////////////////////////////////////////////
 
-export const getLeaderboardSortKey = (obj) => obj['score#badges#userId'] || '';
-export const getUserIdFromLeaderboardSortKey = (str) => {
+export const extractSortKey = (obj) => obj['score#badges#userId'] || '';
+export const getUserIdFromSortKey = (str) => {
   const arr = str.split('#', 3);
   const userId = arr[2] || '';
   return userId;

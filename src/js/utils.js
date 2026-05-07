@@ -1,6 +1,17 @@
 import { isDeparture, isArrival, isNotCrashed } from './types';
 import { distBetweenEntities } from './entity';
 
+// LEADERBOARD /////////////////////////////////////////////////////////////////
+export const mergeSortKeys = (arrKeyObjs, arrKeyObjsNew) => {
+  const arr = arrKeyObjs.map((obj) => Object.values(obj)[0]);
+  const arrNew = arrKeyObjsNew.map((obj) => Object.values(obj)[0]);
+  const mergedUniqueArr = [...new Set([...arr, ...arrNew])];
+  const mergedArrWithObjs = mergedUniqueArr.map((val) => ({
+    'score#badges#userId': val,
+  }));
+  return mergedArrWithObjs;
+};
+
 // PLANES /////////////////////////////////////////////////////////////////
 export const getDepartureCount = (arr) =>
   arr.filter((x) => isDeparture(x) && isNotCrashed(x)).length;

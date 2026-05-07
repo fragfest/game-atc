@@ -19,9 +19,33 @@
           @update="signInUpdate"
         ></SignInButton>
 
-        <div class="user-rank">
-          <h2 class="hdr-white">your rank:</h2>
-          <h2 class="hdr-green">{{ userRank }}</h2>
+        <div class="body-right">
+          <ToolTip>
+            <div v-if="isLoggedIn" class="login-btn player-btn">
+              <button @click="goToPlayer" :disabled="showSpinnerBtn">
+                <SearchIcon
+                  v-if="!showSpinnerBtn"
+                  class="goto-search"
+                  color="white"
+                ></SearchIcon>
+                <SpinnerDots
+                  v-else
+                  class="goto-spinner"
+                  color="white"
+                ></SpinnerDots>
+              </button>
+            </div>
+            <template v-slot:hover>
+              <div class="tooltip">
+                <h2>go to score</h2>
+              </div>
+            </template>
+          </ToolTip>
+
+          <div class="user-rank">
+            <h2 class="hdr-white">your rank:</h2>
+            <h2 class="hdr-green">{{ userRank }}</h2>
+          </div>
         </div>
       </section>
 
@@ -72,8 +96,8 @@
     <!-- footer -->
     <div>
       <div v-if="showMoreBtn" class="login-btn">
-        <button class="more-btn" @click="more" :disabled="showSpinnerMoreBtn">
-          <h3 v-if="!showSpinnerMoreBtn" class="hdr-white">more</h3>
+        <button class="more-btn" @click="more" :disabled="showSpinnerBtn">
+          <h3 v-if="!showSpinnerBtn" class="hdr-white">more</h3>
           <SpinnerDots v-else class="more-spinner" color="white"></SpinnerDots>
         </button>
       </div>
@@ -92,19 +116,21 @@ import {
   getScores,
   getScoresBySortKey,
   getClientId,
-  getLeaderboardSortKey,
+  extractSortKey,
   getUserId,
-  getUserIdFromLeaderboardSortKey,
+  getUserIdFromSortKey,
   getUsername,
   isLoggedIn,
   logout,
 } from '../js/session/session';
-import { calculateScreenSize, setScreenSize } from '../js/utils';
+import { calculateScreenSize, mergeSortKeys, setScreenSize } from '../js/utils';
 import BadgesDisplay from './badges/BadgesDisplay';
 
 import Bowser from 'bowser';
 import SignInButton from './common/SignInButton.vue';
 import SpinnerDots from './common/SpinnerDots.vue';
+import ToolTip from './common/ToolTip.vue';
+import SearchIcon from './common/SearchIcon.vue';
 
 const badgeSize = ref(44);
 
@@ -121,11 +147,9 @@ const createArrWithRank = (obj) => {
   arr.forEach((item) => {
     const badges = item.badges || [];
     const boardItem = { ...item, badges: [...badges] };
-    const itemKey = getLeaderboardSortKey(item);
+    const itemKey = extractSortKey(item);
 
-    const index = keys.findIndex(
-      (key) => getLeaderboardSortKey(key) === itemKey
-    );
+    const index = keys.findIndex((key) => extractSortKey(key) === itemKey);
     if (index > -1) {
       boardItem.rank = index + 1;
     }
@@ -133,6 +157,15 @@ const createArrWithRank = (obj) => {
   });
 
   return boardArr;
+};
+
+const isUserIdInKey = (userId) => (key) => {
+  if (!key) return false;
+
+  const str = extractSortKey(key) || '';
+  const keyUserId = getUserIdFromSortKey(str);
+  if (userId === keyUserId) return true;
+  return false;
 };
 
 const getLeaderboard = async (isLoggedIn) => {
@@ -147,6 +180,8 @@ const getLeaderboard = async (isLoggedIn) => {
 
 export default {
   components: {
+    SearchIcon,
+    ToolTip,
     SignInButton,
     BadgesDisplay,
     SpinnerDots,
@@ -166,9 +201,8 @@ export default {
       badgeSize,
       username: '',
       isLoggedIn: false,
-      showSpinnerMoreBtn: false,
-      spinnerMoreId: null,
-      isFirstLoad: true,
+      showSpinnerBtn: false,
+      spinnerId: null,
     };
   },
 
@@ -225,73 +259,85 @@ export default {
       if (!arrLen || !keyLen) return true;
 
       // assumed that indexSortKey is looking ahead of scoreSortKey
-      // therefore when lengths are equal we have entire leaderboard
-      if (arrLen > 1 && arrLen === keyLen) return false;
+      const scoreSortKey = extractSortKey(this.leaderboardArr[arrLen - 1]);
+      const indexSortKey = extractSortKey(this.leaderboardKeys[keyLen - 1]);
+      if (scoreSortKey === indexSortKey) return false;
+
       return true;
     },
 
     userRank: function () {
-      const hasUserId = (keyObj) => {
-        if (!keyObj) return false;
-
-        const str = getLeaderboardSortKey(keyObj) || '';
-        const userId = getUserIdFromLeaderboardSortKey(str);
-        if (this.userId === userId) return true;
-        return false;
-      };
-
-      const index = this.leaderboardKeys.findIndex(hasUserId);
+      const hasUser = isUserIdInKey(this.userId);
+      const index = this.leaderboardKeys.findIndex(hasUser);
       if (index === -1) return '-';
       return index + 1;
     },
 
     leaderboardDispArr: function () {
-      if (this.isFirstLoad) {
-        return this.leaderboardArr.filter((val, index) => index < 100);
-      }
-      return this.leaderboardArr;
+      if (!this.isLoggedIn) return [];
+      return this.leaderboardArr.filter((val, index) => index < 100);
     },
   },
 
   methods: {
     more: async function () {
       if (!this.isLoggedIn) return;
-      if (this.showSpinnerMoreBtn) return;
-      this.isFirstLoad = false;
-      this.showSpinnerMoreBtn = true;
+      if (this.showSpinnerBtn) return;
 
       const arrLen = this.leaderboardArr?.length;
       const keyLen = this.leaderboardKeys?.length;
       if (!arrLen || !keyLen) return;
 
-      const arrOld = JSON.parse(localStorage.getItem('leaderboard')) || [];
-      const keysOld =
-        JSON.parse(localStorage.getItem('leaderboard-keys')) || [];
+      const arrOld = this.leaderboardArr;
+      const keysOld = this.leaderboardKeys;
+      const scoreSortKey = extractSortKey(this.leaderboardArr[arrLen - 1]);
+      const indexSortKey = extractSortKey(this.leaderboardKeys[keyLen - 1]);
 
-      const scoreSortKey = getLeaderboardSortKey(
-        this.leaderboardArr[arrLen - 1]
-      );
-      const indexSortKey = getLeaderboardSortKey(
-        this.leaderboardKeys[keyLen - 1]
-      );
-
+      this.showSpinnerBtn = true;
       const obj = await getScoresBySortKey(scoreSortKey, indexSortKey);
-      if (!this.spinnerMoreId) {
-        this.spinnerMoreId = setTimeout(() => {
-          this.spinnerMoreId = null;
-          this.showSpinnerMoreBtn = false;
+      if (!this.spinnerId) {
+        this.spinnerId = setTimeout(() => {
+          this.spinnerId = null;
+          this.showSpinnerBtn = false;
         }, 200);
       }
 
-      const arrNext = createArrWithRank(obj) || [];
-      const keysNext = obj?.keys || [];
+      const arrNext = createArrWithRank(obj);
+      const keysNext = obj.keys;
       const arr = arrOld.concat(arrNext);
       const keys = keysOld.concat(keysNext);
-      localStorage.setItem('leaderboard', JSON.stringify(arr));
-      localStorage.setItem('leaderboard-keys', JSON.stringify(keys));
-
       this.leaderboardArr = createArrWithRank({ arr, keys });
       this.leaderboardKeys = keys;
+    },
+
+    goToPlayer: async function () {
+      if (!this.isLoggedIn) return;
+      if (this.showSpinnerBtn) return;
+
+      const hasUser = isUserIdInKey(this.userId);
+      const keysIndex = this.leaderboardKeys.findIndex(hasUser);
+      if (keysIndex === -1) return;
+
+      const offsetFromTop = 3;
+      const playerIndex = keysIndex > 0 ? keysIndex - 1 : 0;
+      let index = playerIndex - offsetFromTop;
+      if (index <= 0) {
+        return;
+      }
+
+      const key = extractSortKey(this.leaderboardKeys[index]);
+      this.showSpinnerBtn = true;
+      const { arr, keys } = await getScoresBySortKey(key, key);
+      if (!this.spinnerId) {
+        this.spinnerId = setTimeout(() => {
+          this.spinnerId = null;
+          this.showSpinnerBtn = false;
+        }, 200);
+      }
+
+      const mergedKeys = mergeSortKeys(this.leaderboardKeys, keys);
+      this.leaderboardArr = createArrWithRank({ arr, keys: mergedKeys });
+      this.leaderboardKeys = mergedKeys;
     },
 
     hasMayDay: function (item) {
@@ -496,7 +542,18 @@ h2 {
     gap: 8px;
   }
 
-  section.body-top .user-rank {
+  section.body-top .body-right {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+
+    @media (max-width: 1000px) {
+      width: 100%;
+    }
+  }
+
+  section.body-top .body-right .user-rank {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -515,7 +572,8 @@ h2 {
 
     @media (max-width: 1000px) {
       justify-content: center;
-      width: 100%;
+      width: 50%;
+
       h2 {
         margin: 8px;
         font-size: 22px;
@@ -699,13 +757,47 @@ h2 {
     }
   }
 
+  .login-btn.player-btn {
+    min-width: unset;
+
+    h2 {
+      margin: 10px;
+      font-size: 22px;
+    }
+    button {
+      width: fit-content;
+    }
+  }
+
   .login-btn .more-btn {
     height: 60px;
   }
-
   .login-btn .more-spinner {
     height: 16px;
   }
+
+  .login-btn .goto-search {
+    height: 18px;
+    padding-left: 12px;
+    padding-right: 10px;
+    padding-top: 12px;
+    padding-bottom: 8px;
+  }
+  .login-btn .goto-spinner {
+    padding: 10px;
+    height: 16px;
+  }
+
   // END login-btn
+
+  .tooltip {
+    color: lightgreen;
+    h2 {
+      font-size: 18px;
+    }
+    p {
+      font-size: 14px;
+    }
+  }
 }
 </style>
