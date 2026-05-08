@@ -19,6 +19,7 @@ Wishlist:
   
 v0.1.5:
   Bugs:
+    ☐ session api https exceptions need catching and logging (not just non-200 responses)
     ☐ mute icon shows when sound not muted
     ✔ firefox: badges not aligned but being displayed stacked on top of each other @done(26-04-30 04:36)
     ✔ game over: clouds not freezing @started(26-04-29 02:36) @done(26-04-29 04:14) @lasted(1h38m6s)
@@ -26,8 +27,8 @@ v0.1.5:
     ✔ pause does not stay paused @done(25-10-07 06:22)
     ✔ retry button does next level if success. need to set level on retry @done(25-09-26 01:18)
 
-  Major:
-    ☐ leaderboard jump to player & navigate previous button @started(26-05-02 06:46)
+  Major:    
+    ✔ leaderboard jump to player & navigate previous button @started(26-05-02 06:46) @done(26-05-07 22:31) @lasted(5d15h45m59s)
     ✔ sound: tire chirp on landing @done(26-05-01 23:19)
     ✔ leaderboard max limit & paged calls (leaderboard: now need all userId sessions to be shown) @started(26-02-06 00:36) @done(26-04-16 23:39) @lasted(9w6d22h3m40s)
     ✔ goal mayday @started(25-12-26 21:07) @done(26-01-15 22:55) @lasted(2w6d1h48m36s)
