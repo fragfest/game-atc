@@ -45,6 +45,8 @@ import { maydaySpawned, runwayIdlePenalty } from './score/score.js';
  * @property {FocusObj} focusObj
  */
 
+let showConflictCircles = false;
+
 /**
  * @param {State} state
  * @param {object} argObj
@@ -56,6 +58,8 @@ export const setup = (state) => (argObj) => {
   const height = getGameSize(argObj.screenSize).height;
   const canvasObj = getCanvasObj(argObj);
   const airport = argObj.airport;
+
+  setShowCircles(state)(showConflictCircles);
 
   const firstPlaneCanvasObj = { ...canvasObj, flightObj: { time: 10 * 60 } };
   const spawnFirstPlane = () => {
@@ -145,8 +149,11 @@ export const setGameLoopState = (state) => (isRunning) => {
   state.gameLoopRunning = !!isRunning;
 };
 
+export const getShowCircles = () => showConflictCircles;
+
 export const setShowCircles = (state) => (isShowCircles) => {
   state.showCircles = !!isShowCircles;
+  showConflictCircles = !!isShowCircles;
 };
 
 export const setPlaneSelected = (argObj, aircraft) => {

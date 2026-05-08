@@ -1,5 +1,6 @@
 Bugs:
   ☐ Safari minor: HomeLanding title animation artifact
+  ☐ mute icon shows when sound not muted (need steps)
 
 Wishlist:
   ☐ consider allowing starting any city any time
@@ -20,7 +21,6 @@ Wishlist:
 v0.1.5:
   Bugs:
     ☐ session api https exceptions need catching and logging (not just non-200 responses)
-    ☐ mute icon shows when sound not muted
     ✔ firefox: badges not aligned but being displayed stacked on top of each other @done(26-04-30 04:36)
     ✔ game over: clouds not freezing @started(26-04-29 02:36) @done(26-04-29 04:14) @lasted(1h38m6s)
     ✔ anti-cheat crash: mayday spawn score.secure @started(26-04-29 03:38) @done(26-04-29 03:38) @lasted(19s)
@@ -39,6 +39,7 @@ v0.1.5:
     ✔ display name for player/leaderboard (instead of all-lowercase cognito username) @started(25-02-19 18:41) @done(25-02-23 11:50) @lasted(3d17h9m18s)
     
   Minor:
+    ✔ save conflict circles @started(26-05-07 23:22) @done(26-05-08 00:05) @lasted(43m27s)
     ✔ block takeoff/landing on occupied runway & display message @started(26-01-22 02:19) @done(26-02-03 20:22) @lasted(1w5d18h3m57s)
     ✔ wake circles should include altitude at which they were generated @started(26-01-21 22:48) @done(26-01-22 00:46) @lasted(1h58m47s)
     ✔ pause: disable flightstrips, non-pause buttons @started(26-01-21 15:03) @done(26-01-21 16:22) @lasted(1h19m14s)

@@ -149,6 +149,7 @@
 import ToolTip from '../common/ToolTip';
 import { getClassSize } from '../../js/utils';
 import { getMute, setMute } from '../../js/game/sound';
+import { getShowCircles } from '../../js/game/game';
 
 export default {
   name: 'ButtonPanel',
@@ -173,6 +174,7 @@ export default {
 
   mounted() {
     this.isSoundMuted = getMute();
+    this.isShowCircles = getShowCircles();
   },
 
   computed: {
