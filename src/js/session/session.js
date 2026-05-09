@@ -169,22 +169,29 @@ export const getScores = async (isSkipCache) => {
   if (isSkipCache) {
     headers = { ...headers, 'Cache-Control': 'max-age=0' };
   }
+  let obj = null;
 
-  const resp = await fetch(apiUrl, {
-    method,
-    headers,
-  });
+  try {
+    const resp = await fetch(apiUrl, {
+      method,
+      headers,
+    });
 
-  if (resp.status !== 200) {
-    console.error('GET leaderboard status:', resp.status);
-    return { arr: [], keys: [] };
+    if (resp?.status !== 200) {
+      console.error('GET leaderboard status:', resp?.status || 'none');
+      return { arr: [], keys: [] };
+    }
+
+    obj = await resp.json();
+
+    const leaderboardArr = obj?.arr || [];
+    const leaderboardKeys = obj?.keys || [];
+    localStorage.setItem('leaderboard', JSON.stringify(leaderboardArr));
+    localStorage.setItem('leaderboard-keys', JSON.stringify(leaderboardKeys));
+  } catch (err) {
+    console.error(err);
   }
 
-  const obj = await resp.json();
-  const leaderboardArr = obj?.arr || [];
-  const leaderboardKeys = obj?.keys || [];
-  localStorage.setItem('leaderboard', JSON.stringify(leaderboardArr));
-  localStorage.setItem('leaderboard-keys', JSON.stringify(leaderboardKeys));
   return obj || { arr: [], keys: [] };
 };
 
@@ -198,23 +205,29 @@ export const getScoresBySortKey = async (scoreKey, indexKey) => {
   const token = getAccessToken();
   const method = 'GET';
   let headers = { Authorization: 'Bearer ' + token };
+  let obj = null;
 
-  const resp = await fetch(
-    apiUrl +
-      `?scoreKey=${encodeURIComponent(scoreKey)}` +
-      `&indexKey=${encodeURIComponent(indexKey)}`,
-    {
-      method,
-      headers,
+  try {
+    const resp = await fetch(
+      apiUrl +
+        `?scoreKey=${encodeURIComponent(scoreKey)}` +
+        `&indexKey=${encodeURIComponent(indexKey)}`,
+      {
+        method,
+        headers,
+      }
+    );
+
+    if (resp?.status !== 200) {
+      console.error('GET leaderboard status:', resp?.status || 'none');
+      return { arr: [], keys: [] };
     }
-  );
 
-  if (resp.status !== 200) {
-    console.error('GET leaderboard status:', resp.status);
-    return { arr: [], keys: [] };
+    obj = await resp.json();
+  } catch (err) {
+    console.error(err);
   }
 
-  const obj = await resp.json();
   return obj || { arr: [], keys: [] };
 };
 
@@ -231,18 +244,24 @@ export const getScoresByUser = async (isSkipCache, userId) => {
   if (isSkipCache) {
     headers = { ...headers, 'Cache-Control': 'max-age=0' };
   }
+  let obj = null;
 
-  const resp = await fetch(apiUrl + `?userId=${userId}`, {
-    method,
-    headers,
-  });
+  try {
+    const resp = await fetch(apiUrl + `?userId=${userId}`, {
+      method,
+      headers,
+    });
 
-  if (resp.status !== 200) {
-    console.error('GET leaderboard status:', resp.status);
-    return { arr: [], keys: [] };
+    if (resp?.status !== 200) {
+      console.error('GET leaderboard status:', resp?.status || 'none');
+      return { arr: [], keys: [] };
+    }
+
+    obj = await resp.json();
+  } catch (err) {
+    console.error(err);
   }
 
-  const obj = await resp.json();
   return obj || { arr: [], keys: [] };
 };
 
@@ -269,22 +288,28 @@ export const sendHistory = async (historyRecordsJwt, badgesJwt) => {
     console.warn('PUT leaderboard not sent');
     return;
   }
+  let resp = null;
 
-  const body = JSON.stringify({
-    clientId,
-    username,
-    history,
-    badges,
-  });
+  try {
+    const body = JSON.stringify({
+      clientId,
+      username,
+      history,
+      badges,
+    });
 
-  const resp = await fetch(apiUrl, {
-    method,
-    headers,
-    body,
-  });
+    resp = await fetch(apiUrl, {
+      method,
+      headers,
+      body,
+    });
+  } catch (err) {
+    console.error(err);
+    return;
+  }
 
-  if (resp.status !== 200) {
-    console.error('PUT leaderboard status:', resp.status);
+  if (resp?.status !== 200) {
+    console.error('PUT leaderboard status:', resp?.status || 'none');
     return;
   }
 };
@@ -320,13 +345,19 @@ export const deleteHistory = async (userId, clientId, scoreInt, badgesInt) => {
     apiUrl +
     `?userId=${clientId}&clientId=${clientId}&score=${scoreInt}&badges=${badgesInt}`;
 
-  const resp = await fetch(url, {
-    method,
-    headers,
-  });
+  let resp = null;
+  try {
+    resp = await fetch(url, {
+      method,
+      headers,
+    });
+  } catch (err) {
+    console.error(err);
+    return;
+  }
 
-  if (resp.status !== 200) {
-    console.error('DELETE leaderboard status:', resp.status);
+  if (resp?.status !== 200) {
+    console.error('DELETE leaderboard status:', resp?.status || 'none');
     return;
   }
 };

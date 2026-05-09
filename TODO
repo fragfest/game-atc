@@ -20,7 +20,6 @@ Wishlist:
   
 v0.1.5:
   Bugs:
-    ☐ session api https exceptions need catching and logging (not just non-200 responses)
     ✔ firefox: badges not aligned but being displayed stacked on top of each other @done(26-04-30 04:36)
     ✔ game over: clouds not freezing @started(26-04-29 02:36) @done(26-04-29 04:14) @lasted(1h38m6s)
     ✔ anti-cheat crash: mayday spawn score.secure @started(26-04-29 03:38) @done(26-04-29 03:38) @lasted(19s)
