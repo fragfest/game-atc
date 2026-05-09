@@ -1083,6 +1083,7 @@ export default {
 .splash-logo .modal .btn-next-nosound {
   position: absolute;
   width: 12%;
+  min-height: 34px;
   height: 6%;
   left: 56%;
   bottom: 20%;
@@ -1091,12 +1092,40 @@ export default {
     left: calc(56% + 6px);
     bottom: calc(20% - 6px);
   }
+
+  @media (max-width: 1600px) {
+    &:active {
+      left: calc(56% + 3px);
+      bottom: calc(25% - 3px);
+    }
+
+    height: 5%;
+    bottom: 25%;
+    h2 {
+      font-size: 16px;
+    }
+  }
+
+  @media (max-width: 1200px) {
+    &:active {
+      left: calc(56% + 1px);
+      bottom: calc(30% - 1px);
+    }
+
+    min-height: 54px;
+    height: 4%;
+    bottom: 30%;
+    h2 {
+      font-size: 14px;
+    }
+  }
 }
 
 .splash-logo .modal .btn-next {
   position: absolute;
   width: 16%;
   height: 8%;
+  min-height: 40px;
   left: 34%;
   bottom: 20%;
 
@@ -1104,14 +1133,45 @@ export default {
     left: calc(34% + 6px);
     bottom: calc(20% - 6px);
   }
+
+  @media (max-width: 1600px) {
+    &:active {
+      left: calc(34% + 3px);
+      bottom: calc(25% - 3px);
+    }
+
+    height: 6%;
+    bottom: 25%;
+    h1 {
+      font-size: 18px;
+    }
+  }
+
+  @media (max-width: 1200px) {
+    &:active {
+      left: calc(34% + 1px);
+      bottom: calc(30% - 1px);
+    }
+
+    min-height: 60px;
+    height: 4%;
+    bottom: 30%;
+    h1 {
+      font-size: 16px;
+    }
+  }
 }
 
 .splash-logo .modal .btn {
   background: linear-gradient(to right, #1d3e58, #2d6794);
   border: 2px solid white;
   border-radius: 12px;
-  box-shadow: 6px 6px 4px #000000a0;
   color: white;
+  box-shadow: 6px 6px 4px #000000a0;
+
+  @media (max-width: 1200px) {
+    box-shadow: 4px 4px 3px #000000a0;
+  }
 
   &:active {
     background: linear-gradient(to right, #132839, #1d425e);
