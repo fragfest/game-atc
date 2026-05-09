@@ -125,7 +125,8 @@
       <button
         class="button-aircraft"
         :class="fastForwardClass"
-        @click="onFastForward"
+        @mousedown="onFastForwardDown"
+        @mouseup="onFastForwardUp"
       >
         <h2 class="btn-title">{{ fastForwardDisp }}</h2>
         <svg viewBox="0 0 394.941 394.941">
@@ -169,6 +170,7 @@ export default {
     return {
       isSoundMuted: true,
       isShowCircles: false,
+      fastForwardTimer: null,
     };
   },
 
@@ -205,14 +207,14 @@ export default {
 
     fastForwardClass: function () {
       if (this.isControlsDisabled) return 'disabled';
-      else if (this.fastForwardNum) return 'active';
+      else if (this.fastForwardNum > 1) return 'active';
       return '';
     },
 
     fastForwardDisp: function () {
       const str = '' + this.fastForwardNum + 'x';
       if (this.isControlsDisabled) return '';
-      else if (this.fastForwardNum) return str;
+      else if (this.fastForwardNum !== 1) return str;
       return '';
     },
   },
@@ -232,7 +234,16 @@ export default {
       this.$emit('pauseEv', !this.isPaused);
     },
 
-    onFastForward: function () {
+    onFastForwardDown: function () {
+      this.$emit('fastForwardEv', this.fastForwardNum + 1);
+      this.fastForwardTimer = setInterval(() => {
+        if (this.fastForwardNum >= 4) return;
+        this.$emit('fastForwardEv', this.fastForwardNum + 1);
+      }, 2000);
+    },
+
+    onFastForwardUp: function () {
+      clearInterval(this.fastForwardTimer);
       this.$emit('fastForwardEv', 1);
     },
   },
@@ -248,7 +259,7 @@ export default {
   h2 {
     font-size: 11px;
     margin-left: 7px;
-    margin-top: 7px;
+    margin-top: 0px;
   }
 
   button.button-aircraft {
@@ -272,7 +283,7 @@ export default {
   h2 {
     font-size: 14px;
     letter-spacing: 1px;
-    margin-top: 14px;
+    margin-top: 0px;
     margin-left: 14px;
     color: orange;
     text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black,
@@ -281,7 +292,7 @@ export default {
 
   .btn-title {
     position: absolute;
-    left: 0;
+    left: 28px;
     right: 0;
   }
 

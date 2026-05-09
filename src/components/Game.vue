@@ -339,7 +339,7 @@ export default {
       isControlBtnsDisabled: true,
       isPausedInit: true,
       isPaused: false,
-      fastForwardNum: 0,
+      fastForwardNum: 1,
 
       backgroundImage: '',
 
@@ -463,15 +463,10 @@ export default {
       setGameLoopState_isRunning(!isPaused);
     },
 
-    fastForwardEv: function (increaseNum) {
+    fastForwardEv: function (rateNum) {
       if (this.isControlBtnsDisabled) return;
 
-      const newNum = this.fastForwardNum + increaseNum;
-
-      if (newNum === 1) this.fastForwardNum = 2;
-      else if (newNum > 4) this.fastForwardNum = 0;
-      else this.fastForwardNum = newNum;
-
+      this.fastForwardNum = rateNum;
       setGameLoopSpeed_numArg(this.fastForwardNum);
     },
   },
