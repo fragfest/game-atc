@@ -23,10 +23,12 @@
               >
                 <div v-if="plane.isMayday" class="col flip-icon">
                   <ToolTip position="tether-below">
-                    <button @click="maydayFlipClick">
+                    <button @click="maydayFlipClick" :disabled="isPaused">
                       <p>&#x25c0;</p>
                     </button>
-                    <template v-slot:hover>details</template>
+                    <template v-slot:hover>
+                      <div class="tooltip-text">details</div>
+                    </template>
                   </ToolTip>
                 </div>
                 <div v-if="!plane.isMayday" class="col font-large">
@@ -47,7 +49,12 @@
                 <div v-if="!isArrival" class="col font-large">
                   <b>{{ plane.waypoint }}</b>
                 </div>
-                <ToolTip v-else position="close" :disabled="isPaused">
+                <ToolTip
+                  v-else
+                  position="close"
+                  :width="toolTipWidth"
+                  :disabled="isPaused"
+                >
                   <div class="col">
                     <button
                       @click="waypointClick"
@@ -59,14 +66,16 @@
                       </span>
                     </button>
                   </div>
-                  <template v-slot:hover>cycle waypoints (W)</template>
+                  <template v-slot:hover>
+                    <div class="tooltip-text">cycle waypoints (W)</div>
+                  </template>
                 </ToolTip>
 
-                <div class="col w-42">
+                <div class="col col-airframe">
                   {{ plane.airframe }} {{ plane.wake }}
                 </div>
 
-                <div class="col fixed-width no-border">
+                <div class="col no-border">
                   <div v-if="plane.isMayday" class="mayday">
                     <div class="font-large"><b>MAYDAY</b></div>
                     <div>{{ maydayTitle }}</div>
@@ -510,6 +519,12 @@ export default {
       return classes.join(' ');
     },
 
+    toolTipWidth: function () {
+      if (this.sizeClass === 'small') return 104;
+      if (this.sizeClass === 'very-small') return 86;
+      return 132;
+    },
+
     progressBarStyle: function () {
       const plane = getPlane(this.plane, this.planes);
       if (!plane) return '';
@@ -750,7 +765,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '~/src/scss/common.scss';
 
 // flip-card
@@ -802,10 +817,10 @@ export default {
   animation: spawn-destination 1.6s var(--timing-bounce) 0s 1 forwards;
 }
 
-.w-42 {
-  width: 42px;
+.strip-hover.very-small {
+  width: 220px;
+  margin-left: 16px;
 }
-
 .strip-hover.small {
   width: 300px;
   margin-left: 16px;
@@ -814,6 +829,96 @@ export default {
   width: 378px;
   margin-left: 16px;
 }
+
+// strip (very-small)
+.strip.very-small {
+  width: 220px;
+  min-width: 220px;
+  height: 44px;
+
+  // strip-info
+  .strip-info {
+    top: 3px;
+    left: 1px;
+
+    font: 7px Arial;
+    .font-large {
+      font-size: 8px;
+    }
+
+    button {
+      font: 6px Arial;
+      padding-top: 1px;
+      padding-bottom: 1px;
+      box-shadow: 1px 1px rgb(0, 84, 84);
+    }
+
+    .col {
+      min-width: 19px;
+      height: 20px;
+      padding: 4px;
+    }
+
+    .col.flip-icon {
+      button {
+        height: 18px;
+      }
+    }
+
+    .col.col-airframe {
+      width: 30px;
+      padding: 2px;
+    }
+
+    .col.card-back {
+      width: 160px;
+      padding: 0px 6px;
+    }
+
+    .fixed-width {
+      width: 46px;
+      padding-left: 4px;
+    }
+
+    .time {
+      text-shadow: 1px 1px black;
+    }
+
+    .title {
+      text-shadow: 1px 1px black;
+    }
+
+    .warn-icon {
+      img {
+        max-width: 18px;
+        padding-left: 4px;
+      }
+      p {
+        margin-left: 6px;
+      }
+    }
+    .holding-handoff {
+      padding-left: 10px;
+    }
+    .takeoff-landing {
+      padding-left: 4px;
+    }
+
+    .conflict {
+      width: 90%;
+      margin-left: 0px;
+      padding: 2px 4px;
+    }
+
+    .mayday {
+      width: 90%;
+      margin-left: 1px;
+      padding: 2px 4px;
+    }
+  }
+  // strip-info END
+}
+// strip (very-small) END
 
 // strip (small)
 .strip.small {
@@ -906,6 +1011,10 @@ export default {
     @include shiftLeft(12, 0.2);
   }
 
+  .tooltip-text {
+    padding: 2px;
+  }
+
   // strip-info
   .strip-info {
     display: flex;
@@ -938,6 +1047,10 @@ export default {
       padding: 6px;
       text-align: center;
       border-right: solid 1px #b2b0b0;
+    }
+
+    .col.col-airframe {
+      width: 42px;
     }
 
     .col.card-back {
@@ -1100,6 +1213,15 @@ export default {
 
   .progress-bar {
     height: 12px;
+  }
+}
+
+.progress-bar-container.very-small {
+  width: 80px;
+  height: 8px;
+
+  .progress-bar {
+    height: 8px;
   }
 }
 

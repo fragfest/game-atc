@@ -408,12 +408,21 @@ export default {
 
     stylePanelRight: () => {
       let minWidth = 410;
+      let paddingLeft = 12;
+      if (screenSize === ScreenSizes.Large) {
+        minWidth = 410;
+      }
       if (screenSize === ScreenSizes.Small) {
         minWidth = 296;
+      }
+      if (screenSize === ScreenSizes.VerySmall) {
+        minWidth = 296;
+        paddingLeft = 2;
       }
       return {
         'min-width': minWidth + 'px',
         'min-height': '99vh',
+        'padding-left': paddingLeft + 'px',
         width: '100%',
       };
     },

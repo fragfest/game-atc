@@ -9,6 +9,7 @@ Wishlist:
   ☐ cognito login page style
   ☐ test training level
   ☐ support more/smaller viewports. consider full screen button
+  ☐ compass input text more flexible
   
   ☐ federated cognito login
   ☐ runway collisions
@@ -29,6 +30,7 @@ v0.1.5:
     ✔ retry button does next level if success. need to set level on retry @done(25-09-26 01:18)
 
   Major:    
+    ☐ very-small screenSize @started(26-05-10 23:16)
     ✔ leaderboard jump to player & navigate previous button @started(26-05-02 06:46) @done(26-05-07 22:31) @lasted(5d15h45m59s)
     ✔ sound: tire chirp on landing @done(26-05-01 23:19)
     ✔ leaderboard max limit & paged calls (leaderboard: now need all userId sessions to be shown) @started(26-02-06 00:36) @done(26-04-16 23:39) @lasted(9w6d22h3m40s)

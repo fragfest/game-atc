@@ -121,20 +121,27 @@ export const leftPadZeros = (str) => ('000' + str).slice(-3);
 
 // SIZE //////////////////////////////////////////////////////////////
 export const ScreenSizes = Object.freeze({
+  VerySmall: 'very-small',
   Small: 'small',
   Large: 'large',
 });
 
 export const calculateScreenSize = (windowWidth, windowHeight) => {
-  const screenOneWidth = 1500;
+  const screenOneWidth = 1800;
   const screenOneHeight = 1000;
+  const screenTwoWidth = 1400;
+  // const screenTwoHeight = 800; // TODO
 
   // w/h aspect ratio: 1.6525
+  // if (windowWidth < screenTwoWidth || windowHeight < screenTwoHeight) {
+  if (windowWidth < screenTwoWidth) {
+    return ScreenSizes.VerySmall;
+  }
   if (windowWidth < screenOneWidth || windowHeight < screenOneHeight) {
     return ScreenSizes.Small;
-  } else {
-    return ScreenSizes.Large;
   }
+
+  return ScreenSizes.Large;
 };
 
 /**
@@ -163,6 +170,7 @@ export const getGameSize = (screenSize) => {
  * @param {ScreenSizes} screenSize
  */
 export const getClassSize = (screenSize) => {
+  if (screenSize === ScreenSizes.VerySmall) return 'very-small';
   if (screenSize === ScreenSizes.Small) return 'small';
   if (screenSize === ScreenSizes.Large) return 'large';
   return '';
@@ -203,6 +211,7 @@ export const destroyGameLoadAndExit = () => {
 // SETUP /////////////////////////////////////////////////////////////////
 // keys are ScreenSizes values
 const gameSizes = {
+  'very-small': { width: 730, height: 442 },
   small: { width: 991, height: 600 },
   large: { width: 1322, height: 800 },
 };

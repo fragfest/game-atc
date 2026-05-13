@@ -110,7 +110,9 @@ export default {
   methods: {
     taxiItemStyle(index) {
       let leftBase = -378;
+      if (this.screenSize === ScreenSizes.Large) leftBase = -378;
       if (this.screenSize === ScreenSizes.Small) leftBase = -302;
+      if (this.screenSize === ScreenSizes.VerySmall) leftBase = -230;
       const left = leftBase * (index + 1);
       return {
         left: left + 'px',
@@ -128,6 +130,12 @@ export default {
   cursor: default;
 }
 
+.queue-length.very-small {
+  font-size: 10px;
+  padding-top: 1px;
+  margin-left: 2px;
+  border-radius: 4px;
+}
 .queue-length.small {
   font-size: 14px;
 }

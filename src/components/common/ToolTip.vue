@@ -46,6 +46,7 @@ export default {
       classStr += this.disabled ? 'disabled' : '';
       classStr += this.position ? ' ' + this.position : '';
       if (this.sizeClass === ScreenSizes.Small) classStr += ' small';
+      if (this.sizeClass === ScreenSizes.VerySmall) classStr += ' very-small';
       return classStr;
     },
   },
@@ -73,6 +74,11 @@ main {
       font-size: 11px;
       padding: 4px 8px;
     }
+
+    &.very-small {
+      font-size: 9px;
+      padding: 2px 2px;
+    }
   }
 
   .tooltip .hover.below {
@@ -81,13 +87,33 @@ main {
   }
 
   .tooltip .hover.close {
-    margin-top: -12px;
-    margin-left: 50px;
+    margin-top: -14px;
+    margin-left: 70px;
+
+    &.small {
+      margin-top: -12px;
+      margin-left: 56px;
+    }
+
+    &.very-small {
+      margin-top: -12px;
+      margin-left: 42px;
+    }
   }
 
   .tooltip .hover.tether-below {
-    margin-top: -8px;
-    margin-left: 26px;
+    margin-top: -10px;
+    margin-left: 30px;
+
+    &.small {
+      margin-top: -6px;
+      margin-left: 28px;
+    }
+
+    &.very-small {
+      margin-top: -7px;
+      margin-left: 20px;
+    }
   }
 
   .tooltip:hover .hover:not(.disabled) {
