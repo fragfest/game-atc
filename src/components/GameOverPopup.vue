@@ -252,7 +252,9 @@ export default {
 
   computed: {
     badgeSize: function () {
+      if (this.screenSize === ScreenSizes.VerySmall) return 26;
       if (this.screenSize === ScreenSizes.Small) return 34;
+      if (this.screenSize === ScreenSizes.Large) return 44;
       return 44;
     },
 
@@ -264,8 +266,12 @@ export default {
   async mounted() {
     this.screenSize = getScreenSize();
     resizeGameOver();
-    if (this.screenSize === ScreenSizes.Small) {
+    if (this.screenSize === ScreenSizes.VerySmall) {
+      this.badgeTextWidth = '400';
+    } else if (this.screenSize === ScreenSizes.Small) {
       this.badgeTextWidth = '500';
+    } else if (this.screenSize === ScreenSizes.Large) {
+      this.badgeTextWidth = '700';
     }
 
     // SCORE ////////////////////////////////////////////////////
@@ -643,6 +649,13 @@ export default {
 .popup.small .modal {
   height: 680px;
 }
+.popup.very-small .modal {
+  height: 600px;
+  width: 60%;
+  min-width: 600px;
+  max-width: 700px;
+  margin-top: 8%;
+}
 
 .popup .modal .item {
   // background-color: black;
@@ -665,6 +678,9 @@ export default {
     margin-top: 8px;
   }
 }
+.popup.very-small .modal .item {
+  height: fit-content;
+}
 
 .popup .modal .title {
   height: 40px;
@@ -677,6 +693,11 @@ export default {
   height: 18px;
   font-size: 24px;
   margin-bottom: 22px;
+}
+.popup.very-small .modal .title {
+  height: 12px;
+  font-size: 18px;
+  margin-bottom: 18px;
 }
 
 .popup .modal .content {
@@ -693,24 +714,35 @@ export default {
 .popup.small .modal .content {
   font-size: 18px;
 }
+.popup.very-small .modal .content {
+  row-gap: 0px;
+  column-gap: 15%;
+  font-size: 14px;
+}
 
 .popup .modal .btn {
-  align-self: center;
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 120px;
   height: 62px;
-  margin-bottom: 8px;
 
   background-color: darkslategrey;
   border: solid 1px white;
   border-radius: 6px;
   a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+
     color: lightgreen;
     text-decoration: none;
   }
-  a h1 {
+  h1,
+  h2 {
     margin: 0;
-    padding: 16px 0px;
   }
 
   :hover {
@@ -725,9 +757,10 @@ export default {
     outline-width: 1px;
   }
 }
-.popup.small .modal .btn {
-  a h2 {
-    padding: 10px 0px;
+.popup.very-small .modal .btn {
+  height: 52px;
+  h1 {
+    font-size: 20px;
   }
 }
 
@@ -743,16 +776,14 @@ export default {
 
 .popup .modal .btn.btn-secondary,
 .btn.btn-disabled {
-  height: 52px;
+  height: 70%;
   border: none;
 
+  h2 {
+    font-size: 14px;
+  }
   a {
     color: whitesmoke;
-  }
-
-  a h2 {
-    margin: 0px;
-    padding: 16px 0px;
   }
 }
 
@@ -760,7 +791,7 @@ export default {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  margin: 12px 0px;
+  margin-bottom: 16px;
 }
 
 //////////////////////////////////////////////////////
@@ -769,23 +800,27 @@ export default {
 
 .popup .badge-display {
   display: flex;
-  margin: 8px 8%;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  margin-left: 16%;
+}
+.popup.very-small .badge-display {
+  margin-left: 25%;
 }
 
 .popup .badge-box {
   position: absolute;
   top: 20%;
-  left: calc(65% - 700px);
+  left: 25%;
   z-index: 3;
 
   background-color: #2c5c81e0;
   border: 1px solid #24b3c9;
   border-radius: 6px;
   padding: 80px 140px;
-
   cursor: default;
-  animation: 2.2s var(--timing-bounce) 1 slide-in, hide 0s linear 8s forwards;
 
+  animation: 2.2s var(--timing-bounce) 1 slide-in, hide 0s linear 8s forwards;
   @keyframes slide-in {
     0% {
       top: 0%;
@@ -803,6 +838,21 @@ export default {
 }
 .popup.small .badge-box {
   padding: 40px 100px;
+}
+.popup.very-small .badge-box {
+  top: 15%;
+  padding: 20px 60px;
+
+  animation: 2.2s var(--timing-bounce) 1 slide-in-very-small,
+    hide 0s linear 8s forwards;
+  @keyframes slide-in-very-small {
+    0% {
+      top: 0%;
+    }
+    100% {
+      top: 15%;
+    }
+  }
 }
 
 .popup .badge-text {
@@ -829,6 +879,16 @@ export default {
     font-size: 14px;
   }
 }
+.popup.very-small .badge-text {
+  .title {
+    h1 {
+      font-size: 18px;
+    }
+  }
+  h3 {
+    font-size: 10px;
+  }
+}
 
 .popup .badge-text .checkmark {
   width: 32px;
@@ -847,5 +907,12 @@ export default {
   font-size: 32px;
   margin-right: 18px;
   margin-bottom: 18px;
+}
+.popup.very-small .badge-text .checkmark {
+  width: 24px;
+  height: 24px;
+  font-size: 28px;
+  margin-right: 12px;
+  margin-bottom: 14px;
 }
 </style>

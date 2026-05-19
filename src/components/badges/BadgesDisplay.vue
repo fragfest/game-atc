@@ -281,6 +281,7 @@ export default {
       let left = '80px';
       if (this.isLeaderboard) left = '66px';
       else if (this.sizeClass === 'small') left = '60px';
+      else if (this.sizeClass === 'very-small') left = '50px';
 
       return {
         display: 'block',
@@ -295,6 +296,7 @@ export default {
       let left = '150px';
       if (this.isLeaderboard) left = '122px';
       else if (this.sizeClass === 'small') left = '110px';
+      else if (this.sizeClass === 'very-small') left = '90px';
 
       return {
         display: 'block',
@@ -309,6 +311,7 @@ export default {
       let left = '220px';
       if (this.isLeaderboard) left = '178px';
       else if (this.sizeClass === 'small') left = '160px';
+      else if (this.sizeClass === 'very-small') left = '130px';
 
       return {
         display: 'block',
@@ -562,6 +565,10 @@ export default {
   width: 184px;
   height: 50px;
 }
+.container.very-small .badges.popup {
+  width: 144px;
+  height: 42px;
+}
 
 .container .badges {
   position: relative;
@@ -636,6 +643,17 @@ export default {
   }
   p {
     font-size: 10px;
+  }
+}
+.container.very-small .badges-desc {
+  h2 {
+    font-size: 16px;
+  }
+  h3 {
+    font-size: 10px;
+  }
+  p {
+    font-size: 8px;
   }
 }
 
