@@ -1093,28 +1093,27 @@ export default {
     bottom: calc(20% - 6px);
   }
 
-  @media (max-width: 1600px) {
+  @media (max-width: 1800px) {
     &:active {
       left: calc(56% + 3px);
-      bottom: calc(25% - 3px);
+      bottom: calc(35% - 3px);
     }
 
-    height: 5%;
-    bottom: 25%;
+    height: 3%;
+    bottom: 35%;
     h2 {
       font-size: 16px;
     }
   }
 
-  @media (max-width: 1200px) {
+  @media (max-width: 1400px) {
     &:active {
       left: calc(56% + 1px);
-      bottom: calc(30% - 1px);
+      bottom: calc(20% - 1px);
     }
 
-    min-height: 54px;
-    height: 4%;
-    bottom: 30%;
+    min-height: 46px;
+    bottom: 20%;
     h2 {
       font-size: 14px;
     }
@@ -1134,28 +1133,27 @@ export default {
     bottom: calc(20% - 6px);
   }
 
-  @media (max-width: 1600px) {
+  @media (max-width: 1800px) {
     &:active {
       left: calc(34% + 3px);
-      bottom: calc(25% - 3px);
+      bottom: calc(35% - 3px);
     }
 
-    height: 6%;
-    bottom: 25%;
+    height: 4%;
+    bottom: 35%;
     h1 {
       font-size: 18px;
     }
   }
 
-  @media (max-width: 1200px) {
+  @media (max-width: 1400px) {
     &:active {
       left: calc(34% + 1px);
-      bottom: calc(30% - 1px);
+      bottom: calc(20% - 1px);
     }
 
     min-height: 60px;
-    height: 4%;
-    bottom: 30%;
+    bottom: 20%;
     h1 {
       font-size: 16px;
     }
@@ -1169,7 +1167,7 @@ export default {
   color: white;
   box-shadow: 6px 6px 4px #000000a0;
 
-  @media (max-width: 1200px) {
+  @media (max-width: 1400px) {
     box-shadow: 4px 4px 3px #000000a0;
   }
 
