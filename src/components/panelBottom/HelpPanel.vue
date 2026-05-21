@@ -243,7 +243,7 @@ export default {
   color: lightgreen;
 }
 
-// help-panel small
+// help-panel
 .help-panel.small {
   .help-info {
     min-height: calc(228px - 28px);
@@ -253,9 +253,21 @@ export default {
     }
   }
 }
-// END small help-panel
 
-// help-panel
+.help-panel.very-small {
+  .help-info {
+    min-height: 148px;
+    padding: 8px 8px;
+
+    .accordion-header {
+      padding: 4px 4px;
+    }
+    .row {
+      font-size: 8px;
+    }
+  }
+}
+
 .help-panel {
   display: flex;
   width: 100%;

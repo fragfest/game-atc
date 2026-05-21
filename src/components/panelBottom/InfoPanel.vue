@@ -247,12 +247,27 @@ export default {
       const plane = this.plane;
       if (!plane) return {};
       const isSmall = this.screenSize === ScreenSizes.Small ? true : false;
+      const isVerySmall =
+        this.screenSize === ScreenSizes.VerySmall ? true : false;
 
       const bottom = this.airframe.images.padding.bottom;
       const left = this.airframe.images.padding?.left;
-      const paddingBottom = isSmall ? 0.1 * bottom : bottom;
-      const paddingLeft = isSmall ? 6 : left;
-      const width = isSmall ? '80%' : 'auto';
+
+      let width = 'auto';
+      let paddingBottom = bottom;
+      let paddingLeft = left;
+
+      if (isSmall) {
+        width = '80%';
+        paddingBottom = 0.1 * bottom;
+        paddingLeft = 6;
+      }
+      if (isVerySmall) {
+        width = '60%';
+        paddingBottom = 0 * bottom;
+        paddingLeft = 24;
+      }
+
       return {
         width,
         'padding-left': paddingLeft + 'px',
@@ -340,6 +355,45 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+// info-panel very-small /////////////
+.info-panel.very-small {
+  min-height: 160px;
+  padding: 2px 8px;
+
+  h1 {
+    font-size: 14px;
+  }
+  h2 {
+    font-size: 10px;
+  }
+  p {
+    margin-bottom: 0;
+    font-size: 9px;
+  }
+}
+
+.info-panel.very-small .header {
+  gap: 6px;
+  padding: 6px 0;
+  height: 30px;
+
+  h1 {
+    font-size: 12px;
+  }
+  h2 {
+    font-size: 10px;
+  }
+}
+
+.info-panel.very-small .plane-info {
+  padding: 3px 0;
+}
+
+.info-panel.very-small .plane-info hr {
+  margin: 3px 0px;
+}
+// END info-panel very-small //////////
+
 // info-panel small //////////////////
 .info-panel.small {
   min-height: 228px;
@@ -367,6 +421,20 @@ export default {
   }
   h2 {
     font-size: 10px;
+  }
+}
+
+.info-panel.very-small .header {
+  gap: 6px;
+  padding: 3px 0;
+  height: 30px;
+
+  h1 {
+    font-size: 8px;
+  }
+  h2 {
+    font-size: 8px;
+    margin-left: 4px;
   }
 }
 
@@ -478,6 +546,20 @@ export default {
       border-radius: 6px;
     }
   }
+
+  &.very-small {
+    margin-left: 2px;
+
+    img {
+      height: 18px;
+      margin-top: 6px;
+      border-radius: 3px;
+    }
+
+    h2 {
+      margin-left: 6px;
+    }
+  }
 }
 
 .info-panel .plane-info {
@@ -549,6 +631,7 @@ export default {
       }
     }
   }
+
   .progress-slices.small {
     .slice {
       height: 14px;
@@ -556,6 +639,19 @@ export default {
 
       svg {
         width: 6px;
+      }
+    }
+  }
+
+  .progress-slices.very-small {
+    padding-top: 0px;
+
+    .slice {
+      height: 12px;
+      width: 6px;
+
+      svg {
+        width: 4px;
       }
     }
   }
@@ -574,6 +670,13 @@ export default {
   }
   .flight-quality-message.small {
     width: 84px;
+  }
+  .flight-quality-message.very-small {
+    width: 50px;
+    border-radius: 3px;
+    h2 {
+      font-size: 8px;
+    }
   }
 
   // progress-bar-container //////////////////

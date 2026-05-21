@@ -76,6 +76,16 @@ export default {
   }
 }
 
+.details-panel.very-small {
+  width: 220px;
+
+  .tab {
+    height: 12px;
+    padding: 2px 12px;
+    font-size: 10px;
+  }
+}
+
 .details-panel {
   width: 540px;
   cursor: default;
