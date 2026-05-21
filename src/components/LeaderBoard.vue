@@ -602,7 +602,7 @@ h2 {
     margin: 1% 12%;
 
     @media (max-width: 1000px) {
-      margin: 6% 4%;
+      margin: 2% 4%;
     }
   }
 

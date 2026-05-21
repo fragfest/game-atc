@@ -2,7 +2,7 @@
   <div class="home" :class="screenSize">
     <!-- showSplash -->
     <SplashLogo
-      v-if="showSplash && !isMobile && !isTablet"
+      v-if="false && showSplash && !isMobile && !isTablet"
       @play="splashDismissEV"
     ></SplashLogo>
     <div v-else>
@@ -40,7 +40,7 @@
           </div>
 
           <!-- grid-score-buttons -->
-          <div class="grid-score-buttons">
+          <div class="grid-score-buttons" :class="screenSize">
             <!-- column left -->
             <div class="col-left">
               <h2 v-if="isGameComplete" class="hdr-green">
@@ -68,7 +68,7 @@
                 <span class="font-mono white">{{ levelNext }}</span>
               </h3>
 
-              <CyberBox width="400" type="button">
+              <CyberBox class="cyber-box" :width="cyberBoxWidth" type="button">
                 <button @click="onStartClick">
                   <h2 v-if="isGameComplete">retry</h2>
                   <h2 v-else-if="levelComplete + 1 === levelNext">start</h2>
@@ -204,6 +204,7 @@ export default {
       username: '',
       loginArr: [],
       screenSize: '',
+      cyberBoxWidth: '400',
 
       isTutorial: getHighestLevelCompleted() === null,
       levelComplete: getHighestLevelCompleted(),
@@ -230,7 +231,9 @@ export default {
     },
 
     badgeSize: function () {
-      if (this.screenSize === ScreenSizes.Small) return 34;
+      if (this.screenSize === ScreenSizes.VerySmall) return 28;
+      if (this.screenSize === ScreenSizes.Small) return 38;
+      if (this.screenSize === ScreenSizes.Large) return 60;
       return 60;
     },
 
@@ -269,6 +272,10 @@ export default {
     this.isTablet = browsers?.platform?.type === 'tablet' ?? false;
 
     this.screenSize = getScreenSize();
+    if (this.screenSize === ScreenSizes.Large) this.cyberBoxWidth = '400';
+    if (this.screenSize === ScreenSizes.Small) this.cyberBoxWidth = '300';
+    if (this.screenSize === ScreenSizes.VerySmall) this.cyberBoxWidth = '240';
+
     if (await isLoggedIn()) {
       this.isLoggedIn = true;
       this.username = getUsername();
@@ -411,7 +418,33 @@ export default {
     font-size: 12px;
   }
 }
-// END small /////////////////////
+// very-small ///////////////////////
+.home.very-small {
+  section {
+    font-size: 18px;
+    min-height: 1000px;
+
+    @media (max-width: 1000px) {
+      .content .header {
+        border-bottom: none;
+      }
+
+      margin-top: 1%;
+      margin-bottom: 1%;
+      margin-left: 2%;
+      margin-right: 2%;
+      padding: 0px 12px;
+    }
+  }
+
+  .attribution {
+    font-size: 12px;
+  }
+
+  .version {
+    font-size: 12px;
+  }
+}
 
 .home {
   display: flex;
@@ -531,10 +564,16 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 182px;
+  height: 180px;
 
   opacity: 0;
   animation: slidein-right 0.3s ease-out 0.2s forwards;
+}
+.grid-score-buttons.small .button-start {
+  height: 0px;
+}
+.grid-score-buttons.very-small .button-start {
+  height: 0px;
 }
 
 .grid-score-buttons .leaderboard button {
@@ -557,6 +596,12 @@ export default {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+.grid-score-buttons.small .button-start button h2 {
+  font-size: 24px;
+}
+.grid-score-buttons.very-small .button-start button h2 {
+  font-size: 22px;
+}
 
 .grid-score-buttons .button-start button {
   margin-top: 9px;
@@ -567,6 +612,18 @@ export default {
   border-radius: 12px;
   background-color: transparent;
   border: none;
+}
+.grid-score-buttons.small .button-start button {
+  margin-top: 7px;
+  margin-left: 3px;
+  width: 294px;
+  height: 50px;
+}
+.grid-score-buttons.very-small .button-start button {
+  margin-top: 5px;
+  margin-left: 2px;
+  width: 236px;
+  height: 40px;
 }
 
 .grid-score-buttons .button-start button:hover {
@@ -585,9 +642,24 @@ export default {
     font-size: 33px;
   }
 }
+.grid-score-buttons.small .button-start button:active {
+  border: 2px inset white;
+  h2 {
+    font-size: 23px;
+  }
+}
+.grid-score-buttons.very-small .button-start button:active {
+  border: 1px inset white;
+  h2 {
+    font-size: 21px;
+  }
+}
 
 // row-history-badges ////////////////////////////////////////
 .home.small .row-history-badges {
+  margin-top: 0px;
+}
+.home.very-small .row-history-badges {
   margin-top: 0px;
 }
 .row-history-badges {
@@ -606,7 +678,6 @@ export default {
 }
 
 // history-record ////////////////////////////////////////
-// small ///////////////////////
 .history-record.small {
   min-width: 240px;
 }
@@ -626,10 +697,17 @@ export default {
   opacity: 0;
   animation: fadein 0.3s ease-out 0.6s forwards;
 }
+.home.very-small {
+  h2 {
+    font-size: 20px;
+  }
+}
 
-// small ////////////////////
 .home.small .row-history-badges .badges .container {
   width: 240px;
+}
+.home.very-small .row-history-badges .badges .container {
+  width: 170px;
 }
 .row-history-badges .badges .container {
   display: flex;
@@ -673,6 +751,24 @@ export default {
     position: relative;
     outline: 1px solid limegreen;
     box-shadow: none;
+  }
+}
+.home.small .content .leaderboard {
+  button {
+    margin-top: 32px;
+    padding: 8px 20px;
+  }
+  button h3 {
+    font-size: 14px;
+  }
+}
+.home.very-small .content .leaderboard {
+  button {
+    margin-top: 32px;
+    padding: 6px 18px;
+  }
+  button h3 {
+    font-size: 12px;
   }
 }
 

@@ -561,6 +561,10 @@ export default {
   width: 184px;
   height: 50px;
 }
+.container.very-small .badges {
+  width: 184px;
+  height: 42px;
+}
 .container.small .badges.popup {
   width: 184px;
   height: 50px;

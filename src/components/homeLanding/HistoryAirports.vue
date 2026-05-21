@@ -369,6 +369,53 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+// very-small
+.history-airports.very-small {
+  gap: 20px;
+
+  .history {
+    height: 270px;
+    min-width: 110px;
+    padding: 8px 16px;
+
+    p {
+      font-size: 14px;
+    }
+    h2 {
+      font-size: 16px;
+    }
+
+    .row {
+      height: 24px;
+    }
+
+    .button-restart {
+      button {
+        width: 64px;
+        height: 24px;
+        padding: 0px;
+        border: none;
+        border-radius: 4px;
+        background-color: #90ee90;
+      }
+
+      button h3 {
+        font-size: 12px;
+      }
+    }
+  }
+
+  .button-airport {
+    width: 200px;
+    height: 130px;
+    box-shadow: 4px 3px 2px #000000a0;
+    .checkmark {
+      font-size: 18px;
+    }
+  }
+}
+// END very-small
+
 // small
 .history-airports.small {
   gap: 60px;
@@ -376,7 +423,6 @@ export default {
   .history {
     height: 340px;
     min-width: 180px;
-
     h2 {
       font-size: 24px;
     }
@@ -385,7 +431,6 @@ export default {
   .button-airport {
     width: 230px;
     height: 150px;
-
     .checkmark {
       font-size: 22px;
     }
@@ -413,6 +458,13 @@ export default {
     grid-auto-rows: minmax(200px, auto);
     row-gap: 0px;
     column-gap: 22px;
+
+    @media (max-width: 1200px) {
+      grid-template-columns: 1fr 1fr;
+      grid-auto-rows: minmax(120px, auto);
+      row-gap: 14px;
+      column-gap: 14px;
+    }
   }
 
   // button-airport

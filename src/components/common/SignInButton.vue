@@ -119,10 +119,6 @@ export default {
 .signin-btn {
   display: flex;
 
-  @media (max-width: 1000px) {
-    width: 100%;
-  }
-
   h1,
   h2,
   h3,
@@ -157,10 +153,6 @@ export default {
     h2 {
       margin: 8px;
     }
-
-    @media (max-width: 1000px) {
-      flex-direction: column;
-    }
   }
 }
 
@@ -170,6 +162,7 @@ export default {
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
+  column-gap: 12px;
 
   border-radius: 6px;
 
@@ -182,14 +175,34 @@ export default {
     font-size: 20px;
   }
 
-  @media (max-width: 1000px) {
+  @media (max-width: 1400px) {
     h2 {
-      margin: 4px;
-      font-size: 20px;
+      font-size: 12px;
+    }
+    h3 {
+      font-size: 18px;
+    }
+  }
+
+  @media (max-width: 1200px) {
+    h2 {
+      margin: 8px;
+      font-size: 12px;
     }
     h3 {
       margin: 8px;
-      font-size: 18px;
+      font-size: 16px;
+    }
+  }
+
+  @media (max-width: 1000px) {
+    h2 {
+      margin: 4px;
+      font-size: 10px;
+    }
+    h3 {
+      margin: 4px;
+      font-size: 14px;
     }
   }
 
@@ -201,8 +214,12 @@ export default {
     box-shadow: 4px 0px 3px #292929;
     cursor: pointer;
 
+    @media (max-width: 1400px) {
+      width: 180px;
+    }
+
     @media (max-width: 1000px) {
-      width: 40%;
+      border-radius: 4px;
     }
   }
 
@@ -229,6 +246,14 @@ export default {
     padding: 0;
     h2 {
       margin: 0;
+
+      @media (max-width: 1400px) {
+        font-size: 22px;
+      }
+
+      @media (max-width: 1000px) {
+        font-size: 18px;
+      }
     }
   }
 
@@ -245,19 +270,28 @@ export default {
     height: 40px;
     padding: 0;
 
-    @media (max-width: 1000px) {
+    @media (max-width: 1400px) {
+      height: 40px;
       width: 80px;
     }
 
     .checkmark {
       margin: 0;
       font-size: 26px;
+
+      @media (max-width: 1000px) {
+        font-size: 22px;
+      }
     }
 
     .cross {
       margin: 0;
       margin-left: 2px;
       font-size: 34px;
+
+      @media (max-width: 1000px) {
+        font-size: 24px;
+      }
     }
   }
 
@@ -270,6 +304,20 @@ export default {
 
     &::selection {
       background: lightgreen;
+    }
+
+    @media (max-width: 1400px) {
+      width: 160px;
+    }
+
+    @media (max-width: 1200px) {
+      width: 120px;
+      font-size: 16px;
+    }
+
+    @media (max-width: 1000px) {
+      width: 120px;
+      font-size: 14px;
     }
   }
 }
