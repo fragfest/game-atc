@@ -1177,9 +1177,10 @@ const _setDivMouseEvents = (self) => {
 };
 
 const _draw = (self, color) => {
-  const proximityDist = self.isSmall
-    ? getTooCloseDistance(ScreenSizes.Small)
-    : getTooCloseDistance(ScreenSizes.Large);
+  let proximityDist = getTooCloseDistance(ScreenSizes.Large);
+  if (self.isSmall) {
+    proximityDist = getTooCloseDistance(ScreenSizes.Small);
+  }
 
   // DEBUG wake circles
   // drawPlaneWake(self, self.textLayerObj);

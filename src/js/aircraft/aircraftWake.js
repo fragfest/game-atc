@@ -52,9 +52,10 @@ export const calcWake = ({ entityManagerArr, aircraft }) => {
     return planesInWake;
   };
 
-  const distMiles3 = aircraft.isSmall
-    ? getTooCloseDistance(ScreenSizes.Small)
-    : getTooCloseDistance(ScreenSizes.Large);
+  let distMiles3 = getTooCloseDistance(ScreenSizes.Large);
+  if (aircraft.isSmall) {
+    distMiles3 = getTooCloseDistance(ScreenSizes.Small);
+  }
   const minRadius = distMiles3 * 0.1;
 
   const planesInWake = [];

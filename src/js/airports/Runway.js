@@ -33,7 +33,13 @@ export default class Runway {
     this.title = title.trim();
     this.x = runwayObj.x;
     this.y = runwayObj.y;
-    this.isSmall = screenSize === ScreenSizes.Small ? true : false;
+    this.isSmall = false;
+    if (
+      screenSize === ScreenSizes.Small ||
+      screenSize === ScreenSizes.VerySmall
+    ) {
+      this.isSmall = true;
+    }
     this.ctx = imgLayerObj.ctx;
     this.width = runwayObj.width;
     this.height = runwayObj.length;
@@ -82,7 +88,11 @@ export default class Runway {
     img.src = '/img/runway.svg';
 
     this.ctx.fillStyle = 'greenyellow';
-    this.ctx.font = this.isSmall ? '10px Arial' : '12px Arial';
+    let font = '12px Arial';
+    if (this.isSmall) {
+      font = '10px Arial';
+    }
+    this.ctx.font = font;
     this.ctx.fillText(this.title, this.x + this.titleX, this.y + this.titleY);
 
     // draw runway heading dashes

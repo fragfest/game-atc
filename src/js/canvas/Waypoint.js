@@ -35,6 +35,7 @@ export default class Waypoint {
     this.ctx = entityLayerObj.ctx;
     this.textLayerObj = textLayerObj;
     this.isSmall = screenSize === ScreenSizes.Small ? true : false;
+    this.isVerySmall = screenSize === ScreenSizes.VerySmall ? true : false;
     this.x = waypointObj.x - 2;
     this.y = waypointObj.y - 2;
     this.width = 4;
@@ -131,7 +132,14 @@ export default class Waypoint {
     );
     this.textLayerObj.ctx.fillStyle =
       this.type === WaypointType.Arrival ? '#facf7f' : '#8ce2ff';
-    this.textLayerObj.ctx.font = this.isSmall ? '10px Arial' : '12px Arial';
+    let font = '12px Arial';
+    if (this.isSmall) {
+      font = '10px Arial';
+    }
+    if (this.isVerySmall) {
+      font = '8px Arial';
+    }
+    this.textLayerObj.ctx.font = font;
     this.textLayerObj.ctx.fillText(this.title, this.x + 2, this.y - 4);
   }
 

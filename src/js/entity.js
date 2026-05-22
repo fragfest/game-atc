@@ -65,6 +65,7 @@ export const isCloseToWaypoint = (waypoint) => (entity) => {
 export const getTooCloseDistance = (screenSize) => {
   if (screenSize === ScreenSizes.Large) return 51;
   if (screenSize === ScreenSizes.Small) return 37;
+  if (screenSize === ScreenSizes.VerySmall) return 37;
 };
 
 export const isCloseToEntity = (screenSize) => (entity) => (entityOther) => {
