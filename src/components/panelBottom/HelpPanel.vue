@@ -87,14 +87,14 @@
           </span>
         </div>
         <div class="row">
-          <b>failed (landings)</b>
+          <b>failed (landing)</b>
           <span>
             aircraft too far off-course or high to land when reaching runway
           </span>
         </div>
         <div class="row">
-          <b>delays (taxiing slots)</b>
-          <span> too many taxiing aircraft waiting to depart </span>
+          <b>delays (delay timer)</b>
+          <span> departing or arriving aircraft exceeded max delay time</span>
         </div>
         <div class="row">
           <b>conflict (TCAS)</b>
