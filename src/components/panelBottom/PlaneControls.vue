@@ -178,7 +178,7 @@ export default {
 
 <style lang="scss" scoped>
 .plane-controls.very-small {
-  min-width: 0px;
+  min-width: 100px;
 
   .btn button {
     height: 22px;
@@ -187,6 +187,12 @@ export default {
 
     &.takeoff {
       width: 80px;
+    }
+    &.is-landing {
+      outline-width: 1.4px;
+    }
+    &.is-holdhandoff {
+      outline-width: 1.4px;
     }
   }
 

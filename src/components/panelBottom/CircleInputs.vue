@@ -344,10 +344,26 @@ export default {
   top: 34px;
 }
 
+.circle-inputs.very-small {
+  left: 60px;
+  top: 29px;
+}
+
 .circle-inputs .input {
   display: flex;
   flex-direction: column;
   position: relative;
+}
+
+.circle-inputs.very-small {
+  label {
+    font-size: 10px;
+  }
+  input {
+    width: 18px;
+    font-size: 10px;
+    border-radius: 3px;
+  }
 }
 
 .circle-inputs .input.pulse::before {

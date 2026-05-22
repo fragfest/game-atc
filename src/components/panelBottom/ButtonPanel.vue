@@ -251,6 +251,22 @@ export default {
 </script>
 
 <style lang="scss">
+// very-small
+.button-panel.very-small {
+  height: 24px;
+  gap: 6px;
+
+  button.button-aircraft {
+    height: 20px;
+    width: 20px;
+  }
+
+  button.active {
+    outline: 1px solid limegreen;
+  }
+}
+// END very-small
+
 // small
 .button-panel.small {
   height: 32px;

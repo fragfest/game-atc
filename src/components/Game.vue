@@ -814,6 +814,10 @@ p {
   justify-content: flex-end;
 }
 
+.col-compass.very-small {
+  display: flex;
+  flex-direction: column;
+}
 .col-compass.small {
   display: flex;
   flex-direction: column;

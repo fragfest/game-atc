@@ -388,6 +388,22 @@ export default {
     font-size: 14px;
   }
 }
+
+// very-small
+.btn-info-panel.very-small {
+  width: 100px;
+
+  .btn-container {
+    height: 30px;
+  }
+
+  .info {
+    font-size: 12px;
+  }
+  .title {
+    font-size: 14px;
+  }
+}
 // END btn-info-panel
 
 // btn-info-panel button
@@ -496,6 +512,10 @@ export default {
 }
 .circle-panel.small {
   width: 184px;
+  position: relative;
+}
+.circle-panel.very-small {
+  width: 160px;
   position: relative;
 }
 
