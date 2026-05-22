@@ -25,11 +25,11 @@
       </div>
 
       <div class="score-row margin-top" :class="sizeClass">
-        <div class="badge dark-red b-top-left-rad">
+        <div class="badge dark-red b-top-left-rad double-row">
           failed <small>handoffs & landings</small>
         </div>
         <div
-          class="badge badge-score red b-top-right-rad"
+          class="badge badge-score red b-top-right-rad double-row"
           :class="failedPointsClass"
         >
           <div :class="failedPulseClass">
@@ -379,11 +379,11 @@ export default {
     height: 20px;
   }
   .badge {
-    width: 80%;
+    width: 76%;
     padding: 3px 4px;
   }
   .badge-score {
-    width: 20%;
+    width: 24%;
   }
 }
 // END score-row

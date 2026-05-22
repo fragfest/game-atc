@@ -56,7 +56,7 @@ export const stageDeparture = (
         `<div class="line"> <span hidden class="checkmark check-3">&check;</span> <span class="cross check-3">&times;</span> <span class="text">Set handoff, aircraft will steer towards departure waypoint DET (H)</span></div>`;
 
       addToGameFn();
-      state.dialogBox = { top: 0.04, left: 0.2, width: 0.7, html };
+      state.dialogBox = { top: 0.04, left: 0.2, width: 0.75, html };
     }, 1000);
   }
 

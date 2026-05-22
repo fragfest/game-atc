@@ -15,7 +15,7 @@ export const stageConflict = (
 ) => {
   if (!event) {
     event = Events.WaitForInput0;
-    state.dialogBox = { top: 0.07, left: 0.1, width: 0.43, html: '<clear>' };
+    state.dialogBox = { top: 0.07, left: 0.1, width: 0.48, html: '<clear>' };
 
     setTimeout(() => {
       const html =
@@ -24,7 +24,7 @@ export const stageConflict = (
         `For this scenario the optional conflict circles are enabled.<br></div>` +
         `<div class="line"> <span hidden class="checkmark check-0">&check;</span> <span class="cross check-0">&times;</span> <span class="text">Use any commands to end the conflict</span></div>`;
 
-      state.dialogBox = { top: 0.07, left: 0.5, width: 0.43, html };
+      state.dialogBox = { top: 0.07, left: 0.5, width: 0.48, html };
     }, 1000);
   }
 

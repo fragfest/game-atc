@@ -38,7 +38,7 @@ export const stageWaypoint = (
     isSetCheckmarkHolding = false;
     isValidHolding = false;
 
-    state.dialogBox = { top: 0.04, left: 0.2, width: 0.57, html: '<clear>' };
+    state.dialogBox = { top: 0.04, left: 0.2, width: 0.62, html: '<clear>' };
     setTimeout(() => {
       const html =
         `<div class="line"><b>Arrival - Hold at waypoint</b><br></div>` +
@@ -48,7 +48,7 @@ export const stageWaypoint = (
         `<div class="line"> <span hidden class="checkmark check-2">&check;</span> <span class="cross check-2">&times;</span> <span class="text">Activate hold at waypoint (H)</span></div>`;
 
       addToGameFn();
-      state.dialogBox = { top: 0.04, left: 0.2, width: 0.57, html };
+      state.dialogBox = { top: 0.04, left: 0.2, width: 0.62, html };
     }, 1000);
   }
 
@@ -134,7 +134,7 @@ export const stageWaypoint = (
     event = '';
     completeStageFn();
     setTimeout(() => {
-      state.dialogBox = { top: 0.07, left: 0.3, width: 0.57, html: '<clear>' };
+      state.dialogBox = { top: 0.07, left: 0.3, width: 0.62, html: '<clear>' };
     }, 5000);
   }
 

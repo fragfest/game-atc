@@ -109,7 +109,7 @@ const createPlaneDepartureStage = ({
   entityManagerArr,
 }) => {
   const destinationType = DestinationType.Departure;
-  const runway = entityManagerArr.find((x) => x.title === '27L');
+  const runway = entityManagerArr.find((x) => x.title === '27R');
 
   const newPlane = {
     x: runway.x,
@@ -205,7 +205,7 @@ const tutorial =
       const html =
         `Welcome <b>Trainee</b>, <br><br> Before directing real traffic we need you to qualify on the Future Flight Ops system.<br>` +
         ` Complete all the training scenarios so we feel safe letting you loose on the paying public. <br><br> Good Luck!`;
-      state.dialogBox = { top: 0.1, left: 0.1, width: 0.5, html };
+      state.dialogBox = { top: 0.1, left: 0.1, width: 0.55, html };
       completeStage(Stages.Intro);
       startTimeStageDeparture = elapsedTime;
       stage = Stages.Departure;
@@ -343,7 +343,7 @@ const tutorial =
           `indicating the time after which flights are considered delayed.<br><br>` +
           `Please wait for the <b>Departures</b> and <b>Arrivals</b> goals to complete.<br>` +
           `Welcome to the Future Flight Ops system!`;
-        state.dialogBox = { top: 0.1, left: 0.1, width: 0.6, html };
+        state.dialogBox = { top: 0.1, left: 0.1, width: 0.65, html };
         state.focusObj.isScorePanelFocus = true;
       }, 1000);
 

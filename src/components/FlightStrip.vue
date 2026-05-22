@@ -891,7 +891,7 @@ export default {
     .warn-icon {
       img {
         max-width: 18px;
-        padding-left: 4px;
+        margin-left: 4px;
       }
       p {
         margin-left: 6px;

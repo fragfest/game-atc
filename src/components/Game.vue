@@ -887,6 +887,55 @@ p {
 }
 
 // msg-popup ////////////////////////////////////////
+// very-small
+.msg-popup.very-small {
+  font-size: 8px;
+
+  h2 {
+    font-size: 11px;
+  }
+  h3 {
+    font-size: 9px;
+  }
+
+  p {
+    font-size: 8px;
+    padding: 6px 24px;
+    line-height: 1.1;
+  }
+
+  .line {
+    margin-bottom: 3px;
+  }
+
+  .checkmark {
+    width: 7px;
+    height: 7.5px;
+
+    padding-top: 1px;
+    padding-bottom: 0px;
+    padding-left: 2px;
+    margin-right: 6px;
+
+    font-size: 7px;
+  }
+
+  .cross {
+    width: 7px;
+    height: 8px;
+    padding-bottom: 1px;
+    padding-left: 2px;
+    margin-right: 6px;
+
+    border-radius: 50%;
+    border: 1px solid white;
+    background-color: red;
+    font-size: 8px;
+    font-weight: bold;
+  }
+}
+// END very-small
+
 // small
 .msg-popup.small {
   font-size: 11px;

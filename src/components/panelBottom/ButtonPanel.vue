@@ -256,6 +256,16 @@ export default {
   height: 24px;
   gap: 6px;
 
+  h2 {
+    font-size: 9px;
+    margin-left: 3px;
+    margin-top: 0px;
+  }
+
+  button {
+    border-radius: 4px;
+  }
+
   button.button-aircraft {
     height: 20px;
     width: 20px;

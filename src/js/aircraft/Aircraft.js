@@ -1187,6 +1187,7 @@ const _draw = (self, color) => {
 
   if (self.isShowCircle) {
     self.textLayerObj.ctx.strokeStyle = 'white';
+    self.textLayerObj.ctx.lineWidth = 1;
     self.textLayerObj.ctx.beginPath();
     self.textLayerObj.ctx.arc(
       self.x,
