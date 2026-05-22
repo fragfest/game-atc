@@ -2,7 +2,7 @@
   <div class="home" :class="screenSize">
     <!-- showSplash -->
     <SplashLogo
-      v-if="false && showSplash && !isMobile && !isTablet"
+      v-if="showSplash && !isMobile && !isTablet"
       @play="splashDismissEV"
     ></SplashLogo>
     <div v-else>

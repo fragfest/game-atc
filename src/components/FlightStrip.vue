@@ -75,7 +75,7 @@
                   {{ plane.airframe }} {{ plane.wake }}
                 </div>
 
-                <div class="col no-border">
+                <div class="col col-message no-border">
                   <div v-if="plane.isMayday" class="mayday">
                     <div class="font-large"><b>MAYDAY</b></div>
                     <div>{{ maydayTitle }}</div>
@@ -859,15 +859,19 @@ export default {
       padding: 4px;
     }
 
+    .col.col-airframe {
+      width: 30px;
+      padding: 2px;
+    }
+
+    .col.col-message {
+      margin-left: 0px;
+    }
+
     .col.flip-icon {
       button {
         height: 18px;
       }
-    }
-
-    .col.col-airframe {
-      width: 30px;
-      padding: 2px;
     }
 
     .col.card-back {
@@ -956,6 +960,10 @@ export default {
       min-width: 19px;
       height: 20px;
       padding: 6px;
+    }
+
+    .col.col-message {
+      margin-left: 6px;
     }
 
     .col.card-back {
@@ -1051,6 +1059,10 @@ export default {
 
     .col.col-airframe {
       width: 42px;
+    }
+
+    .col.col-message {
+      margin-left: 24px;
     }
 
     .col.card-back {

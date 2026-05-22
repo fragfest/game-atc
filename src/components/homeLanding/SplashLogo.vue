@@ -1051,6 +1051,10 @@
           </g>
         </g>
       </svg>
+
+      <div class="instruction">
+        <h2>please maximize browser size before playing</h2>
+      </div>
     </div>
   </div>
 </template>
@@ -1080,10 +1084,28 @@ export default {
 </script>
 
 <style lang="scss">
+.splash-logo .modal .instruction {
+  display: flex;
+  justify-content: center;
+  color: white;
+
+  @media (max-width: 1400px) {
+    h2 {
+      font-size: 16px;
+    }
+  }
+  @media (max-width: 1000px) {
+    h2 {
+      font-size: 14px;
+    }
+  }
+}
+
 .splash-logo .modal .btn-next-nosound {
   position: absolute;
   width: 12%;
   min-height: 34px;
+  max-height: 80px;
   height: 6%;
   left: 56%;
   bottom: 20%;
@@ -1096,11 +1118,9 @@ export default {
   @media (max-width: 1800px) {
     &:active {
       left: calc(56% + 3px);
-      bottom: calc(35% - 3px);
+      bottom: calc(20% - 3px);
     }
 
-    height: 3%;
-    bottom: 35%;
     h2 {
       font-size: 16px;
     }
@@ -1123,9 +1143,10 @@ export default {
 .splash-logo .modal .btn-next {
   position: absolute;
   width: 16%;
-  height: 8%;
   min-height: 40px;
+  max-height: 100px;
   left: 34%;
+  height: 8%;
   bottom: 20%;
 
   &:active {
@@ -1136,11 +1157,9 @@ export default {
   @media (max-width: 1800px) {
     &:active {
       left: calc(34% + 3px);
-      bottom: calc(35% - 3px);
+      bottom: calc(20% - 3px);
     }
 
-    height: 4%;
-    bottom: 35%;
     h1 {
       font-size: 18px;
     }
