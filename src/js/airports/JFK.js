@@ -103,6 +103,7 @@ const runways = (runway, screenSize) => {
       break;
 
     case ScreenSizes.Small:
+    case ScreenSizes.VerySmall:
       runwayWidth = 4.6;
       // 22L
       xOffset22L = 254;
@@ -194,7 +195,10 @@ const waypoints = (waypoint, screenSize) => {
     }
   }
 
-  if (screenSize === ScreenSizes.Small) {
+  if (
+    screenSize === ScreenSizes.Small ||
+    screenSize === ScreenSizes.VerySmall
+  ) {
     switch (waypoint) {
       case WaypointArrivals.CORVT:
         return {

@@ -87,7 +87,9 @@ const runways = (runway, screenSize) => {
   const width = getGameSize(screenSize).width;
   const height = getGameSize(screenSize).height;
   let widthRunway = 6.2;
+  if (screenSize === ScreenSizes.Large) widthRunway = 6.2;
   if (screenSize === ScreenSizes.Small) widthRunway = 4.6;
+  if (screenSize === ScreenSizes.VerySmall) widthRunway = 4.6;
 
   if (runway === Runways.EighteenRight) {
     return {
@@ -179,7 +181,10 @@ const waypoints = (waypoint, screenSize) => {
     }
   }
 
-  if (screenSize === ScreenSizes.Small) {
+  if (
+    screenSize === ScreenSizes.Small ||
+    screenSize === ScreenSizes.VerySmall
+  ) {
     switch (waypoint) {
       case WaypointArrivals.SPY:
         return {

@@ -91,10 +91,14 @@ const runways = (runway, screenSize) => {
   let runwayWidth = 6.2;
   let lengthLong = 55;
   let lengthShort = 44;
+
   if (screenSize === ScreenSizes.Small) {
     runwayWidth = 4.6;
+    lengthLong = 40;
+    lengthShort = 30;
   }
-  if (screenSize === ScreenSizes.Small) {
+  if (screenSize === ScreenSizes.VerySmall) {
+    runwayWidth = 4.6;
     lengthLong = 40;
     lengthShort = 30;
   }
@@ -197,7 +201,10 @@ const waypoints = (waypoint, screenSize) => {
     }
   }
 
-  if (screenSize === ScreenSizes.Small) {
+  if (
+    screenSize === ScreenSizes.Small ||
+    screenSize === ScreenSizes.VerySmall
+  ) {
     switch (waypoint) {
       case WaypointArrivals.HONDA:
         return {

@@ -853,6 +853,8 @@ const driftENE = (width, height) => (x, y) => {
   }
   if (getScreenSize() === ScreenSizes.Large) return { x: 0.01, y: -0.005 };
   if (getScreenSize() === ScreenSizes.Small) return { x: 0.007, y: -0.0035 };
+  if (getScreenSize() === ScreenSizes.VerySmall)
+    return { x: 0.007, y: -0.0035 };
 };
 
 const driftESE = (width, height) => (x, y) => {
@@ -861,6 +863,7 @@ const driftESE = (width, height) => (x, y) => {
   }
   if (getScreenSize() === ScreenSizes.Large) return { x: 0.01, y: 0.005 };
   if (getScreenSize() === ScreenSizes.Small) return { x: 0.007, y: 0.0035 };
+  if (getScreenSize() === ScreenSizes.VerySmall) return { x: 0.007, y: 0.0035 };
 };
 
 const driftE = (width, height) => (x, y) => {
@@ -869,6 +872,7 @@ const driftE = (width, height) => (x, y) => {
   }
   if (getScreenSize() === ScreenSizes.Large) return { x: 0.01, y: 0 };
   if (getScreenSize() === ScreenSizes.Small) return { x: 0.007, y: 0 };
+  if (getScreenSize() === ScreenSizes.VerySmall) return { x: 0.007, y: 0 };
 };
 
 ////////////////////////////////////////////////////////////////////////

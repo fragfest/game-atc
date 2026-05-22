@@ -10,6 +10,9 @@ export const getPerformance = (airframe, screenSize) => {
   if (screenSize === ScreenSizes.Small) {
     return Object.assign(performanceLarge, basePerformanceSmall);
   }
+  if (screenSize === ScreenSizes.VerySmall) {
+    return Object.assign(performanceLarge, basePerformanceSmall);
+  }
   return performanceLarge;
 };
 

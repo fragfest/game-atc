@@ -34,7 +34,13 @@ export default class Waypoint {
 
     this.ctx = entityLayerObj.ctx;
     this.textLayerObj = textLayerObj;
-    this.isSmall = screenSize === ScreenSizes.Small ? true : false;
+    this.isSmall = false;
+    if (
+      screenSize === ScreenSizes.Small ||
+      screenSize === ScreenSizes.VerySmall
+    ) {
+      this.isSmall = true;
+    }
     this.isVerySmall = screenSize === ScreenSizes.VerySmall ? true : false;
     this.x = waypointObj.x - 2;
     this.y = waypointObj.y - 2;

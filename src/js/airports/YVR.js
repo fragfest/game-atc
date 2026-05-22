@@ -77,8 +77,14 @@ const runways = (runway, screenSize) => {
   const height = getGameSize(screenSize).height;
   let widthRunway = 6.2;
   let length = 65;
-  if (screenSize === ScreenSizes.Small) widthRunway = 4.6;
-  if (screenSize === ScreenSizes.Small) length = 50;
+  if (screenSize === ScreenSizes.Small) {
+    widthRunway = 4.6;
+    length = 50;
+  }
+  if (screenSize === ScreenSizes.VerySmall) {
+    widthRunway = 4.6;
+    length = 50;
+  }
 
   if (runway === Runways.TwentysixRight) {
     return {
@@ -108,6 +114,7 @@ const waypoints = (waypoint, screenSize) => {
   const height = getGameSize(screenSize).height;
   let borderPadding = 50;
   if (screenSize === ScreenSizes.Small) borderPadding = 30;
+  if (screenSize === ScreenSizes.VerySmall) borderPadding = 30;
 
   switch (waypoint) {
     case WaypointArrivals.GRIZZ:
