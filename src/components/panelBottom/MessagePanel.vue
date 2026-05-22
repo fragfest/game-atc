@@ -50,6 +50,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.messages.very-small {
+  height: 18px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  padding-left: 4px;
+  padding-right: 4px;
+
+  textarea {
+    font-size: 8px;
+  }
+}
+
 .messages.small {
   height: 18px;
   padding-top: 6px;

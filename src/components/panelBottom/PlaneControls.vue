@@ -177,6 +177,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.plane-controls.very-small {
+  min-width: 0px;
+
+  .btn button {
+    height: 22px;
+    font-size: 10px;
+    width: 42px;
+
+    &.takeoff {
+      width: 80px;
+    }
+  }
+
+  .btn-container {
+    margin-top: 0px;
+  }
+}
+
 .plane-controls.small {
   .btn button {
     height: 28px;

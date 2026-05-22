@@ -77,7 +77,6 @@ main {
 
     &.very-small {
       font-size: 9px;
-      padding: 2px 2px;
     }
   }
 
@@ -98,6 +97,7 @@ main {
     &.very-small {
       margin-top: -12px;
       margin-left: 42px;
+      padding: 2px 2px;
     }
   }
 

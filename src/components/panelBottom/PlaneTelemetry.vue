@@ -65,6 +65,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.plane-telemetry.very-small {
+  width: 90px;
+
+  .info {
+    padding: 3px 6px;
+    font-size: 11px;
+
+    hr {
+      border-width: 0.5px;
+    }
+
+    .title {
+      font-size: 12px;
+      min-height: 16px;
+    }
+  }
+}
+
 .plane-telemetry.small {
   width: 120px;
 

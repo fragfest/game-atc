@@ -170,6 +170,46 @@
               </div>
             </div>
           </div>
+          <div v-else-if="screenSize === 'very-small'" class="row-bottom-right">
+            <div class="btm-right-col" :class="screenSize">
+              <div class="small btm-right-row">
+                <div class="small btm-center-row row-reverse">
+                  <PlaneTelemetry
+                    :planeSelected="aircraftClicked"
+                    :planes="planesSorted"
+                  ></PlaneTelemetry>
+                  <PlaneControls
+                    :planeSelected="aircraftClicked"
+                    :planes="planesSorted"
+                    :focusObj="focusObj"
+                    :isPaused="isPaused"
+                    @compassFocus="compassFocus"
+                  ></PlaneControls>
+                </div>
+                <div class="small col-compass">
+                  <ButtonPanel
+                    :screenSize="screenSize"
+                    :isControlsDisabled="isControlBtnsDisabled"
+                    :isPaused="isPaused"
+                    :fastForwardNum="fastForwardNum"
+                    @showCirclesEv="showCirclesEv"
+                    @pauseEv="pauseEv"
+                    @fastForwardEv="fastForwardEv"
+                  ></ButtonPanel>
+                  <ControlPanel
+                    ref="controlPanel"
+                    :screenSize="screenSize"
+                    :planeSelected="aircraftClicked"
+                    :planes="planesSorted"
+                    :headingRad="planeSelHeadingRad"
+                    :focusObj="focusObj"
+                    @updatedAltitudeEv="updatedAltitudeEv"
+                    @updatedHeadingEv="updatedHeadingEv"
+                  ></ControlPanel>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -723,6 +763,9 @@ p {
   }
 }
 
+.btm-center-col.very-small {
+  padding-top: 2px;
+}
 .btm-center-col.small {
   padding-top: 16px;
   min-width: 260px;
@@ -734,6 +777,10 @@ p {
   padding-top: 33px;
 }
 
+.btm-right-col.very-small {
+  padding-top: 0px;
+  gap: 14px;
+}
 .btm-right-col.small {
   padding-top: 16px;
   gap: 14px;
@@ -777,6 +824,7 @@ p {
   height: 100%;
   margin-top: -3px;
   padding: 4px;
+  gap: 8px;
 
   border-top: solid 2px teal;
   background-image: linear-gradient(

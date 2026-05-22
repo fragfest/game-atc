@@ -68,10 +68,10 @@
         </span>
       </div>
       <div class="score-row" :class="sizeClass">
-        <span class="badge white b-btm-left-rad">
+        <span class="badge white b-btm-left-rad double-row">
           runway idle timer <small>seconds</small>
         </span>
-        <span class="badge badge-score white b-btm-right-rad">
+        <span class="badge badge-score white b-btm-right-rad double-row">
           {{ runwayIdleDisplay }}
         </span>
       </div>
@@ -367,9 +367,24 @@ export default {
   }
 }
 
-// score-row small
+// score-row small, very-small
 .score-row.small {
   font-size: 12px;
+}
+
+.score-row.very-small {
+  font-size: 8px;
+
+  .badge.double-row {
+    height: 20px;
+  }
+  .badge {
+    width: 80%;
+    padding: 3px 4px;
+  }
+  .badge-score {
+    width: 20%;
+  }
 }
 // END score-row
 
