@@ -38,6 +38,7 @@ v0.1.5:
     
   Minor:
     ☐ allow starting any city any time
+    ✔ future city placeholder @done(26-05-24 20:16)
     ✔ fast-forward now activated by holding button @started(26-05-08 12:02) @done(26-05-08 23:16) @lasted(11h14m)
     ✔ save conflict circles @started(26-05-07 23:22) @done(26-05-08 00:05) @lasted(43m27s)
     ✔ block takeoff/landing on occupied runway & display message @started(26-01-22 02:19) @done(26-02-03 20:22) @lasted(1w5d18h3m57s)

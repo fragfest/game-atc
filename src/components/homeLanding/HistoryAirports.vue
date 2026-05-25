@@ -45,6 +45,11 @@
         <div v-if="isButtonCheckmarkVancouver" class="checkmark">&check;</div>
         <div class="photo photo-vancouver"></div>
       </button>
+
+      <button class="button-airport disabled" disabled>
+        <img src="/img/cities/padlock.png" class="icon" alt="future location" />
+        <p>future location</p>
+      </button>
     </div>
 
     <div class="history">
@@ -409,6 +414,11 @@ export default {
     width: 200px;
     height: 130px;
     box-shadow: 4px 3px 2px #000000a0;
+
+    &.disabled p {
+      font-size: 10px;
+    }
+
     .checkmark {
       font-size: 18px;
     }
@@ -431,6 +441,11 @@ export default {
   .button-airport {
     width: 230px;
     height: 150px;
+
+    &.disabled p {
+      font-size: 12px;
+    }
+
     .checkmark {
       font-size: 22px;
     }
@@ -565,6 +580,35 @@ export default {
     &:nth-child(5) {
       opacity: 0;
       animation: slidein-right 0.3s ease-out calc(2.8 * 0.4s) forwards;
+    }
+    &:nth-child(6) {
+      opacity: 0;
+      animation: slidein-right 0.3s ease-out calc(3.2 * 0.4s) forwards;
+    }
+  }
+
+  .button-airport.disabled {
+    filter: brightness(0.7);
+
+    &:hover {
+      cursor: default;
+      filter: brightness(0.7);
+    }
+
+    &:active {
+      left: 0;
+      outline: none;
+      box-shadow: 6px 4px 2px #000000a0;
+      filter: brightness(0.7);
+    }
+
+    img {
+      height: 30%;
+    }
+
+    p {
+      color: white;
+      font-size: 14px;
     }
   }
   // END button-airport
