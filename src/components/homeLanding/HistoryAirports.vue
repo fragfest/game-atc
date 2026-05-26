@@ -59,7 +59,7 @@
         <div v-for="(record, index) in records" :key="index" class="row">
           <div v-if="record.isInactive" class="button-restart inactive">
             <button disabled>
-              <h3>level {{ record.level }}</h3>
+              <h3>level {{ levelDisp(record.level) }}</h3>
             </button>
           </div>
 
@@ -69,7 +69,7 @@
             :class="btnRestartSelectClass(index)"
           >
             <button @click="onClickRetry(record.level)">
-              <h3>level {{ record.level }}</h3>
+              <h3>level {{ levelDisp(record.level) }}</h3>
             </button>
           </div>
 
@@ -89,7 +89,7 @@
             :class="btnRestartSelectClass(index)"
           >
             <button @click="onClickRetry(record.level)">
-              <h3>level {{ record.level }}</h3>
+              <h3>level {{ levelDisp(record.level) }}</h3>
             </button>
           </div>
 
@@ -121,6 +121,7 @@ import {
   getCityByAirport,
   getAirportByLevel,
   getFinalLevel,
+  getAirportDispLevel,
 } from '../../js/levels/getLevel';
 import {
   getClassSize,
@@ -142,13 +143,14 @@ const onClickAirport = (self, airportNew, airportOld) => {
     if (!recordsCompleted.length) return;
 
     self.level = recordsCompleted.slice(-1)[0].level;
-    self.$emit('updateLevel', self.level);
+    const record = self.records.find((x) => x.isNext && x.level === self.level);
+    if (!record) return;
+
+    self.$emit('updateLevel', record);
   }
 };
 
 const getLevelsByAirport = (airport, completed) => {
-  const lastLevel = getFinalLevel();
-  const nextLevel = getNextLevel();
   const isTutorialDone = !!getHistoryRecords().find((x) => x.level === 0);
   const arr = new Array(getFinalLevel());
   let isComplete = false;
@@ -160,35 +162,50 @@ const getLevelsByAirport = (airport, completed) => {
 
     if (isComplete) return;
 
-    if (level === lastLevel) {
-      if (record) {
-        levels.push(record);
-      } else if (level === nextLevel) {
-        levels.push({ isNext: true, level });
-      } else {
+    const location = getAirportByLevel(level);
+    const locationPrev = getAirportByLevel(level - 1);
+    const recordPrev = completed.find((x) => x.level === level - 1);
+    const recordNext = completed.find((x) => x.level === level + 1);
+
+    if (location !== airport) {
+      if (locationPrev === airport) {
+        isComplete = true;
+        return;
+      }
+      level++;
+      return;
+    }
+
+    // always allow first level in new location to be played
+    if (locationPrev !== location && !record && !recordNext) {
+      if (!isTutorialDone) {
         levels.push({ isInactive: true, level });
+        level++;
+        return;
       }
 
-      isComplete = true;
-      return;
-    }
-
-    const location = getAirportByLevel(level);
-    const locationNext = getAirportByLevel(level + 1);
-
-    if (location === airport && level === nextLevel && isTutorialDone) {
       levels.push({ isNext: true, level });
-    } else if (location === airport) {
-      if (record) levels.push(record);
-      else levels.push({ isInactive: true, level });
-    }
-
-    if (location === airport && locationNext !== airport) {
-      isComplete = true;
+      level++;
       return;
     }
 
-    level++;
+    // show next level that can be played
+    if (locationPrev === location && recordPrev && !record && !recordNext) {
+      levels.push({ isNext: true, level });
+      level++;
+      return;
+    }
+
+    // show played and unplayed records
+    if (!record) {
+      levels.push({ isInactive: true, level });
+      level++;
+      return;
+    } else {
+      levels.push(record);
+      level++;
+      return;
+    }
   });
 
   return levels;
@@ -205,27 +222,26 @@ const getRecords = (airport) => {
 
 const isLocationCompleted = (airport) => {
   const lastLevel = getFinalLevel();
-  const arr = new Array(getHighestLevelCompleted());
-  let isComplete = false;
+  const arr = new Array(lastLevel);
   let level = 1;
 
+  const locationLevels = [];
   Array.from(arr, () => {
-    if (isComplete) return;
-    if (level === lastLevel) {
-      isComplete = true;
-      return;
-    }
     const location = getAirportByLevel(level);
-    const locationNext = getAirportByLevel(level + 1);
-    if (location === airport && locationNext !== airport) {
-      isComplete = true;
-      return;
+    if (location === airport) {
+      locationLevels.push(level);
     }
-
     level++;
   });
 
-  return isComplete;
+  const completed = getHistoryRecords()
+    .filter(isAirportLevel(airport))
+    .filter((obj) => obj.level > 0);
+
+  if (completed.length === locationLevels.length) {
+    return true;
+  }
+  return false;
 };
 
 export default {
@@ -263,8 +279,13 @@ export default {
 
     onClickRetry: function (level) {
       routerPathRelative();
+
       this.level = level;
-      this.$emit('updateLevel', level);
+      const record = this.records.find((x) => x.level === level);
+      if (!record) return;
+      record.selected = true;
+
+      this.$emit('updateLevel', record);
     },
 
     btnRestartSelectClass: function (index) {
@@ -275,6 +296,10 @@ export default {
     scoreFormat: function (score) {
       return Number(score).toLocaleString('en-CA');
     },
+
+    levelDisp: function (level) {
+      return getAirportDispLevel(level);
+    },
   },
 
   computed: {
@@ -283,7 +308,9 @@ export default {
       const records = getRecords(this.airport);
 
       const addPropSelected = (record) => {
-        if (record.level === level) return { ...record, selected: true };
+        if (record.level === level && record.isNext) {
+          return { ...record, selected: true };
+        }
         return { ...record, selected: false };
       };
 
@@ -489,24 +516,9 @@ export default {
       filter: brightness(0.7);
     }
 
-    &:active:not(.selected) {
-      left: 2px;
-      outline: 2px solid white;
-      box-shadow: none;
-      filter: brightness(1);
-    }
-
-    &:not(:has(> .checkmark)) {
-      filter: brightness(0.3);
-    }
-
     &.selected {
       outline: 2px solid white;
       box-shadow: none;
-      filter: brightness(1);
-    }
-
-    &.current {
       filter: brightness(1);
     }
 

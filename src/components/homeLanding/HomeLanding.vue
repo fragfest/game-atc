@@ -43,13 +43,10 @@
           <div class="grid-score-buttons" :class="screenSize">
             <!-- column left -->
             <div class="col-left">
-              <h2 v-if="isGameComplete" class="hdr-green">
-                all levels completed!
-              </h2>
-              <h3 v-else-if="levelComplete">
-                <span>level&nbsp;&nbsp;</span>
+              <h3 v-if="levelComplete">
+                <span>levels&nbsp;&nbsp;</span>
                 <small class="white no-wrap">
-                  {{ levelComplete }} / {{ finalLevel }}
+                  {{ levelsCompletedCount }} / {{ finalLevel }}
                 </small>
               </h3>
               <h3 v-if="levelComplete">
@@ -64,14 +61,15 @@
                 <span class="font-mono white">training</span>
               </h3>
               <h3 v-else>
-                <span>level &nbsp;&nbsp;</span>
-                <span class="font-mono white">{{ levelNext }}</span>
+                <span class="hdr-white">{{ city }} &nbsp;</span>
+                <span class="font-mono hdr-white">{{
+                  levelDisp(levelNext)
+                }}</span>
               </h3>
 
               <CyberBox class="cyber-box" :width="cyberBoxWidth" type="button">
                 <button @click="onStartClick">
-                  <h2 v-if="isGameComplete">retry</h2>
-                  <h2 v-else-if="levelComplete + 1 === levelNext">start</h2>
+                  <h2 v-if="levelNext === levelStart">start</h2>
                   <h2 v-else>retry</h2>
                 </button>
               </CyberBox>
@@ -137,7 +135,12 @@
 <script>
 import Bowser from 'bowser';
 
-import { getFinalLevel } from '../../js/levels/getLevel';
+import {
+  getAirportByLevel,
+  getAirportDispLevel,
+  getCityByAirport,
+  getFinalLevel,
+} from '../../js/levels/getLevel';
 import {
   setup as setupScore,
   levelRetry,
@@ -207,11 +210,13 @@ export default {
       cyberBoxWidth: '400',
 
       isTutorial: getHighestLevelCompleted() === null,
+      levelsCompletedCount: getHistoryRecords().filter((x) => x.level > 0)
+        .length,
       levelComplete: getHighestLevelCompleted(),
       levelNext: getHighestLevelCompleted() + 1,
+      levelStart: getHighestLevelCompleted() + 1,
       historyRecordArr: getHistoryRecords().sort((a, b) => a.level - b.level),
       finalLevel: getFinalLevel(),
-      isGameComplete: false,
 
       // BADGES /////////////////////////////////////////////////
       pushingTin: false,
@@ -224,6 +229,10 @@ export default {
   },
 
   computed: {
+    city: function () {
+      return getCityByAirport(getAirportByLevel(this.levelNext));
+    },
+
     showSplash: function () {
       const str = localStorage.getItem('show-splash') || 'yes';
       const showSplashStorage = str === 'yes' ? true : false;
@@ -293,7 +302,6 @@ export default {
     this.mayday = !!this.mayDayLevel;
 
     if (this.finalLevel === this.levelComplete) {
-      this.isGameComplete = true;
       this.levelNext = this.finalLevel;
     }
 
@@ -327,10 +335,13 @@ export default {
       setMute(!isSoundOn);
     },
 
-    updateLevel: function (level) {
+    updateLevel: function (record) {
+      if (!record) return;
+
       historyRecordDebug();
-      this.levelNext = level;
-      levelRetry(level);
+      levelRetry(record.level);
+      this.levelNext = record.level;
+      this.levelStart = record.isNext ? record.level : null;
     },
 
     signInUpdate: function (isLoggedIn) {
@@ -351,6 +362,10 @@ export default {
 
     onStartClick: function () {
       this.$router.push({ path: '/game' });
+    },
+
+    levelDisp: function (level) {
+      return getAirportDispLevel(level);
     },
   },
 };

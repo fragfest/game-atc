@@ -15,8 +15,8 @@ export const Airport = Object.freeze({
 });
 
 export const getMapImageOpacity = (airport) => {
-  if (airport === Airport.LondonLHR) return 0.5;
-  if (airport === Airport.NewYorkJFK) return 0.4;
+  if (airport === Airport.LondonLHR) return 0.4;
+  if (airport === Airport.NewYorkJFK) return 0.3;
   if (airport === Airport.TokyoHND) return 0.3;
   if (airport === Airport.AmsterdamAMS) return 0.3;
   if (airport === Airport.VancouverYVR) return 0.3;
