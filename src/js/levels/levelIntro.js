@@ -1,5 +1,5 @@
 import { fillHtmlQueue } from '../game/gameEvents';
-import { getLevelObj } from './getLevel';
+import { getAirportDispLevel, getLevelObj } from './getLevel';
 
 /**
  * @param {Object} msgPopup Object with vue refs of the popup window
@@ -83,7 +83,7 @@ export const getIntro = (gameLevel) => {
       return {
         displayTimeMs: 1000,
         width: 0.72,
-        levelNum: gameLevel,
+        levelNum: getAirportDispLevel(gameLevel),
         airportHeading: ``,
         airportSubheading: ``,
         text1: ``,
@@ -94,7 +94,7 @@ export const getIntro = (gameLevel) => {
       return {
         displayTimeMs: 20000,
         width: 0.72,
-        levelNum: gameLevel,
+        levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `London Heathrow (LHR)`,
         airportSubheading: `Westbound Operations - early morning, departures only`,
         text1:
@@ -107,7 +107,7 @@ export const getIntro = (gameLevel) => {
       return {
         displayTimeMs: 18000,
         width: 0.72,
-        levelNum: gameLevel,
+        levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `London Heathrow (LHR)`,
         airportSubheading: `Westbound Operations - early morning, mostly arrivals`,
         text1: `Another quiet day to get practice with arrival operations.`,
@@ -118,7 +118,7 @@ export const getIntro = (gameLevel) => {
       return {
         displayTimeMs: 16000,
         width: 0.72,
-        levelNum: gameLevel,
+        levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `London Heathrow (LHR)`,
         airportSubheading: `Westbound Operations - weather: clear`,
         text1: `A healthy mix of departures and arrivals. No bad weather to avoid.`,
@@ -129,7 +129,7 @@ export const getIntro = (gameLevel) => {
       return {
         displayTimeMs: 16000,
         width: 0.72,
-        levelNum: gameLevel,
+        levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `London Heathrow (LHR)`,
         airportSubheading: `Westbound Operations - weather: clear`,
         text1: `A very busy shift. Let's make use of our waypoint stacks and keep those runways busy.`,
@@ -140,7 +140,7 @@ export const getIntro = (gameLevel) => {
       return {
         displayTimeMs: 16000,
         width: 0.72,
-        levelNum: gameLevel,
+        levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `London Heathrow (LHR)`,
         airportSubheading: `Westbound Operations - weather: moderate`,
         text1: `Some scattered weather, try to direct traffic around weather turbulence. Let's avoid customer complaints of bumpy rides.`,
@@ -151,7 +151,7 @@ export const getIntro = (gameLevel) => {
       return {
         displayTimeMs: 16000,
         width: 0.72,
-        levelNum: gameLevel,
+        levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `London Heathrow (LHR)`,
         airportSubheading: `Westbound Operations - weather: heavy`,
         text1: `Many weather systems, but with some gaps of blue sky. Watch for wake turbulence when aircraft density increases.`,
@@ -162,7 +162,7 @@ export const getIntro = (gameLevel) => {
       return {
         displayTimeMs: 20000,
         width: 0.72,
-        levelNum: gameLevel,
+        levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `New York International (JFK)`,
         airportSubheading: `Southbound Operations - weather: clear`,
         text1: `Welcome to New York,&nbsp;<b>Controller</b>! We have a quiet shift for you to get accustomed to new flight operations.`,
@@ -173,7 +173,7 @@ export const getIntro = (gameLevel) => {
       return {
         displayTimeMs: 16000,
         width: 0.72,
-        levelNum: gameLevel,
+        levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `New York International (JFK)`,
         airportSubheading: `Southbound Operations - weather: clear`,
         text1: `A typical busy day at JFK, at least the weather forecast is clear.`,
@@ -184,7 +184,7 @@ export const getIntro = (gameLevel) => {
       return {
         displayTimeMs: 16000,
         width: 0.72,
-        levelNum: gameLevel,
+        levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `New York International (JFK)`,
         airportSubheading: `Southbound Operations - weather: moderate`,
         text1: `Moderate weather has moved into the area. traffic will be reasonable as long as nothing unexpected happens.`,
@@ -195,7 +195,7 @@ export const getIntro = (gameLevel) => {
       return {
         displayTimeMs: 16000,
         width: 0.72,
-        levelNum: gameLevel,
+        levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `New York International (JFK)`,
         airportSubheading: `Southbound Operations - weather: clear`,
         text1: `Delays at other airports have resulted in an incoming traffic spike. We trust in your abilities to manage the mayhem, good luck <b>Controller</b>.`,
@@ -206,7 +206,7 @@ export const getIntro = (gameLevel) => {
       return {
         displayTimeMs: 16000,
         width: 0.72,
-        levelNum: gameLevel,
+        levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `New York International (JFK)`,
         airportSubheading: `Southbound Operations - weather: heavy`,
         text1: `A large weather system is approaching the airport. let's get arrivals and departures completed as soon as possible.`,
@@ -217,7 +217,7 @@ export const getIntro = (gameLevel) => {
       return {
         displayTimeMs: 20000,
         width: 0.72,
-        levelNum: gameLevel,
+        levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `Tokyo Haneda (HND)`,
         airportSubheading: `South Wind Operations - weather: clear`,
         text1: `Welcome to Tokyo,&nbsp;<b>Controller</b>! We have a quiet shift for you to get accustomed to new flight operations.`,
@@ -228,7 +228,7 @@ export const getIntro = (gameLevel) => {
       return {
         displayTimeMs: 16000,
         width: 0.72,
-        levelNum: gameLevel,
+        levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `Tokyo Haneda (HND)`,
         airportSubheading: `South Wind Operations - weather: clear`,
         text1: `Let's keep those runways busy and our customers happy.`,
@@ -239,7 +239,7 @@ export const getIntro = (gameLevel) => {
       return {
         displayTimeMs: 16000,
         width: 0.72,
-        levelNum: gameLevel,
+        levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `Tokyo Haneda (HND)`,
         airportSubheading: `South Wind Operations - weather: moderate`,
         text1: `Some scattered weather. Avoid turbulence so we can give our customers a smooth ride.`,
@@ -250,7 +250,7 @@ export const getIntro = (gameLevel) => {
       return {
         displayTimeMs: 16000,
         width: 0.72,
-        levelNum: gameLevel,
+        levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `Tokyo Haneda (HND)`,
         airportSubheading: `South Wind Operations - weather: clear`,
         text1: `A quiet unremarkable day orchestrating a typical sky over the Greater Tokyo Area.`,
@@ -261,7 +261,7 @@ export const getIntro = (gameLevel) => {
       return {
         displayTimeMs: 16000,
         width: 0.72,
-        levelNum: gameLevel,
+        levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `Tokyo Haneda (HND)`,
         airportSubheading: `South Wind Operations - weather: severe`,
         text1: `We have lingering turbulent weather from the last typhoon. If possible, navigate around all the remaining pockets of weather.`,
@@ -272,7 +272,7 @@ export const getIntro = (gameLevel) => {
       return {
         displayTimeMs: 20000,
         width: 0.72,
-        levelNum: gameLevel,
+        levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `Amsterdam Schiphol (AMS)`,
         airportSubheading: `Southbound Operations - weather: clear`,
         text1: `Welcome to Amsterdam,&nbsp;<b>Controller</b>! We have a quiet shift for you to get accustomed to new flight operations.`,
@@ -283,7 +283,7 @@ export const getIntro = (gameLevel) => {
       return {
         displayTimeMs: 16000,
         width: 0.72,
-        levelNum: gameLevel,
+        levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `Amsterdam Schiphol (AMS)`,
         airportSubheading: `Southbound Operations - weather: clear`,
         text1: `Let's keep those runways busy and our customers happy.`,
@@ -294,7 +294,7 @@ export const getIntro = (gameLevel) => {
       return {
         displayTimeMs: 16000,
         width: 0.72,
-        levelNum: gameLevel,
+        levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `Amsterdam Schiphol (AMS)`,
         airportSubheading: `Southbound Operations - weather: clear`,
         text1: `Delays across Europe are leading to high numbers of arrivals. We heard you're the best don't let us down, <b>Controller</b>!`,
@@ -305,7 +305,7 @@ export const getIntro = (gameLevel) => {
       return {
         displayTimeMs: 16000,
         width: 0.72,
-        levelNum: gameLevel,
+        levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `Amsterdam Schiphol (AMS)`,
         airportSubheading: `Southbound Operations - weather: minor`,
         text1: `Just need to avoid a small weather cell moving through the area. Some light bird activity near the runways, unlikely to cause problems.`,
@@ -316,7 +316,7 @@ export const getIntro = (gameLevel) => {
       return {
         displayTimeMs: 16000,
         width: 0.72,
-        levelNum: gameLevel,
+        levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `Amsterdam Schiphol (AMS)`,
         airportSubheading: `Southbound Operations - weather: clear`,
         text1: `With your magic touch, <b>Controller</b>, we hope to improve our on-time percentage and keep our demanding customers satisfied.`,
@@ -327,7 +327,7 @@ export const getIntro = (gameLevel) => {
       return {
         displayTimeMs: 20000,
         width: 0.72,
-        levelNum: gameLevel,
+        levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `Vancouver International (YVR)`,
         airportSubheading: `West Wind Operations - weather: clear`,
         text1: `Welcome to Vancouver,&nbsp;<b>Controller</b>! We have a quiet shift for you to get accustomed to new flight operations.`,
@@ -338,7 +338,7 @@ export const getIntro = (gameLevel) => {
       return {
         displayTimeMs: 16000,
         width: 0.72,
-        levelNum: gameLevel,
+        levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `Vancouver International (YVR)`,
         airportSubheading: `West Wind Operations - weather: clear`,
         text1: `Busy runways with short delays help keep our paying airline and passenger customers content.`,
@@ -349,7 +349,7 @@ export const getIntro = (gameLevel) => {
       return {
         displayTimeMs: 16000,
         width: 0.72,
-        levelNum: gameLevel,
+        levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `Vancouver International (YVR)`,
         airportSubheading: `West Wind Operations - weather: minor`,
         text1: `Only some light rain is moving through the area.`,
@@ -360,7 +360,7 @@ export const getIntro = (gameLevel) => {
       return {
         displayTimeMs: 16000,
         width: 0.72,
-        levelNum: gameLevel,
+        levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `Vancouver International (YVR)`,
         airportSubheading: `West Wind Operations - weather: minor`,
         text1: `Another day taming the maelstrom, including long-haul fuel-hungry cross-pacific flights.`,
@@ -371,7 +371,7 @@ export const getIntro = (gameLevel) => {
       return {
         displayTimeMs: 16000,
         width: 0.72,
-        levelNum: gameLevel,
+        levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `Vancouver International (YVR)`,
         airportSubheading: `West Wind Operations - weather: severe`,
         text1: `Typical rainy day in the pacific northwest. We have to contend with many scattered storm cells.`,
