@@ -1,4 +1,4 @@
-import { getGameSize } from '../utils';
+import { cancelTutorialLoop, emptyTaxiQueue, getGameSize } from '../utils';
 import {
   setGameLoopState,
   entityManagerAdd,
@@ -17,7 +17,13 @@ import { stageDeparture } from './stageDeparture';
 import { stageWaypoint } from './stageWaypoint';
 import { stageConflict } from './stageConflict';
 import { DestinationType } from '../types';
-import { ScoreEvents, subscribeScore } from '../game/score/score.js';
+import {
+  getScore,
+  planeHandoffSuccess,
+  planeLandSuccess,
+  ScoreEvents,
+  subscribeScore,
+} from '../game/score/score.js';
 import { isVictory, publishSuccess } from '../game/victory';
 import { Airport } from '../airports/airports.js';
 
@@ -94,6 +100,20 @@ export const altitudeUpdatedFn = (altVal) =>
 export const planeSelectedFn = (state) => {
   objEventCB.isPlaneSelected = true;
   setGameLoopState(state)(true);
+};
+
+export const endTutorial = () => {
+  cancelTutorialLoop();
+  const score = getScore();
+
+  if (score.arrivals === 0) {
+    planeLandSuccess();
+  }
+
+  if (score.departures === 0) {
+    emptyTaxiQueue();
+    planeHandoffSuccess();
+  }
 };
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -341,9 +361,15 @@ const tutorial =
         const html =
           `Congratulations <b>Controller</b>, <br><br> Your training is complete and you are ready to direct real aircraft. Note the flightstrip countdown timer,<br>` +
           `indicating the time after which flights are considered delayed.<br><br>` +
-          `Please wait for the <b>Departures</b> and <b>Arrivals</b> goals to complete.<br>` +
+          `You can wait for the <b>Departures</b> and <b>Arrivals</b> goals to complete or press Done.<br>` +
           `Welcome to the Future Flight Ops system!`;
-        state.dialogBox = { top: 0.1, left: 0.1, width: 0.65, html };
+        state.dialogBox = {
+          top: 0.1,
+          left: 0.1,
+          width: 0.65,
+          html,
+          showBtn: true,
+        };
         state.focusObj.isScorePanelFocus = true;
       }, 1000);
 

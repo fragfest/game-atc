@@ -59,12 +59,13 @@
           <div
             v-if="msgPopupHtml"
             class="msg-popup layer-eight"
-            :class="screenSize"
+            :class="msgPopupClass"
             :style="msgPopupStyle"
           >
             <CyberBox :width="msgPopupWidth" type="dialog">
               <p v-html="msgPopupHtml"></p>
             </CyberBox>
+            <button @click="msgPopupClick"><h3>Done</h3></button>
           </div>
           <!-- msgPopup -->
 
@@ -271,7 +272,10 @@ import {
   setGameLoopState,
   setGameSpeed,
 } from '../js/game/game';
-import { setup as setupTutorial } from '../js/tutorial/gameTutorial';
+import {
+  endTutorial,
+  setup as setupTutorial,
+} from '../js/tutorial/gameTutorial';
 import { isArrival, isDeparture, isAircraft } from '../js/types';
 import {
   setupGameLoadAndExit,
@@ -333,6 +337,7 @@ const runwayIdleTimerNum = ref(0);
 let msgPopupTop = ref(0.4);
 let msgPopupLeft = ref(0.4);
 let msgPopupWidth = ref(0.4);
+const msgPopupShowBtn = ref(false);
 
 let updatedHeadingTutorial_hdgArg = null;
 let updatedAltitudeTutorial_altArg = null;
@@ -436,6 +441,15 @@ export default {
       opacity: backgroundOpacity.value,
     }),
 
+    msgPopupClass: () => {
+      const size = screenSize;
+      if (msgPopupShowBtn.value) {
+        return size + ' show-btn';
+      } else {
+        return size;
+      }
+    },
+
     msgPopupStyle: () => ({
       top: height * msgPopupTop.value + 'px',
       left: width * msgPopupLeft.value + 'px',
@@ -474,6 +488,10 @@ export default {
   },
 
   methods: {
+    msgPopupClick: function () {
+      endTutorial();
+    },
+
     compassFocus: function (isSet) {
       if (isSet) {
         controlPanel.setFocus();
@@ -591,7 +609,9 @@ export default {
       msgPopupLeft,
       msgPopupWidth,
       msgPopupHtmlQueue,
+      msgPopupShowBtn,
     };
+    msgPopup.msgPopupShowBtn.value = false;
     attachHtmlQueue(this, 'msgPopupHtml', msgPopupHtmlQueue);
 
     const tutorialEventArg = {
@@ -904,6 +924,20 @@ p {
     line-height: 1.1;
   }
 
+  button {
+    width: 50px;
+    border-radius: 4px;
+
+    h3 {
+      margin: 4px;
+      font-size: 10px;
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
   .line {
     margin-bottom: 3px;
   }
@@ -939,6 +973,22 @@ p {
 // small
 .msg-popup.small {
   font-size: 11px;
+
+  button {
+    left: 85%;
+    top: 60%;
+    width: 60px;
+    border-radius: 4px;
+
+    h3 {
+      margin: 4px;
+      font-size: 12px;
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
 
   p {
     padding: 6px 24px;
@@ -978,10 +1028,42 @@ p {
 }
 // END small
 
+.msg-popup.show-btn {
+  button {
+    display: block;
+  }
+}
 .msg-popup {
   position: absolute;
   color: white;
   font-size: 14px;
+
+  button {
+    display: none;
+    position: absolute;
+    left: 85%;
+    top: 60%;
+    width: 80px;
+
+    border-radius: 6px;
+    background-color: #144c77;
+    border: none;
+    box-shadow: 1px 1px 1px black;
+
+    h3 {
+      margin: 8px;
+      font-size: 16px;
+      color: white;
+    }
+
+    &:hover {
+      cursor: pointer;
+      background-color: #3978a9;
+    }
+    &:active {
+      box-shadow: none;
+    }
+  }
 
   p {
     padding: 10px 34px;

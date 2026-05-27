@@ -505,6 +505,8 @@ export default {
 
   methods: {
     scoreFormat: function (score) {
+      if (Number.isNaN(score)) return '0';
+
       let scoreNum = Math.round(Number(score));
       if (scoreNum === 0) return '0';
       if (scoreNum >= 10000) return '9,999+';

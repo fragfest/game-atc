@@ -34,12 +34,21 @@ export const subscribeVictory = (victoryEvent, cb) => {
 
 export const isDelayed = (level, delayCount) =>
   delayCount >= getGoalsByLevel()(level).Delayed;
+
 export const isDeparturesSuccess = (level, departuresCount) =>
   departuresCount >= getGoalsByLevel()(level).Departures;
+
 export const isArrivalsSuccess = (level, arrivalsCount) =>
   arrivalsCount >= getGoalsByLevel()(level).Arrivals;
-export const isFailedCondition = (level, failedCount) =>
-  failedCount >= getGoalsByLevel()(level).Failed;
+
+export const isFailedCondition = (level, failedCount) => {
+  const failedGoal = getGoalsByLevel()(level).Failed;
+  if (failedGoal === 0) {
+    return failedCount > failedGoal;
+  }
+  return failedCount >= failedGoal;
+};
+
 export const isConflictCondition = (level, conflictCount) =>
   conflictCount >= getGoalsByLevel()(level).Conflict;
 
@@ -104,10 +113,10 @@ export const getGoalsByLevel = () => {
       return {
         Arrivals: 1,
         Departures: 1,
-        Failed: 3,
-        Conflict: 999,
+        Failed: 0,
+        Conflict: 99,
         SpawnRate: 1,
-        Delayed: 4,
+        Delayed: 1,
       };
     }
 

@@ -214,12 +214,19 @@ export const tutorialUpdateEventCB = (
     focusObj.isScorePanelFocus = state?.focusObj?.isScorePanelFocus ?? false;
   }
 
-  const { msgPopupTop, msgPopupLeft, msgPopupWidth, msgPopupHtmlQueue } =
-    msgPopup;
+  const {
+    msgPopupTop,
+    msgPopupLeft,
+    msgPopupWidth,
+    msgPopupHtmlQueue,
+    msgPopupShowBtn,
+  } = msgPopup;
+
   if (state.dialogBox) {
     msgPopupTop.value = state.dialogBox.top;
     msgPopupLeft.value = state.dialogBox.left;
     msgPopupWidth.value = state.dialogBox.width;
+    msgPopupShowBtn.value = state.dialogBox.showBtn;
 
     if (state.dialogBox.html.length) {
       fillHtmlQueue(state.dialogBox.html, msgPopupHtmlQueue);
