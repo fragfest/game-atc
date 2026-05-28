@@ -48,7 +48,7 @@ export const stageWaypoint = (
         `<div class="line"> <span hidden class="checkmark check-2">&check;</span> <span class="cross check-2">&times;</span> <span class="text">Activate hold at waypoint (H)</span></div>`;
 
       addToGameFn();
-      state.dialogBox = { top: 0.04, left: 0.2, width: 0.62, html };
+      state.dialogBox = { top: 0.04, left: 0.2, width: 0.65, html };
     }, 1000);
   }
 

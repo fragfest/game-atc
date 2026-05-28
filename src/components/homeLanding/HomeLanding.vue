@@ -58,13 +58,11 @@
             <!-- column center -->
             <div class="button-start">
               <h3 v-if="isTutorial">
-                <span class="font-mono white">training</span>
+                <span class="hdr-white">training</span>
               </h3>
               <h3 v-else>
                 <span class="hdr-white">{{ city }} &nbsp;</span>
-                <span class="font-mono hdr-white">{{
-                  levelDisp(levelNext)
-                }}</span>
+                <span class="hdr-white">{{ levelDisp(levelNext) }}</span>
               </h3>
 
               <CyberBox class="cyber-box" :width="cyberBoxWidth" type="button">
@@ -396,10 +394,6 @@ export default {
   -webkit-text-fill-color: transparent;
 }
 
-.font-mono {
-  font-family: monospace;
-}
-
 .no-wrap {
   text-wrap: nowrap;
 }
@@ -602,7 +596,6 @@ export default {
 
 .grid-score-buttons .button-start button h2 {
   font-size: 34px;
-  font-family: monospace;
   margin-top: 0px;
   margin-bottom: 2px;
 

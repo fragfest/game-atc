@@ -666,7 +666,8 @@ export default {
   flex-direction: column;
   flex-wrap: wrap;
   align-items: flex-start;
-  font-family: monospace;
+  font-family: 'Orbitron';
+  letter-spacing: 1.2px;
   padding-top: 0px;
 
   .body {

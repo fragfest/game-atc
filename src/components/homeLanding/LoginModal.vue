@@ -190,7 +190,6 @@ export default {
   background-image: url('/public/img/teal-bckgnd.jpg');
 
   color: white;
-  font-family: monospace;
   cursor: default;
 }
 
@@ -210,6 +209,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  font-family: monospace;
 
   p {
     align-self: flex-start;
@@ -218,6 +218,7 @@ export default {
 
 .modal .body {
   width: 100%;
+  font-family: monospace;
 }
 
 .modal .footer {

@@ -17,7 +17,7 @@ export const showLevelIntro = (msgPopup, argOut, doneCB) => {
     fillHtmlQueue('<clear>', msgPopupHtmlQueue);
     setTimeout(() => {
       const levelStr = `LEVEL ${obj.levelNum}`;
-      const dialogBox = { top: 0.2, left: 0.2, width: obj.width, html: '' };
+      const dialogBox = { top: 0.2, left: 0.1, width: obj.width, html: '' };
       msgPopupTop.value = dialogBox.top;
       msgPopupLeft.value = dialogBox.left;
       msgPopupWidth.value = dialogBox.width;
@@ -82,7 +82,7 @@ export const getIntro = (gameLevel) => {
     if (debugSkipIntro) {
       return {
         displayTimeMs: 1000,
-        width: 0.72,
+        width: 0.8,
         levelNum: getAirportDispLevel(gameLevel),
         airportHeading: ``,
         airportSubheading: ``,
@@ -93,7 +93,7 @@ export const getIntro = (gameLevel) => {
     if (gameLevel === 1) {
       return {
         displayTimeMs: 20000,
-        width: 0.72,
+        width: 0.8,
         levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `London Heathrow (LHR)`,
         airportSubheading: `Westbound Operations - early morning, departures only`,
@@ -106,7 +106,7 @@ export const getIntro = (gameLevel) => {
     if (gameLevel === 2) {
       return {
         displayTimeMs: 18000,
-        width: 0.72,
+        width: 0.8,
         levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `London Heathrow (LHR)`,
         airportSubheading: `Westbound Operations - early morning, mostly arrivals`,
@@ -117,7 +117,7 @@ export const getIntro = (gameLevel) => {
     if (gameLevel === 3) {
       return {
         displayTimeMs: 16000,
-        width: 0.72,
+        width: 0.8,
         levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `London Heathrow (LHR)`,
         airportSubheading: `Westbound Operations - weather: clear`,
@@ -128,7 +128,7 @@ export const getIntro = (gameLevel) => {
     if (gameLevel === 4) {
       return {
         displayTimeMs: 16000,
-        width: 0.72,
+        width: 0.8,
         levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `London Heathrow (LHR)`,
         airportSubheading: `Westbound Operations - weather: clear`,
@@ -139,7 +139,7 @@ export const getIntro = (gameLevel) => {
     if (gameLevel === 5) {
       return {
         displayTimeMs: 16000,
-        width: 0.72,
+        width: 0.8,
         levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `London Heathrow (LHR)`,
         airportSubheading: `Westbound Operations - weather: moderate`,
@@ -150,7 +150,7 @@ export const getIntro = (gameLevel) => {
     if (gameLevel === 6) {
       return {
         displayTimeMs: 16000,
-        width: 0.72,
+        width: 0.8,
         levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `London Heathrow (LHR)`,
         airportSubheading: `Westbound Operations - weather: heavy`,
@@ -161,7 +161,7 @@ export const getIntro = (gameLevel) => {
     if (gameLevel === 7) {
       return {
         displayTimeMs: 20000,
-        width: 0.72,
+        width: 0.8,
         levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `New York International (JFK)`,
         airportSubheading: `Southbound Operations - weather: clear`,
@@ -172,7 +172,7 @@ export const getIntro = (gameLevel) => {
     if (gameLevel === 8) {
       return {
         displayTimeMs: 16000,
-        width: 0.72,
+        width: 0.8,
         levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `New York International (JFK)`,
         airportSubheading: `Southbound Operations - weather: clear`,
@@ -183,7 +183,7 @@ export const getIntro = (gameLevel) => {
     if (gameLevel === 9) {
       return {
         displayTimeMs: 16000,
-        width: 0.72,
+        width: 0.8,
         levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `New York International (JFK)`,
         airportSubheading: `Southbound Operations - weather: moderate`,
@@ -194,7 +194,7 @@ export const getIntro = (gameLevel) => {
     if (gameLevel === 10) {
       return {
         displayTimeMs: 16000,
-        width: 0.72,
+        width: 0.8,
         levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `New York International (JFK)`,
         airportSubheading: `Southbound Operations - weather: clear`,
@@ -205,7 +205,7 @@ export const getIntro = (gameLevel) => {
     if (gameLevel === 11) {
       return {
         displayTimeMs: 16000,
-        width: 0.72,
+        width: 0.8,
         levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `New York International (JFK)`,
         airportSubheading: `Southbound Operations - weather: heavy`,
@@ -216,7 +216,7 @@ export const getIntro = (gameLevel) => {
     if (gameLevel === 12) {
       return {
         displayTimeMs: 20000,
-        width: 0.72,
+        width: 0.8,
         levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `Tokyo Haneda (HND)`,
         airportSubheading: `South Wind Operations - weather: clear`,
@@ -227,7 +227,7 @@ export const getIntro = (gameLevel) => {
     if (gameLevel === 13) {
       return {
         displayTimeMs: 16000,
-        width: 0.72,
+        width: 0.8,
         levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `Tokyo Haneda (HND)`,
         airportSubheading: `South Wind Operations - weather: clear`,
@@ -238,7 +238,7 @@ export const getIntro = (gameLevel) => {
     if (gameLevel === 14) {
       return {
         displayTimeMs: 16000,
-        width: 0.72,
+        width: 0.8,
         levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `Tokyo Haneda (HND)`,
         airportSubheading: `South Wind Operations - weather: moderate`,
@@ -249,7 +249,7 @@ export const getIntro = (gameLevel) => {
     if (gameLevel === 15) {
       return {
         displayTimeMs: 16000,
-        width: 0.72,
+        width: 0.8,
         levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `Tokyo Haneda (HND)`,
         airportSubheading: `South Wind Operations - weather: clear`,
@@ -260,7 +260,7 @@ export const getIntro = (gameLevel) => {
     if (gameLevel === 16) {
       return {
         displayTimeMs: 16000,
-        width: 0.72,
+        width: 0.8,
         levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `Tokyo Haneda (HND)`,
         airportSubheading: `South Wind Operations - weather: severe`,
@@ -271,7 +271,7 @@ export const getIntro = (gameLevel) => {
     if (gameLevel === 17) {
       return {
         displayTimeMs: 20000,
-        width: 0.72,
+        width: 0.8,
         levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `Amsterdam Schiphol (AMS)`,
         airportSubheading: `Southbound Operations - weather: clear`,
@@ -282,7 +282,7 @@ export const getIntro = (gameLevel) => {
     if (gameLevel === 18) {
       return {
         displayTimeMs: 16000,
-        width: 0.72,
+        width: 0.8,
         levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `Amsterdam Schiphol (AMS)`,
         airportSubheading: `Southbound Operations - weather: clear`,
@@ -293,7 +293,7 @@ export const getIntro = (gameLevel) => {
     if (gameLevel === 19) {
       return {
         displayTimeMs: 16000,
-        width: 0.72,
+        width: 0.8,
         levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `Amsterdam Schiphol (AMS)`,
         airportSubheading: `Southbound Operations - weather: clear`,
@@ -304,7 +304,7 @@ export const getIntro = (gameLevel) => {
     if (gameLevel === 20) {
       return {
         displayTimeMs: 16000,
-        width: 0.72,
+        width: 0.8,
         levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `Amsterdam Schiphol (AMS)`,
         airportSubheading: `Southbound Operations - weather: minor`,
@@ -315,7 +315,7 @@ export const getIntro = (gameLevel) => {
     if (gameLevel === 21) {
       return {
         displayTimeMs: 16000,
-        width: 0.72,
+        width: 0.8,
         levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `Amsterdam Schiphol (AMS)`,
         airportSubheading: `Southbound Operations - weather: clear`,
@@ -326,7 +326,7 @@ export const getIntro = (gameLevel) => {
     if (gameLevel === 22) {
       return {
         displayTimeMs: 20000,
-        width: 0.72,
+        width: 0.8,
         levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `Vancouver International (YVR)`,
         airportSubheading: `West Wind Operations - weather: clear`,
@@ -337,7 +337,7 @@ export const getIntro = (gameLevel) => {
     if (gameLevel === 23) {
       return {
         displayTimeMs: 16000,
-        width: 0.72,
+        width: 0.8,
         levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `Vancouver International (YVR)`,
         airportSubheading: `West Wind Operations - weather: clear`,
@@ -348,7 +348,7 @@ export const getIntro = (gameLevel) => {
     if (gameLevel === 24) {
       return {
         displayTimeMs: 16000,
-        width: 0.72,
+        width: 0.8,
         levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `Vancouver International (YVR)`,
         airportSubheading: `West Wind Operations - weather: minor`,
@@ -359,7 +359,7 @@ export const getIntro = (gameLevel) => {
     if (gameLevel === 25) {
       return {
         displayTimeMs: 16000,
-        width: 0.72,
+        width: 0.8,
         levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `Vancouver International (YVR)`,
         airportSubheading: `West Wind Operations - weather: minor`,
@@ -370,7 +370,7 @@ export const getIntro = (gameLevel) => {
     if (gameLevel === 26) {
       return {
         displayTimeMs: 16000,
-        width: 0.72,
+        width: 0.8,
         levelNum: getAirportDispLevel(gameLevel),
         airportHeading: `Vancouver International (YVR)`,
         airportSubheading: `West Wind Operations - weather: severe`,

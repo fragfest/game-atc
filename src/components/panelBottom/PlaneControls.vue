@@ -252,6 +252,8 @@ export default {
       box-shadow: 2px 2px rgb(0, 84, 84);
 
       color: white;
+      font-family: 'Orbitron';
+      letter-spacing: 1px;
       font-size: 15px;
       font-weight: 600;
 

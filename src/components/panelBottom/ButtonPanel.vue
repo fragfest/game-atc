@@ -267,7 +267,7 @@ export default {
   }
 
   button.button-aircraft {
-    height: 20px;
+    height: 21px;
     width: 20px;
   }
 

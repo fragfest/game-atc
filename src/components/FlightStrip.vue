@@ -841,13 +841,16 @@ export default {
     top: 3px;
     left: 1px;
 
-    font: 7px Arial;
+    font-size: 7px;
+    font-family: Arial;
     .font-large {
       font-size: 8px;
+      font-family: Arial;
     }
 
     button {
-      font: 6px Arial;
+      font-size: 6px;
+      font-family: Arial;
       padding-top: 1px;
       padding-bottom: 1px;
       box-shadow: 1px 1px rgb(0, 84, 84);
@@ -935,13 +938,16 @@ export default {
     top: 11px;
     left: 4px;
 
-    font: 10px Arial;
+    font-family: Arial;
+    font-size: 10px;
     .font-large {
+      font-family: Arial;
       font-size: 11px;
     }
 
     button {
-      font: 11px Arial;
+      font-size: 11px;
+      font-family: Arial;
       padding-top: 1px;
       padding-bottom: 1px;
       box-shadow: 1px 1px rgb(0, 84, 84);
@@ -1032,16 +1038,17 @@ export default {
     left: 8px;
     height: 38px;
 
-    font: 11px Arial;
+    font-family: Arial;
+    font-size: 11px;
     color: white;
 
     .font-large {
+      font-family: Arial;
       font-size: 14px;
     }
 
     .taxi {
       padding: 12px;
-      font-family: Monospace;
     }
 
     .col {
@@ -1094,9 +1101,11 @@ export default {
       height: 100%;
       border: none;
       padding: 4px;
+
+      font-family: Arial;
       color: white;
+
       background-color: rgba(255, 255, 255, 0.2);
-      border: none;
       border-radius: 6px;
       box-shadow: 2px 2px rgb(0, 84, 84);
 

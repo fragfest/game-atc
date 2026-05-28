@@ -93,7 +93,7 @@
             </button>
           </div>
 
-          <h4 v-if="record.isNext" class="white shadow">start</h4>
+          <h4 v-if="record.isNext" class="white shadow start">start</h4>
           <p v-else-if="!record.isInactive && record.level" class="gold shadow">
             {{ scoreFormat(record?.historyScore?.scoreTotal || 0) }}
           </p>
@@ -415,6 +415,10 @@ export default {
     }
     h2 {
       font-size: 16px;
+    }
+
+    .start {
+      font-size: 12px;
     }
 
     .row {

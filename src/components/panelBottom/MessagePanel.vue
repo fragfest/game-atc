@@ -92,6 +92,7 @@ export default {
 
     color: white;
     font-size: 14px;
+    font-family: monospace;
 
     &:focus-visible {
       outline: none;

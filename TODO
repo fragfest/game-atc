@@ -4,9 +4,7 @@ Bugs:
   ☐ handle sound.js no user interaction exception from play(): make async function, each case call needs try-catch and await bla.play()
 
 Wishlist:
-  ☐ common cross-browser font
-  ☐ cognito login page style
-  
+  ☐ voice comms audio playback
   ☐ runway collisions
   ☐ custom play level
   ☐ change runways for arrivals & departures
@@ -37,6 +35,7 @@ v0.1.5:
     ✔ display name for player/leaderboard (instead of all-lowercase cognito username) @started(25-02-19 18:41) @done(25-02-23 11:50) @lasted(3d17h9m18s)
     
   Minor:
+    ✔ common cross-browser font @started(26-05-26 20:37) @done(26-05-27 21:47) @lasted(1d1h10m50s)
     ✔ tutorial improvements, done button @started(26-05-26 14:28) @done(26-05-26 19:06) @lasted(4h38m17s)
     ✔ allow starting any city any time @started(26-05-24 20:17) @done(26-05-26 00:32) @lasted(1d4h15m19s)
     ✔ future city placeholder @done(26-05-24 20:16)

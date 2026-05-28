@@ -71,7 +71,9 @@
         <span class="badge white b-btm-left-rad double-row">
           runway idle timer <small>seconds</small>
         </span>
-        <span class="badge badge-score white b-btm-right-rad double-row">
+        <span
+          class="badge badge-score white b-btm-right-rad double-row btm-pad"
+        >
           {{ runwayIdleDisplay }}
         </span>
       </div>
@@ -319,11 +321,14 @@ export default {
     width: 83%;
     padding: 6px 8px;
     background-color: darkslategrey;
-    font-family: Monospace;
   }
   .badge-score {
     width: 17%;
     text-align: right;
+    font-family: monospace;
+  }
+  .badge.btm-pad {
+    padding-bottom: 7px;
   }
 
   .white {

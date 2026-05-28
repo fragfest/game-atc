@@ -957,6 +957,7 @@ p {
   .cross {
     width: 7px;
     height: 8px;
+    padding-top: 1px;
     padding-bottom: 1px;
     padding-left: 2px;
     margin-right: 6px;
@@ -1015,6 +1016,7 @@ p {
   .cross {
     width: 11px;
     height: 11px;
+    padding-top: 2px;
     padding-bottom: 2px;
     padding-left: 3px;
     margin-right: 6px;
@@ -1037,6 +1039,7 @@ p {
   position: absolute;
   color: white;
   font-size: 14px;
+  font-family: 'Orbitron';
 
   button {
     display: none;
@@ -1068,6 +1071,7 @@ p {
   p {
     padding: 10px 34px;
     line-height: 1.2;
+    letter-spacing: 1.1px;
   }
   p:hover {
     cursor: default;
@@ -1092,6 +1096,9 @@ p {
     border-radius: 50%;
     border: 1px solid white;
     background-color: limegreen;
+
+    font-family: Arial;
+    font-size: 13px;
   }
 
   .cross {
@@ -1104,6 +1111,8 @@ p {
     border-radius: 50%;
     border: 1px solid white;
     background-color: red;
+
+    font-family: Arial;
     font-size: 16px;
     font-weight: bold;
   }

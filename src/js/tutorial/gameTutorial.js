@@ -225,7 +225,7 @@ const tutorial =
       const html =
         `Welcome <b>Trainee</b>, <br><br> Before directing real traffic we need you to qualify on the Future Flight Ops system.<br>` +
         ` Complete all the training scenarios so we feel safe letting you loose on the paying public. <br><br> Good Luck!`;
-      state.dialogBox = { top: 0.1, left: 0.1, width: 0.55, html };
+      state.dialogBox = { top: 0.1, left: 0.1, width: 0.67, html };
       completeStage(Stages.Intro);
       startTimeStageDeparture = elapsedTime;
       stage = Stages.Departure;
@@ -325,7 +325,7 @@ const tutorial =
     ) {
       const positionObj = {
         x: 0.05 * canvasObj.width,
-        y: canvasObj.height / 2.5,
+        y: canvasObj.height / 2,
         heading: '090',
         altitude: 6000,
         speed: 220,
@@ -366,7 +366,7 @@ const tutorial =
         state.dialogBox = {
           top: 0.1,
           left: 0.1,
-          width: 0.65,
+          width: 0.8,
           html,
           showBtn: true,
         };

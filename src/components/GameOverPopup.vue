@@ -17,12 +17,10 @@
 
     <div class="modal">
       <h1 class="title">
-        <div>
-          <span v-if="isSuccess" class="green">Success</span>
-          <span v-else class="red">Failed</span>
-          <span v-if="level"> level {{ level }}</span>
-          <span v-else> training level</span>
-        </div>
+        <div v-if="isSuccess" class="green">Success</div>
+        <div v-else class="red">Failed</div>
+        <div v-if="level">{{ city }} {{ dispLevel }}</div>
+        <div v-else>training level</div>
       </h1>
       <div class="content">
         <div class="item" :class="departuresTitleClass">departures</div>
@@ -174,6 +172,11 @@ import {
 } from '../js/game/score/badges';
 import CyberBox from './common/CyberBox.vue';
 import { getScores, isLoggedIn, sendHistory } from '../js/session/session';
+import {
+  getAirportByLevel,
+  getAirportDispLevel,
+  getCityByAirport,
+} from '../js/levels/getLevel';
 
 export default {
   components: {
@@ -260,6 +263,14 @@ export default {
 
     sizeClass: function () {
       return getClassSize(this.screenSize);
+    },
+
+    city: function () {
+      return getCityByAirport(getAirportByLevel(this.level));
+    },
+
+    dispLevel: function () {
+      return getAirportDispLevel(this.level);
     },
   },
 
@@ -630,7 +641,7 @@ export default {
   justify-content: space-around;
 
   width: 46%;
-  height: 760px;
+  height: 800px;
   min-width: 800px;
   max-width: 1200px;
 
@@ -645,7 +656,6 @@ export default {
   background-image: url('/public/img/teal-bckgnd.jpg');
 
   color: white;
-  font-family: monospace;
   cursor: default;
 }
 .popup.small .modal {
@@ -661,7 +671,9 @@ export default {
 
 .popup .modal .item {
   // background-color: black;
-  padding: 8px 4px;
+  padding: 8px 8px;
+  font-family: 'Orbitron';
+  letter-spacing: 1px;
 
   &.points {
     min-width: 75px;
@@ -685,10 +697,12 @@ export default {
 }
 
 .popup .modal .title {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
   height: 40px;
-  align-self: center;
-  text-align: center;
-  margin-bottom: 0;
+
+  font-size: 1.8em;
   text-shadow: 2px 2px black;
 }
 .popup.small .modal .title {
@@ -745,6 +759,7 @@ export default {
   h1,
   h2 {
     margin: 0;
+    font-size: 1.8em;
   }
 
   :hover {
@@ -793,7 +808,7 @@ export default {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 2%;
 }
 
 //////////////////////////////////////////////////////

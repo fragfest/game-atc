@@ -58,7 +58,7 @@ export const stageArrivalLand = (
         `<div class="line"> <span hidden class="checkmark check-3">&check;</span> <span class="cross check-3">&times;</span> <span class="text">When in range, click land (L)</span></div>`;
 
       addToGameFn();
-      state.dialogBox = { top: 0.04, left: 0.2, width: 0.68, html };
+      state.dialogBox = { top: 0.04, left: 0.1, width: 0.8, html };
     }, 1000);
   }
 

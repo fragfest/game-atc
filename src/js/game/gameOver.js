@@ -33,7 +33,7 @@ export const gameOver = (msgPopup, isSuccess) => {
   fillHtmlQueue('<clear>', msgPopupHtmlQueue);
 
   setTimeout(() => {
-    const dialogBox = { top: 0.1, left: 0.1, width: 0.45, html: '' };
+    const dialogBox = { top: 0.1, left: 0.1, width: 0.6, html: '' };
     msgPopupTop.value = dialogBox.top;
     msgPopupLeft.value = dialogBox.left;
     msgPopupWidth.value = dialogBox.width;

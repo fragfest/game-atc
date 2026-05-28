@@ -141,18 +141,19 @@ export default {
 }
 .queue-length {
   position: absolute;
-  margin-left: 12px;
+  align-self: center;
 
+  margin-left: 12px;
   padding-top: 2px;
   padding-left: 4px;
   padding-right: 4px;
-  background-color: #ffffff40;
   border-radius: 8px;
 
-  align-self: center;
+  font-family: arial;
   font-size: 18px;
   font-weight: 500;
   color: white;
+  background-color: #ffffff40;
 }
 
 .queue {

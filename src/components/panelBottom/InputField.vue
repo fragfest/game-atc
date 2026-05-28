@@ -59,8 +59,8 @@ export default {
 label {
   margin-bottom: 4px;
   font-size: 14px;
-  font-family: sans-serif;
   font-weight: 600;
+  font-family: 'Orbitron';
   color: white;
   &.heading {
     margin-left: 12px;
@@ -83,7 +83,7 @@ input {
 
   cursor: pointer;
   font-size: 20px;
-  font-family: sans-serif;
+  font-family: Arial;
   font-weight: 600;
   background-color: lightgreen;
   color: darkslategrey;
@@ -97,7 +97,7 @@ input {
 
 .small {
   label {
-    font-size: 12px;
+    font-size: 11px;
   }
 
   input {

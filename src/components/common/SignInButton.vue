@@ -286,8 +286,8 @@ export default {
 
     .cross {
       margin: 0;
-      margin-left: 2px;
-      font-size: 34px;
+      margin-left: 3px;
+      font-size: 32px;
 
       @media (max-width: 1000px) {
         font-size: 24px;
