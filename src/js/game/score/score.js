@@ -4,17 +4,17 @@ import { historyRecordDebug } from '../../utils';
 ////////////////////////////////////////////////////////////////////////
 // NOTE just importing score.secure fails tests for some strange reason
 ////////////////////////////////////////////////////////////////////////
-// import {
-//   getScoreBasicSecure,
-//   getScoreSecure,
-//   setScoreSecure,
-//   getHistorySecure,
-//   setHistorySecure,
-//   getHistoryJwt,
-//   getBadgesArrSecure,
-//   setBadgesArrSecure,
-//   getBadgesJwt,
-// } from './score.secure';
+import {
+  getScoreBasicSecure,
+  getScoreSecure,
+  setScoreSecure,
+  getHistorySecure,
+  setHistorySecure,
+  getHistoryJwt,
+  getBadgesArrSecure,
+  setBadgesArrSecure,
+  getBadgesJwt,
+} from './score.secure';
 
 let debugUseSecure = false;
 export const setDebugUnitTests = () => (debugUseSecure = false);
