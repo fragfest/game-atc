@@ -103,7 +103,7 @@
       <div v-if="airportTotal">
         <hr />
         <div class="row">
-          <h4>score</h4>
+          <h4 class="start">score</h4>
           <p class="gold shadow">{{ airportTotal }}</p>
         </div>
       </div>

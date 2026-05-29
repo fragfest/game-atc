@@ -21,7 +21,7 @@ v1.2.0:
     ☐ Medium: Safari: Badges (Pushing Tin) low-res when svg zoomed in (Firefox is fine)
     ☐ Minor: Leaderboard when not logged in "your rank" shows and has value: NaN
     ☐ Minor: Safari: Leaderboard "you rank" displayed as 2 lines instead of 1, when "create username to view is displayed"
-    ☐ HomeLanding very-small: airport history score total font too large
+    ✔ HomeLanding very-small: airport history score total font too large @started(26-05-28 23:17) @done(26-05-28 23:28) @lasted(11m8s)
     ✔ Major: Firefox, Safari: The pause svg does not fully collapse @done(26-05-28 23:16)
     ✔ Major: badge achievement not pushed to server on GameOverPopup @started(26-05-28 22:06) @done(26-05-28 23:07) @lasted(1h1m44s)
 
@@ -151,3 +151,5 @@ v0.1.2:
     ✔ Sound Plane Select (basic) @done(24-01-26 21:43)
     ✔ Sound background tower @done(24-01-27 19:45)      
     ✔ Highlight success and failures with pule on map @started(24-01-31 07:22) @done(24-01-31 13:39) @lasted(6h17m58s)
+
+Archive:
