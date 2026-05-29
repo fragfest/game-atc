@@ -23,19 +23,22 @@
       </div>
       <div
         v-else-if="isLeaderboard && (isEdit || !username)"
-        class="btn-class gap-14"
+        class="btn-class username-create"
       >
-        <h3 v-if="!username" class="hdr-white">create username to view</h3>
-        <input
-          ref="signinBtnEdit"
-          type="text"
-          maxlength="30"
-          autocomplete="off"
-          @keydown.enter="editSet"
-          v-model="editUsername"
-          class="edit-input"
-        />
-
+        <div v-if="!username" class="instruction">
+          <h3 class="hdr-white">create username to view</h3>
+        </div>
+        <div>
+          <input
+            ref="signinBtnEdit"
+            class="edit-input"
+            type="text"
+            maxlength="30"
+            autocomplete="off"
+            @keydown.enter="editSet"
+            v-model="editUsername"
+          />
+        </div>
         <div class="edit-icon-container">
           <button @click="editSet" class="edit-icon">
             <h2 class="green checkmark">&check;</h2>
@@ -124,10 +127,6 @@ export default {
   h3,
   p {
     color: white;
-  }
-
-  .gap-14 {
-    gap: 14px;
   }
 
   .green {
@@ -241,7 +240,6 @@ export default {
 
   .edit-btn {
     width: 60px;
-    height: 80%;
     padding: 0;
 
     h2 {
@@ -253,13 +251,30 @@ export default {
 
       @media (max-width: 1000px) {
         font-size: 18px;
-        margin-bottom: 8px;
+        margin-bottom: 1px;
       }
 
       @media (max-width: 500px) {
-        margin-bottom: 0px;
+        margin-bottom: 1px;
       }
     }
+  }
+}
+// END btn-class
+
+// username-create
+.signin-btn .btn-class.username-create {
+  gap: 14px;
+
+  @media (max-width: 500px) {
+    flex-direction: column;
+    width: 100%;
+    padding-bottom: 12px;
+  }
+
+  .instruction {
+    min-width: 310px;
+    text-align: center;
   }
 
   .edit-icon-container {
@@ -326,5 +341,5 @@ export default {
     }
   }
 }
-// END btn-class
+// END username-create
 </style>

@@ -19,9 +19,9 @@
           @update="signInUpdate"
         ></SignInButton>
 
-        <div class="body-right">
+        <div v-if="isLoggedIn && username" class="body-right">
           <ToolTip>
-            <div v-if="isLoggedIn" class="login-btn player-btn">
+            <div class="login-btn player-btn">
               <button @click="goToPlayer" :disabled="showSpinner">
                 <SearchIcon
                   v-if="!showGotoSpinner"
@@ -321,6 +321,7 @@ export default {
 
     leaderboardDispArr: function () {
       if (!this.isLoggedIn) return [];
+      if (!this.username) return [];
       return this.leaderboardArr.filter((val, index) => index < scoresPerPage);
     },
   },
