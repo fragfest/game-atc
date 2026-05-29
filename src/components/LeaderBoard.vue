@@ -43,18 +43,26 @@
           </ToolTip>
 
           <div class="user-rank">
-            <h2 class="hdr-white">your rank:</h2>
-            <h2 class="hdr-green">{{ userRank }}</h2>
+            <div class="user-text">
+              <h3 class="hdr-white">your rank:</h3>
+            </div>
+            <div class="user-num">
+              <h3 class="hdr-green">{{ scoreFormat(userRank) }}</h3>
+            </div>
           </div>
         </div>
       </section>
 
+      <!-- scores -->
       <div v-if="leaderboardDispArr.length" class="scores">
         <div class="scores-header">
-          <h2 class="hdr-white"></h2>
           <div class="labels-right">
-            <h2 class="hdr-white">achievements</h2>
-            <h2 class="w-col hdr-white">score</h2>
+            <div>
+              <h2 class="hdr-white">achievements</h2>
+            </div>
+            <div class="w-col">
+              <h2 class="hdr-white">score</h2>
+            </div>
           </div>
         </div>
 
@@ -65,15 +73,17 @@
           :class="scoreItemClass(item)"
         >
           <div class="score-user">
-            <h3 class="hdr-green">{{ item?.rank || '' }}</h3>
-            <h2 :class="scoreHeaderClass(item)">
-              <span v-if="isLocalPlayerItem(item)">
+            <div class="score-rank w-col">
+              <h3 class="hdr-green">{{ scoreFormat(item?.rank) }}</h3>
+            </div>
+            <div class="score-name" :class="scoreHeaderClass(item)">
+              <h2 v-if="isLocalPlayerItem(item)">
                 {{ textFormat(username) }}
-              </span>
-              <span v-else>
+              </h2>
+              <h2 v-else>
                 {{ textFormat(item?.username) }}
-              </span>
-            </h2>
+              </h2>
+            </div>
           </div>
           <div class="score-content">
             <BadgesDisplay
@@ -87,11 +97,15 @@
               :mayDay="hasMayDay(item)"
               :mayDayLevel="getBadgeLevelMayDay(item)"
             />
-            <h2 class="w-col hdr-green">{{ scoreFormat(item?.score) }}</h2>
+            <div class="w-col">
+              <h2 class="hdr-green">{{ scoreFormat(item?.score) }}</h2>
+            </div>
           </div>
         </div>
       </div>
+      <!-- END scores -->
     </div>
+    <!-- END body -->
 
     <!-- footer -->
     <div class="footer">
@@ -515,14 +529,66 @@ export default {
 
 <style lang="scss" scoped>
 h1 {
-  font-size: 40px;
-}
-h2 {
   font-size: 32px;
+
+  @media (max-width: 1000px) {
+    font-size: 24px;
+  }
+
+  @media (max-width: 500px) {
+    font-size: 20px;
+    margin-left: 60px;
+  }
+}
+
+h2 {
+  font-size: 26px;
+  margin: 22px 0;
+
+  @media (max-width: 1400px) {
+    font-size: 20px;
+    margin: 8px 0px;
+  }
+
+  @media (max-width: 1000px) {
+    font-size: 20px;
+    margin: 8px 0px;
+  }
+
+  @media (max-width: 500px) {
+    font-size: 18px;
+    margin: 8px 0px;
+  }
+}
+
+h3 {
+  font-size: 22px;
+  margin: 12px;
+
+  @media (max-width: 1400px) {
+    font-size: 16px;
+  }
+
+  @media (max-width: 1000px) {
+    font-size: 16px;
+  }
+
+  @media (max-width: 500px) {
+    font-size: 14px;
+    margin: 8px;
+  }
 }
 
 .w-col {
-  width: 120px;
+  min-width: 130px;
+
+  @media (max-width: 1000px) {
+    min-width: 110px;
+  }
+
+  @media (max-width: 500px) {
+    min-width: 100px;
+  }
 }
 
 .blue {
@@ -565,14 +631,6 @@ h2 {
       margin: 8px;
     }
 
-    @media (max-width: 1000px) {
-      justify-content: flex-end;
-      h1 {
-        margin-right: 10%;
-        font-size: 26px;
-      }
-    }
-
     .header-back {
       position: absolute;
       left: 0;
@@ -601,7 +659,7 @@ h2 {
     max-width: 1800px;
     margin: 1% 12%;
 
-    @media (max-width: 1000px) {
+    @media (max-width: 1300px) {
       margin: 2% 4%;
     }
   }
@@ -617,39 +675,33 @@ h2 {
   section.body-top .body-right {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     gap: 18px;
+    min-width: 400px;
 
     @media (max-width: 1000px) {
+      min-width: 360px;
       width: 100%;
     }
   }
 
   section.body-top .body-right .user-rank {
     display: flex;
-    flex-wrap: wrap;
     justify-content: space-between;
-    word-break: break-all;
 
-    width: 260px;
-    padding: 0 15px;
+    padding: 0 2%;
     border-radius: 6px;
     outline: 1px solid lightgrey;
     background-color: #2c5c81;
 
-    h2 {
-      margin: 14px;
-      font-size: 26px;
+    .user-text {
+      width: 60%;
+      width: fit-content;
     }
 
-    @media (max-width: 1000px) {
-      justify-content: center;
-      width: 50%;
-
-      h2 {
-        margin: 8px;
-        font-size: 22px;
-      }
+    .user-num {
+      width: 40%;
+      width: fit-content;
     }
   }
 
@@ -667,40 +719,37 @@ h2 {
   .scores .scores-header {
     display: flex;
     justify-content: flex-end;
+    padding: 0% 2%;
 
-    padding: 0% 4%;
     border-radius: 6px;
     background-color: #19354a;
     border: 1px solid lightgrey;
 
-    h2 {
-      margin: 26px 4px;
+    @media (max-width: 500px) {
+      padding: 0% 5%;
     }
 
     .labels-right {
       display: flex;
-      justify-content: space-between;
-      column-gap: 24px;
+      justify-content: flex-end;
+      column-gap: 36px;
+      min-width: 50%;
       text-align: right;
 
-      @media (max-width: 1000px) {
-        column-gap: 0;
-        h2 {
-          margin: 8px 4px;
-          font-size: 24px;
-        }
+      @media (max-width: 500px) {
+        justify-content: space-between;
+        width: 100%;
       }
     }
   }
 
   .scores .scores-row {
     display: flex;
-    flex-wrap: wrap;
-    word-break: break-all;
     justify-content: space-between;
     align-items: center;
+    word-break: break-all;
 
-    padding: 0% 4%;
+    padding: 0% 2%;
     border-radius: 6px;
     background-color: #2c5c81;
 
@@ -709,41 +758,43 @@ h2 {
     }
 
     @media (max-width: 1000px) {
-      padding-left: 8px;
-      h2 {
-        font-size: 22px;
-      }
+      flex-direction: column;
     }
 
     .score-user {
+      width: 70%;
       display: flex;
-      flex-wrap: wrap;
-      word-break: break-all;
       align-items: center;
-      gap: 22px;
 
-      h2 {
-        font-weight: 500;
+      @media (max-width: 1000px) {
+        width: 100%;
       }
-      h3 {
-        margin: 0px;
-        font-size: 22px;
+
+      .score-rank {
+        margin-right: 1%;
+      }
+      .score-name {
+        width: 70%;
+
+        @media (max-width: 1600px) {
+          width: 58%;
+        }
+        @media (max-width: 1200px) {
+          width: 40%;
+        }
       }
     }
 
     .score-content {
+      width: 30%;
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
       align-items: center;
       column-gap: 24px;
       text-align: right;
 
-      h2 {
-        font-weight: 500;
-      }
-
       @media (max-width: 1000px) {
-        column-gap: 0;
+        width: 100%;
       }
     }
 
@@ -863,18 +914,27 @@ h2 {
     padding-right: 10px;
     padding-top: 12px;
     padding-bottom: 8px;
+
+    @media (max-width: 500px) {
+      height: 15px;
+      padding-left: 6px;
+      padding-right: 5px;
+      padding-top: 6px;
+      padding-bottom: 4px;
+    }
   }
+
   .login-btn .goto-spinner {
     padding: 10px;
     height: 16px;
   }
-
   // END login-btn
 
   .tooltip {
     color: lightgreen;
     h2 {
       font-size: 18px;
+      margin: 4px 8px;
     }
     p {
       font-size: 14px;

@@ -14,8 +14,9 @@ Wishlist:
   ☐ leaderboard search by username
   ☐ federated cognito login
   
-v0.1.5:
+v0.2.0:
   Bugs:
+    ✔ new font leaderboard styling @started(26-05-28 13:12) @done(26-05-28 20:02) @lasted(6h50m17s)
     ✔ firefox: badges not aligned but being displayed stacked on top of each other @done(26-04-30 04:36)
     ✔ game over: clouds not freezing @started(26-04-29 02:36) @done(26-04-29 04:14) @lasted(1h38m6s)
     ✔ anti-cheat crash: mayday spawn score.secure @started(26-04-29 03:38) @done(26-04-29 03:38) @lasted(19s)

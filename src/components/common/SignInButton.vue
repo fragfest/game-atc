@@ -159,7 +159,6 @@ export default {
 // btn-class
 .signin-btn .btn-class {
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   column-gap: 12px;
@@ -244,6 +243,7 @@ export default {
     width: 60px;
     height: 80%;
     padding: 0;
+
     h2 {
       margin: 0;
 
@@ -253,6 +253,11 @@ export default {
 
       @media (max-width: 1000px) {
         font-size: 18px;
+        margin-bottom: 8px;
+      }
+
+      @media (max-width: 500px) {
+        margin-bottom: 0px;
       }
     }
   }
