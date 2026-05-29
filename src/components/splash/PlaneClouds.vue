@@ -1002,7 +1002,7 @@ export default {
         transform: scale(0);
       }
       50% {
-        transform: scale(0.95);
+        transform: scale(0.9);
       }
       100% {
         transform: scale(1);
@@ -1018,8 +1018,12 @@ export default {
       0% {
         transform: scale(1);
       }
+      50% {
+        transform: scale(0.1);
+        display: none;
+      }
       100% {
-        transform: scale(0.4);
+        transform: scale(0);
         display: none;
       }
     }

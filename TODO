@@ -18,11 +18,11 @@ Wishlist:
   
 v1.2.0:
   Bugs:
-    ☐ Major: Firefox, Safari: start AMS and pause game. The pause svg does not fully disappear
     ☐ Medium: Safari: Badges (Pushing Tin) low-res when svg zoomed in (Firefox is fine)
     ☐ Minor: Leaderboard when not logged in "your rank" shows and has value: NaN
     ☐ Minor: Safari: Leaderboard "you rank" displayed as 2 lines instead of 1, when "create username to view is displayed"
     ☐ HomeLanding very-small: airport history score total font too large
+    ✔ Major: Firefox, Safari: The pause svg does not fully collapse @done(26-05-28 23:16)
     ✔ Major: badge achievement not pushed to server on GameOverPopup @started(26-05-28 22:06) @done(26-05-28 23:07) @lasted(1h1m44s)
 
 v0.2.0:
