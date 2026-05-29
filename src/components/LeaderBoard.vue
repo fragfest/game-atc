@@ -315,7 +315,7 @@ export default {
     userRank: function () {
       const hasUser = isUserIdInKey(this.userId);
       const index = this.leaderboardKeys.findIndex(hasUser);
-      if (index === -1) return '-';
+      if (index === -1) return null;
       return index + 1;
     },
 
@@ -490,6 +490,7 @@ export default {
     },
 
     scoreFormat: function (score) {
+      if (score === null) return '-';
       if (!score) return 0;
       if (score > 99999) return '99,999+';
       return Number(score).toLocaleString('en-CA');
