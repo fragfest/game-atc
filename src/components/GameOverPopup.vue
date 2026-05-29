@@ -410,9 +410,10 @@ export default {
     // newBadgeAchieved forEach
     newBadgeAchieved.forEach((badgeType, index) => {
       if (badgeType === BadgesTypes.BlueSky) {
+        resetBadgeHistory();
+        setBadgeBlueSky(this.blueSkyLevel);
+
         setTimeout(() => {
-          resetBadgeHistory();
-          setBadgeBlueSky(this.blueSkyLevel);
           play(SoundType.Ding);
 
           this.isNewBlueSky = true;
@@ -434,9 +435,10 @@ export default {
       }
 
       if (badgeType === BadgesTypes.PushingTin) {
+        resetBadgeHistory();
+        setBadgePushingTin(this.pushingTinLevel);
+
         setTimeout(() => {
-          resetBadgeHistory();
-          setBadgePushingTin(this.pushingTinLevel);
           play(SoundType.Ding);
 
           this.isNewBlueSky = false;
@@ -458,9 +460,10 @@ export default {
       }
 
       if (badgeType === BadgesTypes.MayDay) {
+        resetBadgeHistory();
+        setBadgeMayDay(this.maydayLevel);
+
         setTimeout(() => {
-          resetBadgeHistory();
-          setBadgeMayDay(this.maydayLevel);
           play(SoundType.Ding);
 
           this.isNewBlueSky = false;

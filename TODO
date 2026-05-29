@@ -1,9 +1,10 @@
 Bugs:
-  ☐ Safari minor: HomeLanding title animation artifact
   ☐ mute icon shows when sound not muted (need steps)
   ☐ handle sound.js no user interaction exception from play(): make async function, each case call needs try-catch and await bla.play()
 
 Wishlist:
+  ☐ update flights
+
   ☐ voice comms audio playback
   ☐ runway collisions
   ☐ custom play level
@@ -13,7 +14,17 @@ Wishlist:
   ☐ dangerous weather mechanic (wind shear)
   ☐ leaderboard search by username
   ☐ federated cognito login
+  ☐ federated cognito login
   
+v1.2.0:
+  Bugs:
+    ☐ Major: Firefox, Safari: start AMS and pause game. The pause svg does not fully disappear
+    ☐ Medium: Safari: Badges (Pushing Tin) low-res when svg zoomed in (Firefox is fine)
+    ☐ Minor: Leaderboard when not logged in "your rank" shows and has value: NaN
+    ☐ Minor: Safari: Leaderboard "you rank" displayed as 2 lines instead of 1, when "create username to view is displayed"
+    ☐ HomeLanding very-small: airport history score total font too large
+    ✔ Major: badge achievement not pushed to server on GameOverPopup @started(26-05-28 22:06) @done(26-05-28 23:07) @lasted(1h1m44s)
+
 v0.2.0:
   Bugs:
     ✔ new font leaderboard styling @started(26-05-28 13:12) @done(26-05-28 20:02) @lasted(6h50m17s)
