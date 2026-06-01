@@ -49,7 +49,7 @@
           </span>
         </div>
         <div class="row">
-          <b>set speed (spd)</b><span> enter 3 digits 180-450, hit enter</span>
+          <b>set speed (spd)</b><span> enter 3 digits 180-350, hit enter</span>
         </div>
         <div class="row">
           <b>take off</b><span> click button. Shortcut 'T' key</span>

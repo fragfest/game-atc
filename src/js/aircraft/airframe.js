@@ -77,7 +77,7 @@ const basePerformance = {
   speedTakeoff: 150,
   speedMin: 180,
   speedLanding: 130,
-  speedMax: 450,
+  speedMax: 350,
   speedDeltaPerMs: 2,
   speedRatePerMs: 0.012,
   altitudeRatePerMs: 0.04,

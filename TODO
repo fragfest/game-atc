@@ -19,8 +19,18 @@ Wishlist:
   ☐ leaderboard search by username
   ☐ federated cognito login
 
-v1.2.1:
+v1.2.2:
   Bugs:
+
+  Major:
+
+  Minor:
+
+v1.2.1:
+  Minor:
+    ✔ reduced IdleTimer times @done(26-05-31 20:14)
+    ✔ max speed 350 @done(26-05-31 20:14)
+    ✔ meta tag description @done(26-05-30 11:25)
 
 v1.2.0:
   Bugs:

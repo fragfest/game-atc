@@ -161,7 +161,7 @@ export const getGoalsByLevel = () => {
         Conflict: 60,
         SpawnRate: 2,
         Delayed: 5,
-        IdleTimer: 300,
+        IdleTimer: 240,
       };
     }
 
@@ -173,7 +173,7 @@ export const getGoalsByLevel = () => {
         Conflict: 30,
         SpawnRate: 1.5,
         Delayed: 4,
-        IdleTimer: 300,
+        IdleTimer: 180,
       };
     }
 
@@ -185,7 +185,7 @@ export const getGoalsByLevel = () => {
         Conflict: 30,
         SpawnRate: 1.5,
         Delayed: 3,
-        IdleTimer: 360,
+        IdleTimer: 180,
       };
     }
 
@@ -209,7 +209,7 @@ export const getGoalsByLevel = () => {
         Conflict: 30,
         SpawnRate: 2,
         Delayed: 3,
-        IdleTimer: 300,
+        IdleTimer: 180,
       };
     }
 
@@ -232,7 +232,7 @@ export const getGoalsByLevel = () => {
         Conflict: 30,
         SpawnRate: 1.2,
         Delayed: 3,
-        IdleTimer: 240,
+        IdleTimer: 180,
       };
     }
 
@@ -279,7 +279,7 @@ export const getGoalsByLevel = () => {
         Conflict: 30,
         SpawnRate: 1.5,
         Delayed: 3,
-        IdleTimer: 240,
+        IdleTimer: 180,
       };
     }
 
@@ -325,7 +325,7 @@ export const getGoalsByLevel = () => {
         Conflict: 30,
         SpawnRate: 1.2,
         Delayed: 3,
-        IdleTimer: 240,
+        IdleTimer: 180,
       };
     }
 
@@ -337,7 +337,7 @@ export const getGoalsByLevel = () => {
         Conflict: 30,
         SpawnRate: 1.2,
         Delayed: 3,
-        IdleTimer: 180,
+        IdleTimer: 120,
       };
     }
 
@@ -384,7 +384,7 @@ export const getGoalsByLevel = () => {
         Conflict: 30,
         SpawnRate: 1.5,
         Delayed: 2,
-        IdleTimer: 300,
+        IdleTimer: 240,
       };
     }
 
@@ -396,7 +396,7 @@ export const getGoalsByLevel = () => {
         Conflict: 30,
         SpawnRate: 1.5,
         Delayed: 2,
-        IdleTimer: 240,
+        IdleTimer: 180,
       };
     }
 
