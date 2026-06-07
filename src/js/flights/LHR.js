@@ -10,7 +10,7 @@ export const flightsArrival = [
     airport: 'ACC',
     airlineCode: 'BA',
     airline: 'British Airways',
-    airframe: Airframes.B78X,
+    airframe: Airframes.A35K,
   },
   {
     type: DestinationType.Arrival,
@@ -20,7 +20,7 @@ export const flightsArrival = [
     airport: 'DFW',
     airlineCode: 'AA',
     airline: 'American Airlines',
-    airframe: Airframes.B77W,
+    airframe: Airframes.B789,
   },
   {
     type: DestinationType.Arrival,
@@ -70,7 +70,7 @@ export const flightsArrival = [
     airport: 'NCL',
     airlineCode: 'BA',
     airline: 'British Airways',
-    airframe: Airframes.A319,
+    airframe: Airframes.A320,
   },
   {
     type: DestinationType.Arrival,
@@ -80,7 +80,7 @@ export const flightsArrival = [
     airport: 'JNB',
     airlineCode: 'BA',
     airline: 'British Airways',
-    airframe: Airframes.B77W,
+    airframe: Airframes.A388,
   },
   {
     type: DestinationType.Arrival,
@@ -90,7 +90,7 @@ export const flightsArrival = [
     airport: 'GLA',
     airlineCode: 'BA',
     airline: 'British Airways',
-    airframe: Airframes.A319,
+    airframe: Airframes.A320,
   },
   {
     type: DestinationType.Arrival,
@@ -140,7 +140,7 @@ export const flightsArrival = [
     airport: 'MAN',
     airlineCode: 'BA',
     airline: 'British Airways',
-    airframe: Airframes.A320,
+    airframe: Airframes.A321,
   },
 ];
 
@@ -153,7 +153,7 @@ export const flightsDeparture = [
     airport: 'JFK',
     airlineCode: 'VS',
     airline: 'Virgin Atlantic',
-    airframe: Airframes.A333,
+    airframe: Airframes.A35K,
   },
   {
     type: DestinationType.Departure,
@@ -163,7 +163,7 @@ export const flightsDeparture = [
     airport: 'EDI',
     airlineCode: 'BA',
     airline: 'British Airways',
-    airframe: Airframes.A319,
+    airframe: Airframes.A321,
   },
   {
     type: DestinationType.Departure,
@@ -183,7 +183,7 @@ export const flightsDeparture = [
     airport: 'BCN',
     airlineCode: 'BA',
     airline: 'British Airways',
-    airframe: Airframes.A320,
+    airframe: Airframes.A319,
   },
   {
     type: DestinationType.Departure,
@@ -243,7 +243,7 @@ export const flightsDeparture = [
     airport: 'GLA',
     airlineCode: 'BA',
     airline: 'British Airways',
-    airframe: Airframes.A319,
+    airframe: Airframes.A320,
   },
   {
     type: DestinationType.Departure,
@@ -253,7 +253,7 @@ export const flightsDeparture = [
     airport: 'BOM',
     airlineCode: 'BA',
     airline: 'British Airways',
-    airframe: Airframes.B77W,
+    airframe: Airframes.B789,
   },
   {
     type: DestinationType.Departure,
@@ -263,7 +263,7 @@ export const flightsDeparture = [
     airport: 'JFK',
     airlineCode: 'BA',
     airline: 'British Airways',
-    airframe: Airframes.B77W,
+    airframe: Airframes.B772,
   },
   {
     type: DestinationType.Departure,
@@ -273,7 +273,7 @@ export const flightsDeparture = [
     airport: 'AMS',
     airlineCode: 'BA',
     airline: 'British Airways',
-    airframe: Airframes.B738,
+    airframe: Airframes.A320,
   },
   {
     type: DestinationType.Departure,
@@ -283,6 +283,6 @@ export const flightsDeparture = [
     airport: 'FCO',
     airlineCode: 'BA',
     airline: 'British Airways',
-    airframe: Airframes.A320,
+    airframe: Airframes.A321,
   },
 ];
