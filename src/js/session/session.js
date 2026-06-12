@@ -35,6 +35,7 @@ if (process.env.NODE_ENV === 'production') {
  */
 export const startLogin = async () => {
   localStorage.setItem('show-splash', 'no');
+
   const userManager = new UserManager(config);
   await userManager.signinRedirect();
 };
@@ -61,17 +62,21 @@ export const isLoggedIn = async () => {
 export const logout = () => {
   const key = `oidc.user:${config.authority}:${config.client_id}`;
   localStorage.removeItem(key);
+
+  signOutRedirect();
 };
 
-// async function signOutRedirect() {
-//   const clientId = '8fhopbpd0l3bjidn4infu0bcn';
-//   const logoutUri = 'http://localhost:8080/';
-//   const cognitoDomain =
-//     'https://us-west-1i2olrzd6b.auth.us-west-1.amazoncognito.com';
-//   window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(
-//     logoutUri
-//   )}`;
-// }
+async function signOutRedirect() {
+  localStorage.setItem('show-splash', 'no');
+
+  const clientId = '8fhopbpd0l3bjidn4infu0bcn';
+  const logoutUri = 'http://localhost:8080/';
+  const cognitoDomain =
+    'https://us-west-1i2olrzd6b.auth.us-west-1.amazoncognito.com';
+  window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(
+    logoutUri
+  )}`;
+}
 
 /**
  * check url contains post AWS cognito login redirect params
@@ -80,21 +85,26 @@ export const logout = () => {
  */
 export const loginUsingCallbackUrl = async (url) => {
   const userManager = new UserManager(config);
-  const session = await userManager.signinCallback(url).catch(() => {
+  const user = await userManager.signinCallback(url).catch(() => {
     return null;
   });
-  if (!session) return false;
+  if (!user) return false;
 
   return true;
 };
 
-export const getUserId = () => {
-  const key = `oidc.user:${config.authority}:${config.client_id}`;
-  const storage = localStorage.getItem(key);
-  if (!storage) return '';
+export const setUserId = (userId) => {
+  if (!userId) return;
+  localStorage.setItem('user-id', userId);
+};
 
-  const session = JSON.parse(storage);
-  return session.profile.sub;
+export const getUserId = () => {
+  const userId = localStorage.getItem('user-id');
+  if (userId) return userId;
+
+  const userIdLogin = getUserIdFromToken();
+  localStorage.setItem('user-id', userIdLogin);
+  return userIdLogin;
 };
 
 export const getClientId = () => {
@@ -116,13 +126,25 @@ export const setUsername = (str) => {
   localStorage.setItem('username', str);
 };
 
-export const getAccessToken = () => {
+const getOIDCtoken = () => {
   const key = `oidc.user:${config.authority}:${config.client_id}`;
   const storage = localStorage.getItem(key);
-  if (!storage) return '';
+  try {
+    const user = JSON.parse(storage);
+    return user || '';
+  } catch (err) {
+    return '';
+  }
+};
 
-  const session = JSON.parse(storage);
-  return session.access_token;
+export const getAccessToken = () => {
+  const user = getOIDCtoken();
+  return user?.access_token || '';
+};
+
+export const getUserIdFromToken = () => {
+  const user = getOIDCtoken();
+  return user?.profile?.sub || '';
 };
 
 ///////////////////////////////////////////////////////////////
@@ -284,8 +306,13 @@ export const sendHistory = async (historyRecordsJwt, badgesJwt) => {
   const clientId = getClientId() || null;
   const username = getUsername() || '';
 
+  if (getUserId() !== getUserIdFromToken()) {
+    console.warn('PUT leaderboard not sent :: mismatch local & login user-id');
+    return;
+  }
+
   if (!isString(clientId) || !isString(history) || !isString(badges)) {
-    console.warn('PUT leaderboard not sent');
+    console.warn('PUT leaderboard not sent :: missing args');
     return;
   }
   let resp = null;
@@ -314,6 +341,7 @@ export const sendHistory = async (historyRecordsJwt, badgesJwt) => {
   }
 };
 
+// TODO remove userId or run a check since it's extracted from JWT by server
 /**
  * delete a browser item (clientId) for this user
  * @param {String} userId

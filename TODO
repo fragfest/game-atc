@@ -7,6 +7,9 @@ Bugs:
 
 Wishlist:
   ☐ report bug & other links
+  ☐ flightstrip hide button. need to move info to bottom panel, including waypoint btn.
+  ☐ screenSize toggle in panelBottom. will need to restart level
+  ☐ remove username setting requirement from mobile since it can't be saved. OR save to server on username changes
 
   ☐ voice comms audio playback
   ☐ runway collisions
@@ -22,6 +25,7 @@ v1.2.2:
   Bugs:
 
   Major:
+    ☐ federated cognito login: google. user-id now stored locally separate from login @started(26-06-09 22:47)
 
   Minor:
     ✔ update flights @started(26-06-07 04:31) @done(26-06-07 05:49)
