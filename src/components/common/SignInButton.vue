@@ -1,6 +1,25 @@
 <template>
   <div class="signin-btn">
-    <div class="login">
+    <!-- MOBILE -->
+    <div v-if="isMobile" class="login mobile">
+      <div v-if="!isLoggedIn" class="btn-class mobile">
+        <button @click="signIn">
+          <h2 class="hdr-white">Sign In</h2>
+        </button>
+      </div>
+      <div v-else-if="isLoggedIn && !isLeaderboard" class="btn-class mobile">
+        <button @click="signOut">
+          <h2 class="hdr-white">Sign Out</h2>
+        </button>
+      </div>
+
+      <div v-if="!isLoggedIn && isLeaderboard" class="btn-class mobile">
+        <h3 class="hdr-white">Sign In to view</h3>
+      </div>
+    </div>
+
+    <!-- FULL SCREEN -->
+    <div v-if="!isMobile" class="login">
       <div v-if="!isLoggedIn" class="btn-class">
         <button @click="signIn">
           <h2 class="hdr-white">Sign In</h2>
@@ -57,6 +76,7 @@ import { getUsername, setUsername, startLogin } from '../../js/session/session';
 
 export default {
   props: {
+    isMobile: { type: Boolean, default: () => false },
     isLoggedIn: { type: Boolean },
     isLeaderboard: { type: Boolean },
   },
@@ -152,6 +172,10 @@ export default {
     h2 {
       margin: 8px;
     }
+
+    &.mobile {
+      padding: 0;
+    }
   }
 }
 
@@ -171,6 +195,10 @@ export default {
   h3 {
     margin: 14px;
     font-size: 20px;
+  }
+
+  &.mobile {
+    padding: 4px 15px;
   }
 
   @media (max-width: 1400px) {

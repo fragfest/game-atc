@@ -14,6 +14,7 @@
     <div class="body">
       <section class="body-top">
         <SignInButton
+          :isMobile="isMobile"
           :isLeaderboard="true"
           :isLoggedIn="isLoggedIn"
           @update="signInUpdate"
