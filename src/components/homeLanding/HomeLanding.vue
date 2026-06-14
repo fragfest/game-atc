@@ -8,6 +8,7 @@
     <div v-else>
       <LoginModal
         v-if="showLoginModal"
+        :isForceRelogin="isForceRelogin"
         :loginArr="loginArr"
         @done="onDoneEvent"
       ></LoginModal>
@@ -86,7 +87,10 @@
           <div class="row-history-badges">
             <div class="history-record" :class="screenSize">
               <h2>locations</h2>
-              <HistoryAirports @updateLevel="updateLevel"></HistoryAirports>
+              <HistoryAirports
+                :nextLevel="historyLevel"
+                @updateLevel="updateLevel"
+              ></HistoryAirports>
             </div>
 
             <div v-if="showHistory" class="badges">
@@ -160,14 +164,17 @@ import {
   getBadgeLevelCompleted,
 } from '../../js/game/score/badges';
 import {
+  getClientId,
   getScores,
   getScoresByUser,
   getUserId,
+  getUserIdFromToken,
   getUsername,
   isLoggedIn,
   loginUsingCallbackUrl,
   logout,
   sendHistory,
+  setUserId,
 } from '../../js/session/session';
 import { setMute, setup as soundSetup } from '../../js/game/sound';
 
@@ -179,6 +186,30 @@ import SignInButton from '../common/SignInButton';
 import HeaderTitle from './HeaderTitle';
 import SplashLogo from './SplashLogo.vue';
 import SpinnerDots from '../common/SpinnerDots.vue';
+
+const updatePageWithGameData = (self) => {
+  self.isTutorial = getHighestLevelCompleted() === null;
+  self.levelsCompletedCount = getHistoryRecords().filter(
+    (x) => x.level > 0
+  ).length;
+  self.levelComplete = getHighestLevelCompleted();
+  self.levelNext = getHighestLevelCompleted() + 1;
+  self.levelStart = getHighestLevelCompleted() + 1;
+  self.historyRecordArr = getHistoryRecords().sort((a, b) => a.level - b.level);
+
+  self.blueSkyLevel = getBadgeLevelCompleted(BadgesTypes.BlueSky);
+  self.bluesky = !!self.blueSkyLevel;
+  self.pushingTinLevel = getBadgeLevelCompleted(BadgesTypes.PushingTin);
+  self.pushingTin = !!self.pushingTinLevel;
+  self.mayDayLevel = getBadgeLevelCompleted(BadgesTypes.MayDay);
+  self.mayday = !!self.mayDayLevel;
+
+  const level = getHighestLevelCompleted();
+  if (level === self.finalLevel) {
+    self.historyLevel = level;
+  }
+  self.historyLevel = level + 1;
+};
 
 export default {
   components: {
@@ -200,21 +231,25 @@ export default {
       isMobile: false,
       isTablet: false,
 
-      showLoginModal: false,
       isLoggedIn: false,
       username: '',
+
+      showLoginModal: false,
+      isForceRelogin: false,
       loginArr: [],
+
       screenSize: '',
       cyberBoxWidth: '400',
 
-      isTutorial: getHighestLevelCompleted() === null,
-      levelsCompletedCount: getHistoryRecords().filter((x) => x.level > 0)
-        .length,
-      levelComplete: getHighestLevelCompleted(),
-      levelNext: getHighestLevelCompleted() + 1,
-      levelStart: getHighestLevelCompleted() + 1,
-      historyRecordArr: getHistoryRecords().sort((a, b) => a.level - b.level),
+      isTutorial: true,
+      levelsCompletedCount: 0,
+      levelComplete: 0,
+      levelNext: 1,
+      levelStart: 1,
       finalLevel: getFinalLevel(),
+
+      historyLevel: 1,
+      historyRecordArr: [],
 
       // BADGES /////////////////////////////////////////////////
       pushingTin: false,
@@ -253,6 +288,7 @@ export default {
     },
 
     score: function () {
+      // TODO extract to common function. use in LoginModal et al. for display
       const score = (record) => record?.historyScore?.scoreTotal;
       const records = getHistoryRecords().filter((obj) => obj.level > 0);
       if (records.length === 0) return '0';
@@ -283,22 +319,14 @@ export default {
     if (this.screenSize === ScreenSizes.Small) this.cyberBoxWidth = '300';
     if (this.screenSize === ScreenSizes.VerySmall) this.cyberBoxWidth = '240';
 
+    updatePageWithGameData(this);
+
     if (await isLoggedIn()) {
       this.isLoggedIn = true;
       this.username = getUsername();
     }
 
     setupScore();
-
-    this.blueSkyLevel = getBadgeLevelCompleted(BadgesTypes.BlueSky);
-    this.bluesky = !!this.blueSkyLevel;
-
-    this.pushingTinLevel = getBadgeLevelCompleted(BadgesTypes.PushingTin);
-    this.pushingTin = !!this.pushingTinLevel;
-
-    this.mayDayLevel = getBadgeLevelCompleted(BadgesTypes.MayDay);
-    this.mayday = !!this.mayDayLevel;
-
     if (this.finalLevel === this.levelComplete) {
       this.levelNext = this.finalLevel;
     }
@@ -306,16 +334,40 @@ export default {
     const url = window.location.href;
     const isNewLoginSuccess = await loginUsingCallbackUrl(url);
     if (isNewLoginSuccess) {
-      console.info('login success');
+      this.isLoggedIn = true;
+      this.username = getUsername();
+    }
+
+    if (this.isLoggedIn && getUserId() !== getUserIdFromToken()) {
+      console.info('browser user-id mismatch with session token');
+
       this.isLoading = true;
+      const scoreObj = await getScoresByUser(true, getUserIdFromToken());
+      this.isLoading = false;
+      const arr = scoreObj?.arr || [];
+      this.loginArr = arr.filter((x) => x.clientId === getClientId());
+
+      if (this.loginArr.length > 0) {
+        this.isForceRelogin = true;
+        this.showLoginModal = true;
+        return;
+      } else {
+        setUserId(getUserIdFromToken());
+      }
+    }
+
+    if (isNewLoginSuccess) {
+      console.info('login success. posting to score tables.');
+
       this.isLoggedIn = true;
       this.username = getUsername();
 
+      this.isLoading = true;
       await sendHistory(getHistoryRecordsSecure(), getBadgesSecure());
       const scoreObj = await getScoresByUser(true, getUserId());
+      this.isLoading = false;
       this.loginArr = scoreObj?.arr || [];
 
-      this.isLoading = false;
       if (this.loginArr.length > 1) {
         this.showLoginModal = true;
         return;
@@ -350,8 +402,12 @@ export default {
     },
 
     onDoneEvent: async function () {
+      this.loginArr = [];
+      this.isForceRelogin = false;
       this.showLoginModal = false;
+
       getScores(true);
+      updatePageWithGameData(this);
     },
 
     onLeaderboardClick: function () {

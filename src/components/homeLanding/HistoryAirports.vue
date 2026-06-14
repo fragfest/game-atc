@@ -254,7 +254,22 @@ export default {
     };
   },
 
+  props: {
+    nextLevel: { type: Number },
+  },
   emits: ['updateLevel'],
+
+  watch: {
+    nextLevel(levelNew) {
+      this.level = levelNew;
+      this.airport = getAirportByLevel(levelNew);
+      this.airportCurrent = getAirportByLevel(getNextLevel());
+    },
+  },
+
+  mounted() {
+    this.level = this.nextLevel;
+  },
 
   methods: {
     onClickLondon: function () {

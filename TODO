@@ -23,9 +23,11 @@ Wishlist:
 
 v1.2.2:
   Bugs:
+    ☐ Tutorial: hitting Done early disables the button
+    ☐ federated login needs default username (maybe just email partially redacted). API change?
 
   Major:
-    ☐ federated cognito login: google. user-id now stored locally separate from login @started(26-06-09 22:47)
+    ✔ federated cognito login: google. user-id now stored locally separate from login @started(26-06-09 22:47) @done(26-06-13 21:41) @lasted(3d22h54m20s)
 
   Minor:
     ✔ update flights @started(26-06-07 04:31) @done(26-06-07 05:49)

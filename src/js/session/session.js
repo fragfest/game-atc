@@ -44,9 +44,9 @@ export const isLoggedIn = async () => {
   const userManager = new UserManager(config);
   const user = await userManager.getUser();
   if (!user) {
-    console.info('not logged in');
     return false;
   }
+
   if (user.expired) {
     console.info('token expired - refreshing');
     const userRefresh = await userManager.signinSilent();
@@ -59,6 +59,9 @@ export const isLoggedIn = async () => {
   return true;
 };
 
+/**
+ * AWS cognito logout. auto redirects to logoutUri
+ */
 export const logout = () => {
   const key = `oidc.user:${config.authority}:${config.client_id}`;
   localStorage.removeItem(key);
@@ -371,7 +374,7 @@ export const deleteHistory = async (userId, clientId, scoreInt, badgesInt) => {
 
   const url =
     apiUrl +
-    `?userId=${clientId}&clientId=${clientId}&score=${scoreInt}&badges=${badgesInt}`;
+    `?userId=${userId}&clientId=${clientId}&score=${scoreInt}&badges=${badgesInt}`;
 
   let resp = null;
   try {

@@ -16,7 +16,7 @@ import {
   getBadgesJwt,
 } from './score.secure';
 
-let debugUseSecure = false;
+let debugUseSecure = true;
 export const setDebugUnitTests = () => (debugUseSecure = false);
 
 // key & values must match
@@ -34,6 +34,19 @@ export const setup = () => {
 
   score.level = nextLevel <= getFinalLevel() ? nextLevel : getFinalLevel();
   setScore(score);
+};
+
+export const deleteAllSaved = () => {
+  if (process.env.NODE_ENV === 'production' || debugUseSecure) {
+    localStorage.removeItem('atc-ffo:history-records');
+    localStorage.removeItem('atc-ffo:badges');
+    localStorage.removeItem('atc-ffo:score');
+    return;
+  }
+
+  localStorage.removeItem('history-records');
+  localStorage.removeItem('badges');
+  localStorage.removeItem('score');
 };
 
 export const resetScore = () => {
@@ -401,4 +414,24 @@ const setScore = (score) => {
   }
 
   localStorage.setItem('score', JSON.stringify(score));
+};
+
+// DEBUG /////////////////////////////////////////////////
+
+// to get plain records set: debugUseSecure = false;
+
+/**
+ * can be used to grab plain records and save them encrypted
+ * @param {HistoryScore} historyRecords
+ */
+export const debugSetHistorySecure = (historyRecords) => {
+  setHistorySecure(historyRecords);
+};
+
+/**
+ * can be used to grab plain badges and save them encrypted
+ * @param {Array.<String>} badges
+ */
+export const debugSetBadgesArrSecure = (badges) => {
+  setBadgesArrSecure(badges);
 };
