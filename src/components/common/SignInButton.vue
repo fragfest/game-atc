@@ -72,27 +72,23 @@
 </template>
 
 <script>
-import { getUsername, setUsername, startLogin } from '../../js/session/session';
+import { setUsername, startLogin } from '../../js/session/session';
 
 export default {
   props: {
     isMobile: { type: Boolean, default: () => false },
     isLoggedIn: { type: Boolean },
     isLeaderboard: { type: Boolean },
+    username: { type: String },
   },
 
   emits: ['update'],
 
   data() {
     return {
-      username: '',
       isEdit: false,
       editUsername: '',
     };
-  },
-
-  mounted() {
-    this.username = getUsername();
   },
 
   methods: {
@@ -116,7 +112,6 @@ export default {
       setUsername(val);
       this.isEdit = false;
       this.editUsername = '';
-      this.username = getUsername();
       const isLoggedIn = true;
       this.$emit('update', isLoggedIn);
     },

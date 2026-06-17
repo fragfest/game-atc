@@ -36,6 +36,7 @@
             <HeaderTitle />
             <SignInButton
               :isLoggedIn="isLoggedIn"
+              :username="username"
               @update="signInUpdate"
             ></SignInButton>
           </div>
@@ -175,6 +176,7 @@ import {
   logout,
   sendHistory,
   setUserId,
+  setUsername,
 } from '../../js/session/session';
 import { setMute, setup as soundSetup } from '../../js/game/sound';
 
@@ -321,9 +323,9 @@ export default {
 
     updatePageWithGameData(this);
 
+    this.username = getUsername();
     if (await isLoggedIn()) {
       this.isLoggedIn = true;
-      this.username = getUsername();
     }
 
     setupScore();
@@ -335,7 +337,6 @@ export default {
     const isNewLoginSuccess = await loginUsingCallbackUrl(url);
     if (isNewLoginSuccess) {
       this.isLoggedIn = true;
-      this.username = getUsername();
     }
 
     if (this.isLoggedIn && getUserId() !== getUserIdFromToken()) {
@@ -353,15 +354,17 @@ export default {
         return;
       } else {
         setUserId(getUserIdFromToken());
+        setUsername('');
+        this.username = '';
+
+        console.info('local user-id reset to:', getUserIdFromToken());
       }
     }
 
     if (isNewLoginSuccess) {
       console.info('login success. posting to score tables.');
 
-      this.isLoggedIn = true;
       this.username = getUsername();
-
       this.isLoading = true;
       await sendHistory(getHistoryRecordsSecure(), getBadgesSecure());
       const scoreObj = await getScoresByUser(true, getUserId());
@@ -386,15 +389,17 @@ export default {
     },
 
     updateLevel: function (record) {
-      if (!record) return;
-
       historyRecordDebug();
+
+      if (!record) return;
       levelRetry(record.level);
       this.levelNext = record.level;
       this.levelStart = record.isNext ? record.level : null;
     },
 
     signInUpdate: function (isLoggedIn) {
+      this.username = getUsername();
+
       if (!isLoggedIn) {
         this.isLoggedIn = false;
         logout();
@@ -408,6 +413,7 @@ export default {
 
       getScores(true);
       updatePageWithGameData(this);
+      this.username = getUsername();
     },
 
     onLeaderboardClick: function () {

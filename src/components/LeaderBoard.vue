@@ -17,6 +17,7 @@
           :isMobile="isMobile"
           :isLeaderboard="true"
           :isLoggedIn="isLoggedIn"
+          :username="username"
           @update="signInUpdate"
         ></SignInButton>
 

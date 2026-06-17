@@ -134,6 +134,7 @@ import {
   getUserIdFromToken,
   logout,
   setUserId,
+  setUsername,
 } from '../../js/session/session';
 import {
   deleteAllSaved,
@@ -208,6 +209,7 @@ export default {
         deleteItem?.badges?.length
       );
       deleteAllSaved();
+      setUsername('');
 
       resetScore();
       levelComplete(100);
