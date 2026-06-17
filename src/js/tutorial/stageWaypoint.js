@@ -79,6 +79,7 @@ export const stageWaypoint = (
   if (event === Events.WaitForInput0 && isSetCheckmarkPlaneSelected) {
     event = Events.WaitForInput1;
     state.focusObj.isFlightStripArrFocus = false;
+    state.focusObj.flightStripArrFocusIndex = flightstripArrivalIndex;
     state.focusObj.isFlightStripArrWaypointFocus = true;
   }
 
