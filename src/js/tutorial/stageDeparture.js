@@ -87,22 +87,20 @@ export const stageDeparture = (
   }
 
   if (event === Events.WaitForInput1 && objEventCB.buttonTakeoff) {
-    event = Events.WaitForInput2;
     resetFocus(state.focusObj);
     state.focusObj.isControlPanelAltitudeFocus = true;
     isSetCheckmarkTakeoff = true;
   }
 
-  if (event === Events.WaitForInput2 && objEventCB.altitudeValue) {
+  if (event === Events.WaitForInput1 && objEventCB.altitudeValue) {
     if (objEventCB.altitudeValue >= 6000) {
-      event = Events.WaitForInput3;
       resetFocus(state.focusObj);
       state.focusObj.isControlPanelHoldHandoffFocus = true;
       isSetCheckmarkAltitude = true;
     }
   }
 
-  if (event === Events.WaitForInput3 && objEventCB.buttonHandoff) {
+  if (event === Events.WaitForInput1 && objEventCB.buttonHandoff) {
     resetFocus(state.focusObj);
     isSetCheckmarkHandoff = true;
   }
@@ -111,19 +109,19 @@ export const stageDeparture = (
     isValidCheckmarkTaxiQueue = true;
   }
 
-  if (isSetCheckmarkTakeoff && isDeparturePlaneSelected) {
+  if (isSetCheckmarkTakeoff) {
     isValidCheckmarkTakeoff = true;
   }
 
   const isValidAltitude = planeSelected?.altitudeTarget >= 6000;
-  if (isSetCheckmarkAltitude && isDeparturePlaneSelected && isValidAltitude) {
+  if (isSetCheckmarkAltitude && isValidAltitude) {
     isValidCheckmarkAltitude = true;
   } else {
     isValidCheckmarkAltitude = false;
   }
 
   const isValidHandoff = !!planeSelected?.isHandoff;
-  if (isSetCheckmarkHandoff && isDeparturePlaneSelected && isValidHandoff) {
+  if (isSetCheckmarkHandoff && isValidHandoff) {
     isValidCheckmarkHandoff = true;
   } else {
     isValidCheckmarkHandoff = false;

@@ -77,28 +77,24 @@ export const stageWaypoint = (
   }
 
   if (event === Events.WaitForInput0 && isSetCheckmarkPlaneSelected) {
-    event = Events.WaitForInput1;
     state.focusObj.isFlightStripArrFocus = false;
     state.focusObj.flightStripArrFocusIndex = flightstripArrivalIndex;
     state.focusObj.isFlightStripArrWaypointFocus = true;
   }
 
   const isWaypointSelected =
-    isSecondArrivalPlaneSelected && planeSelected?.waypoint === 'BIG';
-  if (event === Events.WaitForInput1 && isWaypointSelected) {
-    event = Events.WaitForInput2;
+    !planeSelected?.landing && planeSelected?.waypoint === 'BIG';
+  if (event === Events.WaitForInput0 && isWaypointSelected) {
     isSetCheckmarkWaypoint = true;
   }
 
-  if (event === Events.WaitForInput2 && isSetCheckmarkWaypoint) {
-    event = Events.WaitForInput3;
+  if (event === Events.WaitForInput0 && isSetCheckmarkWaypoint) {
     state.focusObj.isFlightStripArrWaypointFocus = false;
     state.focusObj.isControlPanelHoldHandoffFocus = true;
   }
 
-  const isHoldingSelected =
-    isSecondArrivalPlaneSelected && planeSelected?.isHolding;
-  if (event === Events.WaitForInput3 && isHoldingSelected) {
+  const isHoldingSelected = !planeSelected?.landing && planeSelected?.isHolding;
+  if (event === Events.WaitForInput0 && isHoldingSelected) {
     resetFocus(state.focusObj);
     isSetCheckmarkHolding = true;
   }
@@ -111,23 +107,13 @@ export const stageWaypoint = (
 
   if (isSetCheckmarkWaypoint && isWaypointSelected) {
     isValidWaypoint = true;
-  }
-  if (
-    isSetCheckmarkWaypoint &&
-    isSecondArrivalPlaneSelected &&
-    !isWaypointSelected
-  ) {
+  } else {
     isValidWaypoint = false;
   }
 
   if (isSetCheckmarkHolding && isHoldingSelected) {
     isValidHolding = true;
-  }
-  if (
-    isSetCheckmarkHolding &&
-    isSecondArrivalPlaneSelected &&
-    !isHoldingSelected
-  ) {
+  } else {
     isValidHolding = false;
   }
 

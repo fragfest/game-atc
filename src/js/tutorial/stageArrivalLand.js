@@ -85,18 +85,18 @@ export const stageArrivalLand = (
   }
 
   if (event === Events.WaitForInput0 && isSetCheckmarkSelected) {
-    event = Events.WaitForInput1;
     state.focusObj.isFlightStripArrFocus = false;
     state.focusObj.isControlPanelAltitudeFocus = true;
   }
 
   if (
-    event === Events.WaitForInput1 &&
+    event === Events.WaitForInput0 &&
     isArrivalPlaneSelected &&
     objEventCB.altitudeValue
   ) {
     if (objEventCB.altitudeValue <= 5000) {
-      event = Events.WaitForInput2;
+      resetFocus(state.focusObj);
+
       state.focusObj.isControlPanelAltitudeFocus = false;
       state.focusObj.isControlPanelHeadingFocus = true;
       isSetCheckmarkAltitude = true;
@@ -104,24 +104,20 @@ export const stageArrivalLand = (
   }
 
   if (
-    event === Events.WaitForInput2 &&
+    event === Events.WaitForInput0 &&
     isArrivalPlaneSelected &&
     objEventCB.headingValue
   ) {
     if (objEventCB.headingValue >= 260 && objEventCB.headingValue <= 280) {
-      event = Events.WaitForInput3;
+      resetFocus(state.focusObj);
+      state.focusObj.isControlPanelHeadingFocus = false;
+      state.focusObj.isControlPanelTakeoffLandFocus = true;
       isSetCheckmarkHeading = true;
     }
   }
 
-  if (event === Events.WaitForInput3 && isSetCheckmarkHeading) {
-    event = Events.WaitForInput4;
-    state.focusObj.isControlPanelHeadingFocus = false;
-    state.focusObj.isControlPanelTakeoffLandFocus = true;
-  }
-
   if (
-    event === Events.WaitForInput4 &&
+    event === Events.WaitForInput0 &&
     isArrivalPlaneSelected &&
     objEventCB.buttonLanding
   ) {
@@ -136,7 +132,7 @@ export const stageArrivalLand = (
   }
 
   const isValidAltitude = planeSelected?.altitudeTarget <= 5000;
-  if (isSetCheckmarkAltitude && isArrivalPlaneSelected && isValidAltitude) {
+  if (isSetCheckmarkAltitude && isValidAltitude) {
     isValidCheckmarkAltitude = true;
   } else {
     isValidCheckmarkAltitude = false;
@@ -144,17 +140,13 @@ export const stageArrivalLand = (
 
   const headingTargetDeg = radToDegrees(planeSelected?.headingTargetRad);
   const isValidHeading = headingTargetDeg >= 260 && headingTargetDeg <= 280;
-  if (isSetCheckmarkHeading && isArrivalPlaneSelected && isValidHeading) {
+  if (isSetCheckmarkHeading && isValidHeading) {
     isValidCheckmarkHeading = true;
   } else {
     isValidCheckmarkHeading = false;
   }
 
-  if (
-    isSetCheckmarkLanding &&
-    isArrivalPlaneSelected &&
-    planeSelected?.landing
-  ) {
+  if (isSetCheckmarkLanding && planeSelected?.landing) {
     isValidCheckmarkLanding = true;
   } else {
     isValidCheckmarkLanding = false;

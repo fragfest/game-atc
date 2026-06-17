@@ -287,6 +287,7 @@ export default {
   .btn button.pulse::before {
     content: '';
     animation: focus-pulse 1.4s infinite linear;
+    z-index: 1;
 
     position: absolute;
     top: -4px;
