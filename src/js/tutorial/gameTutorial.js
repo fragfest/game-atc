@@ -229,6 +229,14 @@ const tutorial =
       completeStage(Stages.Intro);
       startTimeStageDeparture = elapsedTime;
       stage = Stages.Departure;
+
+      // setup tutorial exit on success
+      subscribeScore(ScoreEvents.ScoreEV, (score) => {
+        if (isVictory(score)) {
+          resetFocus(state.focusObj);
+          publishSuccess();
+        }
+      });
     }
 
     // Stages.Departure
@@ -372,15 +380,6 @@ const tutorial =
         };
         state.focusObj.isScorePanelFocus = true;
       }, 1000);
-
-      setTimeout(() => {
-        subscribeScore(ScoreEvents.ScoreEV, (score) => {
-          if (isVictory(score)) {
-            resetFocus(state.focusObj);
-            publishSuccess();
-          }
-        });
-      }, 8000);
 
       completeStage(Stages.Done);
     }

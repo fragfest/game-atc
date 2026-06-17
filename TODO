@@ -22,7 +22,7 @@ Wishlist:
 
 v1.2.2:
   Bugs:
-    ☐ Tutorial: hitting Done early disables the button
+    ✔ Tutorial: hitting Done early disables the button @started(26-06-14 10:51) @done(26-06-16 18:56) @lasted(2d8h5m37s)
     ☐ federated login needs default username (maybe just email partially redacted). API change?
 
   Major:
