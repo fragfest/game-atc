@@ -1,5 +1,5 @@
 <template>
-  <div class="container" :class="sizeClass">
+  <div class="container" :class="[sizeClass, { safari: isSafari }]">
     <div class="badges" :class="badgesRowClass">
       <!-- MayDay -->
       <ToolTip
@@ -189,6 +189,7 @@ import BlueSky from './BlueSky';
 import BlueSkyGrey from './BlueSkyGrey';
 import BadgeEmpty from './BadgeEmpty.vue';
 import ToolTip from '../common/ToolTip';
+import Bowser from 'bowser';
 import {
   BadgesTypes,
   BadgeTextDisp,
@@ -232,6 +233,7 @@ export default {
   data() {
     return {
       sizeClass: '',
+      isSafari: false,
       showBadgeDesc: false,
       badgeDispTimeSec: 8,
       badgeSuccess: '',
@@ -248,6 +250,11 @@ export default {
 
   mounted() {
     this.sizeClass = getClassSize(getScreenSize());
+
+    const browser = Bowser.getParser(
+      window.navigator.userAgent
+    ).getBrowserName();
+    this.isSafari = browser === 'Safari';
   },
 
   computed: {
@@ -720,10 +727,10 @@ export default {
     transform: scale(12) translate(-40%);
   }
   20% {
-    transform: scale(1);
+    transform: scale(1) translate(0%);
   }
   100% {
-    transform: scale(1);
+    transform: scale(1) translate(0%);
   }
 }
 @keyframes shrink-small {
@@ -740,7 +747,7 @@ export default {
 
 @keyframes scale {
   0% {
-    transform: scale(1);
+    transform: scale(1) translate(0%);
   }
   20% {
     transform: scale(12) translate(-40%);
@@ -751,7 +758,7 @@ export default {
 }
 @keyframes scale-small {
   0% {
-    transform: scale(1);
+    transform: scale(1) translate(0%);
   }
   20% {
     transform: scale(12) translate(-40%);
@@ -777,7 +784,7 @@ export default {
 }
 @keyframes scale-shrink-small {
   0% {
-    transform: scale(1);
+    transform: scale(1) translate(0%);
   }
   20% {
     transform: scale(4) translate(30%);
@@ -786,7 +793,83 @@ export default {
     transform: scale(4) translate(30%);
   }
   100% {
+    transform: scale(1) translate(0%);
+  }
+}
+@keyframes shrink-safari {
+  0% {
+    transform: scale(6) translate(-40%);
+  }
+  20% {
+    transform: scale(1) translate(0%);
+  }
+  100% {
+    transform: scale(1) translate(0%);
+  }
+}
+@keyframes shrink-small-safari {
+  0% {
+    transform: scale(6) translate(-40%);
+  }
+  20% {
+    transform: scale(1) translate(0);
+  }
+  100% {
+    transform: scale(1) translate(0);
+  }
+}
+
+@keyframes scale-safari {
+  0% {
+    transform: scale(1) translate(0%);
+  }
+  20% {
+    transform: scale(6) translate(-40%);
+  }
+  100% {
+    transform: scale(6) translate(-40%);
+  }
+}
+@keyframes scale-small-safari {
+  0% {
+    transform: scale(1) translate(0%);
+  }
+  20% {
+    transform: scale(6) translate(-40%);
+  }
+  100% {
+    transform: scale(6) translate(-40%);
+  }
+}
+
+@keyframes scale-shrink-safari {
+  0% {
     transform: scale(1);
   }
+  20% {
+    transform: scale(6);
+  }
+  80% {
+    transform: scale(6);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.container.safari .badge-expand {
+  animation-name: scale-safari;
+}
+.container.safari.small .badge-expand {
+  animation-name: scale-small-safari;
+}
+.container.safari .badge-collapse {
+  animation-name: shrink-safari;
+}
+.container.safari.small .badge-collapse {
+  animation-name: shrink-small-safari;
+}
+.container.safari .badge-new {
+  animation-name: scale-shrink-safari;
 }
 </style>

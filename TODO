@@ -1,5 +1,4 @@
 Bugs:
-  ☐ Medium: Safari: Badges low-res when svg expanded (known Safari issue)
   ☐ mute icon shows when sound not muted (need steps)
   ☐ handle sound.js no user interaction exception from play(): make async function, each case call needs try-catch and await bla.play()
 
@@ -20,6 +19,7 @@ Wishlist:
 
 v1.2.2:
   Bugs:
+    ✔ Medium: Safari: Badges low-res when svg expanded (known Safari issue) @done(26-06-18 05:39)
     ✔ Tutorial: hitting Done early disables the button @started(26-06-14 10:51) @done(26-06-16 18:56) @lasted(2d8h5m37s)
     ✔ Blank usernames should not be saved to leaderboard: also fixed in atc-lambda. @done(26-06-17 09:23)
 
