@@ -34,11 +34,14 @@
         <div class="content">
           <div class="header">
             <HeaderTitle />
-            <SignInButton
-              :isLoggedIn="isLoggedIn"
-              :username="username"
-              @update="signInUpdate"
-            ></SignInButton>
+            <div class="header-actions">
+              <BugReportButton />
+              <SignInButton
+                :isLoggedIn="isLoggedIn"
+                :username="username"
+                @update="signInUpdate"
+              ></SignInButton>
+            </div>
           </div>
 
           <!-- grid-score-buttons -->
@@ -185,6 +188,7 @@ import HistoryAirports from './HistoryAirports';
 import BadgesDisplay from '../badges/BadgesDisplay';
 import CyberBox from '../common/CyberBox';
 import SignInButton from '../common/SignInButton';
+import BugReportButton from '../common/BugReportButton.vue';
 import HeaderTitle from './HeaderTitle';
 import SplashLogo from './SplashLogo.vue';
 import SpinnerDots from '../common/SpinnerDots.vue';
@@ -219,6 +223,7 @@ export default {
     SplashLogo,
     HeaderTitle,
     SignInButton,
+    BugReportButton,
     LoginModal,
     HistoryAirports,
     BadgesDisplay,
@@ -607,12 +612,25 @@ export default {
   align-items: center;
   flex-wrap: wrap;
   gap: 24px;
+
+  height: 80px;
   border-bottom: 1px dashed white;
 
   h1,
   h2,
   h3 {
     margin: 8px 0px;
+  }
+}
+
+.home section .content .header .header-actions {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  height: 80px;
+
+  @media (max-width: 1400px) {
+    gap: 18px;
   }
 }
 

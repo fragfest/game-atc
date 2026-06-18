@@ -1,35 +1,50 @@
 <template>
-  <a
-    href="/bug-report"
-    title="report bug"
-    target="_blank"
-    rel="noopener noreferrer"
-    class="bug-report-btn"
-  >
-    <svg
-      width="22"
-      height="22"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    >
-      <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
-      <path d="M16 6v2a4 4 0 0 1-8 0V6" />
-      <path d="M4 12h3" />
-      <path d="M17 12h3" />
-      <path d="M7 12a5 5 0 0 0 10 0" />
-      <path d="M7 12a3 3 0 0 1-3-3" />
-      <path d="M17 12a3 3 0 0 0 3-3" />
-    </svg>
-  </a>
+  <div v-if="configEnable">
+    <ToolTip position="tether-below">
+      <a
+        :href="href"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="bug-report-btn"
+      >
+        <img src="/img/bug-report.png" />
+      </a>
+      <template v-slot:hover>
+        <h3 class="white">report bug</h3>
+      </template>
+    </ToolTip>
+  </div>
 </template>
 
 <script>
+import { getAccessToken } from '../../js/session/session';
+import ToolTip from './ToolTip.vue';
+
+const configUrlQueryFeedback = `config-feedback-on`;
+
+const bugReportUrl = `https://atc-feedback.carladde.com`;
+
 export default {
   name: 'BugReportButton',
+  components: { ToolTip },
+
+  data() {
+    return {
+      configEnable: false,
+      href: '',
+    };
+  },
+
+  mounted() {
+    const searchParams = new URLSearchParams(window.location.search);
+    const isEnableStr = searchParams.get(configUrlQueryFeedback);
+    if (isEnableStr === 'true') this.configEnable = true;
+
+    const token = getAccessToken();
+    const queryParams = { token };
+    const str = new URLSearchParams(queryParams).toString();
+    this.href = `${bugReportUrl}?${str}`;
+  },
 };
 </script>
 
@@ -37,19 +52,42 @@ export default {
 .bug-report-btn {
   display: flex;
   align-items: center;
-  color: #b0c4de;
-  text-decoration: none;
-  padding: 4px 8px;
-  transition: color 0.15s ease;
+  justify-content: center;
+  height: 53px;
+  width: 53px;
+
+  border-radius: 6px;
+  border: 1px solid lightgrey;
+  background-color: #1d425e;
+
+  @media (max-width: 1400px) {
+    height: 46px;
+    width: 46px;
+  }
+
+  @media (max-width: 1200px) {
+    height: 44px;
+    width: 44px;
+  }
+
+  @media (max-width: 1000px) {
+    height: 41px;
+    width: 41px;
+  }
 
   &:hover {
-    color: white;
+    background-color: #132a3b;
   }
 
   &:focus-visible {
     outline: 1px solid limegreen;
     outline-offset: 2px;
     border-radius: 2px;
+  }
+
+  img {
+    width: 50%;
+    height: 50%;
   }
 }
 </style>
