@@ -701,6 +701,7 @@ h3 {
     .user-text {
       width: 60%;
       width: fit-content;
+      white-space: nowrap;
     }
 
     .user-num {
