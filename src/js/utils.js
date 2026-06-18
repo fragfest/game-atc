@@ -130,7 +130,7 @@ export const calculateScreenSize = (windowWidth, windowHeight) => {
   const screenOneWidth = 1800;
   const screenOneHeight = 1000;
   const screenTwoWidth = 1400;
-  // const screenTwoHeight = 800; // TODO
+  // const screenTwoHeight = 800; // TODO cleanup
 
   // w/h aspect ratio: 1.6525
   // if (windowWidth < screenTwoWidth || windowHeight < screenTwoHeight) {

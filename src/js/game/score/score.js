@@ -16,7 +16,7 @@ import {
   getBadgesJwt,
 } from './score.secure';
 
-let debugUseSecure = true;
+let debugUseSecure = false;
 export const setDebugUnitTests = () => (debugUseSecure = false);
 
 // key & values must match
@@ -417,7 +417,6 @@ const setScore = (score) => {
 };
 
 // DEBUG /////////////////////////////////////////////////
-
 // to get plain records set: debugUseSecure = false;
 
 /**

@@ -1,7 +1,5 @@
 Bugs:
   ☐ Medium: Safari: Badges low-res when svg expanded (known Safari issue)
-  https://share.google/aimode/LPa8reFYpGhZDJPqY
-
   ☐ mute icon shows when sound not muted (need steps)
   ☐ handle sound.js no user interaction exception from play(): make async function, each case call needs try-catch and await bla.play()
 
@@ -23,7 +21,7 @@ Wishlist:
 v1.2.2:
   Bugs:
     ✔ Tutorial: hitting Done early disables the button @started(26-06-14 10:51) @done(26-06-16 18:56) @lasted(2d8h5m37s)
-    ☐ federated login needs default username (maybe just email partially redacted). API change?
+    ✔ Blank usernames should not be saved to leaderboard: also fixed in atc-lambda. @done(26-06-17 09:23)
 
   Major:
     ✔ federated cognito login: google. user-id now stored locally separate from login @started(26-06-09 22:47) @done(26-06-13 21:41) @lasted(3d22h54m20s)

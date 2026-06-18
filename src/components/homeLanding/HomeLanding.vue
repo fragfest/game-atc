@@ -290,7 +290,6 @@ export default {
     },
 
     score: function () {
-      // TODO extract to common function. use in LoginModal et al. for display
       const score = (record) => record?.historyScore?.scoreTotal;
       const records = getHistoryRecords().filter((obj) => obj.level > 0);
       if (records.length === 0) return '0';

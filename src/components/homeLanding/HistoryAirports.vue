@@ -251,6 +251,12 @@ export default {
       level: getNextLevel(),
       airport: getAirportByLevel(getNextLevel()),
       airportCurrent: getAirportByLevel(getNextLevel()),
+
+      isButtonCheckmarkLondon: isLocationCompleted(Airport.LondonLHR),
+      isButtonCheckmarkNewYork: isLocationCompleted(Airport.NewYorkJFK),
+      isButtonCheckmarkTokyo: isLocationCompleted(Airport.TokyoHND),
+      isButtonCheckmarkAmsterdam: isLocationCompleted(Airport.AmsterdamAMS),
+      isButtonCheckmarkVancouver: isLocationCompleted(Airport.VancouverYVR),
     };
   },
 
@@ -264,6 +270,16 @@ export default {
       this.level = levelNew;
       this.airport = getAirportByLevel(levelNew);
       this.airportCurrent = getAirportByLevel(getNextLevel());
+
+      this.isButtonCheckmarkLondon = isLocationCompleted(Airport.LondonLHR);
+      this.isButtonCheckmarkNewYork = isLocationCompleted(Airport.NewYorkJFK);
+      this.isButtonCheckmarkTokyo = isLocationCompleted(Airport.TokyoHND);
+      this.isButtonCheckmarkAmsterdam = isLocationCompleted(
+        Airport.AmsterdamAMS
+      );
+      this.isButtonCheckmarkVancouver = isLocationCompleted(
+        Airport.VancouverYVR
+      );
     },
   },
 
@@ -369,26 +385,6 @@ export default {
       if (this.airportCurrent === Airport.VancouverYVR) str += ' current';
       if (this.airport === Airport.VancouverYVR) str += ' selected';
       return str;
-    },
-
-    isButtonCheckmarkLondon: function () {
-      return isLocationCompleted(Airport.LondonLHR);
-    },
-
-    isButtonCheckmarkNewYork: function () {
-      return isLocationCompleted(Airport.NewYorkJFK);
-    },
-
-    isButtonCheckmarkTokyo: function () {
-      return isLocationCompleted(Airport.TokyoHND);
-    },
-
-    isButtonCheckmarkAmsterdam: function () {
-      return isLocationCompleted(Airport.AmsterdamAMS);
-    },
-
-    isButtonCheckmarkVancouver: function () {
-      return isLocationCompleted(Airport.VancouverYVR);
     },
 
     airportTotal: function () {

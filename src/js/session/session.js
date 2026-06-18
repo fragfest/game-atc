@@ -344,7 +344,6 @@ export const sendHistory = async (historyRecordsJwt, badgesJwt) => {
   }
 };
 
-// TODO remove userId or run a check since it's extracted from JWT by server
 /**
  * delete a browser item (clientId) for this user
  * @param {String} userId
@@ -368,7 +367,14 @@ export const deleteHistory = async (userId, clientId, scoreInt, badgesInt) => {
     !isNumber(scoreInt) ||
     !isNumber(badgesInt)
   ) {
-    console.warn('DELETE leaderboard not sent');
+    console.warn('DELETE leaderboard not sent :: missing args');
+    return;
+  }
+
+  if (getUserIdFromToken() !== userId) {
+    console.warn(
+      'DELETE leaderboard not sent :: mismatch local & token userId'
+    );
     return;
   }
 
