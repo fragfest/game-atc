@@ -16,6 +16,14 @@ Wishlist:
   ☐ leaderboard search by username
   ☐ more federated cognito logins
 
+
+v1.2.5:
+  ☐ GameOverPopup retry triggers window reload warning prompt
+
+v1.2.4:
+  Bugs:
+    ✔ fix logout url config in prod @done(26-06-26 16:48)
+
 v1.2.2:
   Bugs:
     ✔ Medium: Safari: Badges low-res when svg expanded (known Safari issue) @done(26-06-18 05:39)

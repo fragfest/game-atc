@@ -5,9 +5,11 @@ import { v4 as uuidv4 } from 'uuid';
 let apiUrl = 'https://api.carladde.com/dev/atc-dev';
 
 let config = {
+  cognitoDomain: 'https://us-west-1i2olrzd6b.auth.us-west-1.amazoncognito.com',
   authority: 'https://cognito-idp.us-west-1.amazonaws.com/us-west-1_I2oLrzd6B',
   client_id: '8fhopbpd0l3bjidn4infu0bcn',
   redirect_uri: 'http://localhost:8080/',
+  logoutUri: 'http://localhost:8080/',
   response_type: 'code',
   scope: 'phone openid email',
   userStore: new WebStorageStateStore({ store: window.localStorage }),
@@ -19,10 +21,13 @@ if (process.env.NODE_ENV === 'production') {
   apiUrl = 'https://api.carladde.com/prod/atc';
 
   config = {
+    cognitoDomain:
+      'https://ca-central-1iycqfnmja.auth.ca-central-1.amazoncognito.com',
     authority:
       'https://cognito-idp.ca-central-1.amazonaws.com/ca-central-1_iYCqfnMjA',
     client_id: '2hdcodqimttdf885i97mbmjlf',
     redirect_uri: 'https://atc.carladde.com/',
+    logoutUri: 'https://atc.carladde.com/',
     response_type: 'code',
     scope: 'phone openid email',
     userStore: new WebStorageStateStore({ store: window.localStorage }),
@@ -72,10 +77,9 @@ export const logout = () => {
 async function signOutRedirect() {
   localStorage.setItem('show-splash', 'no');
 
-  const clientId = '8fhopbpd0l3bjidn4infu0bcn';
-  const logoutUri = 'http://localhost:8080/';
-  const cognitoDomain =
-    'https://us-west-1i2olrzd6b.auth.us-west-1.amazoncognito.com';
+  const clientId = config.client_id;
+  const logoutUri = config.logoutUri;
+  const cognitoDomain = config.cognitoDomain;
   window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(
     logoutUri
   )}`;
