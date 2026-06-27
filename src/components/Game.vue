@@ -278,7 +278,7 @@ import {
 } from '../js/tutorial/gameTutorial';
 import { isArrival, isDeparture, isAircraft } from '../js/types';
 import {
-  setupGameLoadAndExit,
+  setupGame,
   destroyGameLoadAndExit,
   ScreenSizes,
   getGameSize,
@@ -685,7 +685,7 @@ export default {
       },
     };
 
-    setupGameLoadAndExit();
+    setupGame();
     setupSound();
     setupKeyboard();
     setupMessages();

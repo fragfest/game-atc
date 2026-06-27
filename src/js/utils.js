@@ -182,20 +182,10 @@ export const accMax = (acc, val) => (acc > val ? acc : val);
 export const randMinMax = (min, max) => min + Math.random() * (max - min);
 
 // SETUP /////////////////////////////////////////////////////////////////
-export const setupGameLoadAndExit = () => {
+export const setupGame = () => {
   window.copyright = () => {
     console.log('ATC-FFO copyright Carl Adde - carladde.com');
   };
-
-  if (process.env.NODE_ENV === 'production') {
-    // browser prompts on reload and close
-    window.onbeforeunload = function () {
-      return '';
-    };
-    window.close = function () {
-      return '';
-    };
-  }
 };
 
 export const destroyGameLoadAndExit = () => {
