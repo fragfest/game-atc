@@ -213,8 +213,9 @@ const updatePageWithGameData = (self) => {
   const level = getHighestLevelCompleted();
   if (level === self.finalLevel) {
     self.historyLevel = level;
+  } else {
+    self.historyLevel = level + 1;
   }
-  self.historyLevel = level + 1;
 };
 
 export default {

@@ -52,7 +52,7 @@
       </button>
     </div>
 
-    <div class="history">
+    <div class="history" v-if="records?.length">
       <div>
         <h2>{{ location }}</h2>
 
