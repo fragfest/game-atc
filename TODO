@@ -1,4 +1,5 @@
 Bugs:
+  ☐ Firefox: plane icons not clickable after pause screen clicked
   ☐ mute icon shows when sound not muted (need steps)
   ☐ handle sound.js no user interaction exception from play(): make async function, each case call needs try-catch and await bla.play()
 
@@ -21,10 +22,8 @@ v1.2.5:
   Bugs:
     ✔ GameOverPopup retry triggers window reload warning prompt @done(26-06-27 04:23)
     ✔ Minor: on logout the HistoryRecords box is shown empty, should be hidden @started(26-06-27 22:35) @done(26-06-27 23:36) @lasted(1h1m22s)
+    ✔ GameOverPopup points 99/99 does not fit in item with red background @done(26-06-28 20:11)
     ☐ Replace tutorial checkmark and cross icons to fix padding
-    ☐ Firefox: plane icons not clickable after pause screen clicked
-    ☐ Minor Firefox: when failed tutorial due to conflict the 99/99 in GameOverPopup has text wider than red div
-    ☐ Intermittent Firefox: When retrying tutorial after fail, audio is quiet after toggled on
 
 v1.2.4:
   Bugs:

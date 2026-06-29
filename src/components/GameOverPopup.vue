@@ -679,7 +679,8 @@ export default {
   letter-spacing: 1px;
 
   &.points {
-    min-width: 75px;
+    min-width: 85px;
+    width: fit-content;
     text-align: right;
     align-self: flex-start;
   }
@@ -695,8 +696,17 @@ export default {
     margin-top: 8px;
   }
 }
+.popup.small .modal .item {
+  &.points {
+    min-width: 75px;
+  }
+}
 .popup.very-small .modal .item {
   height: fit-content;
+
+  &.points {
+    min-width: 60px;
+  }
 }
 
 .popup .modal .title {
