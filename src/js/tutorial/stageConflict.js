@@ -27,7 +27,7 @@ export const stageConflict = (
         `<div class="line"><b>Conflict (TCAS) - Ensure spacing between planes</b><br></div>` +
         `<div class="line">When planes get too close, create spacing of 3 miles or 1000 feet.<br>` +
         `For this scenario the conflict circles button has been toggled.<br></div>` +
-        `<div class="line"> <span class="checkmark check-0 hidden">&check;</span> <span class="cross check-0">&times;</span> <span class="text">Use any commands to end the conflict</span></div>`;
+        `<div class="line"> <span class="checkmark check-0 hidden"></span> <span class="cross check-0"></span> <span class="text">Use any commands to end the conflict</span></div>`;
 
       state.dialogBox = { top: 0.04, left: 0.45, width: 0.52, html };
     }, 1000);

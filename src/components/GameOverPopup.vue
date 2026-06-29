@@ -662,7 +662,7 @@ export default {
   cursor: default;
 }
 .popup.small .modal {
-  height: 680px;
+  height: 700px;
 }
 .popup.very-small .modal {
   height: 600px;

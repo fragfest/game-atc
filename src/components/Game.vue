@@ -943,29 +943,13 @@ p {
   }
 
   .checkmark {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 7px;
-    height: 7.5px;
-    margin-top: 1px;
-    margin-right: 6px;
-    font-size: 7px;
+    width: 1.1em;
+    height: 1.1em;
   }
 
   .cross {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 7px;
-    height: 8px;
-    margin-top: 1px;
-    margin-right: 6px;
-    border-radius: 50%;
-    border: 1px solid white;
-    background-color: red;
-    font-size: 8px;
-    font-weight: bold;
+    width: 1.1em;
+    height: 1.1em;
   }
 
   .hidden {
@@ -1001,36 +985,6 @@ p {
 
   .line {
     margin-bottom: 3px;
-  }
-
-  .checkmark {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 11px;
-    height: 10px;
-    margin-top: 3px;
-    margin-right: 6px;
-    border-radius: 50%;
-    border: 1px solid white;
-    background-color: limegreen;
-    font-size: 10px;
-  }
-
-  .cross {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 11px;
-    height: 11px;
-    padding-top: 1px;
-    margin-top: 3px;
-    margin-right: 6px;
-    border-radius: 50%;
-    border: 1px solid white;
-    background-color: red;
-    font-size: 12px;
-    font-weight: bold;
   }
 
   .hidden {
@@ -1097,34 +1051,21 @@ p {
   }
 
   .checkmark {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 14px;
-    height: 14px;
-    margin-top: 2px;
-    margin-right: 8px;
-    border-radius: 50%;
-    border: 1px solid white;
-    background-color: limegreen;
-    font-family: Arial;
-    font-size: 13px;
+    background-image: url('/public/img/checkmark-circle.png');
+    background-size: cover;
+    width: 1.2em;
+    height: 1.2em;
+    margin-top: 0.18em;
+    margin-right: 0.6em;
   }
 
   .cross {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 14px;
-    height: 14px;
-    margin-top: 2px;
-    margin-right: 8px;
-    border-radius: 50%;
-    border: 1px solid white;
-    background-color: red;
-    font-family: Arial;
-    font-size: 16px;
-    font-weight: bold;
+    background-image: url('/public/img/cross-circle.png');
+    background-size: cover;
+    width: 1.2em;
+    height: 1.2em;
+    margin-top: 0.18em;
+    margin-right: 0.6em;
   }
 
   .green {

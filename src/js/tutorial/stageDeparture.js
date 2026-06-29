@@ -50,10 +50,10 @@ export const stageDeparture = (
       const html =
         `<div class="line"><b>Departure - Take off and Handoff</b><br></div>` +
         `<div class="line"> Start aircraft departure roll. Once airborne, climb aircraft and direct to handoff waypoint. Keyboard shortcuts shown in brackets ().</div>` +
-        `<div class="line"> <span class="checkmark check-0 hidden">&check;</span> <span class="cross check-0">&times;</span> <span class="text">Select plane from taxi queue (Arrows)</span></div>` +
-        `<div class="line"> <span class="checkmark check-1 hidden">&check;</span> <span class="cross check-1">&times;</span> <span class="text">Start takeoff roll (T)</span></div>` +
-        `<div class="line"> <span class="checkmark check-2 hidden">&check;</span> <span class="cross check-2">&times;</span> <span class="text">Once airborne type "060" to set handoff altitude of 6000ft, or set it higher (Enter: sets value)</span></div>` +
-        `<div class="line"> <span class="checkmark check-3 hidden">&check;</span> <span class="cross check-3">&times;</span> <span class="text">Set handoff, aircraft will steer towards departure waypoint DET (H)</span></div>`;
+        `<div class="line"> <span class="checkmark check-0 hidden"></span> <span class="cross check-0"></span> <span class="text">Select plane from taxi queue (Arrows)</span></div>` +
+        `<div class="line"> <span class="checkmark check-1 hidden"></span> <span class="cross check-1"></span> <span class="text">Start takeoff roll (T)</span></div>` +
+        `<div class="line"> <span class="checkmark check-2 hidden"></span> <span class="cross check-2"></span> <span class="text">Once airborne type "060" to set handoff altitude of 6000ft, or set it higher (Enter: sets value)</span></div>` +
+        `<div class="line"> <span class="checkmark check-3 hidden"></span> <span class="cross check-3"></span> <span class="text">Set handoff, aircraft will steer towards departure waypoint DET (H)</span></div>`;
 
       addToGameFn();
       state.dialogBox = { top: 0.04, left: 0.1, width: 0.8, html };

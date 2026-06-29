@@ -117,15 +117,26 @@
 
       <div class="attribution">
         <div class="attribution-list">
-          <a href="https://www.freepik.com" title="freepik" target="_blank">
-            location images by freepik
+          <a
+            href="https://www.flaticon.com/free-icons/insurance"
+            title="insurance icons"
+            target="_blank"
+          >
+            Insurance icons by hqrloveq
+          </a>
+          <a
+            href="https://www.flaticon.com/free-icons/quit"
+            title="quit icons"
+            target="_blank"
+          >
+            Quit icons by Freepik - Flaticon
           </a>
           <a
             href="https://www.flaticon.com/free-animated-icons/rain"
             title="rain animated icons"
             target="_blank"
           >
-            animated icons created by freepik
+            location images & animated icons by Freepik
           </a>
         </div>
       </div>
