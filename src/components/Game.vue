@@ -943,30 +943,33 @@ p {
   }
 
   .checkmark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     width: 7px;
     height: 7.5px;
-
-    padding-top: 1px;
-    padding-bottom: 0px;
-    padding-left: 2px;
+    margin-top: 1px;
     margin-right: 6px;
-
     font-size: 7px;
   }
 
   .cross {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     width: 7px;
     height: 8px;
-    padding-top: 1px;
-    padding-bottom: 1px;
-    padding-left: 2px;
+    margin-top: 1px;
     margin-right: 6px;
-
     border-radius: 50%;
     border: 1px solid white;
     background-color: red;
     font-size: 8px;
     font-weight: bold;
+  }
+
+  .hidden {
+    display: none;
   }
 }
 // END very-small
@@ -1001,12 +1004,13 @@ p {
   }
 
   .checkmark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     width: 11px;
     height: 10px;
-    padding-bottom: 1px;
-    padding-left: 3px;
+    margin-top: 3px;
     margin-right: 6px;
-
     border-radius: 50%;
     border: 1px solid white;
     background-color: limegreen;
@@ -1014,18 +1018,23 @@ p {
   }
 
   .cross {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     width: 11px;
     height: 11px;
-    padding-top: 2px;
-    padding-bottom: 2px;
-    padding-left: 3px;
+    padding-top: 1px;
+    margin-top: 3px;
     margin-right: 6px;
-
     border-radius: 50%;
     border: 1px solid white;
     background-color: red;
     font-size: 12px;
     font-weight: bold;
+  }
+
+  .hidden {
+    display: none;
   }
 }
 // END small
@@ -1035,6 +1044,7 @@ p {
     display: block;
   }
 }
+
 .msg-popup {
   position: absolute;
   color: white;
@@ -1087,31 +1097,31 @@ p {
   }
 
   .checkmark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     width: 14px;
     height: 14px;
-    padding-top: 2px;
-    padding-left: 4px;
+    margin-top: 2px;
     margin-right: 8px;
-
     border-radius: 50%;
     border: 1px solid white;
     background-color: limegreen;
-
     font-family: Arial;
     font-size: 13px;
   }
 
   .cross {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     width: 14px;
     height: 14px;
-    padding-bottom: 4px;
-    padding-left: 3px;
+    margin-top: 2px;
     margin-right: 8px;
-
     border-radius: 50%;
     border: 1px solid white;
     background-color: red;
-
     font-family: Arial;
     font-size: 16px;
     font-weight: bold;
@@ -1119,6 +1129,10 @@ p {
 
   .green {
     color: lightgreen;
+  }
+
+  .hidden {
+    display: none;
   }
 }
 // END msg-popup ///////////////////////////////////////

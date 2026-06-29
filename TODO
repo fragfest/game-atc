@@ -23,7 +23,7 @@ v1.2.5:
     ✔ GameOverPopup retry triggers window reload warning prompt @done(26-06-27 04:23)
     ✔ Minor: on logout the HistoryRecords box is shown empty, should be hidden @started(26-06-27 22:35) @done(26-06-27 23:36) @lasted(1h1m22s)
     ✔ GameOverPopup points 99/99 does not fit in item with red background @done(26-06-28 20:11)
-    ☐ Replace tutorial checkmark and cross icons to fix padding
+    ✔ Improve tutorial checkmark and cross icon padding @done(26-06-28 21:26)
 
 v1.2.4:
   Bugs:

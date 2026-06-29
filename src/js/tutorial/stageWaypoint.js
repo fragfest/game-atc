@@ -43,9 +43,9 @@ export const stageWaypoint = (
       const html =
         `<div class="line"><b>Arrival - Hold at waypoint</b><br></div>` +
         `<div class="line"> Set arriving aircraft's waypoint and direct it to circle in a holding pattern</div>` +
-        `<div class="line"> <span hidden class="checkmark check-0">&check;</span> <span class="cross check-0">&times;</span> <span class="text">Select second arriving aircraft (Arrows)</span></div>` +
-        `<div class="line"> <span hidden class="checkmark check-1">&check;</span> <span class="cross check-1">&times;</span> <span class="text">Select arrival waypoint BIG (W)</span></div>` +
-        `<div class="line"> <span hidden class="checkmark check-2">&check;</span> <span class="cross check-2">&times;</span> <span class="text">Activate hold at waypoint (H)</span></div>`;
+        `<div class="line"> <span class="checkmark check-0 hidden">&check;</span> <span class="cross check-0">&times;</span> <span class="text">Select second arriving aircraft (Arrows)</span></div>` +
+        `<div class="line"> <span class="checkmark check-1 hidden">&check;</span> <span class="cross check-1">&times;</span> <span class="text">Select arrival waypoint BIG (W)</span></div>` +
+        `<div class="line"> <span class="checkmark check-2 hidden">&check;</span> <span class="cross check-2">&times;</span> <span class="text">Activate hold at waypoint (H)</span></div>`;
 
       addToGameFn();
       state.dialogBox = { top: 0.04, left: 0.2, width: 0.65, html };
@@ -128,26 +128,26 @@ export const stageWaypoint = (
   if (!isReadyFirstInput) return;
 
   if (isValidCheckmarkPlaneSelected) {
-    document.querySelector('.checkmark.check-0')?.removeAttribute('hidden');
-    document.querySelector('.cross.check-0')?.setAttribute('hidden', true);
+    document.querySelector('.checkmark.check-0')?.classList.remove('hidden');
+    document.querySelector('.cross.check-0')?.classList.add('hidden');
   } else {
-    document.querySelector('.checkmark.check-0')?.setAttribute('hidden', true);
-    document.querySelector('.cross.check-0')?.removeAttribute('hidden');
+    document.querySelector('.checkmark.check-0')?.classList.add('hidden');
+    document.querySelector('.cross.check-0')?.classList.remove('hidden');
   }
 
   if (isValidWaypoint) {
-    document.querySelector('.checkmark.check-1')?.removeAttribute('hidden');
-    document.querySelector('.cross.check-1')?.setAttribute('hidden', true);
+    document.querySelector('.checkmark.check-1')?.classList.remove('hidden');
+    document.querySelector('.cross.check-1')?.classList.add('hidden');
   } else {
-    document.querySelector('.checkmark.check-1')?.setAttribute('hidden', true);
-    document.querySelector('.cross.check-1')?.removeAttribute('hidden');
+    document.querySelector('.checkmark.check-1')?.classList.add('hidden');
+    document.querySelector('.cross.check-1')?.classList.remove('hidden');
   }
 
   if (isValidHolding) {
-    document.querySelector('.checkmark.check-2')?.removeAttribute('hidden');
-    document.querySelector('.cross.check-2')?.setAttribute('hidden', true);
+    document.querySelector('.checkmark.check-2')?.classList.remove('hidden');
+    document.querySelector('.cross.check-2')?.classList.add('hidden');
   } else {
-    document.querySelector('.checkmark.check-2')?.setAttribute('hidden', true);
-    document.querySelector('.cross.check-2')?.removeAttribute('hidden');
+    document.querySelector('.checkmark.check-2')?.classList.add('hidden');
+    document.querySelector('.cross.check-2')?.classList.remove('hidden');
   }
 };
