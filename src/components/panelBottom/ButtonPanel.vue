@@ -127,6 +127,7 @@
         :class="fastForwardClass"
         @mousedown="onFastForwardDown"
         @mouseup="onFastForwardUp"
+        @mouseleave="onFastForwardLeave"
       >
         <h2 class="btn-title">{{ fastForwardDisp }}</h2>
         <svg viewBox="0 0 394.941 394.941">
@@ -236,6 +237,7 @@ export default {
 
     onFastForwardDown: function () {
       this.$emit('fastForwardEv', this.fastForwardNum + 1);
+
       this.fastForwardTimer = setInterval(() => {
         if (this.fastForwardNum >= 4) return;
         this.$emit('fastForwardEv', this.fastForwardNum + 1);
@@ -243,6 +245,11 @@ export default {
     },
 
     onFastForwardUp: function () {
+      clearInterval(this.fastForwardTimer);
+      this.$emit('fastForwardEv', 1);
+    },
+
+    onFastForwardLeave: function () {
       clearInterval(this.fastForwardTimer);
       this.$emit('fastForwardEv', 1);
     },

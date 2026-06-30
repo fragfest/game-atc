@@ -4,22 +4,28 @@ Bugs:
   ☐ handle sound.js no user interaction exception from play(): make async function, each case call needs try-catch and await bla.play()
 
 Wishlist:
+  ☐ default name for new user federated login. i.e. get rid of: google_123456
   ☐ flightstrip hide button. need to move info to bottom panel, including waypoint btn.
   ☐ screenSize toggle btn in panelBottom. will need to restart level
 
   ☐ voice comms audio playback
   ☐ runway collisions
   ☐ custom play level
+  ☐ waypoints realistic based on flight destination
   ☐ restricted areas with min altitude levels
   ☐ noise abatement mechanic (max 250kts below 10Kft)
   ☐ dangerous weather mechanic (wind shear)
   ☐ change runways for arrivals & departures
   ☐ leaderboard search by username
   ☐ more federated cognito logins
+  ☐ aws-lambda uses transactions on PUTs for safer multi-table writes
 
-
+v1.2.6:
+  Bugs:
+    
 v1.2.5:
   Bugs:
+    ✔ fast-forward escalates through speed-ups in a loop. steps: hold btn click, move mouse away and release @done(26-06-30 05:12)
     ✔ GameOverPopup retry triggers window reload warning prompt @done(26-06-27 04:23)
     ✔ Minor: on logout the HistoryRecords box is shown empty, should be hidden @started(26-06-27 22:35) @done(26-06-27 23:36) @lasted(1h1m22s)
     ✔ GameOverPopup points 99/99 does not fit in item with red background @done(26-06-28 20:11)
