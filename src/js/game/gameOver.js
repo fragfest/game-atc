@@ -41,7 +41,7 @@ export const gameOver = (msgPopup, isSuccess) => {
       `<b>${title}</b><br><br>` +
       `You are relieved of duty, <b>Controller</b>! Another controller will take over.` +
       `<div class="line"></div>` +
-      `<div class="line"><span class="cross">&times;</span> <span class="text"><b>${crossText}</b></span></div>`;
+      `<div class="line"><span class="cross"></span> <span class="text"><b>${crossText}</b></span></div>`;
 
     fillHtmlQueue(dialogBox.html, msgPopupHtmlQueue);
   }, 1000);
