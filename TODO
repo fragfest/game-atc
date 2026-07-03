@@ -18,10 +18,13 @@ Wishlist:
   ☐ change runways for arrivals & departures
   ☐ leaderboard search by username
   ☐ more federated cognito logins
-  ☐ aws-lambda uses transactions on PUTs for safer multi-table writes
 
-v1.2.6:
-  Bugs:
+  - atc-lambda 
+  ☐ aws-lambda uses transactions on PUTs for safer multi-table writes
+  
+v1.3.0:
+  Major:
+    ✔ update api url @done(26-07-02 18:27)
     
 v1.2.5:
   Bugs:

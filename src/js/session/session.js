@@ -2,7 +2,7 @@ import { UserManager, WebStorageStateStore } from 'oidc-client-ts';
 import { v4 as uuidv4 } from 'uuid';
 
 // dev config ///////////////////////////////////////////////////////
-let apiUrl = 'https://api.carladde.com/dev/atc-dev';
+let apiUrl = 'https://api.carladde.com/atc/v1/scores-dev';
 
 let config = {
   cognitoDomain: 'https://us-west-1i2olrzd6b.auth.us-west-1.amazoncognito.com',
@@ -18,7 +18,7 @@ let config = {
 
 // prod config ///////////////////////////////////////////////////////
 if (process.env.NODE_ENV === 'production') {
-  apiUrl = 'https://api.carladde.com/prod/atc';
+  apiUrl = 'https://api.carladde.com/atc/v1/scores-prod';
 
   config = {
     cognitoDomain:
